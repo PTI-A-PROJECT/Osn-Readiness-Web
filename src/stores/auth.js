@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { api } from '@/lib/api.js'
+import { useProgressStore } from '@/stores/progress.js'
 
 // Analogi Laravel: Auth::user() di sisi browser.
 // Token TIDAK PERNAH disimpan di sini — cookie httpOnly diurus browser.
@@ -11,6 +12,13 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => user.value !== null)
   const isSuperAdmin = computed(() => user.value?.role === 'super_admin')
   const isSiswa = computed(() => user.value?.role === 'siswa')
+
+  // Nama yang dipakai di sapaan & avatar. Kosong ('') kalau siswa belum mengisi nama.
+  // Beberapa nama field dicoba supaya tetap jalan kalau backend memakai penamaan lain.
+  const nama = computed(() => {
+    const u = user.value ?? {}
+    return String(u.nama ?? u.nama_lengkap ?? u.name ?? u.full_name ?? '').trim()
+  })
 
   // Dipanggil sekali oleh router guard saat aplikasi dibuka.
   async function fetchMe() {
@@ -26,6 +34,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(payload) {
     const { data } = await api.post('/auth/login', payload)
+    useProgressStore().$reset() // pastikan tidak ada sisa data akun sebelumnya
     user.value = data.data.user
     return user.value
   }
@@ -36,6 +45,14 @@ export const useAuthStore = defineStore('auth', () => {
     return data.data
   }
 
+  // Simpan perubahan profil (nama, email, sekolah, kelas) dari halaman Profil.
+  // Karena sapaan & avatar membaca user.value, nama baru langsung tampil di mana-mana.
+  async function updateProfile(payload) {
+    const { data } = await api.put('/auth/profile', payload)
+    user.value = { ...user.value, ...payload, ...(data?.data ?? {}) }
+    return user.value
+  }
+
   async function logout() {
     try {
       await api.post('/auth/logout')
@@ -43,12 +60,14 @@ export const useAuthStore = defineStore('auth', () => {
       // Abaikan: sesi lokal tetap dibersihkan agar user kembali ke /login.
     } finally {
       user.value = null
+      useProgressStore().$reset()
     }
   }
 
   function $reset() {
     user.value = null
     initialized.value = false
+    useProgressStore().$reset()
   }
 
   return {
@@ -57,9 +76,11 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isSuperAdmin,
     isSiswa,
+    nama,
     fetchMe,
     login,
     register,
+    updateProfile,
     logout,
     $reset,
   }

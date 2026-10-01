@@ -5,6 +5,8 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import SiswaDashboardView from '@/views/siswa/DashboardView.vue'
+import SiswaProfileView from '@/views/siswa/ProfileView.vue'
+import PlaceholderView from '@/views/siswa/PlaceholderView.vue'
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
 import ForbiddenView from '@/views/ForbiddenView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
@@ -35,7 +37,43 @@ export const routes = [
         path: 'siswa',
         name: 'siswa.dashboard',
         component: SiswaDashboardView,
-        meta: { requiresAuth: true, role: 'siswa' },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'siswa/profil',
+        name: 'siswa.profil',
+        component: SiswaProfileView,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'siswa/pemetaan',
+        name: 'siswa.pemetaan',
+        component: PlaceholderView,
+        meta: { requiresAuth: true, title: 'Pemetaan Kompetensi' },
+      },
+      {
+        path: 'siswa/materi',
+        name: 'siswa.materi',
+        component: PlaceholderView,
+        meta: { requiresAuth: true, title: 'Materi' },
+      },
+      {
+        path: 'siswa/progress',
+        name: 'siswa.progress',
+        component: PlaceholderView,
+        meta: { requiresAuth: true, title: 'Progress Belajar' },
+      },
+      {
+        path: 'siswa/simulasi',
+        name: 'siswa.simulasi',
+        component: PlaceholderView,
+        meta: { requiresAuth: true, title: 'Simulasi Seleksi' },
+      },
+      {
+        path: 'siswa/riwayat',
+        name: 'siswa.riwayat',
+        component: PlaceholderView,
+        meta: { requiresAuth: true, title: 'Riwayat Hasil' },
       },
       {
         path: 'admin',
