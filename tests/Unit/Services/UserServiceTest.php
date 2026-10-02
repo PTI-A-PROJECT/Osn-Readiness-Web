@@ -32,7 +32,7 @@ class UserServiceTest extends TestCase
         $mockUser = Mockery::mock($user)->makePartial();
         $mockUser->shouldReceive('assignRole')
             ->once()
-            ->with('user')
+            ->with('siswa')
             ->andReturnSelf();
 
         $userRepository->shouldReceive('create')

@@ -28,7 +28,7 @@ class UserApiTest extends TestCase
     public function test_user_without_permission_returns_403(): void
     {
         $user = User::factory()->create(['is_active' => true]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($user)->getJson('/api/users');
 
@@ -75,7 +75,7 @@ class UserApiTest extends TestCase
         $admin->assignRole('Super Admin');
 
         $user = User::factory()->create(['is_active' => true]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($admin)->getJson("/api/users/{$user->id}");
 
@@ -92,7 +92,7 @@ class UserApiTest extends TestCase
         $admin->assignRole('Super Admin');
 
         $user = User::factory()->create(['is_active' => true]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($admin)->putJson("/api/users/{$user->id}", [
             'name' => 'Updated Name',
@@ -113,14 +113,15 @@ class UserApiTest extends TestCase
         $admin->assignRole('Super Admin');
 
         $user = User::factory()->create(['is_active' => true]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($admin)->deleteJson("/api/users/{$user->id}");
 
         $response->assertOk()
             ->assertJson(['message' => 'User berhasil dihapus']);
 
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        // Penghapusan siswa memakai soft delete, jadi barisnya masih ada.
+        $this->assertSoftDeleted('users', ['id' => $user->id]);
     }
 
     public function test_validation_error_returns_422(): void
