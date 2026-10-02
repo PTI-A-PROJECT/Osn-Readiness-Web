@@ -1,56 +1,57 @@
-<laravel-boost-guidelines>
-# Laravel Application
+# OSN Readiness Web
 
-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+Laravel 13 web app for olympiad (OSN) prep — soal, try-out, nilai, and kelas modules with Spatie RBAC.
 
-## Prerequisites
+## Stack
 
-Verify that PHP and Composer are available:
+- PHP 8.3, Laravel 13 (`laravel/framework ^13.17`), Sanctum (`laravel/sanctum ^4.3`), Breeze (`laravel/breeze ^2.4`)
+- Spatie Permission (`spatie/laravel-permission ^8.3`) for RBAC
+- Testing & Style: PHPUnit (`phpunit/phpunit ^12.5.12`), Laravel Pint (`laravel/pint ^1.27`)
+- Frontend: Vite (`vite ^8.0.0`), Tailwind CSS (`tailwindcss ^3.1.0`), Alpine.js (`alpinejs ^3.4.2`)
+- Package managers: Composer (`composer.json`), npm (`package.json`, `package-lock.json`)
 
-```sh
-php -v
-composer -V
-```
+## Commands
 
-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
+- Setup: `composer setup` (installs deps, copies .env, generates key, migrates, builds frontend)
+- Dev server: `composer dev` (PHP server + Vite)
+- Frontend dev: `npm run dev`
+- Frontend build: `npm run build`
+- Run all tests: `composer test` (clears config cache, then runs test suite)
+- Run single test: `php artisan test tests/Feature/Api/UserApiTest.php`
+- Lint check: `vendor/bin/pint --test`
+- Lint fix: `vendor/bin/pint`
+- Sail / Docker: `./vendor/bin/sail up -d`, `./vendor/bin/sail artisan migrate`
 
-macOS:
+## Layout
 
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
-```
+- `app/Contracts/Repositories/` & `app/Contracts/Services/` — Interface contracts
+- `app/Http/Controllers/Api/` — Thin controllers (`Gate::authorize` + Resource return)
+- `app/Http/Middleware/CheckUserStatus.php` — Inactive user check (`403 JSON`)
+- `app/Http/Requests/` & `app/Http/Resources/` — FormRequest validation and API resource transformers
+- `app/Models/` & `app/Policies/` — Eloquent models and Spatie policies
+- `app/Repositories/Eloquent/` — Concrete Eloquent repositories (queries, eager loads)
+- `app/Services/` — Concrete services (business logic, `DB::transaction`)
+- `app/Providers/RepositoryServiceProvider.php` — Interface-to-implementation DI bindings
+- `bootstrap/app.php` & `bootstrap/providers.php` — Routing, middleware aliases, and providers
+- `routes/api.php` & `routes/web.php` — API and web route definitions
+- `tests/Feature/` & `tests/Unit/` — Feature tests (DB) and unit tests (Mockery)
+- `docs/ARCHITECTURE_RULES.md`, `docs/PRD.md`, `docs/IMPLEMENTATION_PLAN.md` — Architecture rules & specs
 
-Windows PowerShell:
+## Conventions
 
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
-```
+- Architecture: Service-Repository pattern — Controller -> Service -> Repository -> Model.
+- Controllers call Services; Services call Repositories; no direct Eloquent queries in controllers.
+- Interfaces: Every service and repository has an interface bound in `RepositoryServiceProvider`.
+- Transactions & Hashing: `DB::transaction` in Services. No `Hash::make` in Services.
+- Auth & Policies: `Gate::authorize()` in controllers; Super Admin bypass in `UserPolicy::before()`.
+- API endpoints: Dedicated `FormRequest` validation; output via API Resource transformers.
+- Testing: Feature tests use `RefreshDatabase` + `RolesAndPermissionsSeeder` in `setUp()`.
 
-Linux:
+## Gotchas
 
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
-```
-
-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original request.
-
-## Agent Setup
-
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-
-## Architecture Rules
-
-Ikuti `docs/ARCHITECTURE_RULES.md` untuk semua kode baru.
-
-Dokumen terkait:
-- [ARCHITECTURE_RULES.md](docs/ARCHITECTURE_RULES.md) — Standar arsitektur & coding rules
-- [PRD.md](docs/PRD.md) — Product Requirements Document
-- [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) — Implementation roadmap
-</laravel-boost-guidelines>
+- Inactive users: `CheckUserStatus` middleware returns 403 JSON; aliased as `active` in `bootstrap/app.php`.
+- DI bindings: Every new service and repository must be bound in `RepositoryServiceProvider`.
+- Super Admin: Never remove the `UserPolicy::before()` bypass guard for the Super Admin role.
+- Database: SQLite default locally (`.env.example`); uncomment MySQL config for Docker Sail.
+- Tailwind dual version: `package.json` lists `@tailwindcss/vite ^4.0.0` and `tailwindcss ^3.1.0`.
+- Git workflow: Working branch is `dev`; remotes: `fork` and `origin`.
