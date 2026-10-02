@@ -110,10 +110,12 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 ## Keputusan terbuka yang kamu pegang
 
-| # | Keputusan | Kapan |
+Semua sudah diputuskan per 2 Oktober 2026; rincian dan alasannya ada di [BATCH_PLAN.md](BATCH_PLAN.md#keputusan-terbuka-putuskan-sebelums selama-b0).
+
+| # | Keputusan | Hasil |
 | --- | --- | --- |
-| 1 | Tabel `sessions` di-drop di migration 1, padahal Breeze web memakai session. Pilih: `SESSION_DRIVER=cookie/file`, atau buang Breeze web | Sebelum B0-A |
-| 2 | Role `user` → `siswa` (seeder, `UserService::registerUser`, test). Orang 2 mengubah ARCHITECTURE_RULES §8 | Sebelum B0-A |
-| 4 | Kolom `id_sumber` untuk impor: migration ke-20 atau tabel pemetaan terpisah (sepakati dengan Orang 2) | Selama B0-A |
-| 5 | Masa retensi akun terhapus | Sebelum B3-C |
-| 3 | Angka usulan milikmu: throttle login (5/menit), toleransi simulasi (30 detik), masa berlaku token | Selama B1-A / B3-A |
+| 1 | Tabel `sessions` di-drop di migration 1, padahal Breeze web memakai session. | `SESSION_DRIVER=cookie`. Breeze tetap dipakai, tabel `sessions` tetap di-drop, dan `down()` migration 1 membuatnya kembali. |
+| 2 | Role `user` → `siswa`. | Sudah diterapkan: seeder, `UserService::registerUser`, factory, dan test. Permission admin berubah dari `users.*` jadi `siswa.*` supaya cocok dengan daftar resource di Migration.pdf. ARCHITECTURE_RULES §8 masih perlu diperbarui — milik Orang 2. |
+| 4 | Kolom `id_sumber` untuk impor. | Migration ke-20 `2026_10_02_090019_add_id_sumber_to_materi_and_soal.php`: `string(100) nullable unique` di `materi` dan `soal`. |
+| 5 | Masa retensi akun terhapus. | 30 hari sejak `deleted_at`. Dipakai mulai B3-C. |
+| 3 | Angka usulan milikmu. | Throttle login 5/menit per email+IP, toleransi simulasi 30 detik, backoff `[10, 30, 60, 120, 300]`, upload maks 2 MB, ambang peringatan bank 2 putaran, masa berlaku token 7 hari. |

@@ -25,6 +25,7 @@ Laravel 13 web app for olympiad (OSN) prep — soal, try-out, nilai, and kelas m
 ## Layout
 
 - `app/Contracts/Repositories/` & `app/Contracts/Services/` — Interface contracts
+- `app/Enums/` — `Level`, `Peruntukan`, `TipeSoal`, `StatusProgress`, `StatusKenaikan`, `JenisPengerjaan`
 - `app/Http/Controllers/Api/` — Thin controllers (`Gate::authorize` + Resource return)
 - `app/Http/Middleware/CheckUserStatus.php` — Inactive user check (`403 JSON`)
 - `app/Http/Requests/` & `app/Http/Resources/` — FormRequest validation and API resource transformers
@@ -36,6 +37,8 @@ Laravel 13 web app for olympiad (OSN) prep — soal, try-out, nilai, and kelas m
 - `routes/api.php` & `routes/web.php` — API and web route definitions
 - `tests/Feature/` & `tests/Unit/` — Feature tests (DB) and unit tests (Mockery)
 - `docs/ARCHITECTURE_RULES.md`, `docs/PRD.md`, `docs/IMPLEMENTATION_PLAN.md` — Architecture rules & specs
+- `docs/BATCH_PLAN.md`, `docs/BATCH_PLAN_ORANG_1.md`, `docs/BATCH_PLAN_ORANG_2.md` — Backend work split per person
+- `docs/Logic per fitur.md`, `docs/Migration.pdf`, `docs/Kode migration.pdf` — Feature logic & schema source
 
 ## Conventions
 
@@ -52,6 +55,11 @@ Laravel 13 web app for olympiad (OSN) prep — soal, try-out, nilai, and kelas m
 - Inactive users: `CheckUserStatus` middleware returns 403 JSON; aliased as `active` in `bootstrap/app.php`.
 - DI bindings: Every new service and repository must be bound in `RepositoryServiceProvider`.
 - Super Admin: Never remove the `UserPolicy::before()` bypass guard for the Super Admin role.
-- Database: SQLite default locally (`.env.example`); uncomment MySQL config for Docker Sail.
+- Database: PostgreSQL 16 only (`compose.yaml` service `pgsql`); SQLite/MySQL tidak didukung karena index parsial, `jsonb`, dan check constraint. Test memakai database terpisah `osn_readiness_testing` (lihat `phpunit.xml`).
+- Tabel tidak jamak: setiap model wajib `#[Table('...')]`, dan `constrained()` selalu menyebut nama tabelnya.
+- `Soal` memakai `SoftDeletes`; soal yang dipakai pengerjaan tetap bisa diambil untuk review.
+- Partial unique index dijaga lewat `DB::statement` di dalam migration (Laravel tidak punya index parsial): `users_email_aktif_unique`, `pretest_berjalan_unique`, `hasil_simulasi_berjalan_unique`, `kenaikan_lulus_unique`.
+- `riwayat_hasil` adalah SQL view, bukan tabel: model `RiwayatHasil` hanya baca, tanpa timestamps, dan migration-nya wajib jalan paling akhir.
+- Role default adalah `siswa` (bukan `user`); permission admin memakai `siswa.*`, `materi.*`, `soal.*`, dst.
 - Tailwind dual version: `package.json` lists `@tailwindcss/vite ^4.0.0` and `tailwindcss ^3.1.0`.
 - Git workflow: Working branch is `dev`; remotes: `fork` and `origin`.
