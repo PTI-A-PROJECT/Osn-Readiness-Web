@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'perhitungan' => [
+        'url' => env('PERHITUNGAN_URL', 'http://localhost:8001'),
+        'token' => env('PERHITUNGAN_TOKEN'),
+        'timeout' => (int) env('PERHITUNGAN_TIMEOUT', 5),
+        'retry' => (int) env('PERHITUNGAN_RETRY', 2),
+    ],
+
 ];

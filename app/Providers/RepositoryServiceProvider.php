@@ -10,6 +10,7 @@ use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
+use App\Contracts\Services\PenilaianServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SyaratSimulasiServiceInterface;
 use App\Contracts\Services\TingkatServiceInterface;
@@ -22,6 +23,7 @@ use App\Repositories\Eloquent\TingkatSeleksiRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Services\AturanService;
 use App\Services\AuthService;
+use App\Services\PenilaianService;
 use App\Services\PutaranService;
 use App\Services\SyaratSimulasiService;
 use App\Services\TingkatService;
@@ -49,5 +51,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->scoped(AturanServiceInterface::class, AturanService::class);
         $this->app->bind(PutaranServiceInterface::class, PutaranService::class);
         $this->app->bind(SyaratSimulasiServiceInterface::class, SyaratSimulasiService::class);
+
+        // B1-C · PerhitunganClient & NilaiUlangJob
+        $this->app->bind(PenilaianServiceInterface::class, PenilaianService::class);
     }
 }
