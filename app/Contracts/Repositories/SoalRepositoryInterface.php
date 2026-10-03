@@ -4,6 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\Enums\Peruntukan;
 use App\Models\Soal;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface SoalRepositoryInterface extends BaseRepositoryInterface
@@ -26,4 +27,15 @@ interface SoalRepositoryInterface extends BaseRepositoryInterface
      * @return Collection<int, Soal>
      */
     public function banyakDenganKonteks(array $ids): Collection;
+
+    /**
+     * Soal yang sudah pernah dijawab di pengerjaan mana pun (pre-test atau
+     * quiz) tidak boleh lagi diubah kunci, level, peruntukan, dan materinya.
+     */
+    public function sedangDipakai(Soal $soal): bool;
+
+    /**
+     * Daftar seluruh soal untuk layar admin, termasuk relasi tampilan.
+     */
+    public function paginasiAdmin(int $perPage = 15): LengthAwarePaginator;
 }

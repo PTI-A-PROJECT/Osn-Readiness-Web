@@ -4,8 +4,11 @@ namespace App\Repositories\Eloquent;
 
 use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Enums\Peruntukan;
+use App\Models\PretestJawaban;
+use App\Models\QuizJawaban;
 use App\Models\Soal;
 use App\Repositories\BaseRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class SoalRepository extends BaseRepository implements SoalRepositoryInterface
@@ -37,5 +40,19 @@ class SoalRepository extends BaseRepository implements SoalRepositoryInterface
             ->withTrashed()
             ->whereIn('id', $ids)
             ->get();
+    }
+
+    public function sedangDipakai(Soal $soal): bool
+    {
+        return PretestJawaban::query()->where('soal_id', $soal->id)->exists()
+            || QuizJawaban::query()->where('soal_id', $soal->id)->exists();
+    }
+
+    public function paginasiAdmin(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->model->newQuery()
+            ->with(['tingkat', 'materi', 'konteks', 'pembahasan'])
+            ->latest()
+            ->paginate($perPage);
     }
 }
