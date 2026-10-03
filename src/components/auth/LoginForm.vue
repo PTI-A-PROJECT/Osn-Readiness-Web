@@ -65,15 +65,6 @@ async function masuk() {
   }
 }
 
-function lupaPassword() {
-  toast.add({
-    severity: 'info',
-    summary: 'Segera hadir',
-    detail: 'Reset kata sandi belum tersedia.',
-    life: 3000,
-  })
-}
-
 function masukGoogle() {
   toast.add({
     severity: 'info',
