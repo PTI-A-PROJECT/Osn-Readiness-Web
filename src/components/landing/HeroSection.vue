@@ -39,10 +39,7 @@ const competencies = [
         <div class="map-card" role="img" aria-label="Contoh pemetaan kompetensi tingkat Provinsi">
           <div class="map-card__head">
             <strong>Pemetaan Kompetensi</strong>
-            <span class="map-card__user">
-              <span class="map-card__avatar" aria-hidden="true"></span>
-              <span class="pill pill--muted">Tingkat Provinsi</span>
-            </span>
+            <span class="pill pill--muted">Tingkat Provinsi</span>
           </div>
           <ul class="bars">
             <li v-for="c in competencies" :key="c.name">
@@ -150,19 +147,6 @@ const competencies = [
   align-items: center;
   font-size: 0.88rem;
   margin-bottom: 18px;
-}
-
-.map-card__user {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.map-card__avatar {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: conic-gradient(from 200deg, #4b8df8, #f5c96a, #38b27a, #4b8df8);
 }
 
 .bars {

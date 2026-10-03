@@ -99,6 +99,14 @@
   background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
 }
 
+.lp .marked--block {
+  display: block;
+  max-width: 14em;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  margin-top: 14px;
+  margin-bottom: 64px;
+}
+
 .marked--center {
   display: block;
   text-align: center;
