@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AturanPemetaanController;
+use App\Http\Controllers\Api\Admin\BankSoalController;
+use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\KompetensiController;
 use App\Http\Controllers\Api\Admin\KonteksSoalController;
 use App\Http\Controllers\Api\Admin\LatihanController;
@@ -94,5 +96,9 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         Route::apiResource('simulasi', SimulasiController::class);
         Route::get('tingkat/{tingkat}/aturan-pemetaan', [AturanPemetaanController::class, 'show']);
         Route::put('tingkat/{tingkat}/aturan-pemetaan', [AturanPemetaanController::class, 'update']);
+
+        // [B2-C] Kecukupan bank soal dan dashboard admin
+        Route::get('bank-soal/kecukupan/{tingkat}', [BankSoalController::class, 'kecukupan']);
+        Route::get('dashboard', [DashboardController::class, 'ringkasan']);
     });
 });
