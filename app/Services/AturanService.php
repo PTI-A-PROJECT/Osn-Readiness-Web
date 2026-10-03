@@ -25,7 +25,7 @@ class AturanService implements AturanServiceInterface
     {
         $aturan = $this->aturanRepository->untukTingkat($tingkatId)->first();
 
-        if (!$aturan) {
+        if (! $aturan) {
             throw new RuntimeException(
                 "Aturan pemetaan untuk tingkat {$tingkatId} tidak ditemukan."
             );

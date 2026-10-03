@@ -19,7 +19,7 @@ class TingkatSeleksiObserver
 
         // Auto-create default aturan for new tingkat if not already exists
         \DB::transaction(function () use ($tingkatSeleksi) {
-            if (!AturanPemetaan::where('tingkat_id', $tingkatSeleksi->id)->exists()) {
+            if (! AturanPemetaan::where('tingkat_id', $tingkatSeleksi->id)->exists()) {
                 AturanPemetaan::create([
                     'tingkat_id' => $tingkatSeleksi->id,
                     'bobot_pretest' => 30,
@@ -49,7 +49,7 @@ class TingkatSeleksiObserver
     {
         // During seeding, check if AturanPemetaanSeeder is in the call stack
         return in_array('Database\Seeders\AturanPemetaanSeeder',
-            array_map(fn($trace) => $trace['class'] ?? '', debug_backtrace()),
+            array_map(fn ($trace) => $trace['class'] ?? '', debug_backtrace()),
             true);
     }
 
