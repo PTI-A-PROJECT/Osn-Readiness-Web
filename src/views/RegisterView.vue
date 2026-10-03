@@ -4,6 +4,7 @@ import { useRouter, RouterLink } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '@/stores/auth.js'
 import { pesanError } from '@/lib/errors.js'
+import PublicNavbar from '@/components/PublicNavbar.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -58,24 +59,7 @@ async function daftar() {
 
 <template>
   <div class="register-page">
-    <header class="navbar">
-      <div class="navbar-container">
-        <RouterLink to="/login" class="brand-logo" aria-label="SIAP OSN, kembali ke masuk">
-          <span class="brand-mark" aria-hidden="true">S</span>
-          <span>SIAP OSN</span>
-        </RouterLink>
-        <nav class="nav-menu" aria-label="Navigasi utama">
-          <a href="#keunggulan">Kenapa SIAP OSN</a>
-          <a href="#keunggulan">Fitur</a>
-          <a href="#register-form">Cara Kerja</a>
-          <a href="#register-form">Tingkat Seleksi</a>
-        </nav>
-        <div class="nav-actions">
-          <RouterLink to="/login" class="btn-login">Masuk</RouterLink>
-          <a href="#register-form" class="btn-register">Daftar Gratis</a>
-        </div>
-      </div>
-    </header>
+    <PublicNavbar current="register" />
 
     <main class="main-content">
       <section id="keunggulan" class="left-section">
@@ -159,104 +143,18 @@ async function daftar() {
   font-family: 'Avenir Next', Avenir, 'Segoe UI', sans-serif;
 }
 
-.navbar {
-  position: sticky;
-  z-index: 2;
-  top: 0;
-  height: 72px;
-  border-bottom: 1px solid var(--line);
-  background: rgb(255 255 255 / 96%);
-}
-
-.navbar-container {
-  display: flex;
-  align-items: center;
-  width: min(1120px, 100% - 48px);
-  height: 100%;
-  margin: 0 auto;
-}
-
-.brand-logo {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 9px;
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.brand-mark {
-  display: grid;
-  width: 28px;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 8px;
-  background: var(--blue);
-  color: white;
-  font-size: 15px;
-}
-
-.nav-menu,
-.nav-actions {
-  display: flex;
-  align-items: center;
-}
-
-.nav-menu {
-  gap: 23px;
-  margin-left: 38px;
-}
-
-.nav-menu a {
-  color: #536570;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.nav-menu a:hover,
-.login-text a:hover {
-  color: var(--blue);
-}
-
-.nav-actions {
-  gap: 9px;
-  margin-left: auto;
-}
-
-.btn-login,
-.btn-register {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 15px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.btn-register {
-  border-color: var(--blue);
-  background: var(--blue);
-  color: white;
-}
-
-.btn-register:hover,
-.register-button:hover:not(:disabled) {
-  background: var(--blue-deep);
-}
-
 .main-content {
   display: grid;
   min-height: calc(100vh - 72px);
   grid-template-columns: 1.05fr 0.95fr;
+}
+
+.login-text a:hover {
+  color: var(--blue);
+}
+
+.register-button:hover:not(:disabled) {
+  background: var(--blue-deep);
 }
 
 .left-section,
@@ -535,15 +433,6 @@ async function daftar() {
 }
 
 @media (max-width: 950px) {
-  .nav-menu {
-    gap: 14px;
-    margin-left: 24px;
-  }
-
-  .nav-menu a {
-    font-size: 12px;
-  }
-
   .main-content {
     grid-template-columns: 1fr 1fr;
   }
@@ -562,18 +451,6 @@ async function daftar() {
 }
 
 @media (max-width: 720px) {
-  .navbar {
-    height: 64px;
-  }
-
-  .navbar-container {
-    width: calc(100% - 32px);
-  }
-
-  .nav-menu {
-    display: none;
-  }
-
   .main-content {
     grid-template-columns: 1fr;
   }
@@ -608,20 +485,6 @@ async function daftar() {
 
   .register-card {
     padding: 24px 20px;
-  }
-}
-
-@media (max-width: 380px) {
-  .btn-login,
-  .btn-register {
-    min-height: 36px;
-    padding: 0 10px;
-    font-size: 12px;
-  }
-
-  .brand-logo {
-    gap: 6px;
-    font-size: 14px;
   }
 }
 
