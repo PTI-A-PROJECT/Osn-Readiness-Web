@@ -38,7 +38,7 @@ class RekomendasiMateriRepository extends BaseRepository implements RekomendasiM
     {
         return $this->model->newQuery()
             ->where('pretest_id', $pretestId)
-            ->orderBy('peringkat')
+            ->orderBy('prioritas')
             ->get();
     }
 }
