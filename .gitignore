@@ -26,14 +26,3 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
-
-# Frontier Kit (agent workspace)
-.agents/
-.scratch/
-/test-results/
-/playwright-report/
-/blob-report/
-/coverage/
-
-/antigravity-workspace-main
-skills-lock.json
