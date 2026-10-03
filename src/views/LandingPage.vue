@@ -83,8 +83,8 @@ const features = [
 ]
 
 const levels = [
-  { tahap: 'Tahap 1', title: 'Kabupaten', text: 'Titik awal persiapan — membangun fondasi kompetensi dasar Informatika.' },
-  { tahap: 'Tahap 2', title: 'Provinsi', text: 'Materi dan simulasi meningkat mengikuti standar seleksi tingkat provinsi.' },
+  { title: 'Kabupaten', text: 'Titik awal persiapan — membangun fondasi kompetensi dasar Informatika.' },
+  { title: 'Provinsi', text: 'Materi dan simulasi meningkat mengikuti standar seleksi tingkat provinsi.' },
 ]
 
 const footerColumns = [
@@ -173,8 +173,7 @@ const footerColumns = [
     <section id="kenapa" class="section section--white">
       <div class="container split">
         <div class="split__text">
-          <small class="kicker kicker--dark">Masalahnya</small>
-          <h2 class="marked">Kenapa persiapan OSN itu sulit?</h2>
+          <h2>Kenapa persiapan OSN itu <span class="hl">sulit?</span></h2>
           <p>
             Jenjang seleksi bertahap (Kabupaten → Provinsi → Nasional), materi yang luas, dan
             minimnya simulasi realistis membuat siswa sulit tahu harus fokus belajar dari mana.
@@ -220,7 +219,7 @@ const footerColumns = [
         </div>
         <div class="split__text split__text--light">
           <small class="kicker">Solusinya</small>
-          <h2 class="marked marked--light">Bagaimana SIAP OSN menjawab masalah itu?</h2>
+          <h2>Bagaimana SIAP OSN <span class="hl">menjawab masalah itu?</span></h2>
           <p>
             SIAP OSN memetakan kompetensi siswa secara otomatis lewat pre-test, memberi rekomendasi
             materi yang personal, dan menyediakan simulasi seleksi bertingkat lengkap dengan
@@ -253,8 +252,7 @@ const footerColumns = [
     <!-- Fitur -->
     <section id="fitur" class="section section--white">
       <div class="container">
-        <small class="kicker kicker--dark">Fitur unggulan</small>
-        <h2 class="marked marked--block">Semua yang kamu butuhkan untuk satu jalur persiapan</h2>
+        <h2 class="marked--block">Semua yang kamu butuhkan untuk <span class="hl">satu jalur persiapan</span></h2>
         <div class="features">
           <article v-for="f in features" :key="f.title" class="feature" :class="{ 'feature--dark': f.dark }">
             <span class="feature__icon" aria-hidden="true">{{ f.icon }}</span>
@@ -268,20 +266,19 @@ const footerColumns = [
     <!-- Tingkat seleksi -->
     <section id="tingkat" class="section section--soft">
       <div class="container levels">
-        <small class="kicker kicker--dark kicker--center">Jenjang seleksi</small>
-        <h2 class="marked marked--center">Naik tingkat sesuai pencapaianmu</h2>
+        <small class="kicker kicker--center">Jenjang seleksi</small>
+        <h2 class="marked--center">Naik tingkat sesuai <span class="hl">pencapaianmu</span></h2>
         <p class="levels__lead">
           Tingkat berikutnya terbuka otomatis setelah kamu memenuhi ketentuan pada tingkat
           sebelumnya.
         </p>
         <div class="levels__row">
-          <template v-for="(l, i) in levels" :key="l.title">
+          <template v-for="l in levels" :key="l.title">
             <article class="level">
-              <small class="level__tahap">{{ l.tahap }}</small>
               <h3>{{ l.title }}</h3>
               <p>{{ l.text }}</p>
             </article>
-            <span v-if="i < levels.length - 1" class="levels__arrow" aria-hidden="true">→</span>
+            <span class="levels__arrow" aria-hidden="true">→</span>
           </template>
         </div>
       </div>
@@ -614,18 +611,9 @@ const footerColumns = [
   margin-top: 14px;
 }
 
-/* Penanda kuning di bawah judul */
-.marked {
-  display: inline;
-  background: linear-gradient(transparent 82%, var(--yellow) 82%, var(--yellow) 92%, transparent 92%);
-  padding-bottom: 2px;
-}
-.split__text .marked {
-  display: block;
-  width: 100%;
-}
-.marked--light {
-  color: #fff;
+/* Sorotan spidol kuning di belakang potongan judul (persis Figma) */
+.hl {
+  background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
 }
 .marked--block {
   display: block;
@@ -810,7 +798,7 @@ const footerColumns = [
 }
 .levels__row {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr auto;
   align-items: center;
   gap: 12px;
 }
@@ -819,13 +807,6 @@ const footerColumns = [
   border-radius: var(--radius);
   padding: 24px;
   height: 100%;
-}
-.level__tahap {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--muted);
-  margin-bottom: 6px;
 }
 .level h3 {
   font-size: 1rem;
