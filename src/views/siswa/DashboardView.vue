@@ -133,6 +133,14 @@ const dash = computed(() => `${((hasil.value?.persen ?? 0) / 100) * KELILING} ${
     </header>
 
     <main class="space-y-5 px-6 py-6">
+      <!-- Status pengambilan data (store sudah menyediakan loading/error) -->
+      <p v-if="progress.loading" class="rounded-2xl border border-[#e6ebf2] bg-white px-5 py-3 text-[13px] text-[#6b778c]">
+        Memuat data dashboard…
+      </p>
+      <p v-else-if="progress.error" class="rounded-2xl border border-[#f3c2c2] bg-[#fdf0f0] px-5 py-3 text-[13px] text-[#a33333]">
+        Tidak dapat memuat data terbaru. Periksa koneksi lalu muat ulang halaman.
+      </p>
+
       <!-- Banner -->
       <section
         class="rounded-3xl bg-gradient-to-r from-[#0b2150] to-[#154a8f] px-8 py-7 text-white"
