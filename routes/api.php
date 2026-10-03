@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         // [B1-D] Struktur konten dan siswa
         // FQCN dipakai karena TingkatController tanpa awalan sudah dipakai
         // endpoint siswa GET /api/tingkat.
-        Route::apiResource('tingkat', \App\Http\Controllers\Api\Admin\TingkatController::class)->only(['index', 'show', 'update']);
+        Route::apiResource('tingkat', App\Http\Controllers\Api\Admin\TingkatController::class)->only(['index', 'show', 'update']);
         Route::apiResource('kompetensi', KompetensiController::class);
         Route::apiResource('materi', MateriController::class);
         Route::post('materi/{materi}/upload-image', [MateriController::class, 'uploadImage']);
