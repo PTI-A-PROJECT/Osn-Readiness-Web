@@ -64,6 +64,7 @@ class AturanPemetaanSeeder extends Seeder
 
             if ($tingkat === null) {
                 $this->command?->warn("Tingkat urutan {$urutan} belum ada, aturannya dilewati.");
+
                 continue;
             }
 
