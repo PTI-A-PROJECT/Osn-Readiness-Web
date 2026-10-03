@@ -9,6 +9,7 @@ import { pesanError } from '@/lib/errors.js'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import PublicNavbar from '@/components/PublicNavbar.vue'
+import AuthHeroPanel from '@/components/AuthHeroPanel.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -67,48 +68,29 @@ function masukGoogle() {
 </script>
 
 <template>
-  <div class="page">
+  <div class="login fixed inset-0 z-50 overflow-y-auto flex flex-col font-['Inter',system-ui,sans-serif] text-[#0f1b3d] bg-white">
     <PublicNavbar current="login" />
 
-    <main class="content">
-      <!-- KIRI -->
-      <section class="left">
-        <div class="glow glow--yellow"></div>
-        <div class="glow glow--gray"></div>
-
-        <div class="left__inner">
-          <h1 class="hero__title">Selamat Datang<br />Kembali!</h1>
-          <p class="hero__desc">
-            Persiapan OSN Informatika yang terarah: dari pemetaan
-            kompetensi sampai simulasi sesuai standar TOKI.
-          </p>
-
-          <ul class="highlights">
-            <li v-for="item in highlights" :key="item" class="highlights__item">
-              <span class="check">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              </span>
-              {{ item }}
-            </li>
-          </ul>
-        </div>
-      </section>
+    <main class="flex-1 grid grid-cols-1 min-[900px]:grid-cols-2">
+      <AuthHeroPanel
+        :title-lines="['Selamat Datang', 'Kembali!']"
+        description="Persiapan OSN Informatika yang terarah: dari pemetaan kompetensi sampai simulasi sesuai standar TOKI."
+        :items="highlights"
+      />
 
       <!-- KANAN -->
-      <section class="right">
-        <div class="card">
-          <h2 class="card__title">Masuk ke Akun</h2>
-          <p class="card__subtitle">
+      <section class="bg-[#eef2f7] flex items-center justify-center px-6 py-12">
+        <div class="w-full max-w-[400px] bg-white border border-[#e8edf3] rounded-[20px] px-8 pt-[34px] pb-[30px] shadow-[0_12px_30px_rgba(15,27,61,0.08)]">
+          <h2 class="text-[22px] font-bold mb-1.5">Masuk ke Akun</h2>
+          <p class="text-[13px] leading-[1.5] text-[#64748b] mb-6">
             Lanjutkan latihan soal, simulasi, dan pelajari materi kompetisi Informatika.
           </p>
 
-          <form class="form" @submit.prevent="masuk">
-            <div class="field">
-              <label for="email" class="field__label">Alamat Email</label>
-              <div class="field__wrap">
-                <span class="field__icon">
+          <form class="flex flex-col gap-4" @submit.prevent="masuk">
+            <div class="flex flex-col gap-1.5">
+              <label for="email" class="text-[13px] font-semibold text-[#0f1b3d]">Alamat Email</label>
+              <div class="relative">
+                <span class="absolute left-[0.85rem] top-1/2 -translate-y-1/2 flex text-[#94a3b8] pointer-events-none z-[1]">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="5" width="18" height="14" rx="2" />
                     <path d="m3 7 9 6 9-6" />
@@ -122,16 +104,16 @@ function masukGoogle() {
                   fluid
                 />
               </div>
-              <small v-if="emailError" class="field__error">{{ emailError }}</small>
+              <small v-if="emailError" class="text-[11px] text-[#ef4444]">{{ emailError }}</small>
             </div>
 
-            <div class="field">
-              <div class="field__row">
-                <label for="password" class="field__label">Kata Sandi</label>
-                <a href="#" class="forgot" @click.prevent="lupaPassword">Lupa kata sandi?</a>
+            <div class="flex flex-col gap-1.5">
+              <div class="flex items-center justify-between">
+                <label for="password" class="text-[13px] font-semibold text-[#0f1b3d]">Kata Sandi</label>
+                <a href="#" class="text-xs font-semibold text-[#1e4b8f] hover:underline cursor-pointer" @click.prevent="lupaPassword">Lupa kata sandi?</a>
               </div>
-              <div class="field__wrap">
-                <span class="field__icon">
+              <div class="relative">
+                <span class="absolute left-[0.85rem] top-1/2 -translate-y-1/2 flex text-[#94a3b8] pointer-events-none z-[1]">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="4" y="11" width="16" height="10" rx="2" />
                     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
@@ -147,20 +129,24 @@ function masukGoogle() {
                   fluid
                 />
               </div>
-              <small v-if="passwordError" class="field__error">{{ passwordError }}</small>
+              <small v-if="passwordError" class="text-[11px] text-[#ef4444]">{{ passwordError }}</small>
             </div>
 
-            <label class="remember">
-              <input v-model="remember" type="checkbox" />
+            <label class="flex items-center gap-2 text-[13px] text-[#334155] cursor-pointer">
+              <input v-model="remember" type="checkbox" class="w-3.5 h-3.5 accent-[#1e4b8f] cursor-pointer" />
               <span>Ingat saya di perangkat ini</span>
             </label>
 
-            <Button type="submit" label="Masuk →" :loading="loading" class="login-btn p-button" />
+            <Button type="submit" label="Masuk →" :loading="loading" class="login-btn" />
           </form>
 
-          <div class="divider"><span>atau masuk dengan</span></div>
+          <div class="flex items-center gap-2.5 my-5 text-[11.5px] text-[#94a3b8]">
+            <span class="flex-1 h-px bg-[#e2e8f0]"></span>
+            <span>atau masuk dengan</span>
+            <span class="flex-1 h-px bg-[#e2e8f0]"></span>
+          </div>
 
-          <Button type="button" class="google-btn p-button" @click="masukGoogle">
+          <Button type="button" class="google-btn" @click="masukGoogle">
             <svg width="16" height="16" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />
               <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z" />
@@ -170,9 +156,9 @@ function masukGoogle() {
             <span>Masuk dengan Google</span>
           </Button>
 
-          <p class="card__footer">
+          <p class="text-center text-[13px] text-[#64748b] mt-[18px]">
             Belum memiliki akun?
-            <RouterLink to="/register" class="link">Daftar akun siswa</RouterLink>
+            <RouterLink to="/register" class="text-[#0f1b3d] font-bold hover:text-[#1e4b8f] hover:underline">Daftar akun siswa</RouterLink>
           </p>
         </div>
       </section>
@@ -181,242 +167,24 @@ function masukGoogle() {
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap');
-
-.page {
-  --navy: #0f1b3d;
-  --blue: #1e4b8f;
-  --blue-hover: #183d75;
-  --border: #e2e8f0;
-  --muted: #64748b;
-
-  /* Menutup layout pembungkus supaya halaman tampil penuh (full-page) */
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  overflow-y: auto;
-  color-scheme: light;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--navy);
-  background: #fff;
-}
-
-/* ---------- Layout ---------- */
-.content {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-/* ---------- Kiri ---------- */
-.left {
-  position: relative;
-  overflow: hidden;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(60px);
-}
-.glow--yellow {
-  width: 420px;
-  height: 420px;
-  top: 12%;
-  right: 8%;
-  background: radial-gradient(circle, rgba(254, 240, 200, 0.7), rgba(254, 240, 200, 0) 70%);
-}
-.glow--gray {
-  width: 380px;
-  height: 380px;
-  bottom: -120px;
-  right: -40px;
-  background: radial-gradient(circle, rgba(203, 213, 225, 0.55), rgba(203, 213, 225, 0) 70%);
-}
-.left__inner {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  padding: 48px 24px;
-}
-.hero__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 44px;
-  line-height: 1.25;
-  font-weight: 700;
-  margin: 0 0 20px;
-}
-.hero__desc {
-  font-size: 15px;
-  line-height: 1.65;
-  color: #1e3a6b;
-  margin: 0 0 28px;
-  max-width: 380px;
-}
-.highlights {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 335px;
-}
-.highlights__item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  background: #eef2f7;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.check {
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--navy);
-  display: grid;
-  place-items: center;
-}
-
-/* ---------- Kanan / Kartu ---------- */
-.right {
-  background: #eef2f7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
-}
-.card {
-  width: 100%;
-  max-width: 400px;
-  background: #fff;
-  border: 1px solid #e8edf3;
-  border-radius: 20px;
-  padding: 34px 32px 30px;
-  box-shadow: 0 12px 30px rgba(15, 27, 61, 0.08);
-}
-.card__title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 6px;
-}
-.card__subtitle {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--muted);
-  margin: 0 0 24px;
-}
-.card__footer {
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-  margin: 18px 0 0;
-}
-.link {
-  color: var(--navy);
-  font-weight: 700;
-  text-decoration: none;
-}
-.link:hover {
-  color: var(--blue);
-  text-decoration: underline;
-}
-
-/* ---------- Form ---------- */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.forgot {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--blue);
-  text-decoration: none;
-  cursor: pointer;
-}
-.forgot:hover {
-  text-decoration: underline;
-}
-
-/* Field (label + input PrimeVue) */
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.field__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.field__label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--navy);
-}
-.field__wrap {
-  position: relative;
-}
-.field__icon {
-  position: absolute;
-  left: 0.85rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  color: #94a3b8;
-  pointer-events: none;
-  z-index: 1;
-}
-.field__error {
-  font-size: 11px;
-  color: #ef4444;
-}
-.field :deep(.p-inputtext) {
+/* Override PrimeVue (tak bisa via utility); layout sudah Tailwind. */
+:deep(.p-inputtext) {
   height: 46px;
   padding-left: 2.4rem;
   border-radius: 10px;
   font-size: 13.5px;
   background: #fff;
-  color: var(--navy);
-  border-color: var(--border);
+  color: #0f1b3d;
+  border-color: #e2e8f0;
 }
-.field :deep(.p-inputtext::placeholder) {
+:deep(.p-inputtext::placeholder) {
   color: #a0aec0;
 }
-.field :deep(.p-inputtext:enabled:focus) {
+:deep(.p-inputtext:enabled:focus) {
   background: #fff;
-}
-.field :deep(.p-inputtext:enabled:focus) {
-  border-color: var(--blue);
+  border-color: #1e4b8f;
   box-shadow: 0 0 0 3px rgba(30, 75, 143, 0.12);
 }
-.remember {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #334155;
-  cursor: pointer;
-}
-.remember input {
-  width: 14px;
-  height: 14px;
-  accent-color: var(--blue);
-  cursor: pointer;
-}
-
-/* Override tampilan PrimeVue Button */
 .login-btn.p-button {
   width: 100%;
   justify-content: center;
@@ -424,13 +192,14 @@ function masukGoogle() {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  background: var(--blue);
-  border: 1px solid var(--blue);
+  background: #1e4b8f;
+  border: 1px solid #1e4b8f;
   color: #fff;
+  white-space: nowrap;
 }
 .login-btn.p-button:not(:disabled):hover {
-  background: var(--blue-hover);
-  border-color: var(--blue-hover);
+  background: #183d75;
+  border-color: #183d75;
 }
 .google-btn.p-button {
   width: 100%;
@@ -441,46 +210,11 @@ function masukGoogle() {
   font-size: 14px;
   font-weight: 600;
   background: #f1f4f8;
-  border: 1px solid var(--border);
-  color: var(--navy);
+  border: 1px solid #e2e8f0;
+  color: #0f1b3d;
+  white-space: nowrap;
 }
 .google-btn.p-button:not(:disabled):hover {
   background: #e8edf3;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
-  font-size: 11.5px;
-  color: #94a3b8;
-}
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* Cegah teks tombol turun baris */
-.google-btn.p-button,
-.login-btn.p-button {
-  white-space: nowrap;
-}
-
-/* ---------- Responsif ---------- */
-@media (max-width: 900px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-  .left__inner {
-    margin: 0 auto;
-    padding: 40px 24px 16px;
-  }
-  .hero__title {
-    font-size: 34px;
-  }
 }
 </style>
