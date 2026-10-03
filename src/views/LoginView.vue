@@ -31,6 +31,7 @@ const highlights = [
 function validasi() {
   emailError.value = ''
   passwordError.value = ''
+  email.value = email.value.trim()
   if (!email.value) emailError.value = 'Email wajib diisi'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) emailError.value = 'Format email tidak valid'
   if (!password.value) passwordError.value = 'Password wajib diisi'

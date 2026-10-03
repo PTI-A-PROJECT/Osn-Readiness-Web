@@ -28,24 +28,26 @@ Aturan arah dependensi:
 
 ## 2. Kontrak integrasi dengan siap-osn-be (terverifikasi 2026-09-25)
 
-Base URL dev: `http://localhost:8080/api/v1` (langsung, tanpa proxy Vite).
+Base URL dev: `http://localhost:8000/api` (Laravel `Osn-Readiness-Web`, langsung tanpa proxy Vite).
 
 | Method + path | Auth | Sukses | Data |
 |---|---|---|---|
-| `POST /auth/register` | — | 201 "Registrasi berhasil" | user `{id, nama, email, role, created_at}` |
-| `POST /auth/login` | — | 200 "Login berhasil" | `{user}` + `Set-Cookie` |
-| `POST /auth/logout` | cookie | 200 "Logout berhasil" | cookie di-expire |
-| `GET /auth/me` | cookie | 200 "Data user berhasil diambil" | user |
+| `POST /auth/register` | — | 201 "Registrasi berhasil" | `{user, token}` |
+| `POST /auth/login` | — | 200 "Login berhasil" | `{user, token}` |
+| `POST /auth/logout` | Bearer | 200 "Logout berhasil" | token dihapus |
+| `GET /auth/me` | Bearer | 200 "OK" | user |
 | `GET /admin/ping` | cookie + `super_admin` | 200, `data.message: "pong"` | — |
 
 Aturan kontrak:
 
-1. Envelope sukses: `{success: true, message, data}`.
-   Envelope error: `{success: false, message}` — pesan selalu Bahasa Indonesia,
+1. Envelope sukses Laravel: `{message, data}` (tanpa `success`).
+   Error validasi: 422 + `{message, errors: {field: [...]}}` —
    dibaca via `pesanError()` (`lib/errors.js`), jangan parsing string manual.
-2. Token hanya lewat cookie httpOnly `siap_osn_token`
-   (`HttpOnly; SameSite=Lax`, tanpa `Secure` di HTTP dev).
-   **Dilarang** menyimpan token di store / localStorage / URL.
+2. Auth Laravel (Sanctum) memakai Bearer token (`data.token` saat login/
+   register), disimpan di `localStorage` (`TOKEN_KEY` di `lib/api.js`)
+   dan dikirim via interceptor. Bentuk user Laravel (`UserResource`:
+   `name`, `roles[]`) dipetakan ke bentuk FE (`nama`, `role`) di
+   `mapUser()` (`stores/auth.js`). Role: `siswa`, `Super Admin`→`super_admin`.
 3. Setiap request wajib `withCredentials: true` (sudah default di `lib/api.js`).
 4. Dev WAJIB di `http://localhost:5173` persis (bukan `127.0.0.1`, bukan port
    lain) — `strictPort: true`. Origin lain ditolak backend (403).
@@ -87,7 +89,8 @@ Aturan kontrak:
 
 ## 6. Larangan ringkas
 
-- Token di JS/localStorage/URL. ❌
+- Token di URL. ❌ (Token di `localStorage` + header `Authorization`
+  diizinkan khusus untuk Bearer Sanctum — lihat §2.)
 - `axios`/`fetch` di luar `lib/api.js`. ❌
 - Import statis `router`/`stores` dari `lib/`. ❌
 - `primevue@latest`, `tailwind.config.js`, teks UI Inggris. ❌

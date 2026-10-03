@@ -1,8 +1,21 @@
 import axios from 'axios'
 
+// Kunci penyimpanan Bearer token Sanctum. Ditaruh di sini (bukan di
+// stores/auth) agar tidak circular: api <- stores/auth <- router.
+export const TOKEN_KEY = 'siap_osn_token'
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true, // wajib: kirim & terima cookie lintas origin
+  withCredentials: true,
+})
+
+// Backend Laravel (Sanctum) memakai Bearer token, bukan cookie sesi.
+// Token dibaca langsung dari localStorage agar tidak circular:
+// api <- stores/auth <- router (lihat response interceptor di bawah).
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem(TOKEN_KEY)
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
 })
 
 api.interceptors.response.use(

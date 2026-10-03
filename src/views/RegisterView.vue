@@ -28,6 +28,8 @@ function validasi() {
   passwordError.value = ''
   konfirmasiError.value = ''
   setujuError.value = ''
+  nama.value = nama.value.trim()
+  email.value = email.value.trim()
   if (nama.value.trim().length < 3) namaError.value = 'Nama minimal 3 karakter'
   if (!email.value) emailError.value = 'Email wajib diisi'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) emailError.value = 'Format email tidak valid'
@@ -42,12 +44,17 @@ async function daftar() {
   if (!validasi()) return
   loading.value = true
   try {
-    await auth.register({ nama: nama.value, email: email.value, password: password.value })
+    await auth.register({ nama: nama.value, email: email.value, password: password.value, konfirmasi: konfirmasi.value })
     toast.add({ severity: 'success', summary: 'Registrasi berhasil', detail: 'Silakan masuk dengan akun baru', life: 4000 })
     router.push('/login')
   } catch (err) {
-    if (err?.response?.status === 400 && err?.response?.data?.message === 'Email sudah terdaftar') {
-      emailError.value = 'Email sudah terdaftar'
+    // Laravel: 422 + { message, errors: { email: [...] } } (pesan Inggris).
+    // Backend Go lama: 400 + "Email sudah terdaftar". Tangani keduanya.
+    const emailGanda =
+      err?.response?.data?.errors?.email?.[0] ??
+      (err?.response?.data?.message === 'Email sudah terdaftar' ? 'Email sudah terdaftar' : null)
+    if (emailGanda && (err?.response?.status === 400 || err?.response?.status === 422)) {
+      emailError.value = emailGanda.includes('already been taken') ? 'Email sudah terdaftar' : emailGanda
     } else {
       toast.add({ severity: 'error', summary: 'Registrasi gagal', detail: pesanError(err), life: 4000 })
     }
