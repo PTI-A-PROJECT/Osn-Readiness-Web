@@ -36,7 +36,7 @@ Before getting started, make sure your environment meets the following requireme
 - [PHP](https://www.php.net/downloads) 8.3 or higher
 - [Composer](https://getcomposer.org/) 2.x
 - [Node.js](https://nodejs.org/) 20 or higher (for frontend assets)
-- A supported database: MySQL 8.x / PostgreSQL / SQLite
+- A supported database: PostgreSQL 16 (wajib, bukan opsional)
 
 ---
 
@@ -139,15 +139,29 @@ composer install
 cp .env.example .env
 ```
 
-Open `.env` and update the database connection settings to match your local setup:
+Database yang dipakai adalah **PostgreSQL 16**.Skema memakai index unik parsial, kolom `jsonb`, dan check constraint, jadi SQLite dan MySQL tidak bisa dipakai untuk database aplikasi maupun database test.
+
+```bash
+./vendor/bin/sail up -d
+```
+
+`compose.yaml` sudah menyediakan service `pgsql` yang ikut membuat database test (`osn_readiness_testing`) saat pertama kali container berjalan.
+
+Kalau Postgres berjalan di luar Docker, sesuaikan `.env`:
 
 ```
-DB_CONNECTION=mysql
+DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=osn_readiness_web
+DB_PORT=5432
+DB_DATABASE=osn_readiness
 DB_USERNAME=your_db_user
 DB_PASSWORD=your_db_password
+```
+
+Buat database test juga secara manual di server Postgres yang sama:
+
+```sql
+CREATE DATABASE osn_readiness_testing;
 ```
 
 **4. Generate application key:**
@@ -159,8 +173,10 @@ php artisan key:generate
 **5. Run database migrations:**
 
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
+
+`--seed` mengisi role dan permission, tingkat seleksi, aturan pemetaan, dan akun Super Admin. Di lingkungan `local` dan `testing` seeder juga mengisi konten contoh (materi, bank soal, latihan, simulasi).
 
 **6. Start the development server:**
 

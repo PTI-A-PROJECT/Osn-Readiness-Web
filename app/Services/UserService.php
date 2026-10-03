@@ -23,7 +23,7 @@ class UserService implements UserServiceInterface
     {
         return DB::transaction(function () use ($data): User {
             $user = $this->userRepository->create($data);
-            $user->assignRole('user');
+            $user->assignRole('siswa');
 
             return $user;
         });
@@ -31,11 +31,42 @@ class UserService implements UserServiceInterface
 
     public function updateUser(User $user, array $data): User
     {
-        return $this->userRepository->update($user, $data);
+        $updated = $this->userRepository->update($user, $data);
+
+        // Menonaktifkan lewat edit harus langsung menutup akses, sama seperti
+        // memanggil deactivateUser secara eksplisit.
+        if (! $updated->is_active) {
+            $this->revokeAllTokens($updated);
+        }
+
+        return $updated;
+    }
+
+    public function deactivateUser(User $user): User
+    {
+        return DB::transaction(function () use ($user): User {
+            $updated = $this->userRepository->update($user, ['is_active' => false]);
+            $this->revokeAllTokens($updated);
+
+            return $updated;
+        });
     }
 
     public function deleteUser(User $user): bool
     {
-        return $this->userRepository->delete($user);
+        return DB::transaction(function () use ($user): bool {
+            $this->revokeAllTokens($user);
+
+            return $this->userRepository->delete($user);
+        });
+    }
+
+    /**
+     * Soft delete dan penonaktifan mencabut semua token supaya akun tidak bisa
+     * dipakai lagi walau token-nya sudah dibagikan.
+     */
+    private function revokeAllTokens(User $user): void
+    {
+        $user->tokens()->delete();
     }
 }

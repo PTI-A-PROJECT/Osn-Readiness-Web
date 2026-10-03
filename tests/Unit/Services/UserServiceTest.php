@@ -32,7 +32,7 @@ class UserServiceTest extends TestCase
         $mockUser = Mockery::mock($user)->makePartial();
         $mockUser->shouldReceive('assignRole')
             ->once()
-            ->with('user')
+            ->with('siswa')
             ->andReturnSelf();
 
         $userRepository->shouldReceive('create')
@@ -90,6 +90,61 @@ class UserServiceTest extends TestCase
         $result = $userService->deleteUser($user);
 
         $this->assertTrue($result);
+    }
+
+    public function test_deactivate_user_menonaktifkan_dan_mencabut_semua_token(): void
+    {
+        $userRepository = Mockery::mock(UserRepositoryInterface::class);
+
+        $user = User::factory()->create();
+        $user->createToken('a')->plainTextToken;
+        $user->createToken('b')->plainTextToken;
+        $this->assertSame(2, $user->tokens()->count());
+
+        $userRepository->shouldReceive('update')
+            ->once()
+            ->with($user, ['is_active' => false])
+            ->andReturn($user->forceFill(['is_active' => false]));
+
+        $result = (new UserService($userRepository))->deactivateUser($user);
+
+        $this->assertFalse($result->is_active);
+        $this->assertSame(0, $user->tokens()->count());
+    }
+
+    public function test_delete_user_mencabut_semua_token(): void
+    {
+        $userRepository = Mockery::mock(UserRepositoryInterface::class);
+
+        $user = User::factory()->create();
+        $user->createToken('a')->plainTextToken;
+        $this->assertSame(1, $user->tokens()->count());
+
+        $userRepository->shouldReceive('delete')
+            ->once()
+            ->with($user)
+            ->andReturn(true);
+
+        $result = (new UserService($userRepository))->deleteUser($user);
+
+        $this->assertTrue($result);
+        $this->assertSame(0, $user->tokens()->count());
+    }
+
+    public function test_update_user_menonaktifkan_akan_mencabut_token(): void
+    {
+        $userRepository = Mockery::mock(UserRepositoryInterface::class);
+
+        $user = User::factory()->create();
+        $user->createToken('a')->plainTextToken;
+
+        $userRepository->shouldReceive('update')
+            ->once()
+            ->andReturn($user->forceFill(['is_active' => false]));
+
+        (new UserService($userRepository))->updateUser($user, ['is_active' => false]);
+
+        $this->assertSame(0, $user->tokens()->count());
     }
 
     public function test_list_calls_repository_paginate(): void
