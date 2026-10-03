@@ -12,12 +12,16 @@ use App\Contracts\Repositories\MateriRepositoryInterface;
 use App\Contracts\Repositories\PemetaanMateriRepositoryInterface;
 use App\Contracts\Repositories\PretestJawabanRepositoryInterface;
 use App\Contracts\Repositories\PretestRepositoryInterface;
+use App\Contracts\Repositories\ProgressBelajarRepositoryInterface;
+use App\Contracts\Repositories\QuizJawabanRepositoryInterface;
+use App\Contracts\Repositories\QuizPengerjaanRepositoryInterface;
 use App\Contracts\Repositories\RekomendasiMateriRepositoryInterface;
 use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
+use App\Contracts\Services\BelajarServiceInterface;
 use App\Contracts\Services\KompetensiServiceInterface;
 use App\Contracts\Services\KonteksSoalServiceInterface;
 use App\Contracts\Services\LatihanServiceInterface;
@@ -39,6 +43,9 @@ use App\Repositories\Eloquent\MateriRepository;
 use App\Repositories\Eloquent\PemetaanMateriRepository;
 use App\Repositories\Eloquent\PretestJawabanRepository;
 use App\Repositories\Eloquent\PretestRepository;
+use App\Repositories\Eloquent\ProgressBelajarRepository;
+use App\Repositories\Eloquent\QuizJawabanRepository;
+use App\Repositories\Eloquent\QuizPengerjaanRepository;
 use App\Repositories\Eloquent\RekomendasiMateriRepository;
 use App\Repositories\Eloquent\SoalRepository;
 use App\Repositories\Eloquent\TingkatSeleksiRepository;
@@ -50,6 +57,8 @@ use App\Services\Admin\SiswaService;
 use App\Services\Admin\TingkatService as AdminTingkatService;
 use App\Services\AturanService;
 use App\Services\AuthService;
+use App\Services\BelajarService;
+use App\Services\LatihanService;
 use App\Services\PenilaianBelumDiimplementasi;
 use App\Services\PretestService;
 use App\Services\PutaranService;
@@ -94,9 +103,12 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SyaratSimulasiServiceInterface::class, SyaratSimulasiService::class);
         $this->app->bind(PretestServiceInterface::class, PretestService::class);
 
-        // Kontraknya sudah final di B1-C, implementasinya menyusul. Stub ini
-        // menjaga NilaiUlangJob tetap bisa di-resolve untuk dua jenis itu.
-        $this->app->bind(LatihanServiceInterface::class, PenilaianBelumDiimplementasi::class);
+        // [B2-B] Latihan yang sesungguhnya menggantikan stub B1-C/B2-A.
+        $this->app->bind(BelajarServiceInterface::class, BelajarService::class);
+        $this->app->bind(ProgressBelajarRepositoryInterface::class, ProgressBelajarRepository::class);
+        $this->app->bind(QuizPengerjaanRepositoryInterface::class, QuizPengerjaanRepository::class);
+        $this->app->bind(QuizJawabanRepositoryInterface::class, QuizJawabanRepository::class);
+        $this->app->bind(LatihanServiceInterface::class, LatihanService::class);
         $this->app->bind(SimulasiServiceInterface::class, PenilaianBelumDiimplementasi::class);
         $this->app->bind(SoalPickerServiceInterface::class, SoalPickerService::class);
 
