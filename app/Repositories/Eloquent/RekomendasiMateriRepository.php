@@ -18,20 +18,23 @@ class RekomendasiMateriRepository extends BaseRepository implements RekomendasiM
     {
         $waktu = now();
 
-        $siap = [];
-
         foreach ($baris as $barisSatu) {
-            $siap[] = [
-                'pretest_id' => $pretestId,
-                'user_id' => $userId,
-                'materi_id' => $barisSatu['materi_id'],
-                'prioritas' => $barisSatu['prioritas'],
-                'created_at' => $waktu,
-                'updated_at' => $waktu,
-            ];
+            // Upsert, bukan insert: penilaian ulang untuk pre-test yang sama
+            // (misalnya job NilaiUlangJob yang berjalan dua kali) tidak boleh
+            // menabrak unique constraint pretest_id + materi_id.
+            $this->model->newQuery()->updateOrCreate(
+                [
+                    'pretest_id' => $pretestId,
+                    'materi_id' => $barisSatu['materi_id'],
+                ],
+                [
+                    'user_id' => $userId,
+                    'prioritas' => $barisSatu['prioritas'],
+                    'created_at' => $waktu,
+                    'updated_at' => $waktu,
+                ],
+            );
         }
-
-        $this->model->newQuery()->insert($siap);
     }
 
     public function untukPretest(int $pretestId): Collection

@@ -110,6 +110,58 @@ class ImporKontenTest extends TestCase
         $this->assertSame(2, Soal::count());
     }
 
+    public function test_materi_bertumburu_dengan_materi_lain_tetap_impor(): void
+    {
+        // Tingkat ini sudah punya materi urutan 1 dari seed contoh; berkas
+        // impor juga meminta urutan 1, sehingga importer harus memilih slot
+        // kosong, bukan gagal pada unique constraint.
+        $tingkat = $this->bankTingkat();
+        Materi::factory()->create([
+            'tingkat_id' => $tingkat->id,
+            'urutan' => 1,
+            'id_sumber' => 'sudah-ada',
+        ]);
+
+        $this->artisan('impor:konten', ['folder' => $this->folder])->assertSuccessful();
+
+        $materi = Materi::query()->where('id_sumber', 'kab-01')->firstOrFail();
+
+        $this->assertNotSame(1, $materi->urutan);
+        $this->assertDatabaseHas('materi', ['id_sumber' => 'sudah-ada', 'urutan' => 1]);
+    }
+
+    public function test_impor_ulang_tidak_menabrak_urutan_materi_lain(): void
+    {
+        $tingkat = $this->bankTingkat();
+
+        // Materi lain memakai urutan 1 lebih dulu, sehingga berkas impor yang
+        // juga meminta urutan 1 harus tetap bisa diperbarui.
+        Materi::factory()->create([
+            'tingkat_id' => $tingkat->id,
+            'urutan' => 1,
+            'id_sumber' => 'sudah-ada',
+        ]);
+
+        $this->artisan('impor:konten', ['folder' => $this->folder])->assertSuccessful();
+        $kedua = $this->artisan('impor:konten', ['folder' => $this->folder]);
+
+        $kedua->assertSuccessful();
+        $this->assertDatabaseHas('materi', ['id_sumber' => 'sudah-ada', 'urutan' => 1]);
+    }
+
+    public function test_alt_teks_gambar_materi_tetap_utuh(): void
+    {
+        $this->bankTingkat();
+
+        $this->artisan('impor:konten', ['folder' => $this->folder])->assertSuccessful();
+
+        $materi = Materi::query()->where('id_sumber', 'kab-01')->firstOrFail();
+
+        // Alt teks harus utuh; string dobel-kutip akan membaca $1 sebagai
+        // variabel PHP dan mengosongkan teksnya.
+        $this->assertStringContainsString('![Diagram Venn](/storage/materi/kab-01-gambar-1.png)', $materi->isi_materi);
+    }
+
     public function test_id_sumber_kembar_membatalkan_seluruh_impor(): void
     {
         $this->bankTingkat();
