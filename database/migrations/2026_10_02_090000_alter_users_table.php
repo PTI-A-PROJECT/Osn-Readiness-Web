@@ -25,6 +25,10 @@ return new class extends Migration
                 $table->softDeletesTz();
             }
 
+            if (! Schema::hasColumn('users', 'tingkat_aktif_id')) {
+                $table->unsignedBigInteger('tingkat_aktif_id')->nullable();
+            }
+
             foreach (['role', 'kelas', 'sekolah'] as $kolom) {
                 if (Schema::hasColumn('users', $kolom)) {
                     $table->dropColumn($kolom);
