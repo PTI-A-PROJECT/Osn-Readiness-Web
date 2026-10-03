@@ -30,6 +30,7 @@ class MateriResource extends JsonResource
             'deskripsi' => $materi->deskripsi,
             'isi_materi' => $materi->isi_materi,
             'file_materi' => $this->getFileMateriUrl($materi->file_materi),
+            'gambar' => $materi->gambar === null ? null : Storage::disk('public')->url($materi->gambar),
             'created_at' => $materi->created_at,
             'updated_at' => $materi->updated_at,
         ];
