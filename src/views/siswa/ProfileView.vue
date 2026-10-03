@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
+import { pesanError } from '@/lib/errors.js'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -71,7 +72,7 @@ async function saveProfile() {
   } catch (e) {
     notice.value = {
       type: 'error',
-      text: e?.response?.data?.message ?? 'Profil belum tersimpan. Periksa koneksi lalu coba lagi.',
+      text: pesanError(e, 'Profil belum tersimpan. Periksa koneksi lalu coba lagi.'),
     }
   } finally {
     saving.value = false

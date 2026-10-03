@@ -133,8 +133,8 @@ const dash = computed(() => `${((hasil.value?.persen ?? 0) / 100) * KELILING} ${
     </header>
 
     <main class="space-y-5 px-6 py-6">
-      <!-- Status pengambilan data (store sudah menyediakan loading/error) -->
-      <p v-if="progress.loading" class="rounded-2xl border border-[#e6ebf2] bg-white px-5 py-3 text-[13px] text-[#6b778c]">
+      <!-- Status pengambilan data. Refresh di latar (data sudah ada) tidak menampilkan banner. -->
+      <p v-if="progress.loading && !progress.loaded" class="rounded-2xl border border-[#e6ebf2] bg-white px-5 py-3 text-[13px] text-[#6b778c]">
         Memuat data dashboard…
       </p>
       <p v-else-if="progress.error" class="rounded-2xl border border-[#f3c2c2] bg-[#fdf0f0] px-5 py-3 text-[13px] text-[#a33333]">

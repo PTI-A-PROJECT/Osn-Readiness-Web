@@ -22,4 +22,19 @@ describe('pesanError', () => {
   it('fallback bila tak ada pesan', () => {
     expect(pesanError({})).toBe('Terjadi kesalahan, coba lagi')
   })
+
+  it('pesan backend diteruskan', () => {
+    const err = { response: { status: 401, data: { message: 'Email atau password salah' } } }
+    expect(pesanError(err)).toBe('Email atau password salah')
+  })
+
+  it('offline dan timeout memakai pesan Indonesia', () => {
+    expect(pesanError({ isAxiosError: true, code: 'ERR_NETWORK' })).toMatch(/Tidak dapat terhubung/)
+    expect(pesanError({ isAxiosError: true, code: 'ECONNABORTED' })).toMatch(/terlalu lama/)
+  })
+
+  it('5xx tidak menampilkan pesan Inggris dari Laravel', () => {
+    const err = { response: { status: 500, data: { message: 'Server Error' } } }
+    expect(pesanError(err, 'Gagal menyimpan')).toBe('Gagal menyimpan')
+  })
 })

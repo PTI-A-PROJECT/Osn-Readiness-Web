@@ -1,18 +1,14 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { api, TOKEN_KEY } from '@/lib/api.js'
-import { ENDPOINTS } from '@/lib/endpoints.js'
-import { mapUser } from '@/lib/user.js'
+import { authService } from '@/services/auth.js'
 import { useProgressStore } from '@/stores/progress.js'
 
-// Backend Laravel (Sanctum): auth pakai Bearer token yang dikembalikan
-// login/register sebagai `data.token`, disimpan di localStorage agar sesi
-// bertahan setelah refresh. Lihat ARCHITECTURE_RULES §2 + lib/endpoints.js
-// (daftar path) + lib/user.js (bentuk user).
+// Store tidak tahu HTTP/backend: token persisten + request lewat
+// authService, bentuk user dari services/mappers/user.js.
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const initialized = ref(false)
-  const token = ref(localStorage.getItem(TOKEN_KEY))
+  const token = ref(authService.tokenTersimpan())
 
   const isAuthenticated = computed(() => user.value !== null)
   const isSuperAdmin = computed(() => user.value?.role === 'super_admin')
@@ -27,21 +23,27 @@ export const useAuthStore = defineStore('auth', () => {
 
   function saveToken(t) {
     token.value = t
-    if (t) localStorage.setItem(TOKEN_KEY, t)
-    else localStorage.removeItem(TOKEN_KEY)
+    authService.simpanToken(t)
   }
 
+  let meInflight = null // navigasi beruntun saat boot tidak memanggil /auth/me dua kali
+
   // Dipanggil sekali oleh router guard saat aplikasi dibuka.
-  async function fetchMe() {
+  function fetchMe() {
+    meInflight ??= muatUser().finally(() => {
+      meInflight = null
+    })
+    return meInflight
+  }
+
+  async function muatUser() {
     if (!token.value) {
       user.value = null
       initialized.value = true
       return
     }
     try {
-      // GET /auth/me -> { message, data: user }
-      const { data } = await api.get(ENDPOINTS.auth.me)
-      user.value = mapUser(data.data)
+      user.value = await authService.me()
     } catch {
       user.value = null
       saveToken(null)
@@ -51,41 +53,33 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(payload) {
-    // POST /auth/login {email, password} -> { message, data: {user, token} }
-    const { data } = await api.post(ENDPOINTS.auth.login, payload)
+    const res = await authService.login(payload)
     useProgressStore().$reset() // pastikan tidak ada sisa data akun sebelumnya
-    saveToken(data.data.token)
-    user.value = mapUser(data.data.user)
+    saveToken(res.token)
+    user.value = res.user
     return user.value
   }
 
   // Tidak otomatis login — pemanggil redirect ke /login.
-  async function register(payload) {
-    // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.
-    const { data } = await api.post(ENDPOINTS.auth.register, {
-      name: payload.nama,
-      email: payload.email,
-      password: payload.password,
-      password_confirmation: payload.konfirmasi,
-    })
-    return mapUser(data.data.user)
+  function register(payload) {
+    return authService.register(payload)
   }
 
   // Simpan perubahan profil (nama, email) dari halaman Profil.
   // sekolah/kelas hanya disimpan lokal (belum ada kolomnya di backend).
   // Karena sapaan & avatar membaca user.value, nama baru langsung tampil di mana-mana.
   async function updateProfile(payload) {
-    const { data } = await api.put(ENDPOINTS.auth.profile, {
-      name: payload.nama ?? payload.name,
+    const terbaru = await authService.updateProfile({
+      nama: payload.nama ?? payload.name,
       email: payload.email,
     })
-    user.value = { ...user.value, ...payload, ...mapUser(data?.data) }
+    user.value = { ...user.value, ...payload, ...terbaru }
     return user.value
   }
 
   async function logout() {
     try {
-      await api.post(ENDPOINTS.auth.logout)
+      await authService.logout()
     } catch {
       // Abaikan: sesi lokal tetap dibersihkan agar user kembali ke /login.
     } finally {

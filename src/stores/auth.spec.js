@@ -1,24 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { api, TOKEN_KEY } from '@/lib/api.js'
+import { authService } from '@/services/auth.js'
 import { useAuthStore } from '@/stores/auth.js'
 
-vi.mock('@/lib/api', () => ({
-  TOKEN_KEY: 'siap_osn_token',
-  api: { get: vi.fn(), post: vi.fn(), put: vi.fn() },
+// Store tidak tahu HTTP: service di-mock total (lihat §1.3.5 + §5.4).
+vi.mock('@/services/auth.js', () => ({
+  authService: {
+    tokenTersimpan: vi.fn(),
+    simpanToken: vi.fn(),
+    me: vi.fn(),
+    login: vi.fn(),
+    register: vi.fn(),
+    updateProfile: vi.fn(),
+    logout: vi.fn(),
+  },
 }))
-
-// Bentuk UserResource dari backend Laravel.
-const userLaravel = {
-  id: 1,
-  name: 'Budi',
-  email: 'budi@example.com',
-  is_active: true,
-  tingkat_aktif_id: null,
-  roles: ['siswa'],
-  created_at: '2026-09-25T00:00:00Z',
-  updated_at: '2026-09-25T00:00:00Z',
-}
 
 const userSiswa = {
   id: 1,
@@ -31,16 +27,16 @@ const userSiswa = {
 beforeEach(() => {
   setActivePinia(createPinia())
   vi.resetAllMocks()
-  localStorage.clear()
+  authService.tokenTersimpan.mockReturnValue(null)
 })
 
 describe('auth store', () => {
   it('fetchMe sukses mengisi user dan initialized', async () => {
-    localStorage.setItem(TOKEN_KEY, 'tok123')
-    api.get.mockResolvedValue({ data: { message: 'OK', data: userLaravel } })
+    authService.tokenTersimpan.mockReturnValue('tok123')
+    authService.me.mockResolvedValue(userSiswa)
     const auth = useAuthStore()
     await auth.fetchMe()
-    expect(api.get).toHaveBeenCalledWith('/auth/me')
+    expect(authService.me).toHaveBeenCalled()
     expect(auth.user).toEqual(userSiswa)
     expect(auth.initialized).toBe(true)
     expect(auth.isAuthenticated).toBe(true)
@@ -48,59 +44,63 @@ describe('auth store', () => {
     expect(auth.isSuperAdmin).toBe(false)
   })
 
-  it('fetchMe tanpa token tidak memanggil API', async () => {
+  it('fetchMe tanpa token tidak memanggil service', async () => {
     const auth = useAuthStore()
     await auth.fetchMe()
-    expect(api.get).not.toHaveBeenCalled()
+    expect(authService.me).not.toHaveBeenCalled()
     expect(auth.user).toBeNull()
     expect(auth.initialized).toBe(true)
   })
 
-  it('fetchMe 401 mengosongkan user dan token', async () => {
-    localStorage.setItem(TOKEN_KEY, 'tok-basi')
-    api.get.mockRejectedValue({ response: { status: 401 } })
+  it('fetchMe gagal mengosongkan user dan token', async () => {
+    authService.tokenTersimpan.mockReturnValue('tok-basi')
+    authService.me.mockRejectedValue({ response: { status: 401 } })
     const auth = useAuthStore()
     await auth.fetchMe()
     expect(auth.user).toBeNull()
     expect(auth.initialized).toBe(true)
     expect(auth.isAuthenticated).toBe(false)
-    expect(localStorage.getItem(TOKEN_KEY)).toBeNull()
+    expect(authService.simpanToken).toHaveBeenCalledWith(null)
   })
 
-  it('login menyimpan token dan user terpeta', async () => {
-    api.post.mockResolvedValue({ data: { message: 'Login berhasil', data: { user: userLaravel, token: 'tok123' } } })
+  it('login menyimpan token dan user dari service', async () => {
+    authService.login.mockResolvedValue({ user: userSiswa, token: 'tok123' })
     const auth = useAuthStore()
     const user = await auth.login({ email: 'budi@example.com', password: 'password123' })
-    expect(api.post).toHaveBeenCalledWith('/auth/login', {
+    expect(authService.login).toHaveBeenCalledWith({
       email: 'budi@example.com',
       password: 'password123',
     })
     expect(user).toEqual(userSiswa)
     expect(auth.isAuthenticated).toBe(true)
-    expect(localStorage.getItem(TOKEN_KEY)).toBe('tok123')
+    expect(authService.simpanToken).toHaveBeenCalledWith('tok123')
   })
 
-  it('register mengirim password_confirmation tanpa login', async () => {
-    api.post.mockResolvedValue({ data: { message: 'Registrasi berhasil', data: { user: userLaravel } } })
+  it('register meneruskan payload tanpa login', async () => {
+    authService.register.mockResolvedValue(userSiswa)
     const auth = useAuthStore()
-    const result = await auth.register({ nama: 'Budi', email: 'budi@example.com', password: 'password123', konfirmasi: 'password123' })
-    expect(api.post).toHaveBeenCalledWith('/auth/register', {
-      name: 'Budi',
-      email: 'budi@example.com',
-      password: 'password123',
-      password_confirmation: 'password123',
-    })
+    const payload = { nama: 'Budi', email: 'budi@example.com', password: 'password123', konfirmasi: 'password123' }
+    const result = await auth.register(payload)
+    expect(authService.register).toHaveBeenCalledWith(payload)
     expect(result).toEqual(userSiswa)
     expect(auth.user).toBeNull()
   })
 
+  it('updateProfile menggabung data server di atas payload', async () => {
+    const auth = useAuthStore()
+    authService.updateProfile.mockResolvedValue({ ...userSiswa, nama: 'Budi Baru' })
+    const result = await auth.updateProfile({ nama: 'Budi Baru', email: 'budi@example.com' })
+    expect(result.nama).toBe('Budi Baru')
+    expect(auth.user.nama).toBe('Budi Baru')
+  })
+
   it('logout mengosongkan user dan token meski request gagal', async () => {
-    localStorage.setItem(TOKEN_KEY, 'tok123')
-    api.post.mockRejectedValue(new Error('network'))
+    authService.tokenTersimpan.mockReturnValue('tok123')
+    authService.logout.mockRejectedValue(new Error('network'))
     const auth = useAuthStore()
     auth.user = userSiswa
     await auth.logout()
     expect(auth.user).toBeNull()
-    expect(localStorage.getItem(TOKEN_KEY)).toBeNull()
+    expect(authService.simpanToken).toHaveBeenCalledWith(null)
   })
 })

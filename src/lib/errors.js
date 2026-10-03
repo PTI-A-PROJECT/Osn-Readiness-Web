@@ -1,6 +1,8 @@
 // Cara membaca error backend terpusat di sini (jangan parsing di view).
 //
 // - pesanError: pesan umum dari envelope ({ message }) atau fallback.
+//   Error tanpa respons (offline/timeout), 429, dan 5xx (pesan Laravel
+//   berbahasa Inggris, mis. "Server Error") diganti pesan Indonesia.
 // - pesanField: pesan validasi per field. Laravel: 422 +
 //   { errors: { email: [...] } } (pesan Inggris) -> diterjemahkan ke
 //   Bahasa Indonesia bila ada padanannya. Backend Go lama: 400 +
@@ -11,6 +13,15 @@ const TERJEMAHAN_FIELD = {
 }
 
 export function pesanError(err, fallback = 'Terjadi kesalahan, coba lagi') {
+  if (err?.code === 'ECONNABORTED' || err?.code === 'ETIMEDOUT') {
+    return 'Server terlalu lama merespons, coba lagi'
+  }
+  if (err?.isAxiosError && !err.response && err.code !== 'ERR_CANCELED') {
+    return 'Tidak dapat terhubung ke server. Periksa koneksi internet.'
+  }
+  const status = err?.response?.status
+  if (status === 429) return 'Terlalu banyak percobaan, tunggu sebentar lalu coba lagi'
+  if (status >= 500) return fallback
   return err?.response?.data?.message ?? fallback
 }
 

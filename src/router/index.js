@@ -1,16 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
-import AuthLayout from '@/layouts/AuthLayout.vue'
-import AppLayout from '@/layouts/AppLayout.vue'
-import LoginView from '@/views/LoginView.vue'
-import RegisterView from '@/views/RegisterView.vue'
-import SiswaDashboardView from '@/views/siswa/DashboardView.vue'
-import SiswaProfileView from '@/views/siswa/ProfileView.vue'
-import PlaceholderView from '@/views/siswa/PlaceholderView.vue'
-import AdminDashboardView from '@/views/admin/DashboardView.vue'
-import ForbiddenView from '@/views/ForbiddenView.vue'
-import NotFoundView from '@/views/NotFoundView.vue'
 import LandingPage from '@/views/LandingPage.vue'
+
+// Landing di-bundle langsung (halaman pertama mayoritas pengunjung).
+// Sisanya lazy: tiap halaman jadi chunk sendiri dan baru diunduh saat dibuka,
+// jadi bundle awal tidak ikut membawa dashboard admin/siswa.
+const AuthLayout = () => import('@/layouts/AuthLayout.vue')
+const AppLayout = () => import('@/layouts/AppLayout.vue')
+const LoginView = () => import('@/views/LoginView.vue')
+const RegisterView = () => import('@/views/RegisterView.vue')
+const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
+const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
+const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
+const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
+const ForbiddenView = () => import('@/views/ForbiddenView.vue')
+const NotFoundView = () => import('@/views/NotFoundView.vue')
 
 // Satu-satunya tempat yang tahu pemetaan role -> dashboard.
 // Dipakai guard di bawah dan LoginView setelah login sukses.

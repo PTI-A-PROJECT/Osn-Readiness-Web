@@ -1,6 +1,6 @@
 // Bentuk user versi FE: { id, nama, email, role, created_at }.
 // Backend Laravel mengirim UserResource: { id, name, email, roles[], ... }.
-// Semua konversi terpusat di sini (dipakai stores + view).
+// Semua konversi terpusat di sini (dipakai services + stores).
 
 // Spatie role -> role FE. Tak dikenal -> null (guard menolak masuk).
 export function mapRole(roles) {

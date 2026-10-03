@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mapRole, mapUser } from '@/lib/user.js'
+import { mapRole, mapUser } from '@/services/mappers/user.js'
 
 const userLaravel = {
   id: 1,
