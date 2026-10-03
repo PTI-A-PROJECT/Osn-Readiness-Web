@@ -23,9 +23,9 @@ const competencies = [
 ]
 
 const priorities = [
-  { title: 'Prioritas tinggi', note: 'Belum dikuasai', tone: 'yellow' },
-  { title: 'Prioritas sedang', note: 'Perlu latihan', tone: 'blue' },
-  { title: 'Dikuasai', note: 'Simulasi tersedia', tone: 'green' },
+  { icon: '📊', judul: 'Dynamic Programming Dasar', sub: 'Prioritas tinggi · Belum dikuasai', tone: 'yellow' },
+  { icon: '🌳', judul: 'Graf & Pohon Lanjutan', sub: 'Prioritas sedang · Perlu latihan', tone: 'blue' },
+  { icon: '✅', judul: 'Struktur Data Dasar', sub: 'Dikuasai · Simulasi tersedia', tone: 'green' },
 ]
 
 const steps = [
@@ -49,37 +49,42 @@ const steps = [
 
 const features = [
   {
+    icon: '📝',
     title: 'Pre-test Adaptif',
     text: 'Mengukur kemampuan awal sesuai tingkat seleksi yang kamu pilih, sebelum masuk ke materi.',
   },
   {
+    icon: '🧭',
     title: 'Pemetaan Kompetensi Otomatis',
     text: 'Sistem menganalisis hasil pre-test dan menunjukkan kompetensi mana yang sudah kuat dan yang masih perlu ditingkatkan.',
     dark: true,
   },
   {
+    icon: '🎯',
     title: 'Rekomendasi Materi Personalisasi',
     text: 'Belajar difokuskan pada materi yang paling kamu butuhkan, bukan menghabiskan waktu untuk topik yang sudah dikuasai.',
   },
   {
+    icon: '🏁',
     title: 'Simulasi Seleksi Bertingkat',
     text: 'Rasakan simulasi ujian yang merepresentasikan kondisi seleksi sesungguhnya di tiap tingkat.',
   },
   {
+    icon: '💡',
     title: 'Pembahasan & Evaluasi Tiap Soal',
     text: 'Setiap soal dilengkapi pembahasan agar kamu tahu persis letak kesalahan dan cara memperbaikinya.',
     dark: true,
   },
   {
+    icon: '📈',
     title: 'Dashboard Progress Belajar',
     text: 'Pantau perkembangan belajar, riwayat pre-test, latihan, dan simulasi dalam satu tempat.',
   },
 ]
 
 const levels = [
-  { title: 'Kabupaten', text: 'Titik awal persiapan — membangun fondasi kompetensi dasar Informatika.' },
-  { title: 'Provinsi', text: 'Materi dan simulasi meningkat mengikuti standar seleksi tingkat provinsi.' },
-  { title: 'Nasional', text: 'Simulasi seleksi tertinggi untuk membekali menghadapi kompetisi nasional.' },
+  { tahap: 'Tahap 1', title: 'Kabupaten', text: 'Titik awal persiapan — membangun fondasi kompetensi dasar Informatika.' },
+  { tahap: 'Tahap 2', title: 'Provinsi', text: 'Materi dan simulasi meningkat mengikuti standar seleksi tingkat provinsi.' },
 ]
 
 const footerColumns = [
@@ -111,7 +116,7 @@ const footerColumns = [
 <template>
   <div class="lp">
     <!-- Navbar -->
-    <PublicNavbar :links="navLinks" current="landing" />
+    <PublicNavbar :links="navLinks" current="landing" theme="dark" />
 
     <!-- Hero -->
     <section class="hero">
@@ -139,7 +144,10 @@ const footerColumns = [
         <div class="map-card" role="img" aria-label="Contoh pemetaan kompetensi tingkat Provinsi">
           <div class="map-card__head">
             <strong>Pemetaan Kompetensi</strong>
-            <span class="pill pill--muted">Tingkat Provinsi</span>
+            <span class="map-card__user">
+              <span class="map-card__avatar" aria-hidden="true"></span>
+              <span class="pill pill--muted">Tingkat Provinsi</span>
+            </span>
           </div>
           <ul class="bars">
             <li v-for="c in competencies" :key="c.name">
@@ -165,6 +173,7 @@ const footerColumns = [
     <section id="kenapa" class="section section--white">
       <div class="container split">
         <div class="split__text">
+          <small class="kicker kicker--dark">Masalahnya</small>
           <h2 class="marked">Kenapa persiapan OSN itu sulit?</h2>
           <p>
             Jenjang seleksi bertahap (Kabupaten → Provinsi → Nasional), materi yang luas, dan
@@ -197,11 +206,15 @@ const footerColumns = [
     <section id="solusi" class="section section--navy">
       <div class="container split split--reverse">
         <div class="priority-card">
+          <h3 class="priority-card__title">Rekomendasi Materi Kamu</h3>
           <span class="tag tag--green">Diperbarui otomatis</span>
           <ul>
-            <li v-for="p in priorities" :key="p.title">
-              <span class="dot" :class="`dot--${p.tone}`"></span>
-              <span>{{ p.title }} · {{ p.note }}</span>
+            <li v-for="p in priorities" :key="p.judul">
+              <span class="rec-icon" :class="`dot--${p.tone}`" aria-hidden="true">{{ p.icon }}</span>
+              <span>
+                <strong>{{ p.judul }}</strong>
+                <small>{{ p.sub }}</small>
+              </span>
             </li>
           </ul>
         </div>
@@ -240,10 +253,11 @@ const footerColumns = [
     <!-- Fitur -->
     <section id="fitur" class="section section--white">
       <div class="container">
+        <small class="kicker kicker--dark">Fitur unggulan</small>
         <h2 class="marked marked--block">Semua yang kamu butuhkan untuk satu jalur persiapan</h2>
         <div class="features">
           <article v-for="f in features" :key="f.title" class="feature" :class="{ 'feature--dark': f.dark }">
-            <span class="feature__icon" aria-hidden="true"></span>
+            <span class="feature__icon" aria-hidden="true">{{ f.icon }}</span>
             <h3>{{ f.title }}</h3>
             <p>{{ f.text }}</p>
           </article>
@@ -254,6 +268,7 @@ const footerColumns = [
     <!-- Tingkat seleksi -->
     <section id="tingkat" class="section section--soft">
       <div class="container levels">
+        <small class="kicker kicker--dark kicker--center">Jenjang seleksi</small>
         <h2 class="marked marked--center">Naik tingkat sesuai pencapaianmu</h2>
         <p class="levels__lead">
           Tingkat berikutnya terbuka otomatis setelah kamu memenuhi ketentuan pada tingkat
@@ -262,10 +277,11 @@ const footerColumns = [
         <div class="levels__row">
           <template v-for="(l, i) in levels" :key="l.title">
             <article class="level">
+              <small class="level__tahap">{{ l.tahap }}</small>
               <h3>{{ l.title }}</h3>
               <p>{{ l.text }}</p>
             </article>
-            <span v-if="i < levels.length - 1" class="levels__arrow" aria-hidden="true">›</span>
+            <span v-if="i < levels.length - 1" class="levels__arrow" aria-hidden="true">→</span>
           </template>
         </div>
       </div>
@@ -475,6 +491,17 @@ const footerColumns = [
   font-size: 0.88rem;
   margin-bottom: 18px;
 }
+.map-card__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.map-card__avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, #4b8df8, #f5c96a, #38b27a, #4b8df8);
+}
 .bars {
   list-style: none;
   margin: 0;
@@ -573,6 +600,14 @@ const footerColumns = [
   font-size: 0.78rem;
   color: #c8d2ea;
 }
+.kicker--dark {
+  color: var(--ink);
+  font-weight: 600;
+}
+.kicker--center {
+  display: block;
+  text-align: center;
+}
 
 /* Penanda kuning di bawah judul */
 .marked {
@@ -616,6 +651,10 @@ const footerColumns = [
   border-radius: 14px;
   padding: 20px 24px 8px;
 }
+.priority-card__title {
+  font-size: 0.95rem;
+  margin: 0 0 4px;
+}
 .priority-card ul {
   list-style: none;
   margin: 12px 0 0;
@@ -630,6 +669,15 @@ const footerColumns = [
   font-size: 0.8rem;
   color: var(--muted);
 }
+.priority-card li strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+.priority-card li small {
+  display: block;
+  font-size: 0.72rem;
+}
 .tag {
   display: block;
   width: fit-content;
@@ -643,11 +691,14 @@ const footerColumns = [
   background: #e3f5ec;
   color: #1f8a5b;
 }
-.dot {
+.rec-icon {
   width: 32px;
   height: 32px;
   border-radius: 8px;
   flex: none;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
 }
 .dot--yellow {
   background: #fdf0d5;
@@ -714,12 +765,14 @@ const footerColumns = [
   padding: 22px;
 }
 .feature__icon {
-  display: block;
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
   border-radius: 8px;
   background: var(--soft);
   margin-bottom: 26px;
+  font-size: 1.2rem;
 }
 .feature h3 {
   font-size: 0.92rem;
@@ -751,7 +804,7 @@ const footerColumns = [
 }
 .levels__row {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
 }
@@ -760,6 +813,13 @@ const footerColumns = [
   border-radius: var(--radius);
   padding: 24px;
   height: 100%;
+}
+.level__tahap {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 6px;
 }
 .level h3 {
   font-size: 1rem;

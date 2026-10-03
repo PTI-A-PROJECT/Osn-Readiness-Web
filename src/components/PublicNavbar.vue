@@ -9,11 +9,12 @@ import { RouterLink } from 'vue-router'
 defineProps({
   links: { type: Array, default: () => [] },
   current: { type: String, default: 'landing' }, // landing | login | register
+  theme: { type: String, default: 'light' }, // light | dark (dark = di atas hero navy)
 })
 </script>
 
 <template>
-  <header class="pubnav">
+  <header class="pubnav" :class="`pubnav--${theme}`">
     <div class="pubnav__inner">
       <RouterLink to="/" class="pubnav__brand" aria-label="SIAP OSN — ke beranda">
         <span class="pubnav__logo" aria-hidden="true">
@@ -127,6 +128,44 @@ defineProps({
   outline: 2px solid #1e4b8f;
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Varian gelap: dipakai landing di atas hero navy (sesuai Figma) */
+.pubnav--dark {
+  background: #1a2d4d;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+.pubnav--dark .pubnav__brand,
+.pubnav--dark .pubnav__name {
+  color: #fff;
+}
+.pubnav--dark .pubnav__links a {
+  color: #c8d2ea;
+}
+.pubnav--dark .pubnav__links a:hover {
+  color: #fff;
+}
+.pubnav--dark .pubnav__btn--outline {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.pubnav--dark .pubnav__btn--outline:hover {
+  border-color: #fff;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.pubnav--dark .pubnav__btn--primary {
+  background: #fff;
+  color: #1a2d4d;
+}
+.pubnav--dark .pubnav__btn--primary:hover {
+  background: #e8edf8;
+}
+.pubnav--dark .pubnav__brand:focus-visible,
+.pubnav--dark .pubnav__links a:focus-visible,
+.pubnav--dark .pubnav__btn:focus-visible {
+  outline-color: #f5c96a;
 }
 
 @media (max-width: 900px) {
