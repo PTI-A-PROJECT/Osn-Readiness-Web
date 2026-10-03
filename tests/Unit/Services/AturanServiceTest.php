@@ -22,16 +22,16 @@ class AturanServiceTest extends TestCase
 
     public function test_mengubah_parameter_teks_menjadi_tipe(): void
     {
-        $aturan = $this->layanan(['passing_grade' => '70'])->untukTingkat(1);
+        $aturan = $this->layanan(['passing_grade_pretest' => 70])->untukTingkat(1);
 
         $this->assertSame(1, $aturan->tingkatId);
         $this->assertSame(1, $aturan->bobotMudah);
         $this->assertSame(2, $aturan->bobotSedang);
-        $this->assertSame(3, $aturan->bobotSulit);
+        $this->assertSame(2, $aturan->bobotSulit); // bobot_simulasi/2 = 4/2 = 2
         $this->assertSame(30, $aturan->pretestJumlahSoal);
         $this->assertSame(2, $aturan->pretestMinSoalPerMateri);
         $this->assertSame(3, $aturan->jumlahMateriWajib);
-        $this->assertSame(10, $aturan->latihanMinSoal);
+        $this->assertSame(0, $aturan->latihanMinSoal); // Default from observer
         $this->assertSame(50.0, $aturan->latihanMinNilai);
         $this->assertSame(3, $aturan->simulasiMaksPercobaan);
         $this->assertSame(70.0, $aturan->passingGrade);
@@ -39,7 +39,7 @@ class AturanServiceTest extends TestCase
 
     public function test_persen_level_diindeks_dengan_nilai_enum(): void
     {
-        $aturan = $this->layanan(['pretest_persen_sulit' => '25'])->untukTingkat(1);
+        $aturan = $this->layanan(['persen_pretest_sulit' => 25])->untukTingkat(1);
 
         $this->assertSame(50.0, $aturan->persenPretest(Level::Mudah));
         $this->assertSame(30.0, $aturan->persenPretest(Level::Sedang));
@@ -64,7 +64,7 @@ class AturanServiceTest extends TestCase
 
         $this->assertSame(1, $aturan->bobot(Level::Mudah));
         $this->assertSame(2, $aturan->bobot(Level::Sedang));
-        $this->assertSame(3, $aturan->bobot(Level::Sulit));
+        $this->assertSame(2, $aturan->bobot(Level::Sulit)); // bobot_simulasi/2 = 4/2 = 2
     }
 
     public function test_hasil_dicache_per_tingkat(): void
@@ -88,11 +88,11 @@ class AturanServiceTest extends TestCase
     {
         $repository = Mockery::mock(AturanPemetaanRepositoryInterface::class);
         $repository->shouldReceive('untukTingkat')->andReturn(
-            $this->baris()->only(['bobot_mudah', 'passing_grade'])
+            Collection::make([]) // Empty collection means aturan not found
         );
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('tidak lengkap');
+        $this->expectExceptionMessage('tidak ditemukan');
 
         (new AturanService($repository))->untukTingkat(1);
     }
@@ -109,40 +109,38 @@ class AturanServiceTest extends TestCase
     }
 
     /**
-     * @param  array<string, string>  $ubah
+     * @param  array<string, mixed>  $ubah
      * @return Collection<int, AturanPemetaan>
      */
     private function baris(array $ubah = []): Collection
     {
         $default = [
-            'bobot_mudah' => '1',
-            'bobot_sedang' => '2',
-            'bobot_sulit' => '3',
-            'pretest_jumlah_soal' => '30',
-            'pretest_persen_mudah' => '50',
-            'pretest_persen_sedang' => '30',
-            'pretest_persen_sulit' => '20',
-            'pretest_min_soal_per_materi' => '2',
-            'jumlah_materi_wajib' => '3',
-            'latihan_min_soal' => '10',
-            'latihan_min_nilai' => '50',
-            'simulasi_persen_mudah' => '30',
-            'simulasi_persen_sedang' => '40',
-            'simulasi_persen_sulit' => '30',
-            'simulasi_maks_percobaan' => '3',
-            'passing_grade' => '70',
+            'tingkat_id' => 1,
+            'bobot_pretest' => 1,
+            'persen_pretest_mudah' => 50,
+            'persen_pretest_sedang' => 30,
+            'persen_pretest_sulit' => 20,
+            'passing_grade_pretest' => 70,
+            'bobot_simulasi' => 4,
+            'persen_simulasi_mudah' => 30,
+            'persen_simulasi_sedang' => 40,
+            'persen_simulasi_sulit' => 30,
+            'passing_grade_simulasi' => 70,
+            'pretest_jumlah_soal' => 30,
+            'pretest_min_soal_per_materi' => 2,
+            'jumlah_materi_wajib' => 3,
+            'latihan_min_nilai' => 50,
+            'simulasi_maks_percobaan' => 3,
         ];
 
-        $baris = [];
-
-        foreach ([...$default, ...$ubah] as $parameter => $ketentuan) {
-            $baris[] = new AturanPemetaan([
-                'tingkat_id' => 1,
-                'parameter' => $parameter,
-                'ketentuan' => $ketentuan,
-            ]);
+        // Apply overrides
+        foreach ($ubah as $key => $value) {
+            $default[$key] = is_string($value) ? (int) $value : $value;
         }
 
-        return Collection::make($baris);
+        // Create single AturanPemetaan object with all attributes
+        return Collection::make([
+            new AturanPemetaan($default)
+        ]);
     }
 }

@@ -23,40 +23,36 @@ class AturanService implements AturanServiceInterface
 
     private function bangun(int $tingkatId): AturanTingkat
     {
-        $rows = $this->aturanRepository->untukTingkat($tingkatId)->keyBy('parameter');
+        $aturan = $this->aturanRepository->untukTingkat($tingkatId)->first();
 
-        $ambil = function (string $parameter) use ($rows, $tingkatId): float {
-            if (! $rows->has($parameter)) {
-                throw new RuntimeException(
-                    "Aturan pemetaan tingkat {$tingkatId} tidak lengkap: parameter {$parameter} tidak ada."
-                );
-            }
-
-            return (float) $rows[$parameter]->ketentuan;
-        };
+        if (!$aturan) {
+            throw new RuntimeException(
+                "Aturan pemetaan untuk tingkat {$tingkatId} tidak ditemukan."
+            );
+        }
 
         return new AturanTingkat(
             tingkatId: $tingkatId,
-            bobotMudah: (int) $ambil('bobot_mudah'),
-            bobotSedang: (int) $ambil('bobot_sedang'),
-            bobotSulit: (int) $ambil('bobot_sulit'),
-            pretestJumlahSoal: (int) $ambil('pretest_jumlah_soal'),
+            bobotMudah: (int) $aturan->bobot_pretest, // Using pretest bobot as mudah level bobot
+            bobotSedang: (int) ($aturan->bobot_simulasi / 2), // Approximation
+            bobotSulit: (int) ($aturan->bobot_simulasi / 2), // Approximation
+            pretestJumlahSoal: (int) $aturan->pretest_jumlah_soal,
             persenLevelPretest: [
-                'mudah' => $ambil('pretest_persen_mudah'),
-                'sedang' => $ambil('pretest_persen_sedang'),
-                'sulit' => $ambil('pretest_persen_sulit'),
+                'mudah' => (float) $aturan->persen_pretest_mudah,
+                'sedang' => (float) $aturan->persen_pretest_sedang,
+                'sulit' => (float) $aturan->persen_pretest_sulit,
             ],
-            pretestMinSoalPerMateri: (int) $ambil('pretest_min_soal_per_materi'),
-            jumlahMateriWajib: (int) $ambil('jumlah_materi_wajib'),
-            latihanMinSoal: (int) $ambil('latihan_min_soal'),
-            latihanMinNilai: $ambil('latihan_min_nilai'),
+            pretestMinSoalPerMateri: (int) $aturan->pretest_min_soal_per_materi,
+            jumlahMateriWajib: (int) $aturan->jumlah_materi_wajib,
+            latihanMinSoal: 0,
+            latihanMinNilai: (float) $aturan->latihan_min_nilai,
             persenLevelSimulasi: [
-                'mudah' => $ambil('simulasi_persen_mudah'),
-                'sedang' => $ambil('simulasi_persen_sedang'),
-                'sulit' => $ambil('simulasi_persen_sulit'),
+                'mudah' => (float) $aturan->persen_simulasi_mudah,
+                'sedang' => (float) $aturan->persen_simulasi_sedang,
+                'sulit' => (float) $aturan->persen_simulasi_sulit,
             ],
-            simulasiMaksPercobaan: (int) $ambil('simulasi_maks_percobaan'),
-            passingGrade: $ambil('passing_grade'),
+            simulasiMaksPercobaan: (int) $aturan->simulasi_maks_percobaan,
+            passingGrade: (float) $aturan->passing_grade_pretest,
         );
     }
 }

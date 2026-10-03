@@ -28,7 +28,7 @@ class AturanPemetaanApiTest extends TestCase
         $this->superAdmin->assignRole('Super Admin');
 
         $this->tingkat = TingkatSeleksi::factory()->create();
-        $this->aturan = AturanPemetaan::factory()->create(['tingkat_id' => $this->tingkat->id]);
+        $this->aturan = $this->tingkat->aturanPemetaan()->first();
     }
 
     public function test_can_show_aturan_pemetaan(): void
@@ -42,6 +42,8 @@ class AturanPemetaanApiTest extends TestCase
     public function test_show_aturan_pemetaan_not_found(): void
     {
         $tingkatBaru = TingkatSeleksi::factory()->create();
+        // Delete the auto-created aturan to test the not-found scenario
+        $tingkatBaru->aturanPemetaan()->delete();
 
         $this->actingAs($this->superAdmin)
             ->getJson("api/admin/tingkat/{$tingkatBaru->id}/aturan-pemetaan")
