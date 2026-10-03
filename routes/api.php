@@ -1,13 +1,17 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AturanPemetaanController;
 use App\Http\Controllers\Api\Admin\KompetensiController;
 use App\Http\Controllers\Api\Admin\KonteksSoalController;
+use App\Http\Controllers\Api\Admin\LatihanController;
 use App\Http\Controllers\Api\Admin\MateriController;
+use App\Http\Controllers\Api\Admin\PembahasanController;
+use App\Http\Controllers\Api\Admin\SimulasiController;
 use App\Http\Controllers\Api\Admin\SiswaController;
+use App\Http\Controllers\Api\Admin\SoalController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PretestController;
 use App\Http\Controllers\Api\TingkatController;
-use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,30 +57,29 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     // [B3-A] Simulasi, kelulusan, dan review.
     // [B3-B] Dashboard dan riwayat.
 
-    // Modul users lama. B1-D memindahkannya ke /api/admin/siswa.
-    Route::apiResource('users', UserController::class);
-});
+    // [B1-D + B1-E] Admin. Satu grup, satu lapisan: middleware role
+    // Super Admin, lalu policy per endpoint di controller masing-masing.
+    Route::prefix('admin')->middleware('role:Super Admin')->group(function (): void {
+        // [B1-D] Struktur konten dan siswa
+        // FQCN dipakai karena TingkatController tanpa awalan sudah dipakai
+        // endpoint siswa GET /api/tingkat.
+        Route::apiResource('tingkat', \App\Http\Controllers\Api\Admin\TingkatController::class)->only(['index', 'show', 'update']);
+        Route::apiResource('kompetensi', KompetensiController::class);
+        Route::apiResource('materi', MateriController::class);
+        Route::post('materi/{materi}/upload-image', [MateriController::class, 'uploadImage']);
+        Route::apiResource('konteks-soal', KonteksSoalController::class);
+        Route::apiResource('siswa', SiswaController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);
 
-/*
-|--------------------------------------------------------------------------
-| Admin routes
-|--------------------------------------------------------------------------
-| Semua admin route dilindungi dengan role:Super Admin middleware.
-| Hanya Super Admin yang bisa mengakses semua fitur admin.
-*/
-
-Route::middleware(['auth:sanctum', 'active', 'super_admin'])->prefix('admin')->group(function (): void {
-    // [B1-D] Admin Struktur Konten
-    Route::apiResource('tingkat', App\Http\Controllers\Api\Admin\TingkatController::class);
-    Route::apiResource('kompetensi', KompetensiController::class);
-    Route::apiResource('materi', MateriController::class);
-    Route::post('materi/{materi}/upload-image', [MateriController::class, 'uploadImage']);
-    Route::apiResource('konteks-soal', KonteksSoalController::class);
-    Route::apiResource('siswa', SiswaController::class);
-    Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);
-
-    // [B1-E] Admin Soal - to be added
-    // [B1-F] Admin Latihan - to be added
-    // [B1-G] Admin Simulasi - to be added
-    // [B1-H] Admin Dashboard - to be added
+        // [B1-E] Soal, pembahasan, latihan, simulasi, aturan pemetaan
+        Route::apiResource('soal', SoalController::class);
+        Route::post('soal/{soal}/pembahasan', [PembahasanController::class, 'store']);
+        Route::put('soal/{soal}/pembahasan', [PembahasanController::class, 'update']);
+        Route::get('soal/{soal}/pembahasan', [PembahasanController::class, 'show']);
+        Route::delete('soal/{soal}/pembahasan', [PembahasanController::class, 'destroy']);
+        Route::apiResource('latihan', LatihanController::class);
+        Route::apiResource('simulasi', SimulasiController::class);
+        Route::get('tingkat/{tingkat}/aturan-pemetaan', [AturanPemetaanController::class, 'show']);
+        Route::put('tingkat/{tingkat}/aturan-pemetaan', [AturanPemetaanController::class, 'update']);
+    });
 });

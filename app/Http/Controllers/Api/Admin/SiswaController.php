@@ -58,4 +58,15 @@ class SiswaController
             'data' => new UserResource($updated->load('roles')),
         ]);
     }
+
+    public function destroy(User $siswa): JsonResponse
+    {
+        Gate::authorize('delete', $siswa);
+
+        $this->siswaService->delete($siswa->id);
+
+        return response()->json([
+            'message' => 'Siswa berhasil dihapus',
+        ]);
+    }
 }

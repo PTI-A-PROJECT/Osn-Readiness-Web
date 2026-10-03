@@ -55,6 +55,6 @@ class TingkatSeleksi extends Model
      */
     public function aturanPemetaan(): HasMany
     {
-        return $this->hasMany(AturanPemetaan::class);
+        return $this->hasMany(AturanPemetaan::class, 'tingkat_id', 'id');
     }
 }
