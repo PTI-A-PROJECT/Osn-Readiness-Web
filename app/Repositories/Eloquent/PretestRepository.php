@@ -31,4 +31,20 @@ class PretestRepository extends BaseRepository implements PretestRepositoryInter
             ->latest('selesai_pada')
             ->first();
     }
+
+    public function findMilik(int $id, int $userId): ?Pretest
+    {
+        return $this->model->newQuery()
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+    }
+
+    public function findUntukUpdate(int $id): ?Pretest
+    {
+        return $this->model->newQuery()
+            ->where('id', $id)
+            ->lockForUpdate()
+            ->first();
+    }
 }

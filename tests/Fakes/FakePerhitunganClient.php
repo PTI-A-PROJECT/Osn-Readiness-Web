@@ -17,7 +17,7 @@ class FakePerhitunganClient implements PerhitunganClientInterface
     /** @var list<array<string, mixed>> */
     public array $permintaanPretest = [];
 
-    public int $nilai = 75.0;
+    public float $nilai = 75.0;
 
     /** @var int|null bila diisi, panggilan berikutnya melempar 503 */
     public ?int $gagalDengan = null;
