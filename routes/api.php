@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\AturanPemetaanController;
+use App\Http\Controllers\Api\Admin\AturanPemetaanController;
+use App\Http\Controllers\Api\Admin\LatihanController;
+use App\Http\Controllers\Api\Admin\PembahasanController;
+use App\Http\Controllers\Api\Admin\SimulasiController;
+use App\Http\Controllers\Api\Admin\SoalController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\LatihanController;
-use App\Http\Controllers\Api\PembahasanController;
 use App\Http\Controllers\Api\PretestController;
-use App\Http\Controllers\Api\SimulasiController;
-use App\Http\Controllers\Api\SoalController;
 use App\Http\Controllers\Api\TingkatController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::apiResource('users', UserController::class);
 
     // [B1-E] Admin soal & konfigurasi
-    Route::prefix('admin')->group(function (): void {
+    Route::prefix('admin')->middleware('role:Super Admin')->group(function (): void {
         // Soal CRUD
         Route::apiResource('soal', SoalController::class);
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
+use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Guards\SoalGuard;
 use App\Http\Requests\StoreSoalRequest;
 use App\Http\Requests\UpdateSoalRequest;
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Storage;
 
 class SoalController
 {
+    public function __construct(
+        private readonly SoalRepositoryInterface $soalRepository,
+    ) {}
+
     public function index(): AnonymousResourceCollection
     {
         Gate::authorize('viewAny', Soal::class);
@@ -21,10 +26,7 @@ class SoalController
         $perPage = (int) request('per_page', 15);
 
         return SoalDetailResource::collection(
-            Soal::query()
-                ->with('tingkat', 'materi', 'konteks', 'pembahasan')
-                ->latest()
-                ->paginate($perPage)
+            $this->soalRepository->paginasiAdmin($perPage)
         );
     }
 

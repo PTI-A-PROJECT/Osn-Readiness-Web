@@ -38,17 +38,7 @@ class MateriFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'tingkat_id' => $tingkat->id,
-            'kompetensi_id' => Kompetensi::factory()->create(['tingkat_id' => $tingkat->id]),
+            'kompetensi_id' => Kompetensi::factory()->for($tingkat),
         ]);
-    }
-
-    public function configure(): static
-    {
-        return $this->afterMaking(function (Materi $materi): void {
-            // Jika kompetensi_id belum exist, create dengan tingkat yang sama
-            if ($materi->kompetensi_id === null && $materi->tingkat_id !== null) {
-                $materi->kompetensi_id = Kompetensi::factory()->create(['tingkat_id' => $materi->tingkat_id])->id;
-            }
-        });
     }
 }

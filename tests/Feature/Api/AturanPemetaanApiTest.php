@@ -3,6 +3,8 @@
 namespace Tests\Feature\Api;
 
 use App\Models\AturanPemetaan;
+use App\Models\Kompetensi;
+use App\Models\Materi;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,8 +18,6 @@ class AturanPemetaanApiTest extends TestCase
 
     private TingkatSeleksi $tingkat;
 
-    private AturanPemetaan $aturan;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,7 +28,34 @@ class AturanPemetaanApiTest extends TestCase
         $this->superAdmin->assignRole('Super Admin');
 
         $this->tingkat = TingkatSeleksi::factory()->create();
-        $this->aturan = $this->tingkat->aturanPemetaan()->first();
+    }
+
+    /**
+     * Nilai default yang benar menurut aturan bisnis, dipakai untuk payload
+     * update yang valid supaya test fokus pada satu perubahan tiap kasus.
+     *
+     * @return array<string, int>
+     */
+    private function nilaiValid(): array
+    {
+        return [
+            'bobot_mudah' => 1,
+            'bobot_sedang' => 2,
+            'bobot_sulit' => 3,
+            'pretest_jumlah_soal' => 30,
+            'pretest_persen_mudah' => 50,
+            'pretest_persen_sedang' => 30,
+            'pretest_persen_sulit' => 20,
+            'pretest_min_soal_per_materi' => 2,
+            'jumlah_materi_wajib' => 1,
+            'latihan_min_soal' => 10,
+            'latihan_min_nilai' => 50,
+            'simulasi_persen_mudah' => 30,
+            'simulasi_persen_sedang' => 40,
+            'simulasi_persen_sulit' => 30,
+            'simulasi_maks_percobaan' => 3,
+            'passing_grade' => 70,
+        ];
     }
 
     public function test_can_show_aturan_pemetaan(): void
@@ -36,7 +63,9 @@ class AturanPemetaanApiTest extends TestCase
         $this->actingAs($this->superAdmin)
             ->getJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan")
             ->assertOk()
-            ->assertJsonPath('data.tingkat_id', $this->tingkat->id);
+            ->assertJsonPath('data.tingkat_id', $this->tingkat->id)
+            ->assertJsonPath('data.pretest_jumlah_soal', 30)
+            ->assertJsonPath('data.passing_grade', 70);
     }
 
     public function test_show_aturan_pemetaan_not_found(): void
@@ -52,41 +81,123 @@ class AturanPemetaanApiTest extends TestCase
 
     public function test_can_update_aturan_pemetaan(): void
     {
-        $updateData = [
-            'bobot_pretest' => 30,
-            'persen_pretest_mudah' => 25,
-            'persen_pretest_sedang' => 50,
-            'persen_pretest_sulit' => 25,
-            'passing_grade_pretest' => 60,
-            'bobot_simulasi' => 70,
-            'persen_simulasi_mudah' => 30,
-            'persen_simulasi_sedang' => 40,
-            'persen_simulasi_sulit' => 30,
-            'passing_grade_simulasi' => 70,
-            'latihan_min_nilai' => 70,
-            'pretest_jumlah_soal' => 30,
-            'pretest_min_soal_per_materi' => 1,
-            'simulasi_maks_percobaan' => 3,
-            'jumlah_materi_wajib' => 10,
-        ];
+        $this->buatMateri(3);
+
+        $updateData = $this->nilaiValid();
+        $updateData['passing_grade'] = 65;
 
         $this->actingAs($this->superAdmin)
             ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $updateData)
             ->assertOk()
-            ->assertJsonPath('data.bobot_pretest', $updateData['bobot_pretest']);
+            ->assertJsonPath('data.passing_grade', 65);
 
         $this->assertDatabaseHas('aturan_pemetaan', [
             'tingkat_id' => $this->tingkat->id,
-            'bobot_pretest' => $updateData['bobot_pretest'],
+            'parameter' => 'passing_grade',
+            'ketentuan' => '65',
         ]);
     }
 
-    public function test_update_aturan_pemetaan_validates_numeric(): void
+    public function test_update_ditolak_bila_persen_pretest_tidak_berjumlah_100(): void
     {
+        $updateData = $this->nilaiValid();
+        $updateData['pretest_persen_sulit'] = 25; // total 105
+
         $this->actingAs($this->superAdmin)
-            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", [
-                'bobot_pretest' => 'bukan angka',
-            ])
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $updateData)
             ->assertUnprocessable();
+
+        $this->assertDatabaseHas('aturan_pemetaan', [
+            'tingkat_id' => $this->tingkat->id,
+            'parameter' => 'passing_grade',
+            'ketentuan' => '70',
+        ]);
+    }
+
+    public function test_update_ditolak_bila_persen_simulasi_tidak_berjumlah_100(): void
+    {
+        $this->buatMateri(3);
+
+        $updateData = $this->nilaiValid();
+        $updateData['simulasi_persen_mudah'] = 40; // total 110
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $updateData)
+            ->assertUnprocessable();
+    }
+
+    public function test_update_ditolak_bila_jumlah_materi_wajib_melebihi_materi_tingkat(): void
+    {
+        $this->buatMateri(2);
+
+        $updateData = $this->nilaiValid();
+        $updateData['jumlah_materi_wajib'] = 3;
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $updateData)
+            ->assertUnprocessable();
+    }
+
+    public function test_update_ditolak_bila_kuota_soal_kurang_dari_kuota_materi(): void
+    {
+        $this->buatMateri(3);
+
+        $updateData = $this->nilaiValid();
+        $updateData['pretest_jumlah_soal'] = 5; // min 2 per materi, cukup 1 materi saja
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $updateData)
+            ->assertUnprocessable();
+    }
+
+    public function test_update_validates_numeric(): void
+    {
+        $this->buatMateri(3);
+
+        $updateData = $this->nilaiValid();
+        $updateData['bobot_mudah'] = 'bukan angka';
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $updateData)
+            ->assertUnprocessable();
+    }
+
+    public function test_siswa_dilarang_mengubah_aturan(): void
+    {
+        $this->buatMateri(3);
+
+        $siswa = User::factory()->create();
+        $siswa->assignRole('siswa');
+
+        $this->actingAs($siswa)
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $this->nilaiValid())
+            ->assertForbidden();
+    }
+
+    public function test_mengubah_aturan_tidak_menimpa_parameter_lain(): void
+    {
+        $this->buatMateri(3);
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", $this->nilaiValid());
+
+        $bobotSedangSebelum = AturanPemetaan::query()
+            ->where('tingkat_id', $this->tingkat->id)
+            ->where('parameter', 'bobot_sedang')
+            ->value('ketentuan');
+
+        $this->assertSame('2', $bobotSedangSebelum);
+    }
+
+    private function buatMateri(int $jumlah): void
+    {
+        $kompetensi = Kompetensi::factory()->create([
+            'tingkat_id' => $this->tingkat->id,
+        ]);
+
+        Materi::factory()->count($jumlah)->create([
+            'tingkat_id' => $this->tingkat->id,
+            'kompetensi_id' => $kompetensi->id,
+        ]);
     }
 }

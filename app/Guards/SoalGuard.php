@@ -2,36 +2,28 @@
 
 namespace App\Guards;
 
+use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Models\Soal;
 use Illuminate\Validation\ValidationException;
 
 /**
  * Guard to protect forbidden fields when updating a Soal that is already in use.
  *
- * If a Soal has any pengerjaan records associated with it (through its materi,
- * or direct usage), certain fields become read-only to maintain data integrity:
+ * If a Soal has any pengerjaan records associated with it, certain fields
+ * become read-only to maintain data integrity:
  * - pertanyaan
  * - pilihan_jawaban
  * - kunci_jawaban
  * - level
  *
- * This guard detects usage and throws an exception if forbidden updates are attempted.
+ * Soal dipakai berarti barisnya dirujuk oleh jawaban pre-test atau jawaban
+ * quiz yang sudah terekam.
  */
 class SoalGuard
 {
-    /**
-     * Check if the soal is in use (has pengerjaan records).
-     */
     public static function isInUse(Soal $soal): bool
     {
-        try {
-            return \DB::table('pengerjaan')
-                ->where('soal_id', $soal->id)
-                ->exists();
-        } catch (\Throwable) {
-            // Table doesn't exist or other DB error; soal is not in use
-            return false;
-        }
+        return app(SoalRepositoryInterface::class)->sedangDipakai($soal);
     }
 
     /**

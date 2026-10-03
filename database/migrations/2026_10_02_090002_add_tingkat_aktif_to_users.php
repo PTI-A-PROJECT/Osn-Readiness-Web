@@ -6,10 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Tambahkan kolom tingkat_aktif_id dengan foreign key constraint ke users.
-     * Migration ini harus berjalan SETELAH 090001 (tingkat_seleksi tabel sudah ada).
-     */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table): void {
