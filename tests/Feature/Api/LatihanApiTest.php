@@ -2,84 +2,332 @@
 
 namespace Tests\Feature\Api;
 
+use App\Contracts\Clients\PerhitunganClientInterface;
+use App\Enums\JenisPengerjaan;
+use App\Jobs\NilaiUlangJob;
 use App\Models\Kompetensi;
 use App\Models\Materi;
+use App\Models\Pretest;
 use App\Models\Quiz;
+use App\Models\QuizJawaban;
+use App\Models\QuizPengerjaan;
+use App\Models\Soal;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
+use Tests\Fakes\FakePerhitunganClient;
 use Tests\TestCase;
 
 class LatihanApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    private User $superAdmin;
+    private FakePerhitunganClient $perhitungan;
+
+    private User $siswa;
+
+    private TingkatSeleksi $tingkat;
 
     private Materi $materi;
+
+    private Quiz $quiz;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->seed('RolesAndPermissionsSeeder');
+        $this->seed(RolesAndPermissionsSeeder::class);
 
-        $this->superAdmin = User::factory()->create(['email' => 'super@admin.com']);
-        $this->superAdmin->assignRole('Super Admin');
+        $this->perhitungan = new FakePerhitunganClient;
+        $this->app->instance(PerhitunganClientInterface::class, $this->perhitungan);
 
-        $tingkat = TingkatSeleksi::factory()->create();
-        $kompetensi = Kompetensi::factory()->create();
+        $this->siswa = User::factory()->create();
+        $this->siswa->assignRole('siswa');
+
+        $this->tingkat = TingkatSeleksi::factory()->create(['urutan' => 1]);
+        $kompetensi = Kompetensi::factory()->create(['tingkat_id' => $this->tingkat->id]);
         $this->materi = Materi::factory()->create([
-            'tingkat_id' => $tingkat->id,
+            'tingkat_id' => $this->tingkat->id,
             'kompetensi_id' => $kompetensi->id,
         ]);
-    }
-
-    public function test_can_list_latihan(): void
-    {
-        // Create separate materis for each quiz (materi_id is unique in quiz)
-        $materi2 = Materi::factory()->create([
-            'tingkat_id' => $this->materi->tingkat_id,
-            'kompetensi_id' => $this->materi->kompetensi_id,
-        ]);
-
-        Quiz::factory()->create(['materi_id' => $this->materi->id]);
-        Quiz::factory()->create(['materi_id' => $materi2->id]);
-
-        $this->actingAs($this->superAdmin)
-            ->getJson('api/admin/latihan')
-            ->assertOk()
-            ->assertJsonCount(2, 'data');
-    }
-
-    public function test_can_create_latihan(): void
-    {
-        $data = [
+        $this->quiz = Quiz::create([
             'materi_id' => $this->materi->id,
-            'nama_quiz' => 'Latihan Bab 1',
-            'deskripsi' => 'Latihan untuk bab 1',
+            'nama_quiz' => 'Latihan '.$this->materi->judul,
             'jumlah_soal' => 10,
+        ]);
+    }
+
+    /**
+     * Putaran aktif = pretest terakhir siswa di tingkat itu yang sudah
+     * selesai dikerjakan.
+     */
+    private function buatPutaranAktif(): Pretest
+    {
+        return Pretest::factory()->create([
+            'user_id' => $this->siswa->id,
+            'tingkat_id' => $this->tingkat->id,
+            'nilai' => 60.0,
+            'disubmit_pada' => now(),
+            'selesai_pada' => now(),
+        ]);
+    }
+
+    private function isiBankSoal(int $jumlah): void
+    {
+        // Kuota level 50/30/20 dari 10 soal butuh 5 mudah, 3 sedang, 2 sulit;
+        // bank dibuat melebihi itu supaya acak tinggal memilih.
+        $komposisi = [
+            'mudah' => (int) ceil($jumlah * 0.5) + 1,
+            'sedang' => (int) ceil($jumlah * 0.3) + 1,
+            'sulit' => (int) ceil($jumlah * 0.2) + 1,
         ];
 
-        $this->actingAs($this->superAdmin)
-            ->postJson('api/admin/latihan', $data)
+        foreach ($komposisi as $level => $banyak) {
+            Soal::factory()->count($banyak)->create([
+                'tingkat_id' => $this->tingkat->id,
+                'materi_id' => $this->materi->id,
+                'peruntukan' => 'latihan',
+                'level' => $level,
+            ]);
+        }
+    }
+
+    public function test_unauthenticated_returns_401(): void
+    {
+        $this->postJson('/api/quiz/'.$this->quiz->id.'/mulai')->assertUnauthorized();
+    }
+
+    public function test_tingkat_terkunci_dibalas_403(): void
+    {
+        // Tingkat urutan dua terkunci selama tingkat pertama belum lulus.
+        $this->tingkat->update(['urutan' => 2]);
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertForbidden();
+    }
+
+    public function test_mulai_tanpa_putaran_aktif_dibalas_409(): void
+    {
+        $response = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai');
+
+        $response->assertStatus(409);
+        $this->assertSame('BELUM_PRETEST', $response->json('kode'));
+    }
+
+    public function test_mulai_mengembalikan_soal_sejumlah_konfigurasi_quiz(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $soal = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
             ->assertCreated()
-            ->assertJsonPath('data.nama_quiz', $data['nama_quiz']);
+            ->assertJsonPath('data.quiz_id', $this->quiz->id)
+            ->assertJsonPath('data.materi_id', $this->materi->id)
+            ->json('data.soal');
+
+        $this->assertCount(10, $soal);
+        $this->assertArrayNotHasKey('kunci_jawaban', $soal[0]);
     }
 
-    /**
-     * @skip Database constraint issue with UPDATE in test
-     */
-    public function test_can_update_latihan(): void
+    public function test_mulai_dua_kali_melanjutkan_pengerjaan_yang_sama(): void
     {
-        $this->assertTrue(true);
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pertama = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $kedua = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertOk()
+            ->json('data.id');
+
+        $this->assertSame($pertama, $kedua);
+        $this->assertDatabaseCount('quiz_pengerjaan', 1);
     }
 
-    /**
-     * @skip Database constraint issue with DELETE in test
-     */
-    public function test_can_delete_latihan(): void
+    public function test_simpan_jawaban_tersimpan(): void
     {
-        $this->assertTrue(true);
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $soalId = QuizJawaban::where('pengerjaan_id', $pengerjaanId)
+            ->firstOrFail()->soal_id;
+
+        $this->actingAs($this->siswa)
+            ->putJson("/api/quiz-pengerjaan/{$pengerjaanId}/jawaban", [
+                'soal_id' => $soalId,
+                'jawaban_user' => 'Jawaban A',
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('quiz_jawaban', [
+            'pengerjaan_id' => $pengerjaanId,
+            'soal_id' => $soalId,
+            'jawaban_user' => 'Jawaban A',
+        ]);
+    }
+
+    public function test_simpan_jawaban_soal_asing_dibalas_422(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $asing = Soal::factory()->create([
+            'tingkat_id' => $this->tingkat->id,
+            'materi_id' => $this->materi->id,
+            'peruntukan' => 'latihan',
+        ]);
+
+        $this->actingAs($this->siswa)
+            ->putJson("/api/quiz-pengerjaan/{$pengerjaanId}/jawaban", [
+                'soal_id' => $asing->id,
+                'jawaban_user' => 'Jawaban A',
+            ])
+            ->assertUnprocessable();
+    }
+
+    public function test_pengerjaan_milik_orang_lain_tidak_ditemukan(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $penyusup = User::factory()->create();
+        $penyusup->assignRole('siswa');
+
+        $this->actingAs($penyusup)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertNotFound();
+    }
+
+    public function test_submit_menghasilkan_nilai_dan_mengunci_jawaban(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $hasil = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk()
+            ->assertJsonPath('data.quiz_id', $this->quiz->id);
+
+        $this->assertSame(75.0, (float) $hasil->json('data.nilai'));
+        $this->assertNotNull($hasil->json('data.selesai_pada'));
+
+        $jawaban = $hasil->json('data.jawaban');
+        $this->assertCount(10, $jawaban);
+
+        foreach ($jawaban as $baris) {
+            $this->assertIsBool($baris['status_benar']);
+        }
+    }
+
+    public function test_submit_dua_kali_tidak_menilai_ulang(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $pertama = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk()
+            ->json('data');
+
+        $kedua = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk()
+            ->json('data');
+
+        $this->assertSame($pertama['selesai_pada'], $kedua['selesai_pada']);
+        $this->assertSame($pertama['nilai'], $kedua['nilai']);
+        $this->assertSame(1, count($this->perhitungan->permintaanPenilaian));
+    }
+
+    public function test_python_gagal_dibalas_503_dan_job_terkirim(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        Queue::fake();
+
+        $this->perhitungan->gagalDengan = 503;
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertStatus(503)
+            ->assertJsonPath('kode', 'HASIL_SEDANG_DIPROSES');
+
+        Queue::assertPushed(NilaiUlangJob::class, function ($job) use ($pengerjaanId): bool {
+            return $job->jenis === JenisPengerjaan::Latihan && $job->id === $pengerjaanId;
+        });
+    }
+
+    public function test_nilai_terbaik_adalah_maksimum_pengerjaan_selesai(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pertama = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pertama.'/submit')
+            ->assertOk();
+
+        // Pengerjaan kedua dipaksa bernilai lebih tinggi lewat DB, karena
+        // client palsu selalu menghasilkan nilai yang sama.
+        $kedua = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        QuizPengerjaan::where('id', $kedua)->update([
+            'nilai' => 95.0,
+            'disubmit_pada' => now(),
+            'selesai_pada' => now(),
+        ]);
+
+        $respons = $this->actingAs($this->siswa)
+            ->getJson('/api/materi?tingkat_id='.$this->tingkat->id)
+            ->assertOk();
+
+        $this->assertSame(95.0, (float) $respons->json('data.0.nilai_latihan_terbaik'));
     }
 }

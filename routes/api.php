@@ -10,7 +10,11 @@ use App\Http\Controllers\Api\Admin\SimulasiController;
 use App\Http\Controllers\Api\Admin\SiswaController;
 use App\Http\Controllers\Api\Admin\SoalController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BelajarController;
 use App\Http\Controllers\Api\PretestController;
+use App\Http\Controllers\Api\QuizController;
+use App\Http\Controllers\Api\QuizPengerjaanController;
+use App\Http\Controllers\Api\SyaratSimulasiController;
 use App\Http\Controllers\Api\TingkatController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +58,15 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::post('pretest/{pretest}/submit', [PretestController::class, 'submit']);
 
     // [B2-B] Materi, progress, latihan, dan syarat simulasi.
+    Route::get('materi', [BelajarController::class, 'index']);
+    Route::get('materi/{materi}', [BelajarController::class, 'show']);
+    Route::put('materi/{materi}/progress', [BelajarController::class, 'perbaruiProgress']);
+    Route::post('quiz/{quiz}/mulai', [QuizController::class, 'mulai']);
+    Route::get('quiz-pengerjaan/{pengerjaan}', [QuizPengerjaanController::class, 'show']);
+    Route::put('quiz-pengerjaan/{pengerjaan}/jawaban', [QuizPengerjaanController::class, 'simpanJawaban']);
+    Route::post('quiz-pengerjaan/{pengerjaan}/submit', [QuizPengerjaanController::class, 'submit']);
+    Route::get('simulasi/syarat/{tingkat}', [SyaratSimulasiController::class, 'show']);
+
     // [B3-A] Simulasi, kelulusan, dan review.
     // [B3-B] Dashboard dan riwayat.
 
