@@ -24,6 +24,7 @@ use App\Contracts\Services\AuthServiceInterface;
 use App\Contracts\Services\BankSoalServiceInterface;
 use App\Contracts\Services\BelajarServiceInterface;
 use App\Contracts\Services\DashboardAdminServiceInterface;
+use App\Contracts\Services\ImporKontenServiceInterface;
 use App\Contracts\Services\KompetensiServiceInterface;
 use App\Contracts\Services\KonteksSoalServiceInterface;
 use App\Contracts\Services\LatihanServiceInterface;
@@ -62,6 +63,7 @@ use App\Services\AuthService;
 use App\Services\BankSoalService;
 use App\Services\BelajarService;
 use App\Services\DashboardAdminService;
+use App\Services\ImporKontenService;
 use App\Services\LatihanService;
 use App\Services\PenilaianBelumDiimplementasi;
 use App\Services\PretestService;
@@ -109,6 +111,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
         // [B2-B] Latihan yang sesungguhnya menggantikan stub B1-C/B2-A.
         $this->app->bind(BankSoalServiceInterface::class, BankSoalService::class);
+        $this->app->bind(ImporKontenServiceInterface::class, ImporKontenService::class);
         $this->app->bind(DashboardAdminServiceInterface::class, DashboardAdminService::class);
         $this->app->bind(BelajarServiceInterface::class, BelajarService::class);
         $this->app->bind(ProgressBelajarRepositoryInterface::class, ProgressBelajarRepository::class);
