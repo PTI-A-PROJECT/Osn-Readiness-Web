@@ -153,7 +153,7 @@ class ImporKontenService implements ImporKontenServiceInterface
         if ($ada instanceof Materi) {
             $ada->update([
                 'kompetensi_id' => $kompetensi->id,
-                'urutan' => (int) ($metadata['urutan'] ?? $ada->urutan),
+                'urutan' => $this->urutanUntukPembaruan($tingkat->id, $ada, (int) ($metadata['urutan'] ?? $ada->urutan)),
                 'judul' => (string) ($metadata['judul'] ?? $ada->judul),
                 'isi_materi' => $isiMateri,
             ]);
@@ -164,13 +164,62 @@ class ImporKontenService implements ImporKontenServiceInterface
                 'id_sumber' => $idSumber,
                 'tingkat_id' => $tingkat->id,
                 'kompetensi_id' => $kompetensi->id,
-                'urutan' => (int) ($metadata['urutan'] ?? 1),
+                'urutan' => $this->urutanBebas($tingkat->id, (int) ($metadata['urutan'] ?? 1)),
                 'judul' => (string) ($metadata['judul'] ?? $idSumber),
                 'isi_materi' => $isiMateri,
             ]);
 
             $laporan['materi']['masuk']++;
         }
+    }
+
+    /**
+     * Saat memperbarui, urutan dari berkas dipakai hanya bila slotnya masih
+     * bebas. Bila sudah dipakai materi lain, urutan lama dipertahankan;
+     * memindahkan urutan materi yang sudah ada bukan urusan impor.
+     */
+    private function urutanUntukPembaruan(int $tingkatId, Materi $materi, int $diinginkan): int
+    {
+        if ($diinginkan === (int) $materi->urutan) {
+            return $diinginkan;
+        }
+
+        $terpakai = Materi::query()
+            ->where('tingkat_id', $tingkatId)
+            ->whereKeyNot($materi->id)
+            ->pluck('urutan')
+            ->map(fn ($urutan): int => (int) $urutan)
+            ->all();
+
+        return in_array($diinginkan, $terpakai, true)
+            ? (int) $materi->urutan
+            : $diinginkan;
+    }
+
+    /**
+     * Urutan harus unik per tingkat. Bila nomor dari berkas sudah dipakai
+     * materi lain, ambil slot kosong berikutnya; identitas materi tetap
+     * id_sumber, urutan hanya untuk urutan tampil.
+     */
+    private function urutanBebas(int $tingkatId, int $diinginkan): int
+    {
+        $terpakai = Materi::query()
+            ->where('tingkat_id', $tingkatId)
+            ->pluck('urutan')
+            ->map(fn ($urutan): int => (int) $urutan)
+            ->all();
+
+        if (! in_array($diinginkan, $terpakai, true)) {
+            return $diinginkan;
+        }
+
+        $urutan = 1;
+
+        while (in_array($urutan, $terpakai, true)) {
+            $urutan++;
+        }
+
+        return $urutan;
     }
 
     /**
@@ -411,7 +460,9 @@ class ImporKontenService implements ImporKontenServiceInterface
                     Storage::disk('public')->put($tujuan, (string) file_get_contents($sumber));
                 }
 
-                return "![$1](/storage/{$tujuan})";
+                // Alt teks dirakit dengan concatenation. String dobel-kutip
+                // akan membaca $1 sebagai variabel PHP, bukan backreference.
+                return '!['.$cocok[1].'](/storage/'.$tujuan.')';
             },
             $isiMateri,
         );
