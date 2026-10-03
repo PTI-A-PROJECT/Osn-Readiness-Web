@@ -1,13 +1,36 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { api } from '@/lib/api.js'
+import { api, TOKEN_KEY } from '@/lib/api.js'
 import { useProgressStore } from '@/stores/progress.js'
 
-// Analogi Laravel: Auth::user() di sisi browser.
-// Token TIDAK PERNAH disimpan di sini — cookie httpOnly diurus browser.
+// Backend Laravel (Sanctum): auth pakai Bearer token yang dikembalikan
+// login/register sebagai `data.token`, disimpan di localStorage agar sesi
+// bertahan setelah refresh. Ini penyimpangan sadar dari ARCHITECTURE_RULES
+// §2 (yang ditulis untuk backend Go cookie httpOnly).
+// Bentuk user Laravel (UserResource): {id, name, email, roles[], ...}
+// dipetakan ke bentuk FE: {id, nama, email, role, created_at}.
+function mapRole(roles) {
+  const list = Array.isArray(roles) ? roles : []
+  if (list.includes('Super Admin')) return 'super_admin'
+  if (list.includes('siswa')) return 'siswa'
+  return null
+}
+
+export function mapUser(r) {
+  if (!r) return null
+  return {
+    id: r.id,
+    nama: r.nama ?? r.name ?? '',
+    email: r.email ?? '',
+    role: r.role ?? mapRole(r.roles),
+    created_at: r.created_at ?? null,
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const initialized = ref(false)
+  const token = ref(localStorage.getItem(TOKEN_KEY))
 
   const isAuthenticated = computed(() => user.value !== null)
   const isSuperAdmin = computed(() => user.value?.role === 'super_admin')
@@ -20,32 +43,50 @@ export const useAuthStore = defineStore('auth', () => {
     return String(u.nama ?? u.nama_lengkap ?? u.name ?? u.full_name ?? '').trim()
   })
 
+  function saveToken(t) {
+    token.value = t
+    if (t) localStorage.setItem(TOKEN_KEY, t)
+    else localStorage.removeItem(TOKEN_KEY)
+  }
+
   // Dipanggil sekali oleh router guard saat aplikasi dibuka.
   async function fetchMe() {
+    if (!token.value) {
+      user.value = null
+      initialized.value = true
+      return
+    }
     try {
-      // lib/api.js tidak melakukan unwrap (interceptor-nya passthrough),
-      // jadi `data` di sini masih envelope penuh { success, message, data }.
-      // Sesuai ARCHITECTURE_RULES.md §2, /auth/me menaruh user di `data`.
+      // GET /auth/me -> { message, data: user }
       const { data } = await api.get('/auth/me')
-      user.value = data.data
+      user.value = mapUser(data.data)
     } catch {
       user.value = null
+      saveToken(null)
     } finally {
       initialized.value = true
     }
   }
 
   async function login(payload) {
+    // POST /auth/login {email, password} -> { message, data: {user, token} }
     const { data } = await api.post('/auth/login', payload)
     useProgressStore().$reset() // pastikan tidak ada sisa data akun sebelumnya
-    user.value = data.data.user
+    saveToken(data.data.token)
+    user.value = mapUser(data.data.user)
     return user.value
   }
 
   // Tidak otomatis login — pemanggil redirect ke /login.
   async function register(payload) {
-    const { data } = await api.post('/auth/register', payload)
-    return data.data
+    // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.
+    const { data } = await api.post('/auth/register', {
+      name: payload.nama,
+      email: payload.email,
+      password: payload.password,
+      password_confirmation: payload.konfirmasi,
+    })
+    return mapUser(data.data.user)
   }
 
   // Simpan perubahan profil (nama, email, sekolah, kelas) dari halaman Profil.
@@ -63,6 +104,7 @@ export const useAuthStore = defineStore('auth', () => {
       // Abaikan: sesi lokal tetap dibersihkan agar user kembali ke /login.
     } finally {
       user.value = null
+      saveToken(null)
       useProgressStore().$reset()
     }
   }
@@ -70,11 +112,13 @@ export const useAuthStore = defineStore('auth', () => {
   function $reset() {
     user.value = null
     initialized.value = false
+    saveToken(null)
     useProgressStore().$reset()
   }
 
   return {
     user,
+    token,
     initialized,
     isAuthenticated,
     isSuperAdmin,
