@@ -9,6 +9,13 @@ class TingkatSeleksiSeeder extends Seeder
 {
     public function run(): void
     {
+        // Observer aturan dimatikan saat seeding supaya aturan bawaan observer
+        // tidak mengalahkan nilai spesifik dari AturanPemetaanSeeder.
+        TingkatSeleksi::withoutEvents(fn () => $this->buat());
+    }
+
+    private function buat(): void
+    {
         TingkatSeleksi::firstOrCreate(
             ['urutan' => 1],
             [

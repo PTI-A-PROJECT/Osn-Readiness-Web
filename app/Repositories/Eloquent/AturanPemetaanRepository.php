@@ -20,4 +20,14 @@ class AturanPemetaanRepository extends BaseRepository implements AturanPemetaanR
             ->where('tingkat_id', $tingkatId)
             ->get();
     }
+
+    public function simpanBanyak(int $tingkatId, array $parameterKetentuan): void
+    {
+        foreach ($parameterKetentuan as $parameter => $ketentuan) {
+            $this->model->newQuery()->updateOrCreate(
+                ['tingkat_id' => $tingkatId, 'parameter' => $parameter],
+                ['ketentuan' => (string) $ketentuan],
+            );
+        }
+    }
 }
