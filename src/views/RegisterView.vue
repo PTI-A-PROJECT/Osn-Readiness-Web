@@ -28,6 +28,8 @@ function validasi() {
   passwordError.value = ''
   konfirmasiError.value = ''
   setujuError.value = ''
+  nama.value = nama.value.trim()
+  email.value = email.value.trim()
   if (nama.value.trim().length < 3) namaError.value = 'Nama minimal 3 karakter'
   if (!email.value) emailError.value = 'Email wajib diisi'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) emailError.value = 'Format email tidak valid'
