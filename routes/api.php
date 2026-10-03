@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\KompetensiController;
+use App\Http\Controllers\Api\Admin\KonteksSoalController;
+use App\Http\Controllers\Api\Admin\MateriController;
+use App\Http\Controllers\Api\Admin\SiswaController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PretestController;
 use App\Http\Controllers\Api\TingkatController;
@@ -51,4 +55,28 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
 
     // Modul users lama. B1-D memindahkannya ke /api/admin/siswa.
     Route::apiResource('users', UserController::class);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin routes
+|--------------------------------------------------------------------------
+| Semua admin route dilindungi dengan role:Super Admin middleware.
+| Hanya Super Admin yang bisa mengakses semua fitur admin.
+*/
+
+Route::middleware(['auth:sanctum', 'active', 'role:Super Admin'])->prefix('admin')->group(function (): void {
+    // [B1-D] Admin Struktur Konten
+    Route::apiResource('tingkat', App\Http\Controllers\Api\Admin\TingkatController::class);
+    Route::apiResource('kompetensi', KompetensiController::class);
+    Route::apiResource('materi', MateriController::class);
+    Route::post('materi/{materi}/upload-image', [MateriController::class, 'uploadImage']);
+    Route::apiResource('konteks-soal', KonteksSoalController::class);
+    Route::apiResource('siswa', SiswaController::class);
+    Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);
+
+    // [B1-E] Admin Soal - to be added
+    // [B1-F] Admin Latihan - to be added
+    // [B1-G] Admin Simulasi - to be added
+    // [B1-H] Admin Dashboard - to be added
 });

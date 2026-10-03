@@ -18,12 +18,17 @@ use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
+use App\Contracts\Services\KompetensiServiceInterface;
+use App\Contracts\Services\KonteksSoalServiceInterface;
 use App\Contracts\Services\LatihanServiceInterface;
+use App\Contracts\Services\MateriServiceInterface;
 use App\Contracts\Services\PretestServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SimulasiServiceInterface;
+use App\Contracts\Services\SiswaServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
 use App\Contracts\Services\SyaratSimulasiServiceInterface;
+use App\Contracts\Services\TingkatServiceAdminInterface;
 use App\Contracts\Services\TingkatServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Randomizers\SeededRandomizer;
@@ -38,6 +43,11 @@ use App\Repositories\Eloquent\RekomendasiMateriRepository;
 use App\Repositories\Eloquent\SoalRepository;
 use App\Repositories\Eloquent\TingkatSeleksiRepository;
 use App\Repositories\Eloquent\UserRepository;
+use App\Services\Admin\KompetensiService;
+use App\Services\Admin\KonteksSoalService;
+use App\Services\Admin\MateriService;
+use App\Services\Admin\SiswaService;
+use App\Services\Admin\TingkatService as AdminTingkatService;
 use App\Services\AturanService;
 use App\Services\AuthService;
 use App\Services\PenilaianBelumDiimplementasi;
@@ -70,6 +80,13 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
         $this->app->bind(TingkatServiceInterface::class, TingkatService::class);
+
+        // [B1-D] Admin services
+        $this->app->bind(TingkatServiceAdminInterface::class, AdminTingkatService::class);
+        $this->app->bind(KompetensiServiceInterface::class, KompetensiService::class);
+        $this->app->bind(MateriServiceInterface::class, MateriService::class);
+        $this->app->bind(KonteksSoalServiceInterface::class, KonteksSoalService::class);
+        $this->app->bind(SiswaServiceInterface::class, SiswaService::class);
 
         // Aturan dibaca berkali-kali dalam satu request; scoped menjaga cache per request.
         $this->app->scoped(AturanServiceInterface::class, AturanService::class);
