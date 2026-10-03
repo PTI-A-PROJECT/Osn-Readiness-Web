@@ -73,5 +73,29 @@ class AturanPemetaanSeeder extends Seeder
                 $aturan
             );
         }
+
+        // Ensure ALL existing tingkat have aturan (created by factory during tests)
+        // Only create if not already created by firstOrCreate above
+        $existingTingkatIds = AturanPemetaan::pluck('tingkat_id')->toArray();
+        foreach (TingkatSeleksi::whereNotIn('id', $existingTingkatIds)->get() as $tingkat) {
+            AturanPemetaan::create([
+                'tingkat_id' => $tingkat->id,
+                'bobot_pretest' => 30,
+                'persen_pretest_mudah' => 50,
+                'persen_pretest_sedang' => 30,
+                'persen_pretest_sulit' => 20,
+                'passing_grade_pretest' => 60,
+                'bobot_simulasi' => 70,
+                'persen_simulasi_mudah' => 30,
+                'persen_simulasi_sedang' => 40,
+                'persen_simulasi_sulit' => 30,
+                'passing_grade_simulasi' => 70,
+                'latihan_min_nilai' => 50,
+                'pretest_jumlah_soal' => 30,
+                'pretest_min_soal_per_materi' => 2,
+                'simulasi_maks_percobaan' => 3,
+                'jumlah_materi_wajib' => 3,
+            ]);
+        }
     }
 }

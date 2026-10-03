@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \App\Models\TingkatSeleksi::observe(\App\Observers\TingkatSeleksiObserver::class);
+
         // Login dibatasi per email + IP, supaya satu akun tidak bisa dibombardir
         // dan satu IP tidak bisa mencoba banyak email sekaligus.
         RateLimiter::for('login', function (Request $request): Limit {

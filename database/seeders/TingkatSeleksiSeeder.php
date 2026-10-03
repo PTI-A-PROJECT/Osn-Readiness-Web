@@ -9,20 +9,23 @@ class TingkatSeleksiSeeder extends Seeder
 {
     public function run(): void
     {
-        TingkatSeleksi::firstOrCreate(
-            ['urutan' => 1],
-            [
-                'nama_tingkat' => 'Kabupaten/Kota',
-                'deskripsi' => 'Tahap seleksi OSN tingkat kabupaten/kota.',
-            ],
-        );
+        // Disable observers to prevent auto-creating aturan; AturanPemetaanSeeder will handle it
+        TingkatSeleksi::withoutEvents(function () {
+            TingkatSeleksi::firstOrCreate(
+                ['urutan' => 1],
+                [
+                    'nama_tingkat' => 'Kabupaten/Kota',
+                    'deskripsi' => 'Tahap seleksi OSN tingkat kabupaten/kota.',
+                ],
+            );
 
-        TingkatSeleksi::firstOrCreate(
-            ['urutan' => 2],
-            [
-                'nama_tingkat' => 'Provinsi',
-                'deskripsi' => 'Tahap seleksi OSN tingkat provinsi.',
-            ],
-        );
+            TingkatSeleksi::firstOrCreate(
+                ['urutan' => 2],
+                [
+                    'nama_tingkat' => 'Provinsi',
+                    'deskripsi' => 'Tahap seleksi OSN tingkat provinsi.',
+                ],
+            );
+        });
     }
 }
