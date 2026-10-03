@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AuthServiceInterface;
+use App\Exceptions\AkunTidakAktifException;
+use App\Exceptions\KredensialTidakValidException;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthService implements AuthServiceInterface
 {
@@ -14,26 +17,58 @@ class AuthService implements AuthServiceInterface
         private readonly UserRepositoryInterface $userRepository,
     ) {}
 
+    public function register(array $data, ?string $device = null): array
+    {
+        return DB::transaction(function () use ($data, $device): array {
+            /** @var User $user */
+            $user = $this->userRepository->create([
+                ...$data,
+                'is_active' => true,
+            ]);
+
+            $user->assignRole('siswa');
+
+            return [
+                'user' => $user,
+                'token' => $this->buatToken($user, $device),
+            ];
+        });
+    }
+
     public function login(string $email, string $password, ?string $device = null): array
     {
         $user = $this->userRepository->findByEmail($email);
 
-        if (! $user || ! Auth::attempt(['email' => $email, 'password' => $password])) {
-            throw ValidationException::withMessages([
-                'email' => ['Kredensial tidak valid.'],
-            ]);
+        // Pesan sengaja sama untuk email tidak dikenal dan password salah,
+        // supaya tidak membocorkan email mana yang terdaftar.
+        if (! $user || ! Hash::check($password, $user->password)) {
+            throw new KredensialTidakValidException;
         }
 
-        $token = $user->createToken($device ?? 'auth-token')->plainTextToken;
+        if (! $user->is_active) {
+            throw new AkunTidakAktifException;
+        }
 
         return [
             'user' => $user,
-            'token' => $token,
+            'token' => $this->buatToken($user, $device),
         ];
     }
 
     public function logout(User $user): bool
     {
-        return (bool) $user->tokens()->delete();
+        $token = $user->currentAccessToken();
+
+        // TransientToken (mis. actingAs di test) tidak punya baris database.
+        if ($token instanceof PersonalAccessToken) {
+            $token->delete();
+        }
+
+        return true;
+    }
+
+    private function buatToken(User $user, ?string $device): string
+    {
+        return $user->createToken($device ?? 'auth-token')->plainTextToken;
     }
 }

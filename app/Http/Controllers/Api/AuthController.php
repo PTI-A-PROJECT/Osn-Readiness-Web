@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\Services\AuthServiceInterface;
 use App\Http\Requests\Auth\ApiLoginRequest;
+use App\Http\Requests\Auth\ApiRegisterRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,19 @@ class AuthController
     public function __construct(
         private readonly AuthServiceInterface $authService,
     ) {}
+
+    public function register(ApiRegisterRequest $request): JsonResponse
+    {
+        $result = $this->authService->register($request->validated());
+
+        return response()->json([
+            'message' => 'Registrasi berhasil',
+            'data' => [
+                'user' => new UserResource($result['user']->load('roles')),
+                'token' => $result['token'],
+            ],
+        ], 201);
+    }
 
     public function login(ApiLoginRequest $request): JsonResponse
     {
