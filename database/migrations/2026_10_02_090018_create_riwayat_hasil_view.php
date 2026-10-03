@@ -6,52 +6,33 @@ use Illuminate\Support\Facades\DB;
 return new class extends Migration
 {
     /**
-     * Buat view riwayat_hasil yang menggabung ketiga jenis pengerjaan:
-     * pretest, latihan (quiz_pengerjaan), dan simulasi (hasil_simulasi).
+     * View riwayat_hasil menggabungkan hasil pre-test, latihan, dan simulasi yang sudah selesai.
+     * View ini hanya dibaca, jadi tidak ada timestamps dan tidak ada operasi tulis.
      *
-     * View ini hanya dibaca, migration-nya harus berjalan paling akhir setelah semua tabel ada.
+     * Dijalankan paling akhir karena menunjuk ke pretest, quiz_pengerjaan, dan hasil_simulasi.
      */
     public function up(): void
     {
-        DB::statement(
-            'CREATE VIEW riwayat_hasil AS
-            -- Pretest yang sudah selesai
-            SELECT
-                p.user_id,
-                p.tingkat_id,
-                \'pretest\' as jenis_hasil,
-                p.nilai,
-                p.selesai_pada as tanggal
+        DB::statement(<<<'SQL'
+            CREATE VIEW riwayat_hasil AS
+            SELECT 'pretest' AS jenis_hasil, p.id AS referensi_id, p.user_id,
+                   p.tingkat_id, p.nilai, p.selesai_pada AS tanggal
             FROM pretest p
             WHERE p.selesai_pada IS NOT NULL
-
             UNION ALL
-
-            -- Latihan (quiz pengerjaan) yang sudah selesai
-            SELECT
-                qp.user_id,
-                m.tingkat_id,
-                \'latihan\' as jenis_hasil,
-                qp.nilai,
-                qp.selesai_pada as tanggal
+            SELECT 'latihan', qp.id, qp.user_id, m.tingkat_id, qp.nilai,
+            qp.selesai_pada
             FROM quiz_pengerjaan qp
-            JOIN quiz q ON qp.quiz_id = q.id
-            JOIN materi m ON q.materi_id = m.id
+            JOIN quiz q ON q.id = qp.quiz_id
+            JOIN materi m ON m.id = q.materi_id
             WHERE qp.selesai_pada IS NOT NULL
-
             UNION ALL
-
-            -- Simulasi yang sudah selesai
-            SELECT
-                hs.user_id,
-                p.tingkat_id,
-                \'simulasi\' as jenis_hasil,
-                hs.nilai,
-                hs.selesai_pada as tanggal
+            SELECT 'simulasi', hs.id, hs.user_id, s.tingkat_id, hs.nilai,
+            hs.selesai_pada
             FROM hasil_simulasi hs
-            JOIN pretest p ON hs.pretest_id = p.id
-            WHERE hs.selesai_pada IS NOT NULL'
-        );
+            JOIN simulasi s ON s.id = hs.simulasi_id
+            WHERE hs.selesai_pada IS NOT NULL
+        SQL);
     }
 
     public function down(): void

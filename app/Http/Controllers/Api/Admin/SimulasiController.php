@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Requests\StoreSimulasiRequest;
 use App\Http\Requests\UpdateSimulasiRequest;

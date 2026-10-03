@@ -29,13 +29,13 @@ class MateriResource extends JsonResource
             'judul' => $materi->judul,
             'deskripsi' => $materi->deskripsi,
             'isi_materi' => $materi->isi_materi,
-            'file_materi' => $this->getFileMateriBurl($materi->file_materi),
+            'file_materi' => $this->getFileMateriUrl($materi->file_materi),
             'created_at' => $materi->created_at,
             'updated_at' => $materi->updated_at,
         ];
     }
 
-    private function getFileMateriBurl(?string $filePath): ?string
+    private function getFileMateriUrl(?string $filePath): ?string
     {
         return $filePath === null ? null : Storage::disk('public')->url($filePath);
     }

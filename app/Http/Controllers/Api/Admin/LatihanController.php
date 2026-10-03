@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Requests\StoreLatihanRequest;
 use App\Http\Requests\UpdateLatihanRequest;

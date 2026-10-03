@@ -4,6 +4,8 @@ namespace Tests\Feature\Api;
 
 use App\Models\Kompetensi;
 use App\Models\Materi;
+use App\Models\Pretest;
+use App\Models\PretestJawaban;
 use App\Models\Soal;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
@@ -163,5 +165,58 @@ class SoalApiTest extends TestCase
             ->assertOk()
             // Admin view includes kunci_jawaban per SoalDetailResource
             ->assertJsonPath('data.kunci_jawaban', $soal->kunci_jawaban);
+    }
+
+    public function test_kunci_soal_terpakai_dilarang_diubah(): void
+    {
+        $soal = Soal::factory()->create(['materi_id' => $this->materi->id]);
+        PretestJawaban::create([
+            'pretest_id' => Pretest::factory()->create(['tingkat_id' => $this->tingkat->id])->id,
+            'soal_id' => $soal->id,
+            'urutan' => 1,
+            'bobot' => 1,
+        ]);
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/soal/{$soal->id}", $this->payloadUpdate($soal, ['kunci_jawaban' => 1]))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('soal');
+
+        $this->assertDatabaseHas('soal', [
+            'id' => $soal->id,
+            'kunci_jawaban' => $soal->kunci_jawaban,
+        ]);
+    }
+
+    public function test_kunci_soal_belum_dipakai_boleh_diubah(): void
+    {
+        $soal = Soal::factory()->create(['materi_id' => $this->materi->id]);
+
+        $this->actingAs($this->superAdmin)
+            ->putJson("api/admin/soal/{$soal->id}", $this->payloadUpdate($soal, ['kunci_jawaban' => 0]))
+            ->assertOk();
+
+        $this->assertDatabaseHas('soal', [
+            'id' => $soal->id,
+            'kunci_jawaban' => 0,
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $ubah
+     * @return array<string, mixed>
+     */
+    private function payloadUpdate(Soal $soal, array $ubah = []): array
+    {
+        return array_merge([
+            'tingkat_id' => $this->tingkat->id,
+            'materi_id' => $this->materi->id,
+            'level' => $soal->level->value,
+            'peruntukan' => $soal->peruntukan->value,
+            'tipe_soal' => $soal->tipe_soal->value,
+            'pertanyaan' => $soal->pertanyaan,
+            'pilihan_jawaban' => $soal->pilihan_jawaban,
+            'kunci_jawaban' => $soal->kunci_jawaban,
+        ], $ubah);
     }
 }

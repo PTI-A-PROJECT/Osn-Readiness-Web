@@ -7,8 +7,7 @@ use App\Models\TingkatSeleksi;
 use Illuminate\Database\Seeder;
 
 /**
- * Seed aturan pemetaan dengan columns individual untuk B1-E.
- * Satu baris per tingkat dengan semua konfigurasi.
+ * 16 parameter per tingkat, total 32 baris.
  *
  * Memakai firstOrCreate supaya aman dijalankan ulang tanpa menimpa angka yang
  * sudah diubah admin: baris yang sudah ada tidak diubah nilainya.
@@ -16,50 +15,52 @@ use Illuminate\Database\Seeder;
 class AturanPemetaanSeeder extends Seeder
 {
     /**
-     * Aturan default per tingkat.
+     * Ketentuan dasar per tingkat, diindeks dengan urutan tingkat.
      *
-     * @var array<int, array<string, int>>
+     * @var array<int, array<string, string>>
      */
-    private const ATURAN = [
+    private const KETENTUAN = [
         1 => [
-            'bobot_pretest' => 30,
-            'persen_pretest_mudah' => 50,
-            'persen_pretest_sedang' => 30,
-            'persen_pretest_sulit' => 20,
-            'passing_grade_pretest' => 60,
-            'bobot_simulasi' => 70,
-            'persen_simulasi_mudah' => 30,
-            'persen_simulasi_sedang' => 40,
-            'persen_simulasi_sulit' => 30,
-            'passing_grade_simulasi' => 70,
-            'latihan_min_nilai' => 50,
-            'pretest_jumlah_soal' => 30,
-            'pretest_min_soal_per_materi' => 2,
-            'simulasi_maks_percobaan' => 3,
-            'jumlah_materi_wajib' => 3,
+            'bobot_mudah' => '1',
+            'bobot_sedang' => '2',
+            'bobot_sulit' => '3',
+            'pretest_jumlah_soal' => '30',
+            'pretest_persen_mudah' => '50',
+            'pretest_persen_sedang' => '30',
+            'pretest_persen_sulit' => '20',
+            'pretest_min_soal_per_materi' => '2',
+            'jumlah_materi_wajib' => '3',
+            'latihan_min_soal' => '10',
+            'latihan_min_nilai' => '50',
+            'simulasi_persen_mudah' => '30',
+            'simulasi_persen_sedang' => '40',
+            'simulasi_persen_sulit' => '30',
+            'simulasi_maks_percobaan' => '3',
+            'passing_grade' => '70',
         ],
         2 => [
-            'bobot_pretest' => 30,
-            'persen_pretest_mudah' => 50,
-            'persen_pretest_sedang' => 30,
-            'persen_pretest_sulit' => 20,
-            'passing_grade_pretest' => 60,
-            'bobot_simulasi' => 70,
-            'persen_simulasi_mudah' => 30,
-            'persen_simulasi_sedang' => 40,
-            'persen_simulasi_sulit' => 30,
-            'passing_grade_simulasi' => 80,
-            'latihan_min_nilai' => 50,
-            'pretest_jumlah_soal' => 30,
-            'pretest_min_soal_per_materi' => 2,
-            'simulasi_maks_percobaan' => 3,
-            'jumlah_materi_wajib' => 3,
+            'bobot_mudah' => '1',
+            'bobot_sedang' => '2',
+            'bobot_sulit' => '3',
+            'pretest_jumlah_soal' => '30',
+            'pretest_persen_mudah' => '50',
+            'pretest_persen_sedang' => '30',
+            'pretest_persen_sulit' => '20',
+            'pretest_min_soal_per_materi' => '2',
+            'jumlah_materi_wajib' => '3',
+            'latihan_min_soal' => '10',
+            'latihan_min_nilai' => '50',
+            'simulasi_persen_mudah' => '30',
+            'simulasi_persen_sedang' => '40',
+            'simulasi_persen_sulit' => '30',
+            'simulasi_maks_percobaan' => '3',
+            'passing_grade' => '80',
         ],
     ];
 
     public function run(): void
     {
-        foreach (self::ATURAN as $urutan => $aturan) {
+        foreach (self::KETENTUAN as $urutan => $ketentuan) {
             $tingkat = TingkatSeleksi::where('urutan', $urutan)->first();
 
             if ($tingkat === null) {
@@ -68,34 +69,12 @@ class AturanPemetaanSeeder extends Seeder
                 continue;
             }
 
-            AturanPemetaan::firstOrCreate(
-                ['tingkat_id' => $tingkat->id],
-                $aturan
-            );
-        }
-
-        // Ensure ALL existing tingkat have aturan (created by factory during tests)
-        // Only create if not already created by firstOrCreate above
-        $existingTingkatIds = AturanPemetaan::pluck('tingkat_id')->toArray();
-        foreach (TingkatSeleksi::whereNotIn('id', $existingTingkatIds)->get() as $tingkat) {
-            AturanPemetaan::create([
-                'tingkat_id' => $tingkat->id,
-                'bobot_pretest' => 30,
-                'persen_pretest_mudah' => 50,
-                'persen_pretest_sedang' => 30,
-                'persen_pretest_sulit' => 20,
-                'passing_grade_pretest' => 60,
-                'bobot_simulasi' => 70,
-                'persen_simulasi_mudah' => 30,
-                'persen_simulasi_sedang' => 40,
-                'persen_simulasi_sulit' => 30,
-                'passing_grade_simulasi' => 70,
-                'latihan_min_nilai' => 50,
-                'pretest_jumlah_soal' => 30,
-                'pretest_min_soal_per_materi' => 2,
-                'simulasi_maks_percobaan' => 3,
-                'jumlah_materi_wajib' => 3,
-            ]);
+            foreach ($ketentuan as $parameter => $nilai) {
+                AturanPemetaan::firstOrCreate(
+                    ['tingkat_id' => $tingkat->id, 'parameter' => $parameter],
+                    ['ketentuan' => $nilai],
+                );
+            }
         }
     }
 }

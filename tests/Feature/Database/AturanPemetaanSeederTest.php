@@ -19,7 +19,7 @@ class AturanPemetaanSeederTest extends TestCase
         $this->seed(AturanPemetaanSeeder::class);
 
         $this->assertSame(2, TingkatSeleksi::count());
-        $this->assertSame(2, AturanPemetaan::count()); // One row per tingkat in denormalized schema
+        $this->assertSame(32, AturanPemetaan::count());
     }
 
     public function test_passing_grade_berbeda_antara_kabupaten_dan_provinsi(): void
@@ -30,14 +30,14 @@ class AturanPemetaanSeederTest extends TestCase
         $kabupaten = TingkatSeleksi::where('urutan', 1)->firstOrFail();
         $provinsi = TingkatSeleksi::where('urutan', 2)->firstOrFail();
 
-        $kabupatenAturan = AturanPemetaan::where('tingkat_id', $kabupaten->id)->firstOrFail();
-        $provinsiAturan = AturanPemetaan::where('tingkat_id', $provinsi->id)->firstOrFail();
+        $ambil = fn (TingkatSeleksi $tingkat, string $parameter): string => AturanPemetaan::where('tingkat_id', $tingkat->id)
+            ->where('parameter', $parameter)
+            ->value('ketentuan');
 
-        // Check that seeder values are applied correctly
-        $this->assertSame(60, $kabupatenAturan->passing_grade_pretest);
-        $this->assertSame(80, $provinsiAturan->passing_grade_simulasi);
-        $this->assertSame(50, $kabupatenAturan->persen_pretest_mudah);
-        $this->assertSame(50, $provinsiAturan->persen_pretest_mudah);
+        $this->assertSame('70', $ambil($kabupaten, 'passing_grade'));
+        $this->assertSame('80', $ambil($provinsi, 'passing_grade'));
+        $this->assertSame('50', $ambil($kabupaten, 'pretest_persen_mudah'));
+        $this->assertSame('50', $ambil($provinsi, 'pretest_persen_mudah'));
     }
 
     public function test_seeder_bisa_dijalankan_ulang_tanpa_menimpa_perubahan_admin(): void
@@ -48,15 +48,17 @@ class AturanPemetaanSeederTest extends TestCase
         $kabupaten = TingkatSeleksi::where('urutan', 1)->firstOrFail();
 
         AturanPemetaan::where('tingkat_id', $kabupaten->id)
-            ->update(['passing_grade_pretest' => 95]);
+            ->where('parameter', 'passing_grade')
+            ->update(['ketentuan' => '95']);
 
         $this->seed(AturanPemetaanSeeder::class);
 
-        $this->assertSame(2, AturanPemetaan::count());
+        $this->assertSame(32, AturanPemetaan::count());
         $this->assertSame(
-            95,
+            '95',
             AturanPemetaan::where('tingkat_id', $kabupaten->id)
-                ->value('passing_grade_pretest'),
+                ->where('parameter', 'passing_grade')
+                ->value('ketentuan'),
         );
     }
 
