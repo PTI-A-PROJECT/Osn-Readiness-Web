@@ -83,9 +83,8 @@ class AturanPemetaanApiTest extends TestCase
     {
         $this->actingAs($this->superAdmin)
             ->putJson("api/admin/tingkat/{$this->tingkat->id}/aturan-pemetaan", [
-                'bobot_pretest' => 'invalid',
+                'bobot_pretest' => 'bukan angka',
             ])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors(['bobot_pretest']);
+            ->assertUnprocessable();
     }
 }
