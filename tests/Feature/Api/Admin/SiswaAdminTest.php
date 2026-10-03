@@ -135,4 +135,42 @@ class SiswaAdminTest extends TestCase
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['email']);
     }
+
+    public function test_unauthenticated_returns_401(): void
+    {
+        $this->getJson('/api/admin/siswa')->assertUnauthorized();
+    }
+
+    public function test_siswa_dilarang_mengakses_daftar_siswa(): void
+    {
+        $siswa = User::factory()->create(['is_active' => true]);
+        $siswa->assignRole('siswa');
+
+        $this->actingAs($siswa)
+            ->getJson('/api/admin/siswa')
+            ->assertForbidden();
+    }
+
+    public function test_admin_dapat_soft_delete_siswa(): void
+    {
+        $admin = $this->createAdmin();
+        $siswa = User::factory()->create(['is_active' => true]);
+
+        $this->actingAs($admin)
+            ->deleteJson("/api/admin/siswa/{$siswa->id}")
+            ->assertOk();
+
+        $this->assertSoftDeleted('users', ['id' => $siswa->id]);
+    }
+
+    public function test_password_tidak_ikut_dalam_respons(): void
+    {
+        $admin = $this->createAdmin();
+        User::factory()->create(['is_active' => true]);
+
+        $this->actingAs($admin)
+            ->getJson('/api/admin/siswa')
+            ->assertOk()
+            ->assertJsonMissing(['password' => 'password']);
+    }
 }

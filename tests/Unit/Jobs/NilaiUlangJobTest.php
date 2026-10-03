@@ -89,18 +89,22 @@ class NilaiUlangJobTest extends TestCase
     #[Test]
     public function gagal_selalu_mencatat_log_untuk_admin(): void
     {
-        Log::spy();
+        $tercatat = false;
 
-        (new NilaiUlangJob(JenisPengerjaan::Simulasi, 9))->failed(new \RuntimeException('python mati'));
-
-        Log::shouldHaveReceived('error')
+        Log::shouldReceive('error')
             ->once()
-            ->withArgs(function (string $pesan, array $konteks): bool {
-                return $pesan === 'Penilaian gagal setelah lima percobaan.'
+            ->withArgs(function (string $pesan, array $konteks) use (&$tercatat): bool {
+                $tercatat = $pesan === 'Penilaian gagal setelah lima percobaan.'
                     && $konteks['jenis'] === 'simulasi'
                     && $konteks['id'] === 9
                     && $konteks['pesan'] === 'python mati';
+
+                return $tercatat;
             });
+
+        (new NilaiUlangJob(JenisPengerjaan::Simulasi, 9))->failed(new \RuntimeException('python mati'));
+
+        static::assertTrue($tercatat);
     }
 
     #[Test]
