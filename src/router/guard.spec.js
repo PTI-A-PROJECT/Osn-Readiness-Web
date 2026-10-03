@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
@@ -41,6 +41,19 @@ describe('router guard', () => {
 
   it('tamu buka /login tetap di login', async () => {
     expect(await pushAs('/login', null)).toBe('login')
+  })
+
+  it('bypass dev membuka /siswa tanpa backend', async () => {
+    vi.stubEnv('VITE_BYPASS_AUTH', 'true')
+    vi.stubEnv('VITE_BYPASS_ROLE', 'siswa')
+    try {
+      setActivePinia(createPinia())
+      const router = setupGuard(createRouter({ history: createMemoryHistory(), routes }))
+      await router.push('/siswa')
+      expect(router.currentRoute.value.name).toBe('siswa.dashboard')
+    } finally {
+      vi.unstubAllEnvs()
+    }
   })
 
   it('siswa buka /siswa lolos ke siswa.dashboard', async () => {

@@ -101,6 +101,16 @@ export function setupGuard(router) {
   router.beforeEach(async (to) => {
     const auth = useAuthStore()
 
+    // BYPASS KHUSUS SLICING (dev saja): tanpa backend pun bisa buka halaman
+    // terproteksi. Aktifkan di .env: VITE_BYPASS_AUTH=true (+ VITE_BYPASS_ROLE
+    // = siswa|super_admin). Aman: import.meta.env.DEV false di production
+    // build sehingga cabang ini hilang total dari bundle prod.
+    if (import.meta.env.DEV && import.meta.env.VITE_BYPASS_AUTH === 'true' && !auth.initialized) {
+      const role = import.meta.env.VITE_BYPASS_ROLE === 'super_admin' ? 'super_admin' : 'siswa'
+      auth.user = { id: 'dev-1', nama: 'Dev Siswa', email: 'dev@local.id', role, created_at: null }
+      auth.initialized = true
+    }
+
     if (!auth.initialized) await auth.fetchMe()
 
     const loggedIn = !!auth.user
