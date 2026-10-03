@@ -7,25 +7,24 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Tambahkan foreign key constraint tingkat_aktif_id ke users.
+     * Tambahkan kolom tingkat_aktif_id dengan foreign key constraint ke users.
      * Migration ini harus berjalan SETELAH 090001 (tingkat_seleksi tabel sudah ada).
      */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table): void {
-            if (Schema::hasColumn('users', 'tingkat_aktif_id')) {
-                $table->foreign('tingkat_aktif_id')
-                    ->references('id')
-                    ->on('tingkat_seleksi')
-                    ->nullableOnDelete();
-            }
+            $table->foreignId('tingkat_aktif_id')
+                ->nullable()
+                ->constrained('tingkat_seleksi')
+                ->nullOnDelete();
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table): void {
-            $table->dropForeignKey('users_tingkat_aktif_id_foreign');
+            $table->dropForeign(['tingkat_aktif_id']);
+            $table->dropColumn('tingkat_aktif_id');
         });
     }
 };
