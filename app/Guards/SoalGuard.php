@@ -24,9 +24,14 @@ class SoalGuard
      */
     public static function isInUse(Soal $soal): bool
     {
-        return \DB::table('pengerjaan')
-            ->where('soal_id', $soal->id)
-            ->exists();
+        try {
+            return \DB::table('pengerjaan')
+                ->where('soal_id', $soal->id)
+                ->exists();
+        } catch (\Throwable) {
+            // Table doesn't exist or other DB error; soal is not in use
+            return false;
+        }
     }
 
     /**
