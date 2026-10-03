@@ -8,7 +8,15 @@ class SiswaPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->hasRole('Super Admin')) {
+        // Use a raw query to check if this user has the Super Admin role
+        $isSuperAdmin = \DB::table('model_has_roles')
+            ->where('model_id', $user->id)
+            ->where('model_type', User::class)
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('roles.name', 'Super Admin')
+            ->exists();
+
+        if ($isSuperAdmin) {
             return true;
         }
 
@@ -42,6 +50,18 @@ class SiswaPolicy
 
     public function deactivate(User $user, User $model): bool
     {
+        // If before() didn't return true, this shouldn't be called
+        // But if it does get called, ensure Super Admin always passes
+        if (\DB::table('model_has_roles')
+            ->where('model_id', $user->id)
+            ->where('model_type', User::class)
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('roles.name', 'Super Admin')
+            ->exists()
+        ) {
+            return true;
+        }
+
         return $user->hasPermissionTo('siswa.deactivate');
     }
 }

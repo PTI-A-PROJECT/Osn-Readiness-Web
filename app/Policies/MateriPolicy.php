@@ -9,7 +9,13 @@ class MateriPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->hasRole('Super Admin')) {
+        // Reload roles if not loaded
+        if (! $user->relationLoaded('roles')) {
+            $user->load('roles');
+        }
+
+        // Check if user has Super Admin role in any guard
+        if ($user->roles()->where('name', 'Super Admin')->exists()) {
             return true;
         }
 

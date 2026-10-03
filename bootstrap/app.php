@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\BisnisException;
+use App\Http\Middleware\CheckSuperAdminRole;
 use App\Http\Middleware\CheckUserStatus;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'active' => CheckUserStatus::class,
+            'super_admin' => CheckSuperAdminRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

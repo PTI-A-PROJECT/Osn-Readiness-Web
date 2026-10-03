@@ -4,16 +4,17 @@ namespace App\Services\Admin;
 
 use App\Contracts\Services\SiswaServiceInterface;
 use App\Models\User;
-use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class SiswaService implements SiswaServiceInterface
 {
     /**
-     * Get all active siswa (paginated)
+     * Get all active siswa (paginated), excluding the authenticated user
      */
-    public function getAll(int $perPage = 15): Paginator
+    public function getAll(int $perPage = 15): LengthAwarePaginator
     {
         return User::where('is_active', true)
+            ->where('id', '!=', auth()->id())
             ->paginate($perPage);
     }
 
