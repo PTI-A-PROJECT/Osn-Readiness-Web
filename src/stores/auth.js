@@ -22,15 +22,16 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Dipanggil sekali oleh router guard saat aplikasi dibuka.
   async function fetchMe() {
-    try {
-      const { data } = await api.get('/auth/me')
-      user.value = data.data
-    } catch {
-      user.value = null
-    } finally {
-      initialized.value = true
-    }
+  try {
+    const { data } = await api.get('/auth/me')
+    // sesuaikan dengan bentuk respons backend-mu, misalnya data.user atau data.data
+    user.value = data?.user ?? null
+  } catch {
+    user.value = null
+  } finally {
+    initialized.value = true
   }
+}
 
   async function login(payload) {
     const { data } = await api.post('/auth/login', payload)

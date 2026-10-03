@@ -1,5 +1,5 @@
 <script setup>
-import Toast from 'primevue/toast'
+import LandingPage from './views/LandingPage.vue'
 </script>
 
 <template>

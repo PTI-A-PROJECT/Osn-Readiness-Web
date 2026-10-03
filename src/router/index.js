@@ -10,6 +10,7 @@ import PlaceholderView from '@/views/siswa/PlaceholderView.vue'
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
 import ForbiddenView from '@/views/ForbiddenView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
+import LandingPage from '@/views/LandingPage.vue'
 
 // Satu-satunya tempat yang tahu pemetaan role -> dashboard.
 // Dipakai guard di bawah dan LoginView setelah login sukses.
@@ -20,6 +21,9 @@ export function dashboardFor(role) {
 // Diekspor agar guard.spec.js bisa membuat router sendiri
 // dengan createMemoryHistory dari definisi route yang sama.
 export const routes = [
+  // Landing page publik, tanpa layout
+  { path: '/', name: 'landing', component: LandingPage },
+
   {
     path: '/',
     component: AuthLayout,
@@ -32,7 +36,7 @@ export const routes = [
     path: '/',
     component: AppLayout,
     children: [
-      { path: '', name: 'home', component: SiswaDashboardView, meta: { requiresAuth: true } },
+      // route 'home' dihapus
       {
         path: 'siswa',
         name: 'siswa.dashboard',
@@ -93,26 +97,23 @@ export function setupGuard(router) {
   router.beforeEach(async (to) => {
     const auth = useAuthStore()
 
-    // 1. Hanya sekali per load: isi user dari cookie via /auth/me.
     if (!auth.initialized) await auth.fetchMe()
 
-    // 2. Belum login dilarang masuk area auth.
-    if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    const loggedIn = !!auth.user
+
+    if (to.meta.requiresAuth && !loggedIn) {
       return { name: 'login', query: { redirect: to.fullPath } }
     }
 
-    // 3. Sudah login dilarang kembali ke halaman tamu.
-    if (to.meta.guestOnly && auth.isAuthenticated) {
+    if (to.meta.guestOnly && loggedIn) {
       return dashboardFor(auth.user.role)
     }
 
-    // 4. Role tidak cocok (mis. siswa buka /admin).
     if (to.meta.role && auth.user?.role !== to.meta.role) {
       return { name: 'forbidden' }
     }
 
-    // 5. `/` diarahkan ke dashboard sesuai role.
-    if (to.name === 'home') {
+    if (to.name === 'landing' && loggedIn) {
       return dashboardFor(auth.user.role)
     }
 
