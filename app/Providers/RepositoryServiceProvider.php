@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Clients\PerhitunganClient;
+use App\Contracts\Clients\PerhitunganClientInterface;
 use App\Contracts\Randomizers\RandomizerInterface;
 use App\Contracts\Repositories\AturanPemetaanRepositoryInterface;
 use App\Contracts\Repositories\HasilSimulasiRepositoryInterface;
@@ -60,6 +62,15 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PutaranServiceInterface::class, PutaranService::class);
         $this->app->bind(SyaratSimulasiServiceInterface::class, SyaratSimulasiService::class);
         $this->app->bind(SoalPickerServiceInterface::class, SoalPickerService::class);
+
+        // [B1-C] Klien layanan hitung Python. Dibaca dari config saat
+        // instantiate supaya test bisa menyuntikkan stub.
+        $this->app->bind(PerhitunganClientInterface::class, fn (): PerhitunganClientInterface => new PerhitunganClient(
+            url: rtrim((string) config('services.perhitungan.url'), '/'),
+            token: (string) config('services.perhitungan.token'),
+            timeout: (int) config('services.perhitungan.timeout'),
+            retry: (int) config('services.perhitungan.retry'),
+        ));
 
         // Seed diambil dari env supaya pengacakan bisa diulang persis; test
         // sendiri menyuntikkan SeededRandomizer dengan seed pilihan.
