@@ -22,16 +22,18 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Dipanggil sekali oleh router guard saat aplikasi dibuka.
   async function fetchMe() {
-  try {
-    const { data } = await api.get('/auth/me')
-    // sesuaikan dengan bentuk respons backend-mu, misalnya data.user atau data.data
-    user.value = data?.user ?? null
-  } catch {
-    user.value = null
-  } finally {
-    initialized.value = true
+    try {
+      // lib/api.js tidak melakukan unwrap (interceptor-nya passthrough),
+      // jadi `data` di sini masih envelope penuh { success, message, data }.
+      // Sesuai ARCHITECTURE_RULES.md §2, /auth/me menaruh user di `data`.
+      const { data } = await api.get('/auth/me')
+      user.value = data.data
+    } catch {
+      user.value = null
+    } finally {
+      initialized.value = true
+    }
   }
-}
 
   async function login(payload) {
     const { data } = await api.post('/auth/login', payload)
@@ -50,7 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Karena sapaan & avatar membaca user.value, nama baru langsung tampil di mana-mana.
   async function updateProfile(payload) {
     const { data } = await api.put('/auth/profile', payload)
-    user.value = { ...user.value, ...payload, ...(data?.data ?? {}) }
+    user.value = { ...user.value, ...payload, ...data?.data }
     return user.value
   }
 
