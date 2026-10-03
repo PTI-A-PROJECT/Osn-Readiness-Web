@@ -167,8 +167,13 @@ function masukGoogle() {
 </template>
 
 <style scoped>
-/* Override PrimeVue (tak bisa via utility); layout sudah Tailwind. */
-:deep(.p-inputtext) {
+/* Override PrimeVue (tak bisa via utility); layout sudah Tailwind.
+   Input password PrimeVue memakai kelas .p-password-input, bukan
+   .p-inputtext — keduanya harus dioverride agar ikon kiri tak
+   menimpa huruf pertama. */
+:deep(.p-inputtext),
+:deep(.p-password-input) {
+  width: 100%;
   height: 46px;
   padding-left: 2.4rem;
   border-radius: 10px;
@@ -177,10 +182,16 @@ function masukGoogle() {
   color: #0f1b3d;
   border-color: #e2e8f0;
 }
-:deep(.p-inputtext::placeholder) {
+/* Ruang untuk ikon mata bawaan PrimeVue di kanan input sandi. */
+:deep(.p-password-input) {
+  padding-right: 2.4rem;
+}
+:deep(.p-inputtext::placeholder),
+:deep(.p-password-input::placeholder) {
   color: #a0aec0;
 }
-:deep(.p-inputtext:enabled:focus) {
+:deep(.p-inputtext:enabled:focus),
+:deep(.p-password-input:enabled:focus) {
   background: #fff;
   border-color: #1e4b8f;
   box-shadow: 0 0 0 3px rgba(30, 75, 143, 0.12);
