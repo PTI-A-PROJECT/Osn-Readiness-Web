@@ -65,72 +65,72 @@ async function daftar() {
 </script>
 
 <template>
-  <div class="register-page">
+  <div class="min-h-screen text-[#17233b] bg-white font-['Avenir_Next',Avenir,'Segoe_UI',sans-serif]">
     <PublicNavbar current="register" />
 
-    <main class="main-content">
-      <section id="keunggulan" class="left-section">
-        <div class="left-content">
-          <p class="eyebrow">SIAPKAN DIRIMU UNTUK OSN</p>
-          <h1>Selamat<br />Datang!</h1>
-          <p class="description">
+    <main class="grid grid-cols-1 min-[720px]:grid-cols-[1.05fr_0.95fr] min-h-[calc(100vh-72px)]">
+      <section id="keunggulan" class="flex items-center justify-center px-6 pt-12 pb-[38px] min-[720px]:justify-end min-[720px]:py-16 min-[720px]:pl-6 min-[720px]:pr-7 min-[950px]:pr-[clamp(32px,6vw,88px)] bg-[radial-gradient(ellipse_at_15%_90%,#e6f1fb_0,transparent_42%),#fff]">
+        <div class="w-full max-w-[480px] anim-a">
+          <p class="text-[#0759a5] text-[11px] font-extrabold mb-[14px] tracking-[1px]">SIAPKAN DIRIMU UNTUK OSN</p>
+          <h1 class="mb-5 text-[#10294a] text-[42px] min-[720px]:text-[52px] font-extrabold leading-[1.03]">Selamat<br />Datang!</h1>
+          <p class="max-w-[460px] mb-5 min-[720px]:mb-[30px] text-[#154b86] text-sm min-[720px]:text-base leading-[1.65]">
             Persiapan OSN Informatika yang terarah: dari pemetaan kompetensi sampai simulasi sesuai standar TOKI.
           </p>
-          <ul class="feature-list">
-            <li><span class="check-icon" aria-hidden="true">✓</span>Pre-test &amp; pemetaan kompetensi</li>
-            <li><span class="check-icon" aria-hidden="true">✓</span>Materi sesuai kebutuhanmu</li>
-            <li><span class="check-icon" aria-hidden="true">✓</span>Simulasi seleksi standar TOKI</li>
+          <ul class="grid gap-2 min-[720px]:gap-[11px] m-0 p-0 list-none">
+            <li class="flex min-h-[42px] min-[720px]:min-h-12 items-center gap-3 px-3.5 border border-[#dce7f1] rounded-[7px] bg-[rgb(255_255_255/78%)] text-[#182f50] text-[13px] font-bold"><span class="grid w-[22px] aspect-square flex-none place-items-center rounded-full bg-[#e3eef8] text-[#0759a5] text-[13px]" aria-hidden="true">✓</span>Pre-test &amp; pemetaan kompetensi</li>
+            <li class="flex min-h-[42px] min-[720px]:min-h-12 items-center gap-3 px-3.5 border border-[#dce7f1] rounded-[7px] bg-[rgb(255_255_255/78%)] text-[#182f50] text-[13px] font-bold"><span class="grid w-[22px] aspect-square flex-none place-items-center rounded-full bg-[#e3eef8] text-[#0759a5] text-[13px]" aria-hidden="true">✓</span>Materi sesuai kebutuhanmu</li>
+            <li class="flex min-h-[42px] min-[720px]:min-h-12 items-center gap-3 px-3.5 border border-[#dce7f1] rounded-[7px] bg-[rgb(255_255_255/78%)] text-[#182f50] text-[13px] font-bold"><span class="grid w-[22px] aspect-square flex-none place-items-center rounded-full bg-[#e3eef8] text-[#0759a5] text-[13px]" aria-hidden="true">✓</span>Simulasi seleksi standar TOKI</li>
           </ul>
         </div>
       </section>
 
-      <section id="register-form" class="right-section">
-        <div class="register-card">
-          <div class="card-heading">
-            <p class="card-kicker">MULAI PERJALANANMU</p>
-            <h2>Daftar Akun Baru</h2>
-            <p class="card-description">Buat akun untuk mulai mempersiapkan diri.</p>
+      <section id="register-form" class="flex items-center justify-center px-[18px] pt-4 pb-[42px] min-[720px]:justify-start min-[720px]:px-6 min-[720px]:py-8 min-[950px]:px-[clamp(28px,5.4vw,78px)] min-[950px]:py-[42px] bg-[#f0f5fb]">
+        <div class="w-full max-w-[440px] mx-auto p-6 px-5 min-[720px]:px-6 min-[950px]:p-[30px] border border-[#dce4ed] rounded-[9px] bg-white shadow-[0_12px_35px_rgb(21_48_80/7%)] anim-b">
+          <div class="mb-[23px]">
+            <p class="text-[#0759a5] text-[11px] font-extrabold mb-2 tracking-[0.7px]">MULAI PERJALANANMU</p>
+            <h2 class="text-[#172033] text-[22px] font-extrabold">Daftar Akun Baru</h2>
+            <p class="mt-[7px] text-[#68758a] text-[13px]">Buat akun untuk mulai mempersiapkan diri.</p>
           </div>
 
-          <form class="register-form" @submit.prevent="daftar">
-            <div class="form-group">
-              <label for="nama">Nama Lengkap <span>*</span></label>
-              <input id="nama" v-model="nama" autocomplete="name" type="text" placeholder="Masukkan nama lengkap" :aria-invalid="Boolean(namaError)" :aria-describedby="namaError ? 'nama-error' : undefined" />
-              <small v-if="namaError" id="nama-error" class="field-error">{{ namaError }}</small>
+          <form class="grid gap-[13px]" @submit.prevent="daftar">
+            <div class="grid gap-1.5">
+              <label for="nama" class="text-[#182238] text-xs font-[750]">Nama Lengkap <span class="text-[#c54c45]">*</span></label>
+              <input id="nama" v-model="nama" autocomplete="name" type="text" placeholder="Masukkan nama lengkap" :aria-invalid="Boolean(namaError)" :aria-describedby="namaError ? 'nama-error' : undefined" class="w-full min-h-[42px] px-3 border border-[#d6e0eb] rounded-md outline-none bg-white text-[#17233b] font-inherit text-[13px] placeholder:text-[#95a5aa] focus:border-[#0759a5] focus:shadow-[0_0_0_3px_rgb(11_104_189/11%)] aria-invalid:border-[#c54c45]" />
+              <small v-if="namaError" id="nama-error" class="text-[11px] text-[#b33a35]">{{ namaError }}</small>
             </div>
 
-            <div class="form-group">
-              <label for="email">Email Aktif <span>*</span></label>
-              <input id="email" v-model="email" autocomplete="email" type="email" placeholder="nama@sekolah.sch.id" :aria-invalid="Boolean(emailError)" :aria-describedby="emailError ? 'email-error' : undefined" />
-              <small v-if="emailError" id="email-error" class="field-error">{{ emailError }}</small>
+            <div class="grid gap-1.5">
+              <label for="email" class="text-[#182238] text-xs font-[750]">Email Aktif <span class="text-[#c54c45]">*</span></label>
+              <input id="email" v-model="email" autocomplete="email" type="email" placeholder="nama@sekolah.sch.id" :aria-invalid="Boolean(emailError)" :aria-describedby="emailError ? 'email-error' : undefined" class="w-full min-h-[42px] px-3 border border-[#d6e0eb] rounded-md outline-none bg-white text-[#17233b] font-inherit text-[13px] placeholder:text-[#95a5aa] focus:border-[#0759a5] focus:shadow-[0_0_0_3px_rgb(11_104_189/11%)] aria-invalid:border-[#c54c45]" />
+              <small v-if="emailError" id="email-error" class="text-[11px] text-[#b33a35]">{{ emailError }}</small>
             </div>
 
-            <div class="form-group">
-              <label for="password">Kata Sandi <span>*</span></label>
-              <input id="password" v-model="password" autocomplete="new-password" type="password" placeholder="Buat kata sandi" :aria-invalid="Boolean(passwordError)" :aria-describedby="passwordError ? 'password-error' : 'password-hint'" />
-              <small v-if="passwordError" id="password-error" class="field-error">{{ passwordError }}</small>
-              <small v-else id="password-hint" class="field-hint">Minimal 8 karakter, kombinasi huruf dan angka</small>
+            <div class="grid gap-1.5">
+              <label for="password" class="text-[#182238] text-xs font-[750]">Kata Sandi <span class="text-[#c54c45]">*</span></label>
+              <input id="password" v-model="password" autocomplete="new-password" type="password" placeholder="Buat kata sandi" :aria-invalid="Boolean(passwordError)" :aria-describedby="passwordError ? 'password-error' : 'password-hint'" class="w-full min-h-[42px] px-3 border border-[#d6e0eb] rounded-md outline-none bg-white text-[#17233b] font-inherit text-[13px] placeholder:text-[#95a5aa] focus:border-[#0759a5] focus:shadow-[0_0_0_3px_rgb(11_104_189/11%)] aria-invalid:border-[#c54c45]" />
+              <small v-if="passwordError" id="password-error" class="text-[11px] text-[#b33a35]">{{ passwordError }}</small>
+              <small v-else id="password-hint" class="text-[11px] text-[#68758a]">Minimal 8 karakter, kombinasi huruf dan angka</small>
             </div>
 
-            <div class="form-group">
-              <label for="konfirmasi">Konfirmasi Kata Sandi <span>*</span></label>
-              <input id="konfirmasi" v-model="konfirmasi" autocomplete="new-password" type="password" placeholder="Ulangi kata sandi Anda" :aria-invalid="Boolean(konfirmasiError)" :aria-describedby="konfirmasiError ? 'konfirmasi-error' : undefined" />
-              <small v-if="konfirmasiError" id="konfirmasi-error" class="field-error">{{ konfirmasiError }}</small>
+            <div class="grid gap-1.5">
+              <label for="konfirmasi" class="text-[#182238] text-xs font-[750]">Konfirmasi Kata Sandi <span class="text-[#c54c45]">*</span></label>
+              <input id="konfirmasi" v-model="konfirmasi" autocomplete="new-password" type="password" placeholder="Ulangi kata sandi Anda" :aria-invalid="Boolean(konfirmasiError)" :aria-describedby="konfirmasiError ? 'konfirmasi-error' : undefined" class="w-full min-h-[42px] px-3 border border-[#d6e0eb] rounded-md outline-none bg-white text-[#17233b] font-inherit text-[13px] placeholder:text-[#95a5aa] focus:border-[#0759a5] focus:shadow-[0_0_0_3px_rgb(11_104_189/11%)] aria-invalid:border-[#c54c45]" />
+              <small v-if="konfirmasiError" id="konfirmasi-error" class="text-[11px] text-[#b33a35]">{{ konfirmasiError }}</small>
             </div>
 
-            <div class="agreement">
+            <div class="agreement flex items-start gap-[9px] mt-[3px]">
               <input id="agreement" v-model="setuju" type="checkbox" :aria-invalid="Boolean(setujuError)" :aria-describedby="setujuError ? 'agreement-error' : undefined" />
-              <label for="agreement">Saya menyetujui <a href="#agreement">Ketentuan Layanan</a> dan <a href="#agreement">Kebijakan Privasi</a> SIAP OSN</label>
+              <label for="agreement" class="text-[#68758a] text-[11px] leading-[1.5]">Saya menyetujui <a href="#agreement" class="text-[#064d91] font-bold no-underline">Ketentuan Layanan</a> dan <a href="#agreement" class="text-[#064d91] font-bold no-underline">Kebijakan Privasi</a> SIAP OSN</label>
             </div>
-            <small v-if="setujuError" id="agreement-error" class="field-error agreement-error">{{ setujuError }}</small>
+            <small v-if="setujuError" id="agreement-error" class="text-[11px] text-[#b33a35] -mt-[9px]">{{ setujuError }}</small>
 
-            <button class="register-button" type="submit" :disabled="loading">
+            <button class="flex min-h-11 items-center justify-center gap-[9px] mt-0.5 rounded-md bg-[#0759a5] text-white text-[13px] font-[750] cursor-pointer hover:bg-[#064d91] disabled:cursor-wait disabled:opacity-70" type="submit" :disabled="loading">
               <span>{{ loading ? 'Memproses...' : 'Daftar Sekarang' }}</span>
               <span aria-hidden="true">→</span>
             </button>
           </form>
 
-          <p class="login-text">Sudah punya akun? <RouterLink to="/login">Masuk di sini</RouterLink></p>
+          <p class="mt-[19px] text-[#718087] text-xs text-center">Sudah punya akun? <RouterLink to="/login" class="text-[#064d91] font-[750] no-underline hover:text-[#0759a5]">Masuk di sini</RouterLink></p>
         </div>
       </section>
     </main>
@@ -138,216 +138,17 @@ async function daftar() {
 </template>
 
 <style scoped>
-.register-page {
-  --ink: #17233b;
-  --muted: #68758a;
-  --blue: #0759a5;
-  --blue-deep: #064d91;
-  --line: #dce3ec;
-  min-height: 100vh;
-  color: var(--ink);
-  background: #fff;
-  font-family: 'Avenir Next', Avenir, 'Segoe UI', sans-serif;
+/* Sisa non-Tailwind: keyframes + checkbox kustom (pseudo-element). */
+@keyframes enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.main-content {
-  display: grid;
-  min-height: calc(100vh - 72px);
-  grid-template-columns: 1.05fr 0.95fr;
-}
-
-.login-text a:hover {
-  color: var(--blue);
-}
-
-.register-button:hover:not(:disabled) {
-  background: var(--blue-deep);
-}
-
-.left-section,
-.right-section {
-  display: flex;
-  align-items: center;
-}
-
-.left-section {
-  justify-content: flex-end;
-  padding: 64px clamp(32px, 6vw, 88px) 64px 24px;
-  background: radial-gradient(ellipse at 15% 90%, #e6f1fb 0, transparent 42%), #fff;
-}
-
-.left-content {
-  width: min(100%, 480px);
+.anim-a {
   animation: enter 500ms ease-out both;
 }
-
-.eyebrow,
-.card-kicker {
-  margin: 0 0 14px;
-  color: var(--blue);
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.eyebrow {
-  letter-spacing: 1px;
-}
-
-.left-content h1 {
-  margin: 0 0 20px;
-  color: #10294a;
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.03;
-}
-
-.description {
-  max-width: 460px;
-  margin: 0 0 30px;
-  color: #154b86;
-  font-size: 16px;
-  line-height: 1.65;
-}
-
-.feature-list {
-  display: grid;
-  gap: 11px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.feature-list li {
-  display: flex;
-  min-height: 48px;
-  align-items: center;
-  gap: 12px;
-  padding: 0 14px;
-  border: 1px solid #dce7f1;
-  border-radius: 7px;
-  background: rgb(255 255 255 / 78%);
-  color: #182f50;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.check-icon {
-  display: grid;
-  width: 22px;
-  aspect-ratio: 1;
-  flex-shrink: 0;
-  place-items: center;
-  border-radius: 50%;
-  background: #e3eef8;
-  color: var(--blue);
-  font-size: 13px;
-}
-
-.right-section {
-  justify-content: flex-start;
-  padding: 42px clamp(28px, 5.4vw, 78px);
-  background: #f0f5fb;
-}
-
-.register-card {
-  width: min(100%, 440px);
-  margin: 0 auto;
-  padding: 30px;
-  border: 1px solid #dce4ed;
-  border-radius: 9px;
-  background: white;
-  box-shadow: 0 12px 35px rgb(21 48 80 / 7%);
+.anim-b {
   animation: enter 600ms 80ms ease-out both;
 }
-
-.card-heading {
-  margin-bottom: 23px;
-}
-
-.card-kicker {
-  margin-bottom: 8px;
-  letter-spacing: 0.7px;
-}
-
-.card-heading h2 {
-  margin: 0;
-  color: #172033;
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.card-description {
-  margin: 7px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.register-form {
-  display: grid;
-  gap: 13px;
-}
-
-.form-group {
-  display: grid;
-  gap: 6px;
-}
-
-.form-group label {
-  color: #182238;
-  font-size: 12px;
-  font-weight: 750;
-}
-
-.form-group label span {
-  color: #c54c45;
-}
-
-.form-group input {
-  width: 100%;
-  min-height: 42px;
-  padding: 0 12px;
-  border: 1px solid #d6e0eb;
-  border-radius: 6px;
-  outline: none;
-  background: #fff;
-  color: var(--ink);
-  font: inherit;
-  font-size: 13px;
-}
-
-.form-group input::placeholder {
-  color: #95a5aa;
-}
-
-.form-group input:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgb(11 104 189 / 11%);
-}
-
-.form-group input[aria-invalid='true'] {
-  border-color: #c54c45;
-}
-
-.field-hint,
-.field-error {
-  font-size: 11px;
-}
-
-.field-hint {
-  color: var(--muted);
-}
-
-.field-error {
-  color: #b33a35;
-}
-
-.agreement {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin-top: 3px;
-}
-
 .agreement input {
   position: relative;
   width: 16px;
@@ -360,12 +161,10 @@ async function daftar() {
   background: #fff;
   cursor: pointer;
 }
-
 .agreement input:checked {
-  border-color: var(--blue);
-  background: var(--blue);
+  border-color: #0759a5;
+  background: #0759a5;
 }
-
 .agreement input:checked::after {
   position: absolute;
   top: 2px;
@@ -377,124 +176,10 @@ async function daftar() {
   content: '';
   transform: rotate(45deg);
 }
-
 .agreement input:focus-visible {
   outline: 3px solid rgb(11 104 189 / 20%);
   outline-offset: 2px;
 }
-
-.agreement label {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.agreement a {
-  color: var(--blue-deep);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.agreement-error {
-  margin-top: -9px;
-}
-
-.register-button {
-  display: flex;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  margin-top: 2px;
-  border: 0;
-  border-radius: 6px;
-  background: var(--blue);
-  color: white;
-  cursor: pointer;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 750;
-}
-
-.register-button:disabled {
-  cursor: wait;
-  opacity: 0.7;
-}
-
-.login-text {
-  margin: 19px 0 0;
-  color: #718087;
-  font-size: 12px;
-  text-align: center;
-}
-
-.login-text a {
-  color: var(--blue-deep);
-  font-weight: 750;
-  text-decoration: none;
-}
-
-@keyframes enter {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 950px) {
-  .main-content {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .left-section {
-    padding-right: 28px;
-  }
-
-  .right-section {
-    padding: 32px 24px;
-  }
-
-  .register-card {
-    padding: 24px;
-  }
-}
-
-@media (max-width: 720px) {
-  .main-content {
-    grid-template-columns: 1fr;
-  }
-
-  .left-section {
-    justify-content: center;
-    padding: 48px 24px 38px;
-  }
-
-  .left-content h1 {
-    font-size: 42px;
-  }
-
-  .description {
-    margin-bottom: 20px;
-    font-size: 14px;
-  }
-
-  .feature-list {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .feature-list li {
-    min-height: 42px;
-  }
-
-  .right-section {
-    justify-content: center;
-    padding: 16px 18px 42px;
-  }
-
-  .register-card {
-    padding: 24px 20px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
