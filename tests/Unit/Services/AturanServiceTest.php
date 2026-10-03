@@ -140,7 +140,7 @@ class AturanServiceTest extends TestCase
 
         // Create single AturanPemetaan object with all attributes
         return Collection::make([
-            new AturanPemetaan($default)
+            new AturanPemetaan($default),
         ]);
     }
 }
