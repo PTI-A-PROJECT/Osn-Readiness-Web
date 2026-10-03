@@ -1,0 +1,192 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\KonteksSoal;
+use App\Models\Materi;
+use App\Models\Pembahasan;
+use App\Models\Pretest;
+use App\Models\PretestJawaban;
+use App\Models\Soal;
+use App\Models\TingkatSeleksi;
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+class ImporKontenTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private string $folder;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(RolesAndPermissionsSeeder::class);
+
+        Storage::fake('public');
+
+        $this->folder = dirname(__DIR__).'/Fixtures/impor';
+    }
+
+    private function bankTingkat(): TingkatSeleksi
+    {
+        return TingkatSeleksi::factory()->create(['urutan' => 1]);
+    }
+
+    public function test_dry_run_tidak_menyisakan_data(): void
+    {
+        $this->bankTingkat();
+
+        $this->artisan('impor:konten', ['folder' => $this->folder, '--dry-run' => true])
+            ->assertSuccessful();
+
+        $this->assertDatabaseCount('materi', 0);
+        $this->assertDatabaseCount('soal', 0);
+        $this->assertDatabaseCount('kompetensi', 0);
+        $this->assertDatabaseCount('konteks_soal', 0);
+
+        // Gambar juga tidak disalin pada dry-run.
+        Storage::disk('public')->assertMissing('materi/kab-01-gambar-1.png');
+    }
+
+    public function test_impor_materi_soal_konteks_pembahasan_dan_gambar(): void
+    {
+        $this->bankTingkat();
+
+        $this->artisan('impor:konten', ['folder' => $this->folder])
+            ->assertSuccessful();
+
+        $materi = Materi::query()->where('id_sumber', 'kab-01')->firstOrFail();
+
+        $this->assertSame('Aljabar Boolean & Teori Himpunan', $materi->judul);
+        $this->assertStringContainsString('/storage/materi/kab-01-gambar-1.png', $materi->isi_materi);
+        $this->assertStringNotContainsString('../gambar/', $materi->isi_materi);
+
+        // Gambar materi tersalin ke storage publik.
+        Storage::disk('public')->assertExists('materi/kab-01-gambar-1.png');
+        Storage::disk('public')->assertExists('soal/kab-2020-001.png');
+
+        // Kompetensi dibuat otomatis bila namanya belum ada.
+        $this->assertDatabaseHas('kompetensi', [
+            'tingkat_id' => $materi->tingkat_id,
+            'nama_kompetensi' => 'Aljabar Boolean',
+        ]);
+
+        // Dua soal masuk: satu ditolak (kunci E bukan pilihan).
+        $this->assertSame(2, Soal::count());
+
+        $pilihan = Soal::query()->where('id_sumber', 'kab-2020-001')->firstOrFail();
+        $this->assertSame('pilihan_ganda', $pilihan->tipe_soal->value);
+        $this->assertSame('B', $pilihan->kunci_jawaban);
+        $this->assertSame('soal/kab-2020-001.png', $pilihan->gambar);
+
+        $isian = Soal::query()->where('id_sumber', 'kab-2020-002')->firstOrFail();
+        $this->assertSame('isian', $isian->tipe_soal->value);
+        $this->assertNull($isian->pilihan_jawaban);
+
+        // Hanya soal pertama yang punya cerita; cerita sama dipakai satu baris.
+        $this->assertSame(1, KonteksSoal::count());
+        $this->assertNotNull($pilihan->konteks_id);
+        $this->assertNull($isian->konteks_id);
+
+        // Pembahasan hanya untuk soal yang punya.
+        $this->assertSame(1, Pembahasan::count());
+        $this->assertSame($pilihan->id, Pembahasan::firstOrFail()->soal_id);
+    }
+
+    public function test_impor_ulang_melalui_upsert_id_sumber(): void
+    {
+        $this->bankTingkat();
+
+        $this->artisan('impor:konten', ['folder' => $this->folder])->assertSuccessful();
+        $this->artisan('impor:konten', ['folder' => $this->folder])->assertSuccessful();
+
+        // Tidak ada duplikasi: upsert mengganti, bukan menambah.
+        $this->assertSame(1, Materi::count());
+        $this->assertSame(2, Soal::count());
+    }
+
+    public function test_id_sumber_kembar_membatalkan_seluruh_impor(): void
+    {
+        $this->bankTingkat();
+
+        // Berkas kedua memuat id_sumber yang sama dengan berkas pertama.
+        file_put_contents(
+            $this->folder.'/soal_provinsi.json',
+            json_encode([
+                [
+                    'id_sumber' => 'kab-2020-001',
+                    'tingkat' => 'kabupaten',
+                    'materi' => 'kab-01',
+                    'tingkat_kesulitan' => 'mudah',
+                    'peruntukan' => 'pretest',
+                    'deskripsi_soal' => null,
+                    'soal' => 'Duplikat.',
+                    'pilihan' => [],
+                    'jawaban_benar' => 'apa saja',
+                    'pembahasan' => null,
+                    'gambar' => null,
+                ],
+            ])
+        );
+
+        $this->artisan('impor:konten', ['folder' => $this->folder])
+            ->assertFailed();
+
+        $this->assertDatabaseCount('materi', 0);
+        $this->assertDatabaseCount('soal', 0);
+
+        unlink($this->folder.'/soal_provinsi.json');
+    }
+
+    public function test_perubahan_terlarang_pada_soal_terpakai_dilewati(): void
+    {
+        // Pakai salinan folder di temp lain supaya fixture asli tidak ikut
+        // berubah bila test gagal di tengah.
+        $folder = sys_get_temp_dir().'/impor-'.uniqid();
+
+        exec('cp -R '.escapeshellarg($this->folder).' '.escapeshellarg($folder));
+
+        try {
+            $this->bankTingkat();
+
+            $this->artisan('impor:konten', ['folder' => $folder])->assertSuccessful();
+
+            $soal = Soal::query()->where('id_sumber', 'kab-2020-001')->firstOrFail();
+
+            // Soal dipakai pre-test: kunci dan materinya terkunci.
+            $pretest = Pretest::factory()->create([
+                'user_id' => User::factory()->create()->id,
+                'tingkat_id' => $soal->tingkat_id,
+            ]);
+
+            PretestJawaban::create([
+                'pretest_id' => $pretest->id,
+                'soal_id' => $soal->id,
+                'urutan' => 1,
+                'bobot' => 1,
+            ]);
+
+            // Sumber kini mengubah kunci B menjadi D dan menperbaiki teks soal.
+            $berkas = $folder.'/soal_kabupaten.json';
+            $isi = json_decode((string) file_get_contents($berkas), true);
+            $isi[0]['jawaban_benar'] = 'D';
+            $isi[0]['soal'] = 'Teks soal diperbaiki.';
+            file_put_contents($berkas, json_encode($isi, JSON_PRETTY_PRINT));
+
+            $this->artisan('impor:konten', ['folder' => $folder])
+                ->assertSuccessful();
+
+            // Kunci tetap, teks soal boleh diperbaiki.
+            $soal->refresh();
+            $this->assertSame('B', $soal->kunci_jawaban);
+            $this->assertSame('Teks soal diperbaiki.', $soal->pertanyaan);
+        } finally {
+            exec('rm -rf '.escapeshellarg($folder));
+        }
+    }
+}
