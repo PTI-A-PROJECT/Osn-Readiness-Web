@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PretestController;
 use App\Http\Controllers\Api\TingkatController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,11 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('tingkat', [TingkatController::class, 'index']);
 
     // [B2-A] Pre-test dan pemetaan.
+    Route::post('pretest', [PretestController::class, 'store']);
+    Route::get('pretest/{pretest}', [PretestController::class, 'show']);
+    Route::put('pretest/{pretest}/jawaban', [PretestController::class, 'simpanJawaban']);
+    Route::post('pretest/{pretest}/submit', [PretestController::class, 'submit']);
+
     // [B2-B] Materi, progress, latihan, dan syarat simulasi.
     // [B3-A] Simulasi, kelulusan, dan review.
     // [B3-B] Dashboard dan riwayat.
