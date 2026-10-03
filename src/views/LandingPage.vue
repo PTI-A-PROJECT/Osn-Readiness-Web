@@ -303,8 +303,8 @@ const footerColumns = [
     <footer id="tim" class="footer">
       <div class="container footer__grid">
         <div class="footer__about">
-          <a href="#" class="brand">
-            <span class="brand__mark" aria-hidden="true"></span>
+          <a href="#" class="brand" aria-label="SIAP OSN">
+            <img class="brand__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
             <span>SIAP OSN</span>
           </a>
           <p>
@@ -863,6 +863,20 @@ const footerColumns = [
   display: grid;
   grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: 32px;
+}
+.footer .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.footer .brand__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  object-fit: cover;
 }
 .footer__about p {
   font-size: 0.78rem;

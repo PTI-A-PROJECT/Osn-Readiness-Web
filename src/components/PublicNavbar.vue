@@ -17,12 +17,7 @@ defineProps({
   <header class="pubnav" :class="`pubnav--${theme}`">
     <div class="pubnav__inner">
       <RouterLink to="/" class="pubnav__brand" aria-label="SIAP OSN — ke beranda">
-        <span class="pubnav__logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 5.5C2 4.7 2.7 4 3.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H3.5A1.5 1.5 0 0 1 2 15.5v-10Z" />
-            <path d="M22 5.5c0-.8-.7-1.5-1.5-1.5H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6.5a1.5 1.5 0 0 0 1.5-1.5v-10Z" />
-          </svg>
-        </span>
+        <img class="pubnav__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
         <span class="pubnav__name">SIAP OSN</span>
       </RouterLink>
 
@@ -65,11 +60,10 @@ defineProps({
 }
 .pubnav__logo {
   width: 30px;
-  height: 26px;
+  height: 30px;
   border-radius: 8px;
-  background: #2f6fe4;
-  display: grid;
-  place-items: center;
+  object-fit: cover;
+  flex: none;
 }
 .pubnav__name {
   font-weight: 700;
