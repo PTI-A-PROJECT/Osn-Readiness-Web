@@ -1,32 +1,14 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { api, TOKEN_KEY } from '@/lib/api.js'
+import { ENDPOINTS } from '@/lib/endpoints.js'
+import { mapUser } from '@/lib/user.js'
 import { useProgressStore } from '@/stores/progress.js'
 
 // Backend Laravel (Sanctum): auth pakai Bearer token yang dikembalikan
 // login/register sebagai `data.token`, disimpan di localStorage agar sesi
-// bertahan setelah refresh. Ini penyimpangan sadar dari ARCHITECTURE_RULES
-// §2 (yang ditulis untuk backend Go cookie httpOnly).
-// Bentuk user Laravel (UserResource): {id, name, email, roles[], ...}
-// dipetakan ke bentuk FE: {id, nama, email, role, created_at}.
-function mapRole(roles) {
-  const list = Array.isArray(roles) ? roles : []
-  if (list.includes('Super Admin')) return 'super_admin'
-  if (list.includes('siswa')) return 'siswa'
-  return null
-}
-
-export function mapUser(r) {
-  if (!r) return null
-  return {
-    id: r.id,
-    nama: r.nama ?? r.name ?? '',
-    email: r.email ?? '',
-    role: r.role ?? mapRole(r.roles),
-    created_at: r.created_at ?? null,
-  }
-}
-
+// bertahan setelah refresh. Lihat ARCHITECTURE_RULES §2 + lib/endpoints.js
+// (daftar path) + lib/user.js (bentuk user).
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const initialized = ref(false)
@@ -58,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
     try {
       // GET /auth/me -> { message, data: user }
-      const { data } = await api.get('/auth/me')
+      const { data } = await api.get(ENDPOINTS.auth.me)
       user.value = mapUser(data.data)
     } catch {
       user.value = null
@@ -70,7 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(payload) {
     // POST /auth/login {email, password} -> { message, data: {user, token} }
-    const { data } = await api.post('/auth/login', payload)
+    const { data } = await api.post(ENDPOINTS.auth.login, payload)
     useProgressStore().$reset() // pastikan tidak ada sisa data akun sebelumnya
     saveToken(data.data.token)
     user.value = mapUser(data.data.user)
@@ -80,7 +62,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Tidak otomatis login — pemanggil redirect ke /login.
   async function register(payload) {
     // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.
-    const { data } = await api.post('/auth/register', {
+    const { data } = await api.post(ENDPOINTS.auth.register, {
       name: payload.nama,
       email: payload.email,
       password: payload.password,
@@ -93,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
   // sekolah/kelas hanya disimpan lokal (belum ada kolomnya di backend).
   // Karena sapaan & avatar membaca user.value, nama baru langsung tampil di mana-mana.
   async function updateProfile(payload) {
-    const { data } = await api.put('/auth/profile', {
+    const { data } = await api.put(ENDPOINTS.auth.profile, {
       name: payload.nama ?? payload.name,
       email: payload.email,
     })
@@ -103,7 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     try {
-      await api.post('/auth/logout')
+      await api.post(ENDPOINTS.auth.logout)
     } catch {
       // Abaikan: sesi lokal tetap dibersihkan agar user kembali ke /login.
     } finally {

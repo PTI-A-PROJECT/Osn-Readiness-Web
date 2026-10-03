@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { api } from '@/lib/api.js'
+import { ENDPOINTS } from '@/lib/endpoints.js'
 
 /*
  * Satu sumber data untuk semua angka di dashboard siswa dan streak di sidebar.
@@ -122,7 +123,7 @@ export const useProgressStore = defineStore('progress', () => {
     error.value = false
 
     inflight = api
-      .get('/siswa/dashboard')
+      .get(ENDPOINTS.siswa.dashboard)
       .then(({ data: res }) => {
         if (saatIni !== generasi) return
         data.value = normalize(res.data)

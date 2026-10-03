@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '@/stores/auth.js'
-import { pesanError } from '@/lib/errors.js'
+import { pesanError, pesanField } from '@/lib/errors.js'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -47,13 +47,9 @@ async function daftar() {
     toast.add({ severity: 'success', summary: 'Registrasi berhasil', detail: 'Silakan masuk dengan akun baru', life: 4000 })
     router.push('/login')
   } catch (err) {
-    // Laravel: 422 + { message, errors: { email: [...] } } (pesan Inggris).
-    // Backend Go lama: 400 + "Email sudah terdaftar". Tangani keduanya.
-    const emailGanda =
-      err?.response?.data?.errors?.email?.[0] ??
-      (err?.response?.data?.message === 'Email sudah terdaftar' ? 'Email sudah terdaftar' : null)
-    if (emailGanda && (err?.response?.status === 400 || err?.response?.status === 422)) {
-      emailError.value = emailGanda.includes('already been taken') ? 'Email sudah terdaftar' : emailGanda
+    const emailGanda = pesanField(err, 'email')
+    if (emailGanda) {
+      emailError.value = emailGanda
     } else {
       toast.add({ severity: 'error', summary: 'Registrasi gagal', detail: pesanError(err), life: 4000 })
     }

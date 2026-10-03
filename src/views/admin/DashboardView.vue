@@ -5,6 +5,7 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import { useAuthStore } from '@/stores/auth.js'
 import { api } from '@/lib/api.js'
+import { ENDPOINTS } from '@/lib/endpoints.js'
 import { pesanError } from '@/lib/errors.js'
 
 const auth = useAuthStore()
@@ -15,7 +16,7 @@ const toast = useToast()
 // hanya super_admin yang bisa lolos RequireRole di GET /admin/ping.
 async function tesAksesAdmin() {
   try {
-    const { data } = await api.get('/admin/ping')
+    const { data } = await api.get(ENDPOINTS.admin.ping)
     toast.add({ severity: 'success', summary: 'Akses admin OK', detail: data.data.message, life: 4000 })
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Akses admin ditolak', detail: pesanError(err), life: 4000 })

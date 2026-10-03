@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ENDPOINTS } from '@/lib/endpoints.js'
 
 // Kunci penyimpanan Bearer token Sanctum. Ditaruh di sini (bukan di
 // stores/auth) agar tidak circular: api <- stores/auth <- router.
@@ -26,7 +27,7 @@ api.interceptors.response.use(
     // 401 dari /auth/me (pengunjung anonim) dan 401 di halaman login
     // ("Email atau password salah") tidak boleh memicu redirect.
     // Import lazy agar tidak circular: api <- stores/auth <- router.
-    if (status === 401 && !url.endsWith('/auth/me')) {
+    if (status === 401 && !url.endsWith(ENDPOINTS.auth.me)) {
       const { default: router } = await import('@/router/index.js')
       if (router.currentRoute.value.name !== 'login') {
         const { useAuthStore } = await import('@/stores/auth.js')

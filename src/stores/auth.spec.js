@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { api, TOKEN_KEY } from '@/lib/api.js'
-import { mapUser, useAuthStore } from '@/stores/auth.js'
+import { useAuthStore } from '@/stores/auth.js'
 
 vi.mock('@/lib/api', () => ({
   TOKEN_KEY: 'siap_osn_token',
@@ -32,20 +32,6 @@ beforeEach(() => {
   setActivePinia(createPinia())
   vi.resetAllMocks()
   localStorage.clear()
-})
-
-describe('mapUser', () => {
-  it('memetakan UserResource siswa ke bentuk FE', () => {
-    expect(mapUser(userLaravel)).toEqual(userSiswa)
-  })
-
-  it('memetakan role Super Admin ke super_admin', () => {
-    expect(mapUser({ ...userLaravel, roles: ['Super Admin'] }).role).toBe('super_admin')
-  })
-
-  it('role tak dikenal menjadi null', () => {
-    expect(mapUser({ ...userLaravel, roles: ['alien'] }).role).toBeNull()
-  })
 })
 
 describe('auth store', () => {
