@@ -3,8 +3,8 @@ import PublicNavbar from '@/components/PublicNavbar.vue'
 
 const navLinks = [
   { label: 'Kenapa SIAP OSN', href: '#kenapa' },
-  { label: 'Fitur', href: '#fitur' },
   { label: 'Cara Kerja', href: '#cara-kerja' },
+  { label: 'Fitur', href: '#fitur' },
   { label: 'Tingkat Seleksi', href: '#tingkat' },
   { label: 'Tim Kami', href: '#tim' },
 ]
@@ -23,9 +23,9 @@ const competencies = [
 ]
 
 const priorities = [
-  { title: 'Prioritas tinggi', note: 'Belum dikuasai', tone: 'yellow' },
-  { title: 'Prioritas sedang', note: 'Perlu latihan', tone: 'blue' },
-  { title: 'Dikuasai', note: 'Simulasi tersedia', tone: 'green' },
+  { icon: '📊', judul: 'Dynamic Programming Dasar', sub: 'Prioritas tinggi · Belum dikuasai', tone: 'yellow' },
+  { icon: '🌳', judul: 'Graf & Pohon Lanjutan', sub: 'Prioritas sedang · Perlu latihan', tone: 'blue' },
+  { icon: '✅', judul: 'Struktur Data Dasar', sub: 'Dikuasai · Simulasi tersedia', tone: 'green' },
 ]
 
 const steps = [
@@ -49,28 +49,34 @@ const steps = [
 
 const features = [
   {
+    icon: '📝',
     title: 'Pre-test Adaptif',
     text: 'Mengukur kemampuan awal sesuai tingkat seleksi yang kamu pilih, sebelum masuk ke materi.',
   },
   {
+    icon: '🧭',
     title: 'Pemetaan Kompetensi Otomatis',
     text: 'Sistem menganalisis hasil pre-test dan menunjukkan kompetensi mana yang sudah kuat dan yang masih perlu ditingkatkan.',
     dark: true,
   },
   {
+    icon: '🎯',
     title: 'Rekomendasi Materi Personalisasi',
     text: 'Belajar difokuskan pada materi yang paling kamu butuhkan, bukan menghabiskan waktu untuk topik yang sudah dikuasai.',
   },
   {
+    icon: '🏁',
     title: 'Simulasi Seleksi Bertingkat',
     text: 'Rasakan simulasi ujian yang merepresentasikan kondisi seleksi sesungguhnya di tiap tingkat.',
   },
   {
+    icon: '💡',
     title: 'Pembahasan & Evaluasi Tiap Soal',
     text: 'Setiap soal dilengkapi pembahasan agar kamu tahu persis letak kesalahan dan cara memperbaikinya.',
     dark: true,
   },
   {
+    icon: '📈',
     title: 'Dashboard Progress Belajar',
     text: 'Pantau perkembangan belajar, riwayat pre-test, latihan, dan simulasi dalam satu tempat.',
   },
@@ -79,7 +85,6 @@ const features = [
 const levels = [
   { title: 'Kabupaten', text: 'Titik awal persiapan — membangun fondasi kompetensi dasar Informatika.' },
   { title: 'Provinsi', text: 'Materi dan simulasi meningkat mengikuti standar seleksi tingkat provinsi.' },
-  { title: 'Nasional', text: 'Simulasi seleksi tertinggi untuk membekali menghadapi kompetisi nasional.' },
 ]
 
 const footerColumns = [
@@ -111,14 +116,14 @@ const footerColumns = [
 <template>
   <div class="lp">
     <!-- Navbar -->
-    <PublicNavbar :links="navLinks" current="landing" />
+    <PublicNavbar :links="navLinks" current="landing" theme="dark" />
 
     <!-- Hero -->
     <section class="hero">
       <div class="container hero__grid">
         <div class="hero__copy">
           <span class="pill">Persiapan OSN Bidang Informatika</span>
-          <h1>Sistem Interaktif Adaptif Persiapan OSN</h1>
+          <h1>Sistem Interaktif<br />Adaptif<br />Persiapan OSN</h1>
           <p class="hero__lead">
             Persiapkan dirimu menghadapi seleksi OSN Bidang Informatika secara adaptif — dari
             tingkat Kabupaten hingga Nasional — dengan pemetaan kompetensi otomatis dan materi yang
@@ -139,7 +144,10 @@ const footerColumns = [
         <div class="map-card" role="img" aria-label="Contoh pemetaan kompetensi tingkat Provinsi">
           <div class="map-card__head">
             <strong>Pemetaan Kompetensi</strong>
-            <span class="pill pill--muted">Tingkat Provinsi</span>
+            <span class="map-card__user">
+              <span class="map-card__avatar" aria-hidden="true"></span>
+              <span class="pill pill--muted">Tingkat Provinsi</span>
+            </span>
           </div>
           <ul class="bars">
             <li v-for="c in competencies" :key="c.name">
@@ -165,7 +173,7 @@ const footerColumns = [
     <section id="kenapa" class="section section--white">
       <div class="container split">
         <div class="split__text">
-          <h2 class="marked">Kenapa persiapan OSN itu sulit?</h2>
+          <h2>Kenapa persiapan OSN itu <span class="hl">sulit?</span></h2>
           <p>
             Jenjang seleksi bertahap (Kabupaten → Provinsi → Nasional), materi yang luas, dan
             minimnya simulasi realistis membuat siswa sulit tahu harus fokus belajar dari mana.
@@ -197,17 +205,21 @@ const footerColumns = [
     <section id="solusi" class="section section--navy">
       <div class="container split split--reverse">
         <div class="priority-card">
+          <h3 class="priority-card__title">Rekomendasi Materi Kamu</h3>
           <span class="tag tag--green">Diperbarui otomatis</span>
           <ul>
-            <li v-for="p in priorities" :key="p.title">
-              <span class="dot" :class="`dot--${p.tone}`"></span>
-              <span>{{ p.title }} · {{ p.note }}</span>
+            <li v-for="p in priorities" :key="p.judul">
+              <span class="rec-icon" :class="`dot--${p.tone}`" aria-hidden="true">{{ p.icon }}</span>
+              <span>
+                <strong>{{ p.judul }}</strong>
+                <small>{{ p.sub }}</small>
+              </span>
             </li>
           </ul>
         </div>
         <div class="split__text split__text--light">
           <small class="kicker">Solusinya</small>
-          <h2 class="marked marked--light">Bagaimana SIAP OSN menjawab masalah itu?</h2>
+          <h2>Bagaimana SIAP OSN <span class="hl">menjawab masalah itu?</span></h2>
           <p>
             SIAP OSN memetakan kompetensi siswa secara otomatis lewat pre-test, memberi rekomendasi
             materi yang personal, dan menyediakan simulasi seleksi bertingkat lengkap dengan
@@ -240,10 +252,10 @@ const footerColumns = [
     <!-- Fitur -->
     <section id="fitur" class="section section--white">
       <div class="container">
-        <h2 class="marked marked--block">Semua yang kamu butuhkan untuk satu jalur persiapan</h2>
+        <h2 class="marked--block">Semua yang kamu butuhkan untuk <span class="hl">satu jalur persiapan</span></h2>
         <div class="features">
           <article v-for="f in features" :key="f.title" class="feature" :class="{ 'feature--dark': f.dark }">
-            <span class="feature__icon" aria-hidden="true"></span>
+            <span class="feature__icon" aria-hidden="true">{{ f.icon }}</span>
             <h3>{{ f.title }}</h3>
             <p>{{ f.text }}</p>
           </article>
@@ -254,18 +266,19 @@ const footerColumns = [
     <!-- Tingkat seleksi -->
     <section id="tingkat" class="section section--soft">
       <div class="container levels">
-        <h2 class="marked marked--center">Naik tingkat sesuai pencapaianmu</h2>
+        <small class="kicker kicker--center">Jenjang seleksi</small>
+        <h2 class="marked--center">Naik tingkat sesuai <span class="hl">pencapaianmu</span></h2>
         <p class="levels__lead">
           Tingkat berikutnya terbuka otomatis setelah kamu memenuhi ketentuan pada tingkat
           sebelumnya.
         </p>
         <div class="levels__row">
-          <template v-for="(l, i) in levels" :key="l.title">
+          <template v-for="l in levels" :key="l.title">
             <article class="level">
               <h3>{{ l.title }}</h3>
               <p>{{ l.text }}</p>
             </article>
-            <span v-if="i < levels.length - 1" class="levels__arrow" aria-hidden="true">›</span>
+            <span class="levels__arrow" aria-hidden="true">→</span>
           </template>
         </div>
       </div>
@@ -287,8 +300,8 @@ const footerColumns = [
     <footer id="tim" class="footer">
       <div class="container footer__grid">
         <div class="footer__about">
-          <a href="#" class="brand">
-            <span class="brand__mark" aria-hidden="true"></span>
+          <a href="#" class="brand" aria-label="SIAP OSN">
+            <img class="brand__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
             <span>SIAP OSN</span>
           </a>
           <p>
@@ -344,7 +357,7 @@ const footerColumns = [
 .lp p {
   margin: 0;
 }
-.lp a {
+.lp a:not(.btn) {
   color: inherit;
   text-decoration: none;
 }
@@ -366,6 +379,7 @@ const footerColumns = [
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
+  text-decoration: none;
   transition: background 0.15s, border-color 0.15s;
 }
 .btn--sm {
@@ -475,6 +489,17 @@ const footerColumns = [
   font-size: 0.88rem;
   margin-bottom: 18px;
 }
+.map-card__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.map-card__avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, #4b8df8, #f5c96a, #38b27a, #4b8df8);
+}
 .bars {
   list-style: none;
   margin: 0;
@@ -573,25 +598,29 @@ const footerColumns = [
   font-size: 0.78rem;
   color: #c8d2ea;
 }
-
-/* Penanda kuning di bawah judul */
-.marked {
-  display: inline;
-  background: linear-gradient(transparent 82%, var(--yellow) 82%, var(--yellow) 92%, transparent 92%);
-  padding-bottom: 2px;
+.kicker--dark {
+  color: var(--ink);
+  font-weight: 600;
 }
-.split__text .marked {
+.kicker--center {
   display: block;
-  width: 100%;
+  text-align: center;
+  margin-bottom: 14px;
 }
-.marked--light {
-  color: #fff;
+.levels .marked--center {
+  margin-top: 14px;
 }
-.marked--block {
+
+/* Sorotan spidol kuning di belakang potongan judul (persis Figma) */
+.hl {
+  background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
+}
+.lp .marked--block {
   display: block;
   max-width: 14em;
   font-size: clamp(1.6rem, 3vw, 2.1rem);
-  margin-bottom: 40px;
+  margin-top: 14px;
+  margin-bottom: 64px;
 }
 .marked--center {
   display: block;
@@ -616,6 +645,10 @@ const footerColumns = [
   border-radius: 14px;
   padding: 20px 24px 8px;
 }
+.priority-card__title {
+  font-size: 0.95rem;
+  margin: 0 0 4px;
+}
 .priority-card ul {
   list-style: none;
   margin: 12px 0 0;
@@ -630,6 +663,15 @@ const footerColumns = [
   font-size: 0.8rem;
   color: var(--muted);
 }
+.priority-card li strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+.priority-card li small {
+  display: block;
+  font-size: 0.72rem;
+}
 .tag {
   display: block;
   width: fit-content;
@@ -643,11 +685,14 @@ const footerColumns = [
   background: #e3f5ec;
   color: #1f8a5b;
 }
-.dot {
+.rec-icon {
   width: 32px;
   height: 32px;
   border-radius: 8px;
   flex: none;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
 }
 .dot--yellow {
   background: #fdf0d5;
@@ -714,12 +759,14 @@ const footerColumns = [
   padding: 22px;
 }
 .feature__icon {
-  display: block;
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
   border-radius: 8px;
   background: var(--soft);
   margin-bottom: 26px;
+  font-size: 1.2rem;
 }
 .feature h3 {
   font-size: 0.92rem;
@@ -742,16 +789,16 @@ const footerColumns = [
 }
 
 /* Tingkat */
-.levels__lead {
+.lp .levels__lead {
   text-align: center;
   color: var(--muted);
   font-size: 0.92rem;
   max-width: 46ch;
-  margin: 16px auto 40px;
+  margin: 16px auto 64px;
 }
 .levels__row {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr auto;
   align-items: center;
   gap: 12px;
 }
@@ -803,6 +850,20 @@ const footerColumns = [
   display: grid;
   grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: 32px;
+}
+.footer .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.footer .brand__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  object-fit: cover;
 }
 .footer__about p {
   font-size: 0.78rem;

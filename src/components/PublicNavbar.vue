@@ -9,19 +9,15 @@ import { RouterLink } from 'vue-router'
 defineProps({
   links: { type: Array, default: () => [] },
   current: { type: String, default: 'landing' }, // landing | login | register
+  theme: { type: String, default: 'light' }, // light | dark (dark = di atas hero navy)
 })
 </script>
 
 <template>
-  <header class="pubnav">
+  <header class="pubnav" :class="`pubnav--${theme}`">
     <div class="pubnav__inner">
       <RouterLink to="/" class="pubnav__brand" aria-label="SIAP OSN — ke beranda">
-        <span class="pubnav__logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 5.5C2 4.7 2.7 4 3.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H3.5A1.5 1.5 0 0 1 2 15.5v-10Z" />
-            <path d="M22 5.5c0-.8-.7-1.5-1.5-1.5H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6.5a1.5 1.5 0 0 0 1.5-1.5v-10Z" />
-          </svg>
-        </span>
+        <img class="pubnav__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
         <span class="pubnav__name">SIAP OSN</span>
       </RouterLink>
 
@@ -64,11 +60,10 @@ defineProps({
 }
 .pubnav__logo {
   width: 30px;
-  height: 26px;
+  height: 30px;
   border-radius: 8px;
-  background: #2f6fe4;
-  display: grid;
-  place-items: center;
+  object-fit: cover;
+  flex: none;
 }
 .pubnav__name {
   font-weight: 700;
@@ -127,6 +122,44 @@ defineProps({
   outline: 2px solid #1e4b8f;
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Varian gelap: dipakai landing di atas hero navy (sesuai Figma) */
+.pubnav--dark {
+  background: #1a2d4d;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+.pubnav--dark .pubnav__brand,
+.pubnav--dark .pubnav__name {
+  color: #fff;
+}
+.pubnav--dark .pubnav__links a {
+  color: #c8d2ea;
+}
+.pubnav--dark .pubnav__links a:hover {
+  color: #fff;
+}
+.pubnav--dark .pubnav__btn--outline {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.pubnav--dark .pubnav__btn--outline:hover {
+  border-color: #fff;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.pubnav--dark .pubnav__btn--primary {
+  background: #fff;
+  color: #1a2d4d;
+}
+.pubnav--dark .pubnav__btn--primary:hover {
+  background: #e8edf8;
+}
+.pubnav--dark .pubnav__brand:focus-visible,
+.pubnav--dark .pubnav__links a:focus-visible,
+.pubnav--dark .pubnav__btn:focus-visible {
+  outline-color: #f5c96a;
 }
 
 @media (max-width: 900px) {
