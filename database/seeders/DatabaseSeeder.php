@@ -13,7 +13,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
+            TingkatSeleksiSeeder::class,
+            AturanPemetaanSeeder::class,
             SuperAdminSeeder::class,
         ]);
+
+        // Konten contoh hanya untuk pengembangan lokal dan test.
+        if (app()->environment('local', 'testing')) {
+            $this->call(KontenContohSeeder::class);
+        }
     }
 }

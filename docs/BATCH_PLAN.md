@@ -219,9 +219,15 @@ CRUD `/api/admin/*` per checklist ARCHITECTURE_RULES §10 untuk:
 
 ## Keputusan terbuka (putuskan sebelum/selama B0)
 
-1. **Tabel `sessions` di-drop di migration 1**, padahal Breeze (web) dari commit sebelumnya memakai session. Pilihan: ubah `SESSION_DRIVER` ke `cookie`/`file`, atau buang Breeze web bila frontend sepenuhnya Vue + token.
-2. **Role `user` → `siswa`**: rename di seeder, `UserService::registerUser`, test, dan ARCHITECTURE_RULES §8.
-3. **Angka usulan**: throttle login (5/menit), toleransi waktu simulasi (30 detik), backoff job, ukuran upload (2 MB), ambang peringatan bank (2 putaran), masa berlaku token.
-4. **`id_sumber`** untuk impor belum ada di skema `materi`/`soal`. Tambah migration ke-20 (nullable, unique per tabel) di B0-A, atau simpan pemetaan di tabel terpisah.
-5. **Masa retensi** untuk PurgeAkunJob belum ditentukan.
-6. **Layanan Python** (`/hitung/penilaian`, `/hitung/pretest`) di luar repo ini; perlu pemilik terpisah dan contoh kontrak final untuk test kontrak B1-C.
+Status per 2 Oktober 2026:
+
+| # | Keputusan | Status |
+| --- | --- | --- |
+| 1 | **Tabel `sessions`**: Breeze web tetap dipakai, jadi `SESSION_DRIVER=cookie` di `.env.example` dan migration 1 tetap drop tabel `sessions`. | **Selesai — `SESSION_DRIVER=cookie`** |
+| 2 | **Role `user` → `siswa`**: rename di seeder, `UserService::registerUser`, test, dan permission admin berubah dari `users.*` jadi `siswa.*`. | **Selesai — sudah diterapkan di B0-A.** ARCHITECTURE_RULES §8 masih menyebut `user` dan Resource admin `users.*`; pembaruannya milik Orang 2 (B0-B) |
+| 3 | **Angka usulan**: throttle login 5/menit per email+IP, toleransi simulasi 30 detik, backoff job `[10, 30, 60, 120, 300]`, upload maks 2 MB, ambang peringatan bank 2 putaran, masa berlaku token 7 hari. | **Selesai — dipakai mulai B1-A** |
+| 4 | **`id_sumber`** untuk impor: migration ke-20 `2026_10_02_090019_add_id_sumber_to_materi_and_soal.php`, kolom `string(100) nullable unique` di `materi` dan `soal`. | **Selesai — sudah ada di B0-A**, dipakai B2-D |
+| 5 | **Masa retensi** akun untuk PurgeAkunJob: 30 hari sejak `deleted_at`. | **Selesai — dipakai mulai B3-C** |
+| 6 | **Layanan Python** (`/hitung/penilaian`, `/hitung/pretest`) di luar repo ini; perlu pemilik terpisah dan contoh kontrak final untuk test kontrak B1-C. | **Terbuka** |
+
+Catatan tambahan dari B0-A: kolom `soal.gambar` tidak ada di Kode migration, tapi dibutuhkan oleh importer (B2-D) dan `SoalResource` (B1-B), jadi ditambahkan di migration 7.

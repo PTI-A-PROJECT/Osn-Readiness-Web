@@ -17,26 +17,26 @@ class UserPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('users.viewAny');
+        return $user->hasPermissionTo('siswa.viewAny');
     }
 
     public function view(User $user, User $model): bool
     {
-        return $user->hasPermissionTo('users.view');
+        return $user->hasPermissionTo('siswa.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('users.create');
+        return $user->hasPermissionTo('siswa.create');
     }
 
     public function update(User $user, User $model): bool
     {
-        return $user->hasPermissionTo('users.update');
+        return $user->hasPermissionTo('siswa.update');
     }
 
     public function delete(User $user, User $model): bool
     {
-        return $user->hasPermissionTo('users.delete');
+        return $user->hasPermissionTo('siswa.delete');
     }
 }

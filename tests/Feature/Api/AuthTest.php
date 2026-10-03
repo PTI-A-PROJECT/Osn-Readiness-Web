@@ -25,7 +25,7 @@ class AuthTest extends TestCase
             'password' => 'password',
             'is_active' => true,
         ]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->postJson('/api/auth/login', [
             'email' => 'test@example.com',
@@ -62,7 +62,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create([
             'is_active' => true,
         ]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($user)->getJson('/api/auth/me');
 
@@ -85,7 +85,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create([
             'is_active' => true,
         ]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($user)->postJson('/api/auth/logout');
 
@@ -98,7 +98,7 @@ class AuthTest extends TestCase
         $user = User::factory()->create([
             'is_active' => false,
         ]);
-        $user->assignRole('user');
+        $user->assignRole('siswa');
 
         $response = $this->actingAs($user)->getJson('/api/auth/me');
 

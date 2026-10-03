@@ -31,6 +31,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'is_active' => true,
+            'tingkat_aktif_id' => null,
         ];
     }
 
@@ -42,5 +43,39 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Akun yang dinonaktifkan, ditolak middleware active dengan 403.
+     */
+    public function tidakAktif(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
+    }
+
+    /**
+     * Akun yang sudah dihapus dan tidak lagi bisa login.
+     */
+    public function terhapus(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'deleted_at' => now(),
+        ]);
+    }
+
+    public function siswa(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('siswa');
+        });
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('Super Admin');
+        });
     }
 }

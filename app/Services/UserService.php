@@ -23,7 +23,7 @@ class UserService implements UserServiceInterface
     {
         return DB::transaction(function () use ($data): User {
             $user = $this->userRepository->create($data);
-            $user->assignRole('user');
+            $user->assignRole('siswa');
 
             return $user;
         });
