@@ -21,7 +21,9 @@ use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
+use App\Contracts\Services\BankSoalServiceInterface;
 use App\Contracts\Services\BelajarServiceInterface;
+use App\Contracts\Services\DashboardAdminServiceInterface;
 use App\Contracts\Services\KompetensiServiceInterface;
 use App\Contracts\Services\KonteksSoalServiceInterface;
 use App\Contracts\Services\LatihanServiceInterface;
@@ -57,7 +59,9 @@ use App\Services\Admin\SiswaService;
 use App\Services\Admin\TingkatService as AdminTingkatService;
 use App\Services\AturanService;
 use App\Services\AuthService;
+use App\Services\BankSoalService;
 use App\Services\BelajarService;
+use App\Services\DashboardAdminService;
 use App\Services\LatihanService;
 use App\Services\PenilaianBelumDiimplementasi;
 use App\Services\PretestService;
@@ -104,6 +108,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PretestServiceInterface::class, PretestService::class);
 
         // [B2-B] Latihan yang sesungguhnya menggantikan stub B1-C/B2-A.
+        $this->app->bind(BankSoalServiceInterface::class, BankSoalService::class);
+        $this->app->bind(DashboardAdminServiceInterface::class, DashboardAdminService::class);
         $this->app->bind(BelajarServiceInterface::class, BelajarService::class);
         $this->app->bind(ProgressBelajarRepositoryInterface::class, ProgressBelajarRepository::class);
         $this->app->bind(QuizPengerjaanRepositoryInterface::class, QuizPengerjaanRepository::class);
