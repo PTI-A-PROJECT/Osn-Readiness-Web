@@ -12,16 +12,24 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 | # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk | Status 3 Okt |
 | --- | --- | --- | --- | --- |
-| 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya | ✅ merged ke `dev` |
-| 1b | B0-B · Kontrak & error (diambil alih) | — | B1-C | ✅ `feat/b0b-kontrak`, siap merge |
-| 2 | B1-A · Auth, AturanService, PutaranService | — | B2-B, B3-B | ✅ `feat/b1a-auth-putaran`, siap merge |
-| 3 | B1-B · SoalPicker + SoalResource + Randomizer | — | B1-E, B2-B, B2-C | Berikutnya |
-| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | |
-| 5 | B3-A · Simulasi & kelulusan | B2-B (SyaratSimulasiService) | B3-B bagian simulasi | |
-| 6 | B3-C · PurgeAkunJob | — | — | |
-| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | |
+| 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya | ✅ merged (`dev` `e860823`) |
+| 1b | B0-B · Kontrak & error (diambil alih) | — | B1-C | ✅ merged (PR#7) |
+| 2 | B1-A · Auth, AturanService, PutaranService | — | B2-B, B3-B | ✅ merged (PR#8) |
+| 3 | B1-B · SoalPicker + SoalResource + Randomizer | — | B1-E, B2-B, B2-C | ✅ merged (PR#10) |
+| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | 🔧 PR#14 open |
+| 5 | B3-A · Simulasi & kelulusan | **B2-B** (SyaratSimulasiService) | B3-B bagian simulasi | ⛔ terblokir |
+| 6 | B3-C · PurgeAkunJob | — | — | ✅ merged (PR#11) |
+| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | ⛔ terblokir |
 
-**Tugas merge segera** (urutan dari [HANDOFF-KONDISI.md](HANDOFF-KONDISI.md)): PR#5 (revert di `main`) → `feat/b0b-kontrak` ke `dev` → `feat/b1a-auth-putaran` ke `dev` → PR rilis `dev` → `main`. Beri tahu Orang 2 setelah B0-B merge, karena B1-C dibangun ulang di atasnya.
+**Posisi sekarang.** `dev` hijau di `e860823` (180/180 test). PR#14 (B2-A) menunggu review.
+Tidak ada lagi paket Orang 1 yang bisa dikerjakan sebelum B2-B masuk: B3-A butuh
+B2-B, dan B4 butuh semua paket. Lihat [HANDOFF-KONDISI.md §6](HANDOFF-KONDISI.md).
+
+**Dua hal yang perlu disepakati sebelum Orang 2 mulai B1-D** (detail di
+[HANDOFF-KONDISI.md §7](HANDOFF-KONDISI.md)): rute admin siswa (keputusan #7) dan
+pemilik grup rute `admin`. `tests/Feature/Api/UserApiTest.php` milik B1-A memakai
+`/api/users`, jadi penghapusan rute itu di B1-D akan menggagalkan test yang sudah ada
+di `dev`.
 
 **Bila B1-C belum siap saat mulai B2-A:** pakai `FakePerhitunganClient` / mock `PerhitunganClientInterface` dengan bentuk kontrak di [BATCH_PLAN.md § B1-C](BATCH_PLAN.md#b1-c--perhitunganclient--nilaiulangjob-be-11).
 
