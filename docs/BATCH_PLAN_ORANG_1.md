@@ -10,23 +10,29 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 ## Urutan kerja
 
-| # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk |
-| --- | --- | --- | --- |
-| 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya (wajib merge paling awal) |
-| 2 | B1-A · Auth, AturanService, PutaranService | B0-B | B2-B, B3-B |
-| 3 | B1-B · SoalPicker + SoalResource | B0-B | B1-E, B2-B, B2-C |
-| 4 | B2-A · Pre-test & pemetaan | B1-C | NilaiUlangJob jenis pretest |
-| 5 | B3-A · Simulasi & kelulusan | B2-B (SyaratSimulasiService) | B3-B bagian simulasi |
-| 6 | B3-C · PurgeAkunJob | — | — |
-| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — |
+| # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk | Status 3 Okt |
+| --- | --- | --- | --- | --- |
+| 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya | ✅ merged ke `dev` |
+| 1b | B0-B · Kontrak & error (diambil alih) | — | B1-C | ✅ `feat/b0b-kontrak`, siap merge |
+| 2 | B1-A · Auth, AturanService, PutaranService | — | B2-B, B3-B | ✅ `feat/b1a-auth-putaran`, siap merge |
+| 3 | B1-B · SoalPicker + SoalResource + Randomizer | — | B1-E, B2-B, B2-C | Berikutnya |
+| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | |
+| 5 | B3-A · Simulasi & kelulusan | B2-B (SyaratSimulasiService) | B3-B bagian simulasi | |
+| 6 | B3-C · PurgeAkunJob | — | — | |
+| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | |
 
-**Bila harus menunggu B2-B sebelum B3-A:** mulai B3-A dengan mock `SyaratSimulasiServiceInterface` (kontraknya sudah ada dari B0-B), lalu ganti ke implementasi asli setelah B2-B merge.
+**Tugas merge segera** (urutan dari [HANDOFF-KONDISI.md](HANDOFF-KONDISI.md)): PR#5 (revert di `main`) → `feat/b0b-kontrak` ke `dev` → `feat/b1a-auth-putaran` ke `dev` → PR rilis `dev` → `main`. Beri tahu Orang 2 setelah B0-B merge, karena B1-C dibangun ulang di atasnya.
+
+**Bila B1-C belum siap saat mulai B2-A:** pakai `FakePerhitunganClient` / mock `PerhitunganClientInterface` dengan bentuk kontrak di [BATCH_PLAN.md § B1-C](BATCH_PLAN.md#b1-c--perhitunganclient--nilaiulangjob-be-11).
+
+**Bila harus menunggu B2-B sebelum B3-A:** mulai B3-A dengan mock `SyaratSimulasiServiceInterface` (sudah ada), lalu ganti ke implementasi asli setelah B2-B merge.
 
 ## Aturan kerja
 
-- Satu paket = satu branch `feat/<kode-paket>-<nama>` (contoh `feat/b1a-putaran`) = satu PR ke `dev`. Orang 2 me-review PR-mu, dan sebaliknya.
+- Ikuti [Alur branch & PR](BATCH_PLAN.md#alur-branch--pr-wajib-setelah-insiden-pr2) dan [Konvensi](BATCH_PLAN.md#konvensi-yang-sudah-berlaku-di-kode) di BATCH_PLAN. Ringkasnya: branch dari `dev` terbaru, PR hanya ke `dev`, jangan buat ulang file yang sudah ada.
+- Satu paket = satu branch `feat/<kode-paket>-<nama>` = satu PR ke `dev`. Orang 2 me-review PR-mu, dan sebaliknya.
 - File bersama (`routes/api.php`, `RepositoryServiceProvider`, `RolesAndPermissionsSeeder`, `bootstrap/app.php`): tulis hanya di blok berlabel paketmu.
-- Signature di `app/Contracts/**` dibuat Orang 2 di B0-B. Perubahan harus disepakati berdua.
+- Kontrak yang belum ada dibuat oleh pemilik paket yang pertama memakainya. Untukmu: `RandomizerInterface`, `SoalPickerServiceInterface` + DTO (B1-B), dan `KelulusanServiceInterface` (B3-A). Perubahan kontrak yang sudah ada harus disepakati berdua.
 - Test memakai PostgreSQL. Python selalu di-fake (`FakePerhitunganClient` dari B0-B atau `Http::fake`).
 - DoD tiap paket: Feature test (401/403/422/sukses + kode error bisnis), Unit test untuk service berlogika, `vendor/bin/pint --test` bersih, `composer test` hijau, tidak ada query di Controller.
 
@@ -63,8 +69,9 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 ## 3. B1-B · SoalPicker + SoalResource (BE-03)
 
-**Butuh:** B0-A, B0-B
+**Butuh:** B0-A, B0-B. Branch dari `dev` setelah B0-B dan B1-A merge.
 
+- Kontrak (sisa B0-B): `App\Contracts\Services\SoalPickerServiceInterface`, DTO `App\DTOs\PermintaanSoal` (tingkat, peruntukan, jumlah, persen level, batas materi, soal dikecualikan, soal dihindari) dan `App\DTOs\SoalTerpilih` (soal, urutan, bobot), `RandomizerInterface` + `SeededRandomizer` untuk test.
 - Fungsi kuota level terpisah (misalnya `KuotaLevel::hitung(jumlah, persen[])`: floor + sisa ke pecahan terbesar; 30 → 15/9/6). **Dipakai ulang Orang 2 di B2-C.**
 - Langkah 1–7: kandidat (tingkat, peruntukan, belum dihapus, minus dikecualikan), batas materi pre-test (2 per materi, level dengan sisa kuota terbanyak), isi sisa, prioritas non-dihindari untuk simulasi, `BankSoalTidakCukupException` dengan rincian, acak urutan, pasang bobot.
 - Tidak menulis ke DB; Randomizer disuntikkan.
@@ -77,7 +84,7 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 **Butuh:** B1-A, B1-B, B1-C (Orang 2)
 
 - `POST /api/pretest`, `GET /api/pretest/{id}`, `PUT .../jawaban`, `POST .../submit` sesuai langkah di dokumen (403/409, kembalikan yang berjalan, tangkap pelanggaran `pretest_berjalan_unique`, isi `tingkat_aktif_id`).
-- Submit dua transaksi dengan Python di antaranya; `PretestService::selesaikanPenilaian` idempoten (implementasi `PenilaianServiceInterface`), menyimpan `status_benar`, nilai, `pemetaan_materi`, `rekomendasi_materi`.
+- Submit dua transaksi dengan Python di antaranya; `PretestService::selesaikanPenilaian(int $id)` idempoten (implementasi `PretestServiceInterface extends PenilaianServiceInterface` dari B1-C), menyimpan `status_benar`, nilai, `pemetaan_materi`, `rekomendasi_materi`.
 - Akses milik orang lain → 404.
 
 **Test:** alur penuh dengan Python palsu, Python gagal → 503 + job ter-dispatch, submit dua kali, soal pre-test kedua tidak mengulang soal pertama.
@@ -89,7 +96,8 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 - `GET /api/simulasi`, `POST /api/simulasi/{id}/mulai`, `GET/PUT/POST /api/hasil-simulasi/{id}[...]`, `GET .../review`.
 - Mulai dalam satu transaksi dengan `lockForUpdate` pada pretest putaran aktif, urutan cek 1–9 sesuai dokumen; daftar dihindari diteruskan ke picker; `batas_pada` disimpan.
 - Simpan jawaban: 409 `WAKTU_HABIS` setelah `batas_pada` + 30 detik.
-- Submit dua transaksi; `SimulasiService::selesaikanPenilaian` memanggil `KelulusanService` di transaksi ke-2 (lulus → `kenaikan_tingkat`; gagal ke-3 → hapus progress dan quiz_pengerjaan tingkat itu + `kenaikan_tingkat` tidak_lulus).
+- Buat `KelulusanServiceInterface` (sisa B0-B) dan implementasinya.
+- Submit dua transaksi; `SimulasiService::selesaikanPenilaian(int $id)` (implementasi `SimulasiServiceInterface` dari B1-C) memanggil `KelulusanService` di transaksi ke-2 (lulus → `kenaikan_tingkat`; gagal ke-3 → hapus progress dan quiz_pengerjaan tingkat itu + `kenaikan_tingkat` tidak_lulus).
 - Command `simulasi:tutup-kedaluwarsa` tiap menit, `withoutOverlapping`, didaftarkan di `routes/console.php`.
 
 **Test:** lulus di percobaan 1; gagal 3 kali → data terhapus dan pre-test baru boleh; dua request mulai bersamaan; scheduler menutup simulasi kedaluwarsa; nilai via job tetap memicu kelulusan.
@@ -110,7 +118,7 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 ## Keputusan terbuka yang kamu pegang
 
-Semua sudah diputuskan per 2 Oktober 2026; rincian dan alasannya ada di [BATCH_PLAN.md](BATCH_PLAN.md#keputusan-terbuka-putuskan-sebelums selama-b0).
+Semua sudah diputuskan per 2 Oktober 2026; rincian dan alasannya ada di [BATCH_PLAN.md](BATCH_PLAN.md#keputusan-terbuka-putuskan-sebelumselama-b0).
 
 | # | Keputusan | Hasil |
 | --- | --- | --- |
