@@ -620,7 +620,7 @@ const footerColumns = [
   max-width: 14em;
   font-size: clamp(1.6rem, 3vw, 2.1rem);
   margin-top: 14px;
-  margin-bottom: 40px;
+  margin-bottom: 64px;
 }
 .marked--center {
   display: block;
@@ -794,7 +794,7 @@ const footerColumns = [
   color: var(--muted);
   font-size: 0.92rem;
   max-width: 46ch;
-  margin: 16px auto 40px;
+  margin: 16px auto 64px;
 }
 .levels__row {
   display: grid;
