@@ -42,4 +42,16 @@ describe('router guard', () => {
   it('tamu buka /login tetap di login', async () => {
     expect(await pushAs('/login', null)).toBe('login')
   })
+
+  it('siswa buka /siswa lolos ke siswa.dashboard', async () => {
+    expect(await pushAs('/siswa', siswa)).toBe('siswa.dashboard')
+  })
+
+  it('super_admin buka /siswa diarahkan ke forbidden', async () => {
+    expect(await pushAs('/siswa', admin)).toBe('forbidden')
+  })
+
+  it('tamu buka /siswa diarahkan ke login', async () => {
+    expect(await pushAs('/siswa', null)).toBe('login')
+  })
 })

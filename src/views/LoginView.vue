@@ -59,6 +59,13 @@ async function masuk() {
   }
 }
 
+function lupaPassword() {
+  // Belum ada endpoint reset password di backend — jangan routing ke
+  // halaman yang tidak ada (dulu RouterLink ke /forgot-password yang
+  // tidak terdaftar dan jatuh ke not-found).
+  toast.add({ severity: 'info', summary: 'Segera hadir', detail: 'Reset kata sandi belum tersedia.', life: 3000 })
+}
+
 function masukGoogle() {
   // TODO: sambungkan ke Google OAuth
   toast.add({ severity: 'info', summary: 'Segera hadir', detail: 'Login dengan Google belum tersedia.', life: 3000 })
@@ -147,7 +154,7 @@ function masukGoogle() {
             <div class="field">
               <div class="field__row">
                 <label for="password" class="field__label">Kata Sandi</label>
-                <RouterLink to="/forgot-password" class="forgot">Lupa kata sandi?</RouterLink>
+                <a href="#" class="forgot" @click.prevent="lupaPassword">Lupa kata sandi?</a>
               </div>
               <div class="field__wrap">
                 <span class="field__icon">
@@ -445,6 +452,7 @@ function masukGoogle() {
   font-weight: 600;
   color: var(--blue);
   text-decoration: none;
+  cursor: pointer;
 }
 .forgot:hover {
   text-decoration: underline;
