@@ -64,7 +64,7 @@ async function selesai() {
     setTimeout(() => {
       router.push('/login')
     }, 1200)
-  } catch (err) {
+  } catch {
     toast.add({
       severity: 'error',
       summary: 'Gagal mengubah kata sandi',
