@@ -8,6 +8,7 @@ import { dashboardFor } from '@/router/index.js'
 import { pesanError } from '@/lib/errors.js'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
+import PublicNavbar from '@/components/PublicNavbar.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -20,14 +21,6 @@ const remember = ref(false)
 const emailError = ref('')
 const passwordError = ref('')
 const loading = ref(false)
-
-const navLinks = [
-  { label: 'Kenapa SIAP OSN', href: '#kenapa' },
-  { label: 'Fitur', href: '#fitur' },
-  { label: 'Cara Kerja', href: '#cara-kerja' },
-  { label: 'Tingkat Seleksi', href: '#tingkat-seleksi' },
-  { label: 'Tim Kami', href: '#tim-kami' },
-]
 
 const highlights = [
   'Pre-test & pemetaan kompetensi',
@@ -74,27 +67,7 @@ function masukGoogle() {
 
 <template>
   <div class="page">
-    <!-- NAVBAR -->
-    <header class="navbar">
-      <div class="navbar__inner">
-        <RouterLink to="/" class="brand">
-          <span class="brand__logo">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 5.5C2 4.7 2.7 4 3.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H3.5A1.5 1.5 0 0 1 2 15.5v-10Z" />
-              <path d="M22 5.5c0-.8-.7-1.5-1.5-1.5H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6.5a1.5 1.5 0 0 0 1.5-1.5v-10Z" />
-            </svg>
-            <span class="brand__dot"></span>
-          </span>
-          <span class="brand__name">SIAP OSN</span>
-        </RouterLink>
-
-        <nav class="nav">
-          <a v-for="link in navLinks" :key="link.label" :href="link.href" class="nav__link">{{ link.label }}</a>
-          <RouterLink to="/login" class="nav-btn nav-btn--outline">Masuk</RouterLink>
-          <RouterLink to="/register" class="nav-btn nav-btn--primary">Daftar Gratis</RouterLink>
-        </nav>
-      </div>
-    </header>
+    <PublicNavbar current="login" />
 
     <main class="content">
       <!-- KIRI -->
@@ -227,89 +200,6 @@ function masukGoogle() {
   font-family: 'Inter', system-ui, sans-serif;
   color: var(--navy);
   background: #fff;
-}
-
-/* ---------- Navbar ---------- */
-.navbar {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.navbar__inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  height: 62px;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--navy);
-}
-.brand__logo {
-  position: relative;
-  width: 30px;
-  height: 26px;
-  border-radius: 8px;
-  background: #2f6fe4;
-  display: grid;
-  place-items: center;
-}
-.brand__dot {
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #22c55e;
-  border: 1.5px solid #fff;
-}
-.brand__name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-}
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-.nav__link {
-  font-size: 13px;
-  color: #334155;
-  text-decoration: none;
-}
-.nav__link:hover {
-  color: var(--blue);
-}
-.nav-btn {
-  padding: 9px 18px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid transparent;
-}
-.nav-btn--outline {
-  background: #fff;
-  color: var(--navy);
-  border-color: var(--border);
-}
-.nav-btn--primary {
-  background: var(--blue);
-  color: #fff;
-}
-.nav-btn--primary:hover {
-  background: var(--blue-hover);
 }
 
 /* ---------- Layout ---------- */
@@ -573,10 +463,7 @@ function masukGoogle() {
   background: var(--border);
 }
 
-/* Cegah teks navbar & tombol turun baris */
-.brand__name,
-.nav__link,
-.nav-btn,
+/* Cegah teks tombol turun baris */
 .google-btn.p-button,
 .login-btn.p-button {
   white-space: nowrap;
@@ -584,12 +471,6 @@ function masukGoogle() {
 
 /* ---------- Responsif ---------- */
 @media (max-width: 900px) {
-  .nav__link {
-    display: none;
-  }
-  .navbar__inner {
-    justify-content: space-between;
-  }
   .content {
     grid-template-columns: 1fr;
   }

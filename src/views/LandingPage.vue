@@ -1,4 +1,6 @@
 <script setup>
+import PublicNavbar from '@/components/PublicNavbar.vue'
+
 const navLinks = [
   { label: 'Kenapa SIAP OSN', href: '#kenapa' },
   { label: 'Fitur', href: '#fitur' },
@@ -109,21 +111,7 @@ const footerColumns = [
 <template>
   <div class="lp">
     <!-- Navbar -->
-    <header class="nav">
-      <div class="container nav__inner">
-        <a href="#" class="brand" aria-label="SIAP OSN">
-          <span class="brand__mark" aria-hidden="true"></span>
-          <span>SIAP OSN</span>
-        </a>
-        <nav class="nav__links" aria-label="Navigasi utama">
-          <a v-for="l in navLinks" :key="l.href" :href="l.href">{{ l.label }}</a>
-        </nav>
-        <div class="nav__actions">
-          <a href="/login" class="btn btn--outline btn--sm">Masuk</a>
-          <a href="/register" class="btn btn--light btn--sm">Daftar Gratis</a>
-        </div>
-      </div>
-    </header>
+    <PublicNavbar :links="navLinks" current="landing" />
 
     <!-- Hero -->
     <section class="hero">
@@ -410,8 +398,7 @@ const footerColumns = [
 .btn--ghost:hover {
   border-color: #c5cbe0;
 }
-.btn:focus-visible,
-.nav__links a:focus-visible {
+.btn:focus-visible {
   outline: 2px solid var(--yellow);
   outline-offset: 2px;
 }
@@ -428,53 +415,6 @@ const footerColumns = [
 .pill--muted {
   background: rgba(255, 255, 255, 0.1);
   color: #d6def0;
-}
-
-/* Navbar */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: #1a2d4d;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-.nav__inner {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  height: 64px;
-  color: #fff;
-}
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  color: #fff;
-}
-.brand__mark {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: var(--blue);
-  box-shadow: inset 0 0 0 4px #fff2;
-}
-.nav__links {
-  display: flex;
-  gap: 24px;
-  font-size: 0.82rem;
-  color: #c8d2ea;
-  flex: 1;
-}
-.nav__links a:hover {
-  color: #fff;
-}
-.nav__actions {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
 }
 
 /* Hero */
@@ -895,9 +835,6 @@ const footerColumns = [
 
 /* Responsif */
 @media (max-width: 900px) {
-  .nav__links {
-    display: none;
-  }
   .hero__grid,
   .split,
   .steps,
