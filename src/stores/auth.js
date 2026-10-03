@@ -89,11 +89,15 @@ export const useAuthStore = defineStore('auth', () => {
     return mapUser(data.data.user)
   }
 
-  // Simpan perubahan profil (nama, email, sekolah, kelas) dari halaman Profil.
+  // Simpan perubahan profil (nama, email) dari halaman Profil.
+  // sekolah/kelas hanya disimpan lokal (belum ada kolomnya di backend).
   // Karena sapaan & avatar membaca user.value, nama baru langsung tampil di mana-mana.
   async function updateProfile(payload) {
-    const { data } = await api.put('/auth/profile', payload)
-    user.value = { ...user.value, ...payload, ...data?.data }
+    const { data } = await api.put('/auth/profile', {
+      name: payload.nama ?? payload.name,
+      email: payload.email,
+    })
+    user.value = { ...user.value, ...payload, ...mapUser(data?.data) }
     return user.value
   }
 
