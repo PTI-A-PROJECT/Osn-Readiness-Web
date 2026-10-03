@@ -350,6 +350,7 @@ const footerColumns = [
 .lp h2,
 .lp h3 {
   font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.15;
   margin: 0;
   letter-spacing: -0.01em;
