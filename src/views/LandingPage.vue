@@ -3,8 +3,8 @@ import PublicNavbar from '@/components/PublicNavbar.vue'
 
 const navLinks = [
   { label: 'Kenapa SIAP OSN', href: '#kenapa' },
-  { label: 'Fitur', href: '#fitur' },
   { label: 'Cara Kerja', href: '#cara-kerja' },
+  { label: 'Fitur', href: '#fitur' },
   { label: 'Tingkat Seleksi', href: '#tingkat' },
   { label: 'Tim Kami', href: '#tim' },
 ]
