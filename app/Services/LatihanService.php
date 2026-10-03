@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Contracts\Clients\PerhitunganClientInterface;
 use App\Contracts\Repositories\QuizJawabanRepositoryInterface;
 use App\Contracts\Repositories\QuizPengerjaanRepositoryInterface;
-use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\LatihanServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
@@ -34,7 +33,6 @@ class LatihanService implements LatihanServiceInterface
         private readonly QuizJawabanRepositoryInterface $jawabanRepository,
         private readonly SoalPickerServiceInterface $soalPicker,
         private readonly PutaranServiceInterface $putaranService,
-        private readonly AturanServiceInterface $aturanService,
         private readonly PerhitunganClientInterface $perhitungan,
     ) {}
 
@@ -63,13 +61,15 @@ class LatihanService implements LatihanServiceInterface
             return $this->balasan($berjalan, baru: false);
         }
 
-        $aturan = $this->aturanService->untukTingkat((int) $tingkat->id);
-
         $terpilih = $this->soalPicker->pilih(new PermintaanSoal(
             tingkatId: (int) $tingkat->id,
             peruntukan: Peruntukan::Latihan,
             jumlahSoal: (int) $quiz->jumlah_soal,
-            persenLevel: $aturan->persenLevelPretest,
+            // Latihan memakai bank soal yang biasanya hanya diisi soal
+            // mudah, jadi tanpa pembagian level. Persentase 50/30/20 milik
+            // pre-test; memakainya di sini akan selalu ditolak dengan
+            // BANK_SOAL_TIDAK_CUKUP untuk bank latihan yang tidak lengkap.
+            persenLevel: [],
             materiId: (int) $materi->id,
         ));
 

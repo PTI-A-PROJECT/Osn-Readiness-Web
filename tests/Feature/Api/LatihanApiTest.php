@@ -76,12 +76,11 @@ class LatihanApiTest extends TestCase
 
     private function isiBankSoal(int $jumlah): void
     {
-        // Kuota level 50/30/20 dari 10 soal butuh 5 mudah, 3 sedang, 2 sulit;
-        // bank dibuat melebihi itu supaya acak tinggal memilih.
+        // Latihan diambil tanpa pembagian level, dan SoalPickerService
+        // mengambilnya dari bank level mudah, jadi bank latihan per materi
+        // dibuat semua mudah.
         $komposisi = [
-            'mudah' => (int) ceil($jumlah * 0.5) + 1,
-            'sedang' => (int) ceil($jumlah * 0.3) + 1,
-            'sulit' => (int) ceil($jumlah * 0.2) + 1,
+            'mudah' => $jumlah,
         ];
 
         foreach ($komposisi as $level => $banyak) {
