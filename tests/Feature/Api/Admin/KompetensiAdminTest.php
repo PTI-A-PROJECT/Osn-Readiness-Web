@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\Admin;
 
 use App\Models\Kompetensi;
+use App\Models\Materi;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -103,7 +104,7 @@ class KompetensiAdminTest extends TestCase
     {
         $admin = $this->createAdmin();
         $kompetensi = Kompetensi::factory()->create();
-        $kompetensi->materi()->factory()->create();
+        Materi::factory()->create(['kompetensi_id' => $kompetensi->id]);
 
         $response = $this->actingAs($admin)->deleteJson("/api/admin/kompetensi/{$kompetensi->id}");
 

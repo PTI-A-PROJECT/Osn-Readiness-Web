@@ -8,7 +8,15 @@ class UserPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->hasRole('Super Admin')) {
+        // Use a raw query to check if this user has the Super Admin role
+        $isSuperAdmin = \DB::table('model_has_roles')
+            ->where('model_id', $user->id)
+            ->where('model_type', User::class)
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('roles.name', 'Super Admin')
+            ->exists();
+
+        if ($isSuperAdmin) {
             return true;
         }
 
@@ -38,5 +46,10 @@ class UserPolicy
     public function delete(User $user, User $model): bool
     {
         return $user->hasPermissionTo('siswa.delete');
+    }
+
+    public function deactivate(User $user, User $model): bool
+    {
+        return $user->hasPermissionTo('siswa.deactivate');
     }
 }

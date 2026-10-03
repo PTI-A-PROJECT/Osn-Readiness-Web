@@ -65,7 +65,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
 | Hanya Super Admin yang bisa mengakses semua fitur admin.
 */
 
-Route::middleware(['auth:sanctum', 'active', 'role:Super Admin'])->prefix('admin')->group(function (): void {
+Route::middleware(['auth:sanctum', 'active', 'super_admin'])->prefix('admin')->group(function (): void {
     // [B1-D] Admin Struktur Konten
     Route::apiResource('tingkat', App\Http\Controllers\Api\Admin\TingkatController::class);
     Route::apiResource('kompetensi', KompetensiController::class);
