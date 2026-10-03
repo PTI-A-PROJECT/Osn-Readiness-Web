@@ -615,7 +615,7 @@ const footerColumns = [
 .hl {
   background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
 }
-.marked--block {
+.lp .marked--block {
   display: block;
   max-width: 14em;
   font-size: clamp(1.6rem, 3vw, 2.1rem);
@@ -789,7 +789,7 @@ const footerColumns = [
 }
 
 /* Tingkat */
-.levels__lead {
+.lp .levels__lead {
   text-align: center;
   color: var(--muted);
   font-size: 0.92rem;
