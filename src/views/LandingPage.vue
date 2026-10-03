@@ -790,7 +790,7 @@ const footerColumns = [
 
 /* Tingkat */
 .levels__lead {
-  text-align: center;
+  text-align: left;
   color: var(--muted);
   font-size: 0.92rem;
   max-width: 46ch;
