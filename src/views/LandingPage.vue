@@ -123,7 +123,7 @@ const footerColumns = [
       <div class="container hero__grid">
         <div class="hero__copy">
           <span class="pill">Persiapan OSN Bidang Informatika</span>
-          <h1>Sistem Interaktif Adaptif Persiapan OSN</h1>
+          <h1>Sistem Interaktif<br />Adaptif<br />Persiapan OSN</h1>
           <p class="hero__lead">
             Persiapkan dirimu menghadapi seleksi OSN Bidang Informatika secara adaptif — dari
             tingkat Kabupaten hingga Nasional — dengan pemetaan kompetensi otomatis dan materi yang
@@ -360,7 +360,7 @@ const footerColumns = [
 .lp p {
   margin: 0;
 }
-.lp a {
+.lp a:not(.btn) {
   color: inherit;
   text-decoration: none;
 }
@@ -382,6 +382,7 @@ const footerColumns = [
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
+  text-decoration: none;
   transition: background 0.15s, border-color 0.15s;
 }
 .btn--sm {
@@ -607,6 +608,10 @@ const footerColumns = [
 .kicker--center {
   display: block;
   text-align: center;
+  margin-bottom: 14px;
+}
+.levels .marked--center {
+  margin-top: 14px;
 }
 
 /* Penanda kuning di bawah judul */
@@ -626,6 +631,7 @@ const footerColumns = [
   display: block;
   max-width: 14em;
   font-size: clamp(1.6rem, 3vw, 2.1rem);
+  margin-top: 14px;
   margin-bottom: 40px;
 }
 .marked--center {
