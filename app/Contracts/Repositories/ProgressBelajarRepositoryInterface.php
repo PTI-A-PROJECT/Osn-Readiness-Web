@@ -27,4 +27,12 @@ interface ProgressBelajarRepositoryInterface
      * @param  array{status: string, persentase?: int, tanggal_selesai?: object|null}  $data
      */
     public function simpan(User $user, int $materiId, array $data): ProgressBelajar;
+
+    /**
+     * Hapus semua baris progress milik satu siswa untuk materi-materi yang
+     * diberikan, dipakai saat putaran habis.
+     *
+     * @param  list<int>  $materiIds
+     */
+    public function hapusUntukMateri(User $user, array $materiIds): void;
 }

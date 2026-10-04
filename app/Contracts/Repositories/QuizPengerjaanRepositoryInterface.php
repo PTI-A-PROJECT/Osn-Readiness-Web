@@ -35,4 +35,13 @@ interface QuizPengerjaanRepositoryInterface
      * @param  array<string, mixed>  $data
      */
     public function create(array $data): QuizPengerjaan;
+
+    /**
+     * Hapus semua pengerjaan latihan milik satu siswa untuk materi-materi
+     * yang diberikan (jawabannya ikut terhapus lewat cascade), dipakai saat
+     * putaran habis.
+     *
+     * @param  list<int>  $materiIds
+     */
+    public function hapusUntukMateri(User $user, array $materiIds): void;
 }
