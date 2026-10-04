@@ -329,10 +329,7 @@ class ImporKontenService implements ImporKontenServiceInterface
 
         if ($ada instanceof Soal) {
             $berubah = $this->perubahanYangMenyimpang($ada, $data);
-            $terlarang = array_intersect(
-                array_keys($berubah),
-                ['level', 'peruntukan', 'materi_id', 'kunci_jawaban'],
-            );
+            $terlarang = array_intersect(array_keys($berubah), SoalGuard::KOLOM_TERKUNCI);
 
             if ($terlarang !== [] && SoalGuard::isInUse($ada)) {
                 // Soal terpakai: kunci, level, peruntukan, dan materinya
