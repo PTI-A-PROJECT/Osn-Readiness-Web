@@ -12,14 +12,24 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
 
 ## Status perbaikan
 
-- [x] Temuan tinggi #1–3 (SoalPicker): implementasi [PR #27](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/27) (PR 1) di `fix/b1b-picker`; menunggu review dan merge ke `dev`.
+- [x] Temuan tinggi #1–3 (SoalPicker): implementasi [PR #27](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/27) (PR 1) di `fix/b1b-picker`; sudah merge ke `dev`.
   - Randomizer produksi menggunakan `Random\Randomizer` tanpa seed tetap.
   - Latihan mengambil kandidat dari semua level; seeder kembali memakai campuran 4/3/3.
   - Cadangan simulasi mengecualikan soal yang baru dipilih dan melaporkan kekurangan nyata.
   - Lima regresi picker gagal sebelum perbaikan dan lolos sesudahnya; delapan kasus tambahan memeriksa kontrak randomizer.
   - Verifikasi akhir: 344 test / 1305 assertion lolos, Pint bersih, 72 rute API, migrasi + seeder + reset di PostgreSQL 16 sementara berhasil.
   - HTTP dengan seeder dan server hitung palsu: dua siswa mendapat set pretest berbeda; tiga latihan campuran 4/3/3 berhasil dimulai dan disubmit; simulasi kedua dengan hanya lima soal baru per level tetap berisi 30 soal unik dan berhasil disubmit.
-- [ ] Temuan lain tetap mengikuti PR 2–9 dalam rencana perbaikan.
+- [x] Temuan sedang pada alur penilaian dan pengerjaan: implementasi [PR #28](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/28) (PR 2) di `fix/penilaian-konsisten`; menunggu review dan merge ke `dev`.
+  - `selesaikanPenilaian` (pre-test, latihan, simulasi) mengunci ulang baris dan mengecek `selesai_pada` di transaksi kedua.
+  - `KelulusanService` menulis `kenaikan_tingkat` lewat repository; insert lulus memakai `ON CONFLICT DO NOTHING`.
+  - `NilaiUlangJob` langsung gagal pada kesalahan konfigurasi, tanpa retry.
+  - Index parsial `quiz_pengerjaan_berjalan_unique` mencegah dua pengerjaan latihan berjalan; migration-nya menghapus baris kembar lama dan menyisakan yang terbaru.
+  - Relasi `soal()` pada ketiga model jawaban memuat soal yang di-soft delete.
+  - Simpan jawaban setelah submit dibalas 409 `SUDAH_DISUBMIT` di ketiga alur; argumen `PerhitunganTidakTersediaException` yang tertukar diperbaiki.
+  - Verifikasi: 358 test / 1352 assertion lolos, Pint bersih, 72 rute API, migrasi + seeder di PostgreSQL 16 sementara berhasil; 12 test baru gagal terhadap kode lama.
+  - HTTP dengan seeder dan server hitung palsu: soal terhapus saat pre-test berjalan tetap bisa disubmit; delapan request mulai latihan bersamaan menghasilkan satu pengerjaan; delapan submit bersamaan menghasilkan satu nilai. Alur simulasi hanya diuji lewat feature test.
+  - Belum dikerjakan di PR ini: `simpanJawaban` masih membaca pengerjaan tanpa kunci, dan submit ulang saat Python mati masih mengirim job baru tiap kali.
+- [ ] Temuan lain tetap mengikuti PR 3–9 dalam rencana perbaikan.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
