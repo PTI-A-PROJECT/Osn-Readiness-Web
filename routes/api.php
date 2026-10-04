@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\HasilSimulasiController;
 use App\Http\Controllers\Api\PretestController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\QuizPengerjaanController;
+use App\Http\Controllers\Api\RiwayatController;
 use App\Http\Controllers\Api\SyaratSimulasiController;
 use App\Http\Controllers\Api\TingkatController;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +80,8 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('hasil-simulasi/{hasil}/review', [HasilSimulasiController::class, 'review']);
 
     // [B3-B] Dashboard dan riwayat.
+    Route::get('dashboard', [App\Http\Controllers\Api\DashboardController::class, 'show']);
+    Route::get('riwayat', [RiwayatController::class, 'index']);
 
     // [B1-D + B1-E] Admin. Satu grup, satu lapisan: middleware role
     // Super Admin, lalu policy per endpoint di controller masing-masing.
