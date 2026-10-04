@@ -23,4 +23,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->newQuery()->with('roles')->latest()->paginate($perPage);
     }
+
+    public function paginasiSiswa(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->model->newQuery()->role('siswa')->with('roles')->latest()->paginate($perPage);
+    }
+
+    public function cariSiswa(int $id): ?User
+    {
+        return $this->model->newQuery()->role('siswa')->find($id);
+    }
 }

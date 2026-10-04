@@ -72,17 +72,13 @@ class MateriController
         ]);
     }
 
-    public function uploadImage(UploadMateriImageRequest $request, Materi $materi): JsonResponse
+    public function uploadGambar(UploadMateriImageRequest $request): JsonResponse
     {
-        Gate::authorize('update', $materi);
-
-        // Store image and update materi
-        $path = $request->file('gambar')->store('materi', 'public');
-        $materi->update(['gambar' => $path]);
+        Gate::authorize('create', Materi::class);
 
         return response()->json([
             'message' => 'Gambar berhasil diunggah',
-            'data' => new MateriResource($materi),
-        ]);
+            'data' => ['path' => $this->materiService->simpanGambar($request->file('gambar'))],
+        ], 201);
     }
 }

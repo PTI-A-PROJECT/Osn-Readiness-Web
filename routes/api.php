@@ -91,8 +91,10 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         // endpoint siswa GET /api/tingkat.
         Route::apiResource('tingkat', App\Http\Controllers\Api\Admin\TingkatController::class)->only(['index', 'show', 'update']);
         Route::apiResource('kompetensi', KompetensiController::class);
+        // Didaftarkan sebelum apiResource supaya "gambar" tidak dibaca
+        // sebagai {materi}.
+        Route::post('materi/gambar', [MateriController::class, 'uploadGambar']);
         Route::apiResource('materi', MateriController::class);
-        Route::post('materi/{materi}/upload-image', [MateriController::class, 'uploadImage']);
         Route::apiResource('konteks-soal', KonteksSoalController::class);
         Route::apiResource('siswa', SiswaController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);

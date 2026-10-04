@@ -19,7 +19,7 @@ class StoreKonteksSoalRequest extends FormRequest
     {
         return [
             'tingkat_id' => ['required', 'integer', 'exists:tingkat_seleksi,id'],
-            'judul' => ['required', 'string', 'max:255'],
+            'judul' => ['required', 'string', 'max:200'],
             'isi_konteks' => ['required', 'string'],
             'gambar' => ['nullable', 'string'],
         ];

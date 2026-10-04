@@ -31,7 +31,7 @@ class SiswaController
 
         return response()->json([
             'message' => 'OK',
-            'data' => new UserResource($siswa->load('roles')),
+            'data' => new UserResource($this->siswaService->getById($siswa->id)->load('roles')),
         ]);
     }
 

@@ -18,9 +18,10 @@ class UpdateTingkatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_tingkat' => ['sometimes', 'string', 'max:255'],
+            // Hanya nama dan deskripsi; urutan menentukan tingkat mana yang
+            // terbuka lebih dulu dan tidak diubah lewat admin (BE-13).
+            'nama_tingkat' => ['sometimes', 'string', 'max:100'],
             'deskripsi' => ['sometimes', 'string'],
-            'urutan' => ['sometimes', 'integer', 'min:1'],
         ];
     }
 }

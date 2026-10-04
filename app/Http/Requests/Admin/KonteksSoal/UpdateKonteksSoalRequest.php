@@ -19,7 +19,7 @@ class UpdateKonteksSoalRequest extends FormRequest
     {
         return [
             'tingkat_id' => ['sometimes', 'integer', 'exists:tingkat_seleksi,id'],
-            'judul' => ['sometimes', 'string', 'max:255'],
+            'judul' => ['sometimes', 'string', 'max:200'],
             'isi_konteks' => ['sometimes', 'string'],
             'gambar' => ['nullable', 'string'],
         ];
