@@ -7,9 +7,11 @@ use App\Contracts\Services\LatihanServiceInterface;
 use App\Contracts\Services\PretestServiceInterface;
 use App\Contracts\Services\SimulasiServiceInterface;
 use App\Enums\JenisPengerjaan;
+use App\Exceptions\PerhitunganKonfigurasiException;
 use App\Jobs\NilaiUlangJob;
 use App\Models\HasilSimulasi;
 use App\Models\HasilSimulasiJawaban;
+use App\Models\KenaikanTingkat;
 use App\Models\Kompetensi;
 use App\Models\Materi;
 use App\Models\Pretest;
@@ -381,10 +383,11 @@ class SimulasiApiTest extends TestCase
             ->assertCreated()
             ->json('data.id');
 
-        // Belum selesai: review 404.
+        // Belum selesai: review ditolak dengan kode bisnisnya.
         $this->actingAs($this->siswa)
             ->getJson('/api/hasil-simulasi/'.$hasilId.'/review')
-            ->assertNotFound();
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SIMULASI_BELUM_DINILAI');
 
         $this->actingAs($this->siswa)
             ->postJson('/api/hasil-simulasi/'.$hasilId.'/submit')
@@ -572,5 +575,205 @@ class SimulasiApiTest extends TestCase
         $this->actingAs($this->siswa)
             ->getJson('/api/hasil-simulasi/'.$hasilId.'/review')
             ->assertOk();
+    }
+
+    private function mulaiLaluLewatkanBatas(): int
+    {
+        $hasilId = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        HasilSimulasi::where('id', $hasilId)->update(['batas_pada' => now()->subMinutes(10)]);
+
+        return $hasilId;
+    }
+
+    public function test_mulai_setelah_batas_lewat_menutup_percobaan_lama_dan_membuat_yang_baru(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(12, 10, 8);
+
+        $lama = $this->mulaiLaluLewatkanBatas();
+
+        // Nilai 10 belum lulus, jadi percobaan kedua masih boleh.
+        $this->perhitungan->nilai = 10.0;
+
+        $baru = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $this->assertNotSame($lama, $baru);
+
+        $tertutup = HasilSimulasi::findOrFail($lama);
+
+        $this->assertNotNull($tertutup->disubmit_pada, 'Penutupan tidak boleh ikut di-rollback.');
+        $this->assertNotNull($tertutup->selesai_pada);
+        $this->assertSame(10.0, (float) $tertutup->nilai);
+        $this->assertFalse((bool) $tertutup->lulus);
+    }
+
+    public function test_mulai_setelah_batas_lewat_yang_ternyata_lulus_dibalas_sudah_lulus(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        $lama = $this->mulaiLaluLewatkanBatas();
+
+        $this->perhitungan->nilai = 95.0;
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SUDAH_LULUS');
+
+        // Nilai dan kelulusan tetap tersimpan walau permintaan mulai ditolak.
+        $this->assertTrue((bool) HasilSimulasi::findOrFail($lama)->lulus);
+        $this->assertDatabaseHas('kenaikan_tingkat', [
+            'user_id' => $this->siswa->id,
+            'status' => 'lulus',
+        ]);
+    }
+
+    public function test_mulai_setelah_batas_lewat_saat_python_gagal_mengunci_dan_mengirim_job(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        $lama = $this->mulaiLaluLewatkanBatas();
+
+        Queue::fake();
+        $this->perhitungan->gagalDengan = 503;
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertStatus(503)
+            ->assertJsonPath('kode', 'HASIL_SEDANG_DIPROSES');
+
+        Queue::assertPushed(NilaiUlangJob::class, fn ($job): bool => $job->id === $lama);
+
+        $hasil = HasilSimulasi::findOrFail($lama);
+        $this->assertNotNull($hasil->disubmit_pada);
+        $this->assertNull($hasil->selesai_pada);
+
+        // Selama belum dinilai, mulai lagi ditolak tanpa memanggil Python.
+        $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SIMULASI_BELUM_DINILAI');
+
+        $this->assertCount(1, $this->perhitungan->permintaanPenilaian);
+    }
+
+    public function test_mulai_setelah_lulus_dibalas_409(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        KenaikanTingkat::create([
+            'user_id' => $this->siswa->id,
+            'tingkat_asal_id' => $this->tingkat->id,
+            'tingkat_tujuan_id' => $this->provinsi->id,
+            'status' => 'lulus',
+        ]);
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SUDAH_LULUS');
+    }
+
+    public function test_syarat_belum_terpenuhi_dibalas_409_beserta_rincian(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        ProgressBelajar::where('user_id', $this->siswa->id)->delete();
+
+        $response = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SYARAT_SIMULASI_BELUM_TERPENUHI');
+
+        $detail = json_decode((string) $response->json('detail'), true);
+
+        $this->assertIsString($detail['pesan']);
+        $this->assertNotEmpty($detail['rincian']);
+        $this->assertFalse($detail['rincian'][0]['selesai']);
+        $this->assertArrayHasKey('nilai_latihan', $detail['rincian'][0]);
+    }
+
+    public function test_percobaan_milik_siswa_lain_tidak_ditemukan(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        $hasilId = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $lain = User::factory()->create();
+        $lain->assignRole('siswa');
+
+        $this->actingAs($lain)->getJson('/api/hasil-simulasi/'.$hasilId)->assertNotFound();
+        $this->actingAs($lain)->postJson('/api/hasil-simulasi/'.$hasilId.'/submit')->assertNotFound();
+        $this->actingAs($lain)->getJson('/api/hasil-simulasi/'.$hasilId.'/review')->assertNotFound();
+        $this->actingAs($lain)->putJson('/api/hasil-simulasi/'.$hasilId.'/jawaban', [
+            'soal_id' => 1,
+            'jawaban_user' => 'A',
+        ])->assertNotFound();
+    }
+
+    public function test_daftar_tanpa_tingkat_dan_tanpa_tingkat_aktif_dibalas_422(): void
+    {
+        $this->actingAs($this->siswa)
+            ->getJson('/api/simulasi')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('tingkat_id');
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/simulasi?tingkat_id=abc')
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('tingkat_id');
+    }
+
+    public function test_penjadwal_tetap_menutup_baris_lain_saat_satu_baris_gagal(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+        $this->mulaiLaluLewatkanBatas();
+
+        // Siswa kedua juga punya percobaan kedaluwarsa.
+        $siswaPertama = $this->siswa;
+        $this->siswa = User::factory()->create();
+        $this->siswa->assignRole('siswa');
+        $pretestKedua = Pretest::factory()->create([
+            'user_id' => $this->siswa->id,
+            'tingkat_id' => $this->tingkat->id,
+            'disubmit_pada' => now(),
+            'selesai_pada' => now(),
+        ]);
+        HasilSimulasi::factory()->create([
+            'user_id' => $this->siswa->id,
+            'simulasi_id' => $this->simulasi->id,
+            'pretest_id' => $pretestKedua->id,
+            'batas_pada' => now()->subMinutes(10),
+            'disubmit_pada' => null,
+            'selesai_pada' => null,
+            'nilai' => null,
+        ]);
+        $this->siswa = $siswaPertama;
+
+        // Layanan hitung salah konfigurasi (502): bukan kegagalan sementara.
+        $this->perhitungan->lempar = new PerhitunganKonfigurasiException('Token ditolak.');
+
+        $this->artisan('simulasi:tutup-kedaluwarsa')->assertSuccessful();
+
+        // Kedua baris dicoba; baris pertama yang gagal tidak menghentikan
+        // baris kedua.
+        $this->assertCount(2, $this->perhitungan->permintaanPenilaian);
+        $this->assertSame(2, HasilSimulasi::whereNotNull('disubmit_pada')->count());
     }
 }

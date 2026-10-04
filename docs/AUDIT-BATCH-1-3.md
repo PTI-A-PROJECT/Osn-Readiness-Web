@@ -29,7 +29,12 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - Verifikasi: 358 test / 1352 assertion lolos, Pint bersih, 72 rute API, migrasi + seeder di PostgreSQL 16 sementara berhasil; 12 test baru gagal terhadap kode lama.
   - HTTP dengan seeder dan server hitung palsu: soal terhapus saat pre-test berjalan tetap bisa disubmit; delapan request mulai latihan bersamaan menghasilkan satu pengerjaan; delapan submit bersamaan menghasilkan satu nilai. Alur simulasi hanya diuji lewat feature test.
   - Belum dikerjakan di PR ini: `simpanJawaban` masih membaca pengerjaan tanpa kunci, dan submit ulang saat Python mati masih mengirim job baru tiap kali.
-- [ ] Temuan lain tetap mengikuti PR 3–9 dalam rencana perbaikan.
+- [x] Temuan sedang B3-A (simulasi): PR 3 di `fix/b3a-simulasi` (commit lokal, bertumpuk di atas `fix/penilaian-konsisten`).
+  - `mulai` menutup percobaan kedaluwarsa sebelum transaksi dibuka, sehingga nilai dan kelulusannya tidak lagi ikut di-rollback.
+  - `tutupKedaluwarsa` mencatat dan melewati baris yang gagal, tidak lagi berhenti di baris pertama.
+  - `SYARAT_SIMULASI_BELUM_TERPENUHI` saat mulai membawa rincian per materi (JSON di `detail`).
+  - `SimulasiServiceInterface` mendeklarasikan semua method yang dipakai controller; validasi daftar pindah ke FormRequest; review yang belum dinilai kini 409 `SIMULASI_BELUM_DINILAI` (sebelumnya 404).
+- [ ] Temuan lain tetap mengikuti PR 4–9 dalam rencana perbaikan.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
