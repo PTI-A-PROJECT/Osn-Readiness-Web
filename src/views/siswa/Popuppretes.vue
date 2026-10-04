@@ -66,7 +66,7 @@ function mulaiPretest() {
           <span
             class="text-[18px] font-bold leading-none text-[#18243b]"
           >
-            ±15
+            90
           </span>
 
           <span

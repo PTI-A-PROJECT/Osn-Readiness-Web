@@ -424,8 +424,8 @@ function pindah(i) {
   aktif.value = i
 }
 
-/* ---------- Timer (15 menit) ---------- */
-const sisaDetik = ref(15 * 60)
+/* ---------- Timer (90 menit) ---------- */
+const sisaDetik = ref(90 * 60)
 let timer = null
 const waktuTampil = computed(() => {
   const m = Math.floor(sisaDetik.value / 60)
