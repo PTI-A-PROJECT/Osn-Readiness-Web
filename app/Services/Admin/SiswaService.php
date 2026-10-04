@@ -2,61 +2,51 @@
 
 namespace App\Services\Admin;
 
+use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\SiswaServiceInterface;
+use App\Contracts\Services\UserServiceInterface;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SiswaService implements SiswaServiceInterface
 {
-    /**
-     * Get all active siswa (paginated), excluding the authenticated user
-     */
+    public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly UserServiceInterface $userService,
+    ) {}
+
     public function getAll(int $perPage = 15): LengthAwarePaginator
     {
-        return User::where('is_active', true)
-            ->where('id', '!=', auth()->id())
-            ->paginate($perPage);
+        return $this->userRepository->paginasiSiswa($perPage);
     }
 
-    /**
-     * Get siswa by id (only active)
-     */
     public function getById(int $id): User
     {
-        return User::where('is_active', true)->findOrFail($id);
+        $siswa = $this->userRepository->cariSiswa($id);
+
+        // Akun non-siswa dianggap tidak ada, sehingga admin tidak bisa
+        // menonaktifkan atau menghapus dirinya sendiri maupun admin lain
+        // lewat menu siswa.
+        if (! $siswa instanceof User) {
+            throw (new ModelNotFoundException)->setModel(User::class, [$id]);
+        }
+
+        return $siswa;
     }
 
-    /**
-     * Update siswa (name only)
-     */
     public function update(int $id, array $data): User
     {
-        $user = $this->getById($id);
-        $user->update($data);
-
-        return $user;
+        return $this->userService->updateUser($this->getById($id), $data);
     }
 
-    /**
-     * Deactivate siswa and revoke all tokens
-     */
     public function deactivate(int $id): User
     {
-        $user = $this->getById($id);
-        $user->update(['is_active' => false]);
-
-        // Revoke all tokens
-        $user->tokens()->delete();
-
-        return $user;
+        return $this->userService->deactivateUser($this->getById($id));
     }
 
-    /**
-     * Soft delete siswa
-     */
     public function delete(int $id): void
     {
-        $user = $this->getById($id);
-        $user->delete();
+        $this->userService->deleteUser($this->getById($id));
     }
 }

@@ -44,7 +44,14 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - Latihan: satu per materi (422), `jumlah_soal >= latihan_min_soal` (422), hapus ditolak 409 `LATIHAN_MASIH_DIGUNAKAN` bila punya pengerjaan.
   - Simulasi: hapus ditolak 409 `SIMULASI_MASIH_DIGUNAKAN` bila punya hasil; guard `is_aktif` pindah ke service dan hanya memeriksa bank saat dinyalakan atau saat jumlah soal simulasi aktif berubah.
   - Query pindah dari controller ke `LatihanAdminService`/`SimulasiAdminService` dan repository. 21 test baru untuk kedua resource.
-- [ ] Temuan lain tetap mengikuti PR 6–9 dalam rencana perbaikan.
+- [x] Temuan tinggi #5–6 dan temuan struktur konten/siswa: PR 6 di `fix/b1d-admin-struktur` (commit lokal, bertumpuk di atas `fix/b1e-admin-latihan-simulasi`).
+  - Hapus materi mengecek soal (termasuk yang di-soft delete), latihan, pemetaan, materi wajib, dan progress lewat repository; semuanya 409 `MATERI_MASIH_DIGUNAKAN`.
+  - Upload gambar pindah ke `POST /api/admin/materi/gambar` dan membalas `data.path` tanpa domain (`/storage/materi/...`). Rute lama `materi/{materi}/upload-image` dan field `gambar` di `MateriResource` dihapus.
+  - Validasi: kompetensi setingkat, `urutan` unik per tingkat, nama kompetensi unik per tingkat, panjang teks mengikuti kolom, tingkat hanya nama dan deskripsi.
+  - Siswa: daftar hanya role siswa (aktif maupun nonaktif); akun admin 404 di menu siswa; soft delete dan nonaktif lewat `UserService` sehingga token dicabut.
+  - Policy memakai satu gaya `before()` dan nama permission yang sama dengan seeder; `LatihanPolicy` dan `SiswaPolicy` yang tidak terpakai dihapus.
+  - Belum dikerjakan: service Kompetensi, Konteks, dan Tingkat admin masih memakai Eloquent langsung.
+- [ ] Temuan lain tetap mengikuti PR 7–9 dalam rencana perbaikan.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 

@@ -2,79 +2,62 @@
 
 namespace App\Services\Admin;
 
+use App\Contracts\Repositories\MateriRepositoryInterface;
 use App\Contracts\Services\MateriServiceInterface;
 use App\Exceptions\MateriMasihDigunakanException;
 use App\Models\Materi;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
 
 class MateriService implements MateriServiceInterface
 {
-    /**
-     * Get all materi with optional filters
-     */
+    public function __construct(
+        private readonly MateriRepositoryInterface $materiRepository,
+    ) {}
+
     public function getAll(?int $kompetensiId = null): Collection
     {
-        $query = Materi::query();
-
-        if ($kompetensiId) {
-            $query->where('kompetensi_id', $kompetensiId);
-        }
-
-        return $query->get();
+        return $this->materiRepository->daftarAdmin($kompetensiId);
     }
 
-    /**
-     * Get materi by id
-     */
     public function getById(int $id): Materi
     {
-        return Materi::findOrFail($id);
+        /** @var Materi */
+        return $this->materiRepository->findOrFail($id);
     }
 
-    /**
-     * Create new materi
-     */
     public function create(array $data): Materi
     {
-        return Materi::create($data);
+        /** @var Materi */
+        return $this->materiRepository->create($data);
     }
 
-    /**
-     * Update materi
-     */
     public function update(int $id, array $data): Materi
     {
-        $materi = $this->getById($id);
-        $materi->update($data);
-
-        return $materi;
+        /** @var Materi */
+        return $this->materiRepository->update($this->getById($id), $data);
     }
 
     /**
-     * Soft delete materi (throw if in use)
-     *
      * @throws MateriMasihDigunakanException
      */
     public function delete(int $id): bool
     {
         $materi = $this->getById($id);
 
-        // Check if materi has soal
-        if (DB::table('soal')->where('materi_id', $materi->id)->exists()) {
-            throw new MateriMasihDigunakanException('Materi masih memiliki soal');
+        $alasan = $this->materiRepository->alasanTidakBisaDihapus($materi);
+
+        if ($alasan !== null) {
+            throw new MateriMasihDigunakanException($alasan);
         }
 
-        // Check if materi has latihan
-        if (DB::table('latihan')->where('materi_id', $materi->id)->exists()) {
-            throw new MateriMasihDigunakanException('Materi masih memiliki latihan');
-        }
+        return $this->materiRepository->delete($materi);
+    }
 
-        // Check if materi is referenced by hasil_simulasi
-        if (DB::table('pemetaan_materi')->where('materi_id', $materi->id)->exists()) {
-            throw new MateriMasihDigunakanException('Materi masih dirujuk hasil siswa');
-        }
-
-        return $materi->delete();
+    public function simpanGambar(UploadedFile $gambar): string
+    {
+        // Sama dengan alamat yang ditulis importer ke isi_materi: tanpa nama
+        // domain, supaya tetap benar bila domain berganti (BE-21).
+        return '/storage/'.$gambar->store('materi', 'public');
     }
 }

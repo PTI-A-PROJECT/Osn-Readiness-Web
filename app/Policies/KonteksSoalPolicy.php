@@ -9,13 +9,7 @@ class KonteksSoalPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        // Reload roles if not loaded
-        if (! $user->relationLoaded('roles')) {
-            $user->load('roles');
-        }
-
-        // Check if user has Super Admin role in any guard
-        if ($user->roles()->where('name', 'Super Admin')->exists()) {
+        if ($user->hasRole('Super Admin')) {
             return true;
         }
 
@@ -24,26 +18,26 @@ class KonteksSoalPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('konteks_soal.viewAny');
+        return $user->hasPermissionTo('konteks-soal.viewAny');
     }
 
     public function view(User $user, KonteksSoal $model): bool
     {
-        return $user->hasPermissionTo('konteks_soal.view');
+        return $user->hasPermissionTo('konteks-soal.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('konteks_soal.create');
+        return $user->hasPermissionTo('konteks-soal.create');
     }
 
     public function update(User $user, KonteksSoal $model): bool
     {
-        return $user->hasPermissionTo('konteks_soal.update');
+        return $user->hasPermissionTo('konteks-soal.update');
     }
 
     public function delete(User $user, KonteksSoal $model): bool
     {
-        return $user->hasPermissionTo('konteks_soal.delete');
+        return $user->hasPermissionTo('konteks-soal.delete');
     }
 }
