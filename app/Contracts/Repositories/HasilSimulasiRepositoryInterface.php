@@ -48,6 +48,12 @@ interface HasilSimulasiRepositoryInterface extends BaseRepositoryInterface
     public function nilaiTerbaik(int $pretestId): ?float;
 
     /**
+     * Percobaan terakhir yang sudah selesai dinilai pada satu putaran milik
+     * satu siswa, untuk layar dashboard.
+     */
+    public function terakhirSelesai(int $userId, int $pretestId): ?HasilSimulasi;
+
+    /**
      * @param  array<string, mixed>  $data
      */
     public function create(array $data): HasilSimulasi;
