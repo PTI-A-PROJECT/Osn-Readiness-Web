@@ -1,0 +1,126 @@
+# Audit Batch 1–3
+
+Tanggal: 4 Oktober 2026. Posisi `dev`: `dbb091c` (setelah PR #26).
+
+Acuan: [BATCH_PLAN.md](BATCH_PLAN.md), [BATCH_PLAN_ORANG_1.md](BATCH_PLAN_ORANG_1.md), [BATCH_PLAN_ORANG_2.md](BATCH_PLAN_ORANG_2.md), [Logic per fitur.md](Logic%20per%20fitur.md), dan [ARCHITECTURE_RULES.md](ARCHITECTURE_RULES.md).
+
+## Ringkasan
+
+Semua paket Batch 1–3 (B1-A s.d. B1-E, B2-A s.d. B2-D, B3-A s.d. B3-C) sudah merge ke `dev`. Pemeriksaan mekanis semuanya lolos, tetapi audit kode menemukan **8 bug tingkat tinggi** yang tidak tertangkap oleh test. Semua temuan tingkat tinggi sudah dicek ulang langsung di kode. **Perbaiki temuan tingkat tinggi sebelum mulai B4.**
+
+Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jalan. Sebagian besar bug di bawah berada di jalur yang tidak pernah dilewati data seeder maupun test.
+
+## Status perbaikan
+
+- [x] Temuan tinggi #1–3 (SoalPicker): implementasi PR 1 di `fix/b1b-picker`; menunggu review dan merge ke `dev`.
+  - Randomizer produksi menggunakan `Random\Randomizer` tanpa seed tetap.
+  - Latihan mengambil kandidat dari semua level; seeder kembali memakai campuran 4/3/3.
+  - Cadangan simulasi mengecualikan soal yang baru dipilih dan melaporkan kekurangan nyata.
+  - Lima regresi picker gagal sebelum perbaikan dan lolos sesudahnya; delapan kasus tambahan memeriksa kontrak randomizer.
+  - Verifikasi akhir: 344 test / 1305 assertion lolos, Pint bersih, 72 rute API, migrasi + seeder + reset di PostgreSQL 16 sementara berhasil.
+  - HTTP dengan seeder dan server hitung palsu: dua siswa mendapat set pretest berbeda; tiga latihan campuran 4/3/3 berhasil dimulai dan disubmit; simulasi kedua dengan hanya lima soal baru per level tetap berisi 30 soal unik dan berhasil disubmit.
+- [ ] Temuan lain tetap mengikuti PR 2–9 dalam rencana perbaikan.
+
+Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
+
+## Pemeriksaan mekanis
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| `php artisan test` (Postgres 16) | ✅ 331/331, 1267 assertion |
+| `vendor/bin/pint --test` | ✅ bersih |
+| `migrate:fresh --seed` lalu `migrate:reset` sampai bawah (di database sementara) | ✅ sukses |
+| Rute siswa di balik `auth:sanctum` + `active`; rute admin di balik `role:Super Admin` | ✅ |
+| Tidak ada query di Controller | ❌ [Admin/LatihanController.php:22](../app/Http/Controllers/Api/Admin/LatihanController.php#L22) dan [Admin/SimulasiController.php:24](../app/Http/Controllers/Api/Admin/SimulasiController.php#L24) |
+
+## Temuan tingkat tinggi
+
+### B1-B · SoalPicker
+
+1. **Semua siswa mendapat soal yang sama.** Di produksi, `RandomizerInterface` di-bind ke `SeededRandomizer` dengan seed tetap `20261003` ([RepositoryServiceProvider.php:151-153](../app/Providers/RepositoryServiceProvider.php#L151-L153)). Dengan kandidat yang sama, hasil acak selalu sama: pre-test pertama dan paket simulasi tiap siswa identik, urutannya pun sama. Produksi perlu implementasi acak sungguhan; `SeededRandomizer` cukup untuk test.
+2. **Latihan hanya mengambil soal Mudah.** Mode bebas membaca `semua[0]`, padahal `kelompokkan()` mengelompokkan per level, sehingga `semua[0]` hanya berisi soal Mudah ([SoalPickerService.php:154](../app/Services/SoalPickerService.php#L154), [:247](../app/Services/SoalPickerService.php#L247)). Bila soal Mudah di suatu materi kurang dari `jumlah_soal`, latihan gagal dengan `BANK_SOAL_TIDAK_CUKUP` meskipun total soal materi itu cukup. Bug #2 pada uji manual PR #24 sebenarnya hanya tertutup oleh perubahan seeder, bukan diperbaiki.
+3. **Cadangan soal dihindari bisa menghasilkan soal kurang dari permintaan tanpa error.** `$penghindaran` dihitung sebelum `$take` level itu masuk ke `$terpilih`, sehingga soal yang sama bisa terambil dua kali dan menyusut saat digabung. `$kurangLevelIni` lalu dipaksa 0 tanpa dicek ([SoalPickerService.php:257-263](../app/Services/SoalPickerService.php#L257-L263)). Akibatnya paket simulasi bisa berisi soal lebih sedikit dari yang diminta. Test yang ada hanya menguji kasus `$take` kosong.
+
+### B1-D / B1-E · Admin
+
+4. **Show, update, dan destroy latihan admin tidak melakukan apa-apa.** Parameter rute `{latihan}` tidak cocok dengan argumen controller `Quiz $quiz`, sehingga implicit binding tidak jalan dan yang disuntikkan adalah `new Quiz` kosong. Contoh: `DELETE /api/admin/latihan/5` membalas 200 "berhasil dihapus" padahal tidak ada yang terhapus.
+5. **Menghapus materi selalu 500.** [MateriService.php:69](../app/Services/Admin/MateriService.php#L69) memanggil `DB::table('latihan')`, padahal nama tabelnya `quiz`. Pemeriksaan juga melewatkan `progress_belajar` dan `rekomendasi_materi` (FK restrict), sehingga kasus itu pun berakhir 500, bukan 409. Belum ada test hapus materi.
+6. **Path upload gambar materi hilang.** Tabel `materi` tidak punya kolom `gambar` dan kolom itu tidak ada di fillable, jadi `update(['gambar' => $path])` diabaikan diam-diam ([MateriController.php:80-85](../app/Http/Controllers/Api/Admin/MateriController.php#L80-L85)). Respons berisi `gambar: null` dan file menjadi yatim. Test-nya lolos karena kebetulan (`assertExists(null)` di [MateriAdminTest.php:105](../tests/Feature/Api/Admin/MateriAdminTest.php#L105)).
+7. **`SoalGuard` mengunci kolom yang salah.** Yang dikunci `pertanyaan`, `pilihan_jawaban`, `kunci_jawaban`, `level` ([SoalGuard.php:42](../app/Guards/SoalGuard.php#L42)); menurut spesifikasi seharusnya kunci, level, peruntukan, dan materi, sedangkan teks boleh diubah.
+   - Semua kolom `required` saat update, dan guard menolak hanya karena kolomnya ada di request. Akibatnya soal yang sudah dipakai sama sekali tidak bisa diedit, termasuk untuk memperbaiki salah ketik.
+   - Sebaliknya, `peruntukan` dan `materi_id` pada soal terpakai bebas diubah.
+   - `test_super_admin_can_update_soal` hanya berisi `assertTrue(true)`.
+8. **Validasi soal tidak sesuai spesifikasi** ([StoreSoalRequest.php:26-35](../app/Http/Requests/StoreSoalRequest.php#L26-L35), juga `UpdateSoalRequest`):
+   - Soal isian tidak bisa dibuat karena `pilihan_jawaban` wajib untuk semua tipe.
+   - Kunci tidak dicek ada di pilihan (kunci 7 dengan 3 pilihan diterima).
+   - Tidak ada pemeriksaan materi dan konteks harus setingkat.
+   - Kunci berupa indeks integer, sedangkan soal hasil impor memakai `{"A": ...}` dan kunci `"C"`. Mengedit soal hasil impor memaksa kunci integer yang tidak cocok lagi dengan pilihan.
+
+## Temuan tingkat sedang
+
+- **B3-A · `mulai` setelah waktu habis berputar tanpa akhir.** `lanjutan()` menilai percobaan lewat `submitInternal`, lalu melempar `SimulasiBelumDinilaiException` di dalam transaksi `mulai`. Seluruh penilaian (`disubmit_pada`, nilai, kenaikan tingkat, penghapusan data) ikut di-rollback. Bila scheduler tidak jalan, siswa selalu mendapat 409 dan tidak ada yang tersimpan ([SimulasiService.php:360-375](../app/Services/SimulasiService.php#L360-L375)). Belum ada test untuk jalur ini.
+- **Soal yang di-soft delete admin membuat pengerjaan berjalan gagal 500.** Relasi `soal()` di `PretestJawaban`, `QuizJawaban`, dan `HasilSimulasiJawaban` tidak memakai `withTrashed()`, sementara `Admin/SoalController::destroy` tidak mengecek soal sedang dipakai. Pre-test yang berisi soal itu tidak bisa disubmit, dan `pretest_berjalan_unique` menghalangi pre-test baru, sehingga siswa macet di tingkat itu. Review simulasi lama juga ikut 500.
+- **`selesaikanPenilaian` tidak aman terhadap balapan** (Pretest, Latihan, Simulasi). `selesai_pada` dicek tanpa kunci (`findUntukUpdate` dipanggil di luar transaksi), dan transaksi kedua tidak mengecek ulang. Bila job dan submit ulang berjalan bersamaan, percobaan dinilai dua kali. Pada simulasi gagal ke-3 bisa tercatat dua baris `tidak_lulus`; pada lulus, insert kembar ditelan tetapi transaksi Postgres sudah batal sehingga commit-nya diam-diam di-rollback.
+- **Klik ganda "mulai latihan" membuat dua pengerjaan.** Tidak ada index parsial seperti `pretest_berjalan_unique` di `quiz_pengerjaan`, dan pemeriksaan `berjalan()` lalu insert tidak atomik ([LatihanService.php:58-85](../app/Services/LatihanService.php#L58-L85)).
+- **`NilaiUlangJob` mengulang kesalahan konfigurasi 5 kali.** `handle()` tidak menangkap `PerhitunganKonfigurasiException` untuk memanggil `$this->fail()`, padahal spesifikasi meminta tidak di-retry. Docblock di [NilaiUlangJob.php:52](../app/Jobs/NilaiUlangJob.php#L52) menyatakan sebaliknya dari perilakunya.
+- **`SiswaService` (admin siswa):**
+  - Soft delete tidak mencabut token. Hook di `UserService` (B1-A) tidak pernah dipanggil dari API.
+  - Daftar siswa ikut menampilkan Super Admin.
+  - Siswa nonaktif tidak bisa dilihat atau dihapus (404).
+  - Admin bisa menonaktifkan atau menghapus akunnya sendiri.
+- **`SoalRepository::sedangDipakai` tidak mengecek `hasil_simulasi_jawaban`.** Kunci soal yang hanya pernah dipakai di simulasi masih bisa diubah, termasuk lewat importer.
+- **Beberapa kasus admin berakhir 500, bukan 409/422:**
+  - Latihan kedua untuk materi yang sama (unique constraint DB).
+  - Hapus latihan yang punya pengerjaan dan hapus simulasi yang punya hasil (FK restrict).
+  - `urutan` materi kembar per tingkat dan nama kompetensi kembar per tingkat.
+  - Teks melebihi panjang kolom (`max:255` di request, padahal kolom 100–200).
+  - Kompetensi materi tidak dicek setingkat; `jumlah_soal >= latihan_min_soal` pada latihan juga belum dicek.
+  - Tingkat masih bisa diubah `urutan`-nya (spesifikasi: hanya nama dan deskripsi).
+- **Importer ([ImporKontenService.php](../app/Services/ImporKontenService.php)):**
+  - `tingkat_kesulitan` atau `peruntukan` yang tidak valid memicu `ValueError`, sedangkan command hanya menangkap `RuntimeException`, sehingga seluruh impor berhenti alih-alih menolak satu soal.
+  - Tingkat materi tidak dicek sama dengan tingkat soal.
+  - Soal isian dipaksa level Mudah.
+  - `id_sumber` kembar pada berkas materi tidak terdeteksi.
+- **Laporan kecukupan bank soal mengurangi soal yang pernah dipakai siswa mana pun** ([BankSoalService.php:33-43](../app/Services/BankSoalService.php#L33-L43)), padahal picker hanya mengecualikan soal milik siswa itu sendiri. Setelah banyak pre-test, laporan bisa menyatakan "kurang" padahal picker masih jalan. *Perlu dicek ulang.*
+
+## Temuan tingkat rendah
+
+- **Rute berbeda dari rencana:** `simulasi/syarat/{tingkat}` (rencana `?tingkat_id=`, dan tanpa cek tingkat terbuka), `bank-soal/kecukupan/{tingkat}` (rencana `?tingkat_id=`), `materi/{materi}/upload-image` (rencana `materi/gambar` dengan balasan path relatif).
+- **Kode error tidak seragam untuk simpan jawaban setelah submit:** pre-test 409 dengan kode `PUTARAN_MASIH_BERJALAN` (menyesatkan), latihan dan simulasi 422 (spesifikasi 409).
+- **Argumen `PerhitunganTidakTersediaException` tertukar** di PretestService (`:202-205`) dan SimulasiService (`:270-273`); teks teknis client masuk ke `message`.
+- **`SYARAT_SIMULASI_BELUM_TERPENUHI` saat mulai simulasi hanya berisi jumlah**, bukan rincian seperti di spesifikasi. `periksa()` tanpa putaran aktif juga tidak memberi alasan "belum pre-test".
+- **Pelanggaran lapisan arsitektur:**
+  - `DashboardService` menghitung `sisa_kuota` sendiri (spesifikasi: tanpa hitungan sendiri).
+  - `RiwayatController` menyuntik repository langsung tanpa service.
+  - `KelulusanService` memanggil `KenaikanTingkat::create` langsung; `hapusDataPutaran` adalah kode mati.
+  - Service B1-D memakai Eloquent dan `DB::table` langsung; `AturanPemetaanController` menyuntik kelas konkret tanpa interface.
+  - `SimulasiServiceInterface` hanya mendeklarasikan `tutupKedaluwarsa`, padahal controller memanggil `daftar`, `mulai`, `simpanJawaban`, dan `submit`.
+- **Nama permission tidak konsisten:** policy memakai `konteks_soal.*`, seeder `konteks-soal.*`; policy Simulasi/Quiz/Latihan/Aturan memakai `soal.*`. Saat ini aman hanya karena `before()` meloloskan Super Admin; role lain akan kena `PermissionDoesNotExist` (500).
+- **`tutupKedaluwarsa` hanya menangkap 503**; error 502 atau soal null menghentikan seluruh putaran scheduler.
+- **Semua `BisnisException` tercatat sebagai ERROR** dengan stack trace (misalnya tiap gagal login), sementara rincian `BANK_SOAL_TIDAK_CUKUP` yang diminta spesifikasi justru tidak tercatat.
+- **Auth:** email tidak di-lowercase (`A@x.com` dan `a@x.com` jadi dua akun); register bersamaan dengan email sama berakhir 500; tidak ada `sanctum:prune-expired` di jadwal.
+- **N+1** di `BelajarService::nilaiLatihanTerbaik` dan `SyaratSimulasiService::periksa`; `PutaranService::status()` dipanggil dua kali per request daftar materi.
+- **Hapus soal ikut menghapus file gambar** padahal soal hanya di-soft delete, sehingga review percobaan lama menampilkan gambar rusak.
+- **Kode mati:** [PenilaianBelumDiimplementasi.php](../app/Services/PenilaianBelumDiimplementasi.php) tidak dipakai di mana pun dan bisa dihapus.
+
+## Celah test
+
+- Latihan admin, simulasi admin, dan guard `is_aktif` **belum punya test sama sekali**.
+- Belum ada test 401/403 untuk admin materi, konteks, pembahasan, latihan, dan simulasi; belum ada test hapus materi/konteks yang ditolak dan keunikan kompetensi.
+- Test "dua request mulai bersamaan" ([SimulasiApiTest.php:186](../tests/Feature/Api/SimulasiApiTest.php#L186)) sebenarnya berjalan berurutan.
+- Belum ada test untuk `SUDAH_LULUS` dan `SIMULASI_BELUM_DINILAI` pada simulasi, akses milik siswa lain (404) pada simulasi, jalur lewat `batas_pada` di `mulai`, dan scheduler saat Python gagal.
+- Belum ada test kesalahan konfigurasi di job (tidak di-retry), koneksi gagal atau timeout di client, masa berlaku token, dan pencabutan token lewat `/api/admin/siswa`.
+- Belum ada test urutan "wajib dulu" pada `GET /api/materi`, 403 detail materi saat tingkat terkunci, dan simpan jawaban latihan setelah submit.
+
+## Dokumen yang tertinggal
+
+Tabel status di [BATCH_PLAN.md](BATCH_PLAN.md), [BATCH_PLAN_ORANG_1.md](BATCH_PLAN_ORANG_1.md), dan [BATCH_PLAN_ORANG_2.md](BATCH_PLAN_ORANG_2.md) masih menggambarkan keadaan 3 Oktober (misalnya "B1-C dikerjakan ulang", "B3-A terblokir"). Yang sudah sesuai keadaan sekarang hanya [RINGKASAN-SESI.md](RINGKASAN-SESI.md).
+
+## Urutan perbaikan yang disarankan (sebelum B4)
+
+1. **SoalPicker** (temuan tinggi 1–3), karena berdampak ke semua siswa.
+2. **Bug admin** (temuan tinggi 4–8), sekaligus menambah test latihan dan simulasi admin.
+3. **Balapan penilaian dan soal yang di-soft delete** (temuan sedang), lalu rollback di `mulai` B3-A.
+4. Sisa temuan sedang dan rendah, lalu perbarui tabel status di ketiga BATCH_PLAN.
+
+Test skenario penuh B4 tidak akan menangkap sebagian besar temuan di atas, karena data seeder tidak pernah melewati jalur-jalur ini. Setiap perbaikan sebaiknya diuji juga lewat HTTP dengan data seeder, seperti pada PR #24.

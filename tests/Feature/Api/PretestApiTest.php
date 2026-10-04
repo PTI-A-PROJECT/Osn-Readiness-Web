@@ -527,8 +527,10 @@ class PretestApiTest extends TestCase
         $user = $this->siswa();
         // Bank cuma satu soal per level, tidak mungkin menyusun 30 soal.
         $kabupaten = TingkatSeleksi::where('urutan', 1)->firstOrFail();
+        $kompetensi = Kompetensi::factory()->create(['tingkat_id' => $kabupaten->id]);
         $materi = Materi::factory()->create([
             'tingkat_id' => $kabupaten->id,
+            'kompetensi_id' => $kompetensi->id,
             'urutan' => 1,
         ]);
 
