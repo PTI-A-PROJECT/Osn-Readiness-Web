@@ -21,6 +21,7 @@ use App\DTOs\SimulasiDimulai;
 use App\Enums\JenisPengerjaan;
 use App\Enums\Peruntukan;
 use App\Exceptions\KuotaSimulasiHabisException;
+use App\Exceptions\PengerjaanSudahDisubmitException;
 use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Exceptions\SimulasiBelumDinilaiException;
 use App\Exceptions\SudahLulusException;
@@ -38,7 +39,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class SimulasiService implements SimulasiServiceInterface
 {
@@ -75,24 +78,17 @@ class SimulasiService implements SimulasiServiceInterface
             throw new TingkatTerkunciException("Tingkat {$tingkat->nama_tingkat} belum terbuka.");
         }
 
-        $aturan = $this->aturanService->untukTingkat($tingkatId);
-        $maksimal = (int) $aturan->simulasiMaksPercobaan;
-
         $daftar = [];
-        $simulasiTingkat = $this->simulasiRepository->untukTingkat($tingkatId);
 
-        foreach ($simulasiTingkat as $simulasi) {
-            $terpakai = $status->putaranAktifId === null
-                ? 0
-                : $this->hasilRepository->jumlahPercobaan((int) $status->putaranAktifId);
-
+        foreach ($this->simulasiRepository->untukTingkat($tingkatId) as $simulasi) {
             $daftar[] = [
                 'id' => (int) $simulasi->id,
                 'nama_simulasi' => (string) $simulasi->nama_simulasi,
                 'jumlah_soal' => (int) $simulasi->jumlah_soal,
                 'durasi_menit' => (int) $simulasi->durasi_menit,
                 'is_aktif' => (bool) $simulasi->is_aktif,
-                'sisa_kuota' => max(0, $maksimal - $terpakai),
+                // Kuota berlaku per putaran, bukan per simulasi.
+                'sisa_kuota' => $status->sisaKuotaSimulasi,
             ];
         }
 
@@ -101,8 +97,14 @@ class SimulasiService implements SimulasiServiceInterface
 
     /**
      * Mulai percobaan, atau lanjutkan yang sedang berjalan. Urutan cek 1–9
-     * sesuai dokumen, semuanya di dalam satu transaksi yang mengunci baris
-     * pretest putaran aktif.
+     * sesuai dokumen, di dalam satu transaksi yang mengunci baris pretest
+     * putaran aktif.
+     *
+     * Satu-satunya langkah di luar transaksi itu adalah menutup percobaan
+     * yang batas waktunya sudah lewat (bagian dari langkah 4). Penutupan
+     * memanggil Python dan menyimpan nilai beserta kelulusan; bila dijalankan
+     * di dalam transaksi mulai, penolakan sesudahnya akan ikut membatalkan
+     * nilai yang baru disimpan.
      */
     public function mulai(User $user, Simulasi $simulasi): SimulasiDimulai
     {
@@ -118,6 +120,8 @@ class SimulasiService implements SimulasiServiceInterface
         if (! $statusAwal->tingkatTerbuka) {
             throw new TingkatTerkunciException("Tingkat {$tingkat->nama_tingkat} belum terbuka.");
         }
+
+        $this->tutupBilaKedaluwarsa($user, (int) $tingkat->id);
 
         return DB::transaction(function () use ($user, $simulasi, $tingkat): SimulasiDimulai {
             // 2. Kunci baris pretest putaran aktif. Tanpa putaran aktif,
@@ -155,9 +159,9 @@ class SimulasiService implements SimulasiServiceInterface
                 throw new KuotaSimulasiHabisException('Semua percobaan simulasi sudah dipakai.');
             }
 
-            // 6. Syarat simulasi belum terpenuhi. Rincian lengkapnya sudah
-            // tersedia lewat GET /api/simulasi/syarat/{tingkat}; di sini
-            // dibalas kode bisnisnya beserta ringkasan jumlah yang kurang.
+            // 6. Syarat simulasi belum terpenuhi: dibalas kode bisnisnya
+            // beserta rincian per materi wajib, dalam bentuk JSON di detail
+            // seperti BANK_SOAL_TIDAK_CUKUP.
             $syarat = $this->syaratService->periksa($user, $tingkat);
 
             if (! $syarat->terpenuhi) {
@@ -168,7 +172,10 @@ class SimulasiService implements SimulasiServiceInterface
                 ));
 
                 throw new SyaratSimulasiBelumTerpenuhiException(
-                    detail: "{$belum} dari ".count($syarat->rincian).' materi wajib belum memenuhi syarat.',
+                    detail: (string) json_encode([
+                        'pesan' => "{$belum} dari ".count($syarat->rincian).' materi wajib belum memenuhi syarat.',
+                        'rincian' => $syarat->rincian,
+                    ]),
                 );
             }
 
@@ -213,9 +220,7 @@ class SimulasiService implements SimulasiServiceInterface
         }
 
         if ($hasil->disubmit_pada !== null) {
-            throw ValidationException::withMessages([
-                'hasil' => ['Jawaban sudah dikunci saat simulasi disubmit.'],
-            ]);
+            throw new PengerjaanSudahDisubmitException('Jawaban sudah dikunci saat simulasi disubmit.');
         }
 
         $baris = $this->jawabanRepository->findJawaban($hasil->id, $soalId);
@@ -227,6 +232,17 @@ class SimulasiService implements SimulasiServiceInterface
         }
 
         $baris->forceFill(['jawaban_user' => $jawaban])->save();
+    }
+
+    public function review(User $user, int $hasilId): HasilSimulasi
+    {
+        $hasil = $this->hasilMilik($user, $hasilId);
+
+        if ($hasil->selesai_pada === null) {
+            throw new SimulasiBelumDinilaiException('Review hanya tersedia setelah simulasi dinilai.');
+        }
+
+        return $hasil;
     }
 
     public function submit(User $user, int $hasilId): HasilSimulasi
@@ -241,7 +257,7 @@ class SimulasiService implements SimulasiServiceInterface
      * job: kunci, panggil Python di luar transaksi, simpan + nilai dalam
      * transaksi kedua.
      */
-    public function submitInternal(HasilSimulasi $hasil): HasilSimulasi
+    private function submitInternal(HasilSimulasi $hasil): HasilSimulasi
     {
         // Transaksi 1: kunci baris. Bila selesai, kembalikan yang ada.
         $terkunci = DB::transaction(function () use ($hasil): HasilSimulasi {
@@ -269,20 +285,21 @@ class SimulasiService implements SimulasiServiceInterface
 
             throw new PerhitunganTidakTersediaException(
                 "Penilaian simulasi #{$terkunci->id} gagal dan dijadwalkan untuk dicoba lagi.",
-                $exception->getDetail(),
             );
         }
 
-        return $this->hasilRepository->findUntukUpdate($terkunci->id) ?? $terkunci;
+        return $terkunci->fresh() ?? $terkunci;
     }
 
     /**
      * Susun payload, panggil Python di luar transaksi, simpan hasil beserta
-     * keputusan kelulusan dalam transaksi kedua. Idempoten untuk job.
+     * keputusan kelulusan dalam transaksi kedua. Idempoten untuk job:
+     * pemeriksaan di awal hanya menghemat panggilan Python, penjaga yang
+     * sebenarnya ada di transaksi kedua, di bawah kunci baris.
      */
     public function selesaikanPenilaian(int $id): void
     {
-        $hasil = $this->hasilRepository->findUntukUpdate($id);
+        $hasil = $this->hasilRepository->find($id);
 
         if (! $hasil instanceof HasilSimulasi || $hasil->selesai_pada !== null) {
             return;
@@ -306,7 +323,16 @@ class SimulasiService implements SimulasiServiceInterface
             }
         }
 
-        DB::transaction(function () use ($hasil, $jawaban, $balasan, $statusBenar, $benar, $salah): void {
+        DB::transaction(function () use ($id, $jawaban, $balasan, $statusBenar, $benar, $salah): void {
+            // Job dan submit ulang bisa sampai di sini bersamaan. Yang kalah
+            // menunggu kunci, lalu melihat selesai_pada sudah terisi, sehingga
+            // kelulusan tidak pernah dievaluasi dua kali.
+            $hasil = $this->hasilRepository->findUntukUpdate($id);
+
+            if (! $hasil instanceof HasilSimulasi || $hasil->selesai_pada !== null) {
+                return;
+            }
+
             foreach ($jawaban as $baris) {
                 $status = $statusBenar->get((int) $baris->soal_id);
 
@@ -324,7 +350,7 @@ class SimulasiService implements SimulasiServiceInterface
 
             // Kelulusan ikut dijalankan di sini, sehingga penilaian yang
             // berasal dari job ulang tetap menulis kenaikan tingkat.
-            $this->kelulusanService->menilai($hasil->fresh() ?? $hasil);
+            $this->kelulusanService->menilai($hasil);
         });
     }
 
@@ -345,6 +371,17 @@ class SimulasiService implements SimulasiServiceInterface
                 // percobaan berikutnya supaya satu kegagalan tidak menahan
                 // seluruh jadwal.
                 continue;
+            } catch (Throwable $exception) {
+                // Kegagalan lain (misalnya layanan hitung salah konfigurasi)
+                // juga tidak boleh menahan percobaan berikutnya. Baris ini
+                // sudah terkunci oleh disubmit_pada, jadi dicatat untuk admin.
+                Log::error('Penutupan simulasi kedaluwarsa gagal.', [
+                    'hasil_simulasi_id' => $hasil->id,
+                    'exception' => $exception::class,
+                    'pesan' => $exception->getMessage(),
+                ]);
+
+                continue;
             }
         }
 
@@ -352,10 +389,32 @@ class SimulasiService implements SimulasiServiceInterface
     }
 
     /**
+     * Bagian dari langkah 4 mulai: percobaan yang belum disubmit tetapi
+     * batasnya sudah lewat ditutup lewat alur submit yang sama, sebelum
+     * transaksi mulai dibuka. Bila Python gagal, submitInternal sudah
+     * mengirim job dan 503-nya diteruskan ke siswa.
+     */
+    private function tutupBilaKedaluwarsa(User $user, int $tingkatId): void
+    {
+        $putaranAktif = $this->pretestRepository->putaranAktifTerbaru($user->id, $tingkatId);
+
+        if (! $putaranAktif instanceof Pretest) {
+            return;
+        }
+
+        $berjalan = $this->hasilRepository->berjalan($user->id, (int) $putaranAktif->id);
+
+        if ($berjalan instanceof HasilSimulasi && $berjalan->disubmit_pada === null && $this->lewatBatas($berjalan)) {
+            $this->submitInternal($berjalan);
+        }
+    }
+
+    /**
      * Percobaan berjalan yang ditemukan di langkah 4: bila belum disubmit
-     * dan masih dalam batas, kembalikan; bila sudah disubmit tetapi belum
-     * dinilai, tolak; bila batasnya lewat, tutup dulu lewat alur submit
-     * lalu laporkan bahwa percobaan baru harus dimulai lagi.
+     * dan masih dalam batas, kembalikan; selain itu tolak tanpa menulis apa
+     * pun. Method ini berjalan di dalam transaksi mulai, jadi tidak boleh
+     * menilai: percobaan kedaluwarsa sudah ditutup tutupBilaKedaluwarsa
+     * sebelum transaksi dibuka.
      */
     private function lanjutan(HasilSimulasi $berjalan): SimulasiDimulai
     {
@@ -363,15 +422,9 @@ class SimulasiService implements SimulasiServiceInterface
             return $this->balasan($berjalan, baru: false);
         }
 
-        if ($berjalan->disubmit_pada !== null && $berjalan->selesai_pada === null) {
-            throw new SimulasiBelumDinilaiException('Percobaan ini sedang dinilai; tunggu sebentar.');
-        }
-
-        // Batas lewat tetapi scheduler belum menutup: tutup sekarang lewat
-        // alur submit yang sama, supaya tidak ada jawaban yang hilang.
-        $this->submitInternal($berjalan);
-
-        throw new SimulasiBelumDinilaiException('Waktu percobaan ini sudah habis dan baru saja dinilai. Mulai percobaan baru.');
+        // Sudah disubmit tetapi belum bernilai, atau baru saja melewati
+        // batas di sela penutupan dan transaksi ini.
+        throw new SimulasiBelumDinilaiException('Percobaan ini sedang dinilai; tunggu sebentar.');
     }
 
     private function lewatBatas(HasilSimulasi $hasil): bool

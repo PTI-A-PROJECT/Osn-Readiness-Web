@@ -20,6 +20,7 @@ use App\DTOs\PermintaanSoal;
 use App\DTOs\PretestDimulai;
 use App\Enums\JenisPengerjaan;
 use App\Enums\Peruntukan;
+use App\Exceptions\PengerjaanSudahDisubmitException;
 use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Exceptions\PutaranMasihBerjalanException;
 use App\Exceptions\SudahLulusException;
@@ -32,7 +33,7 @@ use App\Models\TingkatSeleksi;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -108,7 +109,7 @@ class PretestService implements PretestServiceInterface
 
                 return $pretest;
             });
-        } catch (QueryException $exception) {
+        } catch (UniqueConstraintViolationException $exception) {
             // Permintaan ganda bisa lolos dari pemeriksaan di atas karena
             // keduanya melihat keadaan yang sama. Index parsial
             // pretest_berjalan_unique yang menjadi penjaga terakhir.
@@ -151,7 +152,7 @@ class PretestService implements PretestServiceInterface
         $pretest = $this->pretestMilik($user, $pretestId);
 
         if ($pretest->disubmit_pada !== null) {
-            throw new PutaranMasihBerjalanException('Jawaban sudah dikunci saat pre-test disubmit.');
+            throw new PengerjaanSudahDisubmitException('Jawaban sudah dikunci saat pre-test disubmit.');
         }
 
         $baris = $this->jawabanRepository->findJawaban($pretest->id, $soalId);
@@ -201,7 +202,6 @@ class PretestService implements PretestServiceInterface
 
             throw new PerhitunganTidakTersediaException(
                 "Penilaian pre-test #{$terkunci->id} gagal dan dijadwalkan untuk dicoba lagi.",
-                $exception->getDetail(),
             );
         }
 
@@ -213,7 +213,9 @@ class PretestService implements PretestServiceInterface
      * lalu simpan hasil dalam transaksi kedua.
      *
      * Dipanggil juga oleh NilaiUlangJob, jadi harus idempoten: bila
-     * selesai_pada sudah terisi, ia berhenti tanpa menulis apa pun.
+     * selesai_pada sudah terisi, ia berhenti tanpa menulis apa pun. Pemeriksaan
+     * di awal hanya menghemat panggilan Python; penjaga yang sebenarnya ada di
+     * transaksi kedua, di bawah kunci baris.
      */
     public function selesaikanPenilaian(int $id): void
     {
@@ -245,7 +247,15 @@ class PretestService implements PretestServiceInterface
 
         $statusBenar = collect($balasan['jawaban'])->keyBy('soal_id');
 
-        DB::transaction(function () use ($pretest, $jawaban, $balasan, $statusBenar): void {
+        DB::transaction(function () use ($id, $jawaban, $balasan, $statusBenar): void {
+            // Job dan submit ulang bisa sampai di sini bersamaan. Yang kalah
+            // menunggu kunci, lalu melihat selesai_pada sudah terisi.
+            $pretest = $this->pretestRepository->findUntukUpdate($id);
+
+            if (! $pretest instanceof Pretest || $pretest->selesai_pada !== null) {
+                return;
+            }
+
             foreach ($jawaban as $baris) {
                 $status = $statusBenar->get((int) $baris->soal_id);
 

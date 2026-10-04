@@ -123,4 +123,34 @@ class KompetensiAdminTest extends TestCase
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['nama_kompetensi', 'tingkat_id']);
     }
+
+    public function test_nama_kompetensi_unik_per_tingkat(): void
+    {
+        $admin = $this->createAdmin();
+        $ada = Kompetensi::factory()->create(['nama_kompetensi' => 'Logika']);
+        $lain = Kompetensi::factory()->create(['tingkat_id' => $ada->tingkat_id, 'nama_kompetensi' => 'Aljabar']);
+
+        $this->actingAs($admin)
+            ->postJson('/api/admin/kompetensi', [
+                'tingkat_id' => $ada->tingkat_id,
+                'nama_kompetensi' => 'Logika',
+                'deskripsi' => 'Kembar',
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('nama_kompetensi');
+
+        $this->actingAs($admin)
+            ->putJson("/api/admin/kompetensi/{$lain->id}", ['nama_kompetensi' => 'Logika'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('nama_kompetensi');
+
+        // Nama yang sama di tingkat lain boleh.
+        $this->actingAs($admin)
+            ->postJson('/api/admin/kompetensi', [
+                'tingkat_id' => TingkatSeleksi::factory()->create()->id,
+                'nama_kompetensi' => 'Logika',
+                'deskripsi' => 'Tingkat lain',
+            ])
+            ->assertCreated();
+    }
 }

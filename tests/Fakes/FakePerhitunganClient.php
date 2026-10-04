@@ -4,6 +4,8 @@ namespace Tests\Fakes;
 
 use App\Contracts\Clients\PerhitunganClientInterface;
 use App\Exceptions\PerhitunganTidakTersediaException;
+use Closure;
+use Throwable;
 
 /**
  * PerhitunganClient palsu untuk test dan pengembangan lokal tanpa layanan
@@ -21,6 +23,16 @@ class FakePerhitunganClient implements PerhitunganClientInterface
 
     /** @var int|null bila diisi, panggilan berikutnya melempar 503 */
     public ?int $gagalDengan = null;
+
+    /**
+     * Dijalankan tiap kali layanan hitung dipanggil. Test memakainya untuk
+     * meniru penilai lain (job atau submit ulang) yang selesai lebih dulu
+     * saat panggilan ini masih berjalan.
+     */
+    public ?Closure $saatDipanggil = null;
+
+    /** Bila diisi, panggilan berikutnya melempar exception ini apa adanya. */
+    public ?Throwable $lempar = null;
 
     public function hitungPenilaian(array $soal): array
     {
@@ -104,6 +116,14 @@ class FakePerhitunganClient implements PerhitunganClientInterface
 
     private function mungkinGagal(): void
     {
+        if ($this->saatDipanggil !== null) {
+            ($this->saatDipanggil)();
+        }
+
+        if ($this->lempar !== null) {
+            throw $this->lempar;
+        }
+
         if ($this->gagalDengan !== null) {
             throw new PerhitunganTidakTersediaException("Fake gagal dengan {$this->gagalDengan}.");
         }

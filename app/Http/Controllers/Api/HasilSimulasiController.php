@@ -60,18 +60,11 @@ class HasilSimulasiController
 
     public function review(Request $request, HasilSimulasi $hasil): JsonResponse
     {
-        $dimulai = $this->simulasiService->ringkasan($request->user(), $hasil->id);
-
-        if ($dimulai->hasil->selesai_pada === null) {
-            return response()->json([
-                'message' => 'Review hanya tersedia setelah simulasi dinilai.',
-                'kode' => 'SIMULASI_BELUM_DINILAI',
-            ], 404);
-        }
+        $selesai = $this->simulasiService->review($request->user(), $hasil->id);
 
         return response()->json([
             'message' => 'OK',
-            'data' => new HasilSimulasiReviewResource($dimulai->hasil->load('jawaban')),
+            'data' => new HasilSimulasiReviewResource($selesai->load('jawaban')),
         ]);
     }
 }

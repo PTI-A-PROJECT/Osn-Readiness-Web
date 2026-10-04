@@ -13,6 +13,17 @@ class ApiLoginRequest extends FormRequest
     }
 
     /**
+     * Email disamakan huruf kecilnya supaya A@x.com dan a@x.com tidak
+     * menjadi dua akun.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('email'))) {
+            $this->merge(['email' => strtolower(trim($this->input('email')))]);
+        }
+    }
+
+    /**
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array

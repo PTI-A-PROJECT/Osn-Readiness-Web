@@ -9,13 +9,7 @@ class TingkatSeleksiPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        // Reload roles if not loaded
-        if (! $user->relationLoaded('roles')) {
-            $user->load('roles');
-        }
-
-        // Check if user has Super Admin role in any guard
-        if ($user->roles()->where('name', 'Super Admin')->exists()) {
+        if ($user->hasRole('Super Admin')) {
             return true;
         }
 
@@ -32,18 +26,8 @@ class TingkatSeleksiPolicy
         return $user->hasPermissionTo('tingkat.view');
     }
 
-    public function create(User $user): bool
-    {
-        return $user->hasPermissionTo('tingkat.create');
-    }
-
     public function update(User $user, TingkatSeleksi $model): bool
     {
         return $user->hasPermissionTo('tingkat.update');
-    }
-
-    public function delete(User $user, TingkatSeleksi $model): bool
-    {
-        return $user->hasPermissionTo('tingkat.delete');
     }
 }

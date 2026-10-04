@@ -83,4 +83,25 @@ class TingkatAdminTest extends TestCase
             'nama_tingkat' => 'Updated Tingkat',
         ]);
     }
+
+    public function test_urutan_tingkat_tidak_bisa_diubah(): void
+    {
+        $admin = $this->createAdmin();
+        $tingkat = TingkatSeleksi::factory()->create(['urutan' => 7]);
+
+        $this->actingAs($admin)
+            ->putJson("/api/admin/tingkat/{$tingkat->id}", ['urutan' => 99, 'deskripsi' => 'Baru'])
+            ->assertOk();
+
+        $this->assertDatabaseHas('tingkat_seleksi', ['id' => $tingkat->id, 'urutan' => 7, 'deskripsi' => 'Baru']);
+    }
+
+    public function test_tingkat_tidak_bisa_ditambah_atau_dihapus(): void
+    {
+        $admin = $this->createAdmin();
+        $tingkat = TingkatSeleksi::factory()->create();
+
+        $this->actingAs($admin)->postJson('/api/admin/tingkat', ['nama_tingkat' => 'Nasional'])->assertStatus(405);
+        $this->actingAs($admin)->deleteJson("/api/admin/tingkat/{$tingkat->id}")->assertStatus(405);
+    }
 }

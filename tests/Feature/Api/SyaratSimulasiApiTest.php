@@ -80,16 +80,45 @@ class SyaratSimulasiApiTest extends TestCase
 
     public function test_unauthenticated_returns_401(): void
     {
-        $this->getJson('/api/simulasi/syarat/'.$this->tingkat->id)->assertUnauthorized();
+        $this->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)->assertUnauthorized();
     }
 
     public function test_tanpa_putaran_aktif_belum_terpenuhi_tanpa_rincian(): void
     {
         $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->assertJsonPath('data.terpenuhi', false)
+            ->assertJsonPath('data.alasan', 'belum_pretest')
             ->assertJsonPath('data.rincian', []);
+    }
+
+    public function test_dengan_putaran_aktif_alasan_kosong(): void
+    {
+        $this->buatPutaranAktif();
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
+            ->assertOk()
+            ->assertJsonPath('data.alasan', null);
+    }
+
+    public function test_tingkat_terkunci_dibalas_403(): void
+    {
+        $provinsi = TingkatSeleksi::factory()->create(['urutan' => 2]);
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$provinsi->id)
+            ->assertForbidden()
+            ->assertJsonPath('kode', 'TINGKAT_TERKUNCI');
+    }
+
+    public function test_tanpa_tingkat_id_dibalas_422(): void
+    {
+        $this->actingAs($this->siswa)
+            ->getJson('/api/simulasi/syarat')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('tingkat_id');
     }
 
     public function test_rincian_materi_wajib_benar_sebelum_dilengkapi(): void
@@ -97,7 +126,7 @@ class SyaratSimulasiApiTest extends TestCase
         $this->buatPutaranAktif();
 
         $rincian = $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->assertJsonPath('data.terpenuhi', false)
             ->json('data.rincian');
@@ -122,7 +151,7 @@ class SyaratSimulasiApiTest extends TestCase
         ]);
 
         $rincian = $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->json('data.rincian');
 
@@ -160,12 +189,12 @@ class SyaratSimulasiApiTest extends TestCase
         }
 
         $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->assertJsonPath('data.terpenuhi', true);
 
         $rincian = $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->json('data.rincian');
 
         foreach ($rincian as $baris) {
@@ -203,7 +232,7 @@ class SyaratSimulasiApiTest extends TestCase
         }
 
         $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->assertJsonPath('data.terpenuhi', false);
     }

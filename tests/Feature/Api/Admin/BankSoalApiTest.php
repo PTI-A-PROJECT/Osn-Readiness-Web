@@ -49,8 +49,8 @@ class BankSoalApiTest extends TestCase
     }
 
     /**
-     * Bank pre-test terpakai atau tidak: aturan pengulangan membuat soal
-     * terpakai tidak lagi tersedia untuk putaran berikutnya.
+     * Bank pre-test per level. Yang dihitung tersedia adalah stok bank,
+     * sama dengan kandidat yang dilihat SoalPicker.
      */
     private function bankPretest(int $mudah, int $sedang, int $sulit): void
     {
@@ -66,20 +66,20 @@ class BankSoalApiTest extends TestCase
 
     public function test_unauthenticated_returns_401(): void
     {
-        $this->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)->assertUnauthorized();
+        $this->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)->assertUnauthorized();
     }
 
     public function test_siswa_dilarang_melihat_laporan(): void
     {
         $this->actingAs($this->siswa)
-            ->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)
             ->assertForbidden();
     }
 
     public function test_lima_bagian_laporan_dengan_bank_kosong(): void
     {
         $data = $this->actingAs($this->admin)
-            ->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->json('data');
 
@@ -111,7 +111,7 @@ class BankSoalApiTest extends TestCase
         $this->bankPretest(30, 18, 12);
 
         $data = $this->actingAs($this->admin)
-            ->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)
             ->json('data');
 
         $this->assertSame(30, $data['pretest_per_level'][0]['tersedia']);
@@ -125,10 +125,13 @@ class BankSoalApiTest extends TestCase
         $this->assertFalse($data['pretest_per_materi'][0]['kurang']);
     }
 
-    public function test_soal_yang_sudah_dipakai_tidak_dihitung_tersedia(): void
+    public function test_soal_yang_dipakai_siswa_lain_tetap_dihitung_tersedia(): void
     {
-        $this->bankPretest(16, 9, 6);
+        $this->bankPretest(30, 18, 12);
 
+        // Satu siswa sudah mengerjakan pre-test dengan seluruh soal mudah.
+        // Larangan mengulang berlaku per siswa, jadi siswa berikutnya tetap
+        // bisa memakai soal yang sama dan laporan tidak boleh menyusut.
         $pretest = Pretest::factory()->create([
             'user_id' => $this->siswa->id,
             'tingkat_id' => $this->tingkat->id,
@@ -138,29 +141,38 @@ class BankSoalApiTest extends TestCase
             ->where('tingkat_id', $this->tingkat->id)
             ->where('peruntukan', 'pretest')
             ->where('level', 'mudah')
-            ->limit(1)
             ->pluck('id');
 
-        foreach ($dipakai as $soalId) {
+        foreach ($dipakai as $urutan => $soalId) {
             PretestJawaban::create([
                 'pretest_id' => $pretest->id,
                 'soal_id' => $soalId,
-                'urutan' => 1,
+                'urutan' => $urutan + 1,
                 'bobot' => 1,
             ]);
         }
 
         $data = $this->actingAs($this->admin)
-            ->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)
             ->json('data');
 
-        // Kuota mudah 15, tersedia 15 setelah satu soal terpakai — pas.
-        $this->assertSame(15, $data['pretest_per_level'][0]['tersedia']);
+        $this->assertSame(30, $data['pretest_per_level'][0]['tersedia']);
         $this->assertFalse($data['pretest_per_level'][0]['kurang']);
+        $this->assertSame(2, $data['putaran_pretest']['putaran']);
+        $this->assertFalse($data['putaran_pretest']['kurang']);
+    }
 
-        // Satu soal hilang membuat putaran tinggal satu: di bawah ambang.
-        $this->assertSame(1, $data['putaran_pretest']['putaran']);
-        $this->assertTrue($data['putaran_pretest']['kurang']);
+    public function test_tanpa_tingkat_id_dibalas_422(): void
+    {
+        $this->actingAs($this->admin)
+            ->getJson('/api/admin/bank-soal/kecukupan')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('tingkat_id');
+
+        $this->actingAs($this->admin)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id=999999')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('tingkat_id');
     }
 
     public function test_bagian_simulasi_menampilkan_kuota_tiap_simulasi(): void
@@ -186,7 +198,7 @@ class BankSoalApiTest extends TestCase
         }
 
         $data = $this->actingAs($this->admin)
-            ->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)
             ->json('data');
 
         $this->assertCount(1, $data['simulasi_per_level']);
@@ -224,7 +236,7 @@ class BankSoalApiTest extends TestCase
         }
 
         $data = $this->actingAs($this->admin)
-            ->getJson('/api/admin/bank-soal/kecukupan/'.$this->tingkat->id)
+            ->getJson('/api/admin/bank-soal/kecukupan?tingkat_id='.$this->tingkat->id)
             ->json('data');
 
         $this->assertTrue($data['latihan_per_materi'][0]['punya_latihan']);

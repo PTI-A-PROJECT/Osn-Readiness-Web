@@ -9,6 +9,7 @@ use App\Contracts\Repositories\RekomendasiMateriRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Services\BelajarServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
+use App\DTOs\StatusPutaran;
 use App\Enums\StatusProgress;
 use App\Exceptions\BelumPretestException;
 use App\Exceptions\TingkatTerkunciException;
@@ -16,6 +17,7 @@ use App\Models\Materi;
 use App\Models\ProgressBelajar;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
@@ -32,14 +34,15 @@ class BelajarService implements BelajarServiceInterface
 
     public function daftar(User $user, int $tingkatId): Collection
     {
-        $this->pastikanTerbuka($user, $tingkatId);
+        $status = $this->pastikanTerbuka($user, $tingkatId);
 
         $materi = $this->materiRepository->untukTingkat($tingkatId);
 
         if ($materi->isEmpty()) {
             return new Collection;
         }
-        $tanda = $this->tandaMateriWajib($user, $tingkatId);
+
+        $tanda = $this->tandaMateriWajib($status);
         $progress = $this->progressRepository->untukUserDiTingkat($user, $tingkatId);
         $nilaiTerbaik = $this->nilaiLatihanTerbaik($user, $materi);
 
@@ -68,9 +71,9 @@ class BelajarService implements BelajarServiceInterface
 
     public function detail(User $user, Materi $materi): array
     {
-        $this->pastikanTerbuka($user, (int) $materi->tingkat_id);
+        $status = $this->pastikanTerbuka($user, (int) $materi->tingkat_id);
 
-        $tanda = $this->tandaMateriWajib($user, (int) $materi->tingkat_id);
+        $tanda = $this->tandaMateriWajib($status);
         $progress = $this->progressRepository->find($user, (int) $materi->id);
         $nilaiTerbaik = $this->nilaiLatihanTerbaik($user, new Collection([$materi]));
 
@@ -108,7 +111,7 @@ class BelajarService implements BelajarServiceInterface
         ]);
     }
 
-    private function pastikanTerbuka(User $user, int $tingkatId): void
+    private function pastikanTerbuka(User $user, int $tingkatId): StatusPutaran
     {
         $tingkat = $this->tingkatRepository->find($tingkatId);
 
@@ -121,6 +124,8 @@ class BelajarService implements BelajarServiceInterface
         if (! $status->tingkatTerbuka) {
             throw new TingkatTerkunciException("Tingkat {$tingkat->nama_tingkat} belum terbuka.");
         }
+
+        return $status;
     }
 
     /**
@@ -129,11 +134,8 @@ class BelajarService implements BelajarServiceInterface
      *
      * @return array{wajib: array<int, bool>, prioritas: array<int, int>}
      */
-    private function tandaMateriWajib(User $user, int $tingkatId): array
+    private function tandaMateriWajib(StatusPutaran $statusPutaran): array
     {
-        $tingkat = $this->tingkatRepository->findOrFail($tingkatId);
-        $statusPutaran = $this->putaranService->status($user, $tingkat);
-
         if ($statusPutaran->putaranAktifId === null) {
             return ['wajib' => [], 'prioritas' => []];
         }
@@ -160,19 +162,21 @@ class BelajarService implements BelajarServiceInterface
      */
     private function nilaiLatihanTerbaik(User $user, Collection $materi): array
     {
+        // Latihan dan nilai terbaiknya diambil sekaligus, bukan per materi.
+        (new EloquentCollection($materi->all()))->loadMissing('quiz');
+
+        $nilaiPerQuiz = $this->quizPengerjaanRepository->nilaiTerbaikPerQuiz(
+            $user,
+            $materi->map(fn (Materi $satu): ?int => $satu->quiz?->id)->filter()->values()->all(),
+        );
+
         $nilai = [];
 
         foreach ($materi as $satu) {
-            $quiz = $satu->quiz;
+            $quizId = $satu->quiz?->id;
 
-            if ($quiz === null) {
-                continue;
-            }
-
-            $terbaik = $this->quizPengerjaanRepository->selesai($user, (int) $quiz->id)->first();
-
-            if ($terbaik !== null && $terbaik->nilai !== null) {
-                $nilai[(int) $satu->id] = (float) $terbaik->nilai;
+            if ($quizId !== null && isset($nilaiPerQuiz[(int) $quizId])) {
+                $nilai[(int) $satu->id] = $nilaiPerQuiz[(int) $quizId];
             }
         }
 

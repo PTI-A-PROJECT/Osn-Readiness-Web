@@ -19,7 +19,7 @@ class StoreSimulasiRequest extends FormRequest
     {
         return [
             'tingkat_id' => ['required', 'integer', 'exists:tingkat_seleksi,id'],
-            'nama_simulasi' => ['required', 'string', 'max:255'],
+            'nama_simulasi' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string'],
             'jumlah_soal' => ['required', 'integer', 'min:1'],
             'durasi_menit' => ['required', 'integer', 'min:1'],

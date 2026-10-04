@@ -138,7 +138,7 @@ Pre-test berjalan dalam empat endpoint; submit dipecah menjadi dua transaksi den
 **Simpan jawaban** (body: soal\_id, jawaban\_user)
 
 - Pre-test dicari dengan where user\_id; bukan miliknya dibalas 404.
-- Ditolak dengan 409 jika disubmit\_pada sudah terisi.
+- Ditolak dengan 409 SUDAH\_DISUBMIT jika disubmit\_pada sudah terisi. Kode yang sama dipakai latihan dan simulasi.
 - soal\_id harus ada di pretest\_jawaban pre-test itu; selain itu 422.
 
 **Submit**
@@ -150,7 +150,7 @@ Pre-test berjalan dalam empat endpoint; submit dipecah menjadi dua transaksi den
 5. Transaksi 2: isi status\_benar tiap jawaban, isi nilai dan selesai\_pada, simpan satu baris pemetaan\_materi per materi, dan simpan baris rekomendasi\_materi dari materi\_wajib.
 6. Balas 200 dengan nilai, pemetaan, dan materi wajib.
 
-Langkah 2 sampai 5 berada di satu method, misalnya PretestService::selesaikanPenilaian, yang juga dipanggil NilaiUlangJob. Method itu idempoten: bila selesai\_pada sudah terisi, ia berhenti tanpa menulis apa pun.
+Langkah 2 sampai 5 berada di satu method, misalnya PretestService::selesaikanPenilaian, yang juga dipanggil NilaiUlangJob. Method itu idempoten: bila selesai\_pada sudah terisi, ia berhenti tanpa menulis apa pun. Pemeriksaan itu diulang di dalam transaksi 2, di bawah kunci baris, supaya job dan submit ulang yang berjalan bersamaan tidak menilai dua kali.
 
 Sebelum menyimpan, Laravel memeriksa balasan Python: jumlah jawaban harus sama dengan yang dikirim, setiap materi yang dikirim punya baris pemetaan, dan jumlah materi wajib sesuai aturan. Balasan yang tidak cocok diperlakukan sebagai kesalahan konfigurasi (502).
 
@@ -177,14 +177,14 @@ Materi bisa dibaca kapan saja selama tingkatnya terbuka, tetapi menandai selesai
 
 **Latihan**
 
-1. Mulai: periksa tingkat terbuka dan putaran aktif. Jika ada pengerjaan yang belum disubmit untuk latihan itu, kembalikan pengerjaan itu.
+1. Mulai: periksa tingkat terbuka dan putaran aktif. Jika ada pengerjaan yang belum disubmit untuk latihan itu, kembalikan pengerjaan itu. Index quiz\_pengerjaan\_berjalan\_unique (user\_id, quiz\_id, hanya baris yang belum disubmit) menolak permintaan ganda; permintaan yang kalah mengembalikan pengerjaan yang sudah ada.
 2. Panggil SoalPickerService dengan materi latihan dan quiz.jumlah\_soal, lalu dalam satu transaksi buat quiz\_pengerjaan dan baris quiz\_jawaban.
 3. Submit memakai pola yang sama dengan pre-test: transaksi 1 mengunci dan mengisi disubmit\_pada, lalu PerhitunganClient::hitungPenilaian, lalu transaksi 2 mengisi status\_benar, nilai, dan selesai\_pada.
 4. Nilai latihan sebuah materi adalah nilai tertinggi dari semua pengerjaan yang selesai.
 
 **Syarat simulasi** (SyaratSimulasiService)
 
-1. Ambil putaran aktif. Jika tidak ada, syarat belum terpenuhi dengan alasan belum pre-test.
+1. Ambil putaran aktif. Jika tidak ada, syarat belum terpenuhi dengan alasan belum pre-test (kolom alasan berisi belum\_pretest; selain itu kosong).
 2. Ambil materi wajib dari rekomendasi\_materi putaran itu.
 3. Untuk tiap materi wajib, periksa dua hal: progress berstatus selesai, dan nilai latihan terbaik mencapai latihan\_min\_nilai.
 4. Kembalikan terpenuhi (benar bila semua lolos) dan rincian per materi: judul, selesai atau belum, nilai latihan, dan batasnya.
@@ -221,7 +221,7 @@ Mulai simulasi adalah titik paling rawan, karena di sana syarat, kuota, dan perm
 **Simpan jawaban**
 
 - Ditolak dengan 409 WAKTU\_HABIS bila waktu server melewati batas\_pada ditambah toleransi (30 detik, usulan).
-- Ditolak dengan 409 bila disubmit\_pada sudah terisi.
+- Ditolak dengan 409 SUDAH\_DISUBMIT bila disubmit\_pada sudah terisi.
 
 **Submit**
 
@@ -247,7 +247,7 @@ Command simulasi:tutup-kedaluwarsa berjalan tiap menit dengan withoutOverlapping
 
 **Review**
 
-Hanya terbuka bila selesai\_pada terisi dan percobaan itu milik siswa. Balasan memakai SoalReviewResource: jawaban siswa, status benar, kunci, dan pembahasan.
+Hanya terbuka bila selesai\_pada terisi dan percobaan itu milik siswa. Percobaan yang belum dinilai dibalas 409 SIMULASI\_BELUM\_DINILAI; milik siswa lain 404. Balasan memakai SoalReviewResource: jawaban siswa, status benar, kunci, dan pembahasan.
 
 ## Dashboard dan riwayat (BE-15, BE-16)
 
@@ -268,15 +268,15 @@ Semua endpoint admin berada di bawah /api/admin/\* dengan CRUD standar; yang per
 
 | Resource | Validasi khusus | Aturan ubah dan hapus |
 | --- | --- | --- |
-| Siswa | Tidak ada | Menonaktifkan atau soft delete mencabut semua token siswa itu |
+| Siswa | Tidak ada | Menonaktifkan atau soft delete mencabut semua token siswa itu. Menu ini hanya menyentuh akun ber-role siswa (aktif maupun nonaktif); akun admin dibalas 404 |
 | Tingkat | Hanya nama dan deskripsi yang bisa diubah | Tidak bisa ditambah atau dihapus |
 | Kompetensi | Nama unik per tingkat | Hapus ditolak bila masih punya materi |
 | Materi | Kompetensi harus dari tingkat yang sama; urutan unik per tingkat | Hapus ditolak bila punya soal, latihan, atau dirujuk hasil siswa |
 | Cerita soal | Tingkat wajib | Hapus ditolak bila masih dipakai soal |
-| Soal | Materi dan cerita harus dari tingkat yang sama. Pilihan ganda wajib punya minimal 2 pilihan dan kunci harus salah satu pilihan. Isian tidak punya pilihan | Hapus = soft delete. Soal yang sudah dipakai pengerjaan tidak boleh diubah kunci, level, peruntukan, atau materinya; teks boleh diperbaiki |
+| Soal | Materi dan cerita harus dari tingkat yang sama. Pilihan ganda wajib punya minimal 2 pilihan dan kunci harus salah satu pilihan. Isian tidak punya pilihan. Pilihan ditulis sebagai objek berkunci huruf ({"A": "...", "B": "..."}) dan kunci adalah hurufnya, sama dengan format impor | Hapus = soft delete. Soal yang sudah dipakai pengerjaan tidak boleh diubah kunci, level, peruntukan, atau materinya; teks boleh diperbaiki |
 | Pembahasan | Satu per soal | Simpan = buat atau perbarui |
-| Simulasi | jumlah\_soal dan durasi\_menit lebih dari 0 | is\_aktif hanya bisa dinyalakan bila bank soal cukup untuk satu percobaan. Hapus ditolak bila punya hasil |
-| Latihan | Satu per materi; jumlah\_soal minimal latihan\_min\_soal | Hapus ditolak bila punya pengerjaan |
+| Simulasi | jumlah\_soal dan durasi\_menit lebih dari 0 | is\_aktif hanya bisa dinyalakan bila bank soal cukup untuk satu percobaan. Hapus ditolak bila punya hasil (409 SIMULASI\_MASIH\_DIGUNAKAN) |
+| Latihan | Satu per materi; jumlah\_soal minimal latihan\_min\_soal | Hapus ditolak bila punya pengerjaan (409 LATIHAN\_MASIH\_DIGUNAKAN) |
 | Aturan pemetaan | Lihat di bawah | Hanya nilai yang bisa diubah; parameter tidak bisa ditambah atau dihapus |
 
 **Validasi aturan pemetaan**
@@ -297,7 +297,7 @@ Semua endpoint admin berada di bawah /api/admin/\* dengan CRUD standar; yang per
 | Simulasi per level | Jumlah soal tersedia dibanding kuota satu simulasi | Tersedia lebih kecil dari kuota |
 | Latihan per materi | Jumlah soal latihan tiap materi dibanding quiz.jumlah\_soal | Lebih kecil, atau materi belum punya latihan |
 
-BankSoalService memakai fungsi hitung kuota yang sama dengan SoalPickerService, supaya laporan admin dan perilaku nyata tidak pernah berbeda.
+BankSoalService memakai fungsi hitung kuota yang sama dengan SoalPickerService, supaya laporan admin dan perilaku nyata tidak pernah berbeda. "Tersedia" berarti stok bank (tingkat dan peruntukan yang sesuai, belum dihapus). Soal yang pernah dipakai siswa lain tetap dihitung, karena larangan mengulang soal pre-test berlaku per siswa.
 
 **Dashboard Super Admin** (GET /api/admin/dashboard): jumlah siswa aktif, jumlah pengerjaan per jenis, jumlah siswa per tingkat aktif, dan rata-rata nilai per jenis.
 

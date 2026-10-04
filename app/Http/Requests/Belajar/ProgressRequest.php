@@ -16,7 +16,7 @@ class ProgressRequest extends FormRequest
     {
         return [
             'status.required' => 'Status progress wajib disebut.',
-            'status.in' => 'Status hanya boleh belajar atau selesai.',
+            'status.enum' => 'Status hanya boleh belajar atau selesai.',
         ];
     }
 

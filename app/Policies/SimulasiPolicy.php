@@ -18,26 +18,26 @@ class SimulasiPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('soal.viewAny');
+        return $user->hasPermissionTo('simulasi.viewAny');
     }
 
     public function view(User $user, Simulasi $simulasi): bool
     {
-        return $user->hasPermissionTo('soal.view');
+        return $user->hasPermissionTo('simulasi.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('soal.create');
+        return $user->hasPermissionTo('simulasi.create');
     }
 
     public function update(User $user, Simulasi $simulasi): bool
     {
-        return $user->hasPermissionTo('soal.update');
+        return $user->hasPermissionTo('simulasi.update');
     }
 
     public function delete(User $user, Simulasi $simulasi): bool
     {
-        return $user->hasPermissionTo('soal.delete');
+        return $user->hasPermissionTo('simulasi.delete');
     }
 }
