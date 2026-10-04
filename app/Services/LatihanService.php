@@ -65,10 +65,7 @@ class LatihanService implements LatihanServiceInterface
             tingkatId: (int) $tingkat->id,
             peruntukan: Peruntukan::Latihan,
             jumlahSoal: (int) $quiz->jumlah_soal,
-            // Latihan memakai bank soal yang biasanya hanya diisi soal
-            // mudah, jadi tanpa pembagian level. Persentase 50/30/20 milik
-            // pre-test; memakainya di sini akan selalu ditolak dengan
-            // BANK_SOAL_TIDAK_CUKUP untuk bank latihan yang tidak lengkap.
+            // Latihan mengambil semua level tanpa kuota persentase.
             persenLevel: [],
             materiId: (int) $materi->id,
         ));

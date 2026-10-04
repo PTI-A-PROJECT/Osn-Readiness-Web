@@ -43,7 +43,7 @@ use App\Contracts\Services\SyaratSimulasiServiceInterface;
 use App\Contracts\Services\TingkatServiceAdminInterface;
 use App\Contracts\Services\TingkatServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
-use App\Randomizers\SeededRandomizer;
+use App\Randomizers\AcakRandomizer;
 use App\Repositories\Eloquent\AturanPemetaanRepository;
 use App\Repositories\Eloquent\HasilSimulasiJawabanRepository;
 use App\Repositories\Eloquent\HasilSimulasiRepository;
@@ -146,10 +146,7 @@ class RepositoryServiceProvider extends ServiceProvider
             retry: (int) config('services.perhitungan.retry'),
         ));
 
-        // Seed diambil dari env supaya pengacakan bisa diulang persis; test
-        // sendiri menyuntikkan SeededRandomizer dengan seed pilihan.
-        $this->app->bind(RandomizerInterface::class, function (): RandomizerInterface {
-            return new SeededRandomizer((int) env('SOAL_ACAK_SEED', 20261003));
-        });
+        // Produksi memakai sumber acak PHP; test dapat menyuntikkan SeededRandomizer.
+        $this->app->bind(RandomizerInterface::class, AcakRandomizer::class);
     }
 }
