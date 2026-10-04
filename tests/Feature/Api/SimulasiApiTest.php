@@ -489,4 +489,88 @@ class SimulasiApiTest extends TestCase
         $this->assertNotNull($hasil->disubmit_pada);
         $this->assertNull($hasil->selesai_pada);
     }
+
+    public function test_simpan_jawaban_setelah_submit_dibalas_409(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        $hasilId = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $soalId = HasilSimulasiJawaban::where('hasil_simulasi_id', $hasilId)->firstOrFail()->soal_id;
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/hasil-simulasi/'.$hasilId.'/submit')
+            ->assertOk();
+
+        $this->actingAs($this->siswa)
+            ->putJson("/api/hasil-simulasi/{$hasilId}/jawaban", [
+                'soal_id' => $soalId,
+                'jawaban_user' => 'A',
+            ])
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SUDAH_DISUBMIT');
+    }
+
+    public function test_penilaian_yang_kalah_balapan_tidak_mengevaluasi_kelulusan_lagi(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        $hasilId = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        // Nilai 90 akan menulis kenaikan tingkat bila penilai ini dibiarkan
+        // jalan. Penilai lain sudah menutup percobaan lebih dulu dengan
+        // nilai 11, jadi yang ini harus berhenti tanpa menulis apa pun.
+        $this->perhitungan->nilai = 90.0;
+        $this->perhitungan->saatDipanggil = function () use ($hasilId): void {
+            HasilSimulasi::where('id', $hasilId)->update([
+                'nilai' => 11,
+                'lulus' => false,
+                'selesai_pada' => now(),
+            ]);
+        };
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/hasil-simulasi/'.$hasilId.'/submit')
+            ->assertOk();
+
+        $hasil = HasilSimulasi::findOrFail($hasilId);
+
+        $this->assertSame(11.0, (float) $hasil->nilai);
+        $this->assertFalse((bool) $hasil->lulus);
+        $this->assertDatabaseCount('kenaikan_tingkat', 0);
+    }
+
+    public function test_soal_yang_dihapus_admin_tidak_menggagalkan_submit_dan_review(): void
+    {
+        $this->siapkanSyarat();
+        $this->isiBankSimulasi(6, 5, 4);
+
+        $hasilId = $this->actingAs($this->siswa)
+            ->postJson('/api/simulasi/'.$this->simulasi->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $soalId = HasilSimulasiJawaban::where('hasil_simulasi_id', $hasilId)->firstOrFail()->soal_id;
+        Soal::findOrFail($soalId)->delete();
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/hasil-simulasi/'.$hasilId)
+            ->assertOk();
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/hasil-simulasi/'.$hasilId.'/submit')
+            ->assertOk();
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/hasil-simulasi/'.$hasilId.'/review')
+            ->assertOk();
+    }
 }

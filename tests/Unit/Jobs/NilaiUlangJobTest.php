@@ -7,6 +7,8 @@ use App\Contracts\Services\PenilaianServiceInterface;
 use App\Contracts\Services\PretestServiceInterface;
 use App\Contracts\Services\SimulasiServiceInterface;
 use App\Enums\JenisPengerjaan;
+use App\Exceptions\PerhitunganKonfigurasiException;
+use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Jobs\NilaiUlangJob;
 use Illuminate\Support\Facades\Log;
 use Mockery;
@@ -94,7 +96,7 @@ class NilaiUlangJobTest extends TestCase
         Log::shouldReceive('error')
             ->once()
             ->withArgs(function (string $pesan, array $konteks) use (&$tercatat): bool {
-                $tercatat = $pesan === 'Penilaian gagal setelah lima percobaan.'
+                $tercatat = $pesan === 'Penilaian gagal dan tidak akan dicoba lagi.'
                     && $konteks['jenis'] === 'simulasi'
                     && $konteks['id'] === 9
                     && $konteks['pesan'] === 'python mati';
@@ -122,5 +124,48 @@ class NilaiUlangJobTest extends TestCase
 
         $this->assertSame(JenisPengerjaan::Latihan, $job->jenis);
         $this->assertSame(42, $job->id);
+    }
+
+    #[Test]
+    public function kesalahan_konfigurasi_langsung_menggagalkan_job_tanpa_retry(): void
+    {
+        $galat = new PerhitunganKonfigurasiException('Token ditolak.');
+
+        $pretest = Mockery::mock(PretestServiceInterface::class);
+        $pretest->shouldReceive('selesaikanPenilaian')->once()->with(5)->andThrow($galat);
+
+        $job = (new NilaiUlangJob(JenisPengerjaan::Pretest, 5))->withFakeQueueInteractions();
+
+        // Tidak dilempar ulang: exception yang lolos dari handle() membuat
+        // queue menjadwalkan percobaan berikutnya.
+        $job->handle(
+            $pretest,
+            Mockery::mock(LatihanServiceInterface::class),
+            Mockery::mock(SimulasiServiceInterface::class),
+        );
+
+        $job->assertFailedWith($galat);
+    }
+
+    #[Test]
+    public function kegagalan_sementara_dilempar_ulang_supaya_queue_mencoba_lagi(): void
+    {
+        $pretest = Mockery::mock(PretestServiceInterface::class);
+        $pretest->shouldReceive('selesaikanPenilaian')->once()
+            ->andThrow(new PerhitunganTidakTersediaException('Timeout.'));
+
+        $job = (new NilaiUlangJob(JenisPengerjaan::Pretest, 5))->withFakeQueueInteractions();
+
+        try {
+            $job->handle(
+                $pretest,
+                Mockery::mock(LatihanServiceInterface::class),
+                Mockery::mock(SimulasiServiceInterface::class),
+            );
+
+            $this->fail('Kegagalan sementara harus dilempar ulang.');
+        } catch (PerhitunganTidakTersediaException) {
+            $job->assertNotFailed();
+        }
     }
 }

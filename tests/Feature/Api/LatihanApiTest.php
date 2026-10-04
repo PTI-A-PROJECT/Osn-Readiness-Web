@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Contracts\Clients\PerhitunganClientInterface;
+use App\Contracts\Repositories\QuizPengerjaanRepositoryInterface;
 use App\Enums\JenisPengerjaan;
 use App\Jobs\NilaiUlangJob;
 use App\Models\Kompetensi;
@@ -14,7 +15,9 @@ use App\Models\QuizPengerjaan;
 use App\Models\Soal;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
+use App\Repositories\Eloquent\QuizPengerjaanRepository;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\Fakes\FakePerhitunganClient;
@@ -328,5 +331,137 @@ class LatihanApiTest extends TestCase
             ->assertOk();
 
         $this->assertSame(95.0, (float) $respons->json('data.0.nilai_latihan_terbaik'));
+    }
+
+    public function test_simpan_jawaban_setelah_submit_dibalas_409(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $soalId = QuizJawaban::where('pengerjaan_id', $pengerjaanId)->firstOrFail()->soal_id;
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk();
+
+        $this->actingAs($this->siswa)
+            ->putJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/jawaban', [
+                'soal_id' => $soalId,
+                'jawaban_user' => 'A',
+            ])
+            ->assertStatus(409)
+            ->assertJsonPath('kode', 'SUDAH_DISUBMIT');
+    }
+
+    public function test_index_menolak_dua_pengerjaan_berjalan_untuk_latihan_yang_sama(): void
+    {
+        QuizPengerjaan::create(['user_id' => $this->siswa->id, 'quiz_id' => $this->quiz->id]);
+
+        $this->expectException(UniqueConstraintViolationException::class);
+
+        QuizPengerjaan::create(['user_id' => $this->siswa->id, 'quiz_id' => $this->quiz->id]);
+    }
+
+    public function test_pengerjaan_baru_boleh_setelah_yang_lama_disubmit(): void
+    {
+        QuizPengerjaan::create([
+            'user_id' => $this->siswa->id,
+            'quiz_id' => $this->quiz->id,
+            'disubmit_pada' => now(),
+        ]);
+
+        QuizPengerjaan::create(['user_id' => $this->siswa->id, 'quiz_id' => $this->quiz->id]);
+
+        $this->assertDatabaseCount('quiz_pengerjaan', 2);
+    }
+
+    public function test_mulai_bersamaan_melanjutkan_pengerjaan_yang_menang(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        // Request lain sudah membuat pengerjaan, tetapi request ini belum
+        // melihatnya saat memeriksa: pemeriksaan pertama dibuat meleset.
+        $pemenang = QuizPengerjaan::create(['user_id' => $this->siswa->id, 'quiz_id' => $this->quiz->id]);
+
+        $this->app->bind(QuizPengerjaanRepositoryInterface::class, function () {
+            return new class(new QuizPengerjaan) extends QuizPengerjaanRepository
+            {
+                private bool $sudahMeleset = false;
+
+                public function berjalan(User $user, int $quizId): ?QuizPengerjaan
+                {
+                    if (! $this->sudahMeleset) {
+                        $this->sudahMeleset = true;
+
+                        return null;
+                    }
+
+                    return parent::berjalan($user, $quizId);
+                }
+            };
+        });
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertOk()
+            ->assertJsonPath('data.id', $pemenang->id);
+
+        $this->assertDatabaseCount('quiz_pengerjaan', 1);
+    }
+
+    public function test_penilaian_yang_kalah_balapan_tidak_menimpa_hasil(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        // Saat Python masih menghitung, penilai lain sudah selesai lebih dulu.
+        $this->perhitungan->saatDipanggil = function () use ($pengerjaanId): void {
+            QuizPengerjaan::where('id', $pengerjaanId)->update(['nilai' => 11, 'selesai_pada' => now()]);
+        };
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk();
+
+        $this->assertSame(11.0, (float) QuizPengerjaan::findOrFail($pengerjaanId)->nilai);
+        $this->assertSame(
+            0,
+            QuizJawaban::where('pengerjaan_id', $pengerjaanId)->whereNotNull('status_benar')->count(),
+            'Penilai yang kalah tidak boleh menulis status jawaban.',
+        );
+    }
+
+    public function test_soal_yang_dihapus_admin_tidak_menggagalkan_latihan_berjalan(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $soalId = QuizJawaban::where('pengerjaan_id', $pengerjaanId)->firstOrFail()->soal_id;
+        Soal::findOrFail($soalId)->delete();
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/quiz-pengerjaan/'.$pengerjaanId)
+            ->assertOk();
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk()
+            ->assertJsonCount(10, 'data.jawaban');
     }
 }
