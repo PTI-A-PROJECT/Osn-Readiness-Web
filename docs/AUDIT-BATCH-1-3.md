@@ -12,7 +12,7 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
 
 ## Status perbaikan
 
-- [x] Temuan tinggi #1–3 (SoalPicker): implementasi PR 1 di `fix/b1b-picker`; menunggu review dan merge ke `dev`.
+- [x] Temuan tinggi #1–3 (SoalPicker): implementasi [PR #27](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/27) (PR 1) di `fix/b1b-picker`; menunggu review dan merge ke `dev`.
   - Randomizer produksi menggunakan `Random\Randomizer` tanpa seed tetap.
   - Latihan mengambil kandidat dari semua level; seeder kembali memakai campuran 4/3/3.
   - Cadangan simulasi mengecualikan soal yang baru dipilih dan melaporkan kekurangan nyata.
