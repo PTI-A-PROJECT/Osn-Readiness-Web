@@ -18,24 +18,20 @@ B0-B (kontrak dan error handling) sudah diambil alih Orang 1 di `feat/b0b-kontra
 
 ## Urutan kerja
 
-| # | Paket | Butuh dari Orang 1 | Ditunggu Orang 1 untuk | Status 3 Okt |
+| # | Paket | Butuh dari Orang 1 | Ditunggu Orang 1 untuk | Status 4 Okt |
 | --- | --- | --- | --- | --- |
 | 0 | Tutup branch lama | — | — | `feat/b0b-kontrak-error` dan `feat/b1c-perhitungan` tidak di-merge |
-| 1 | B1-C · PerhitunganClient & NilaiUlangJob (ulang) | B0-B merge ke `dev` | **B2-A** | Dikerjakan ulang |
-| 2 | Revisi ARCHITECTURE_RULES §3.5 & §8 | — | — | PR dokumen kecil |
-| 3 | B1-E · Admin: soal & konfigurasi | B1-B (SoalResource) | — | |
-| 4 | B1-D · Admin: struktur konten & siswa | B1-A | — | |
-| 5 | B2-B · Materi, latihan, syarat simulasi | B1-A, B1-B | **B3-A (prioritaskan)** | |
-| 6 | B2-C · Kecukupan bank soal & dashboard admin | B1-B (fungsi kuota) | — | |
-| 7 | B2-D · Impor konten | — (`id_sumber` sudah ada di `dev`) | — | |
-| 8 | B3-B · Dashboard & riwayat siswa | B1-A; B3-A untuk bagian simulasi | — | |
-| 9 | B4 · Route check & dokumentasi | Semua paket Orang 1 | — | |
+| 1 | B1-C · PerhitunganClient & NilaiUlangJob (ulang) | B0-B merge ke `dev` | **B2-A** | ✅ merged (PR#12) |
+| 2 | Revisi ARCHITECTURE_RULES §3.5 & §8 | — | — | ⬜ belum; ikut B4 |
+| 3 | B1-E · Admin: soal & konfigurasi | B1-B (SoalResource) | — | ✅ merged (PR#19) |
+| 4 | B1-D · Admin: struktur konten & siswa | B1-A | — | ✅ merged (PR#20) |
+| 5 | B2-B · Materi, latihan, syarat simulasi | B1-A, B1-B | **B3-A (prioritaskan)** | ✅ merged (PR#21) |
+| 6 | B2-C · Kecukupan bank soal & dashboard admin | B1-B (fungsi kuota) | — | ✅ merged (PR#22) |
+| 7 | B2-D · Impor konten | — (`id_sumber` sudah ada di `dev`) | — | ✅ merged (PR#23) |
+| 8 | B3-B · Dashboard & riwayat siswa | B1-A; B3-A untuk bagian simulasi | — | ✅ merged (PR#26) |
+| 9 | B4 · Route check & dokumentasi | Semua paket Orang 1 | — | ⬜ setelah perbaikan audit |
 
-B1-C sekarang ada di jalur kritis karena Orang 1 butuh klien Python untuk B2-A. Kerjakan B1-C lebih dulu.
-
-B2-B juga di jalur kritis karena Orang 1 butuh `SyaratSimulasiService` untuk B3-A. Bila B1-A dan B1-B sudah merge, kerjakan B2-B sebelum menyelesaikan admin.
-
-Bila B1-B belum merge saat kamu mulai B1-E, buat dulu CRUD dan validasinya. Respons soal admin menyusul setelah `SoalResource` tersedia.
+Semua paket Batch 1–3 milikmu sudah merge ke `dev`. Yang tersisa adalah me-review perbaikan audit pada paketmu (admin, latihan, importer, bank soal) dan B4. Rinciannya ada di [AUDIT-BATCH-1-3.md](AUDIT-BATCH-1-3.md#status-perbaikan).
 
 ## Aturan kerja
 

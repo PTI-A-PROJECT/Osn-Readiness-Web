@@ -20,17 +20,21 @@ PR#2 (`main` ← `feat/b0b-kontrak-error`) membuat `main` tidak bisa boot. PR#4 
 5. Sebelum PR: `composer test`, `vendor/bin/pint --test`, `php artisan route:list --path=api`, dan `migrate:fresh --seed` di Postgres harus lolos dari checkout bersih.
 6. Bila konflik: rebase ke `dev` terbaru. Jangan resolve lewat UI GitHub untuk file di `database/migrations`, `app/Contracts`, atau `routes`.
 
-## Status per 3 Oktober 2026
+## Status per 4 Oktober 2026
 
-| Paket | Branch | Pemilik | Status |
-| --- | --- | --- | --- |
-| B0-A | `feat/b0a-skema-model` | Orang 1 | ✅ merged ke `dev` (PR#3) |
-| B0-B | `feat/b0b-kontrak` | Orang 1 (diambil alih) | ✅ siap merge ke `dev`. Sisa kontrak dipindah ke paket pemakainya (lihat B0-B) |
-| B1-A | `feat/b1a-auth-putaran` | Orang 1 | ✅ siap merge ke `dev` setelah B0-B |
-| B1-C | `feat/b1c-perhitungan` | Orang 2 | ❌ perlu dikerjakan ulang di atas `dev` (lihat B1-C) |
-| — | `feat/b0b-kontrak-error` | — | ❌ tidak dipakai; PR#4 closed. PR#5 (revert PR#2 di `main`) menunggu merge |
+Batch 0 sampai 3 sudah merge ke `dev`. Audit atas Batch 1–3 ([AUDIT-BATCH-1-3.md](AUDIT-BATCH-1-3.md)) menemukan bug yang tidak tertangkap test; perbaikannya dikerjakan sebagai sembilan PR berurutan sebelum B4.
 
-Urutan merge berikutnya: PR#5 → `feat/b0b-kontrak` → `feat/b1a-auth-putaran` → PR rilis `dev` → `main`.
+| Batch | Paket | Status |
+| --- | --- | --- |
+| 0 | B0-A, B0-B | ✅ merged ke `dev` |
+| 1 | B1-A, B1-B, B1-C, B1-D, B1-E | ✅ merged ke `dev` |
+| 2 | B2-A, B2-B, B2-C, B2-D | ✅ merged ke `dev` |
+| 3 | B3-A, B3-B, B3-C | ✅ merged ke `dev` |
+| — | Perbaikan audit, PR 1 (SoalPicker) | ✅ merged ke `dev` (PR#27) |
+| — | Perbaikan audit, PR 2–9 | 🔧 dikerjakan; status tiap PR ada di [AUDIT-BATCH-1-3.md](AUDIT-BATCH-1-3.md#status-perbaikan) |
+| 4 | Integrasi & penutupan | ⬜ dimulai setelah perbaikan audit merge |
+
+Branch `feat/b0b-kontrak-error` dan `feat/b1c-perhitungan` tidak dipakai dan tidak di-merge.
 
 ## Konvensi yang sudah berlaku di kode
 

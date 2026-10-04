@@ -62,7 +62,25 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - `sisaKuotaSimulasi` dihitung `PutaranService`; `RiwayatService` menggantikan repository di controller.
   - N+1 di daftar materi dan syarat simulasi dihapus (satu query nilai terbaik per siswa).
   - `PenilaianBelumDiimplementasi` dihapus; pesan validasi progress dan karakter nyasar di test diperbaiki.
-- [ ] PR 9 (dokumen) menyusul.
+- [x] Dokumen: PR 9 di `docs/pasca-audit` (commit lokal, bertumpuk di atas `chore/rapikan-temuan-rendah`).
+  - Tabel status di ketiga BATCH_PLAN diperbarui ke 4 Oktober.
+  - Logic per fitur memuat `SUDAH_DISUBMIT`, format pilihan berhuruf, arti "tersedia" di laporan bank, index latihan berjalan, kolom `alasan` syarat simulasi, dan kode 409 baru untuk hapus latihan/simulasi.
+
+### Verifikasi akhir (di ujung tumpukan, sebelum PR 9)
+
+- `php artisan test`: 432 test, seluruhnya lolos (naik dari 331). Pint bersih. 72 rute API. Tidak ada query di controller.
+- `migrate:fresh --seed` dan `migrate:reset` berhasil di PostgreSQL 16 pada database sementara.
+- HTTP lewat `php artisan serve` dengan data seeder dan server hitung palsu: dua siswa mendapat set pre-test berbeda; latihan berisi tiga level; simulasi kedaluwarsa ditutup lewat `mulai` dan percobaan baru dibuat; hapus materi yang dirujuk 409; upload gambar membalas path; teks soal terpakai bisa diperbaiki tetapi kuncinya tidak; latihan baru bisa diubah dan dihapus; admin tidak bisa menghapus dirinya lewat menu siswa; soft delete siswa mencabut token.
+- Batas verifikasi: layanan hitung yang dipakai adalah tiruan, bukan layanan Python produksi. Balapan penilaian ditiru di test lewat kait pada klien palsu; yang diuji dengan request bersamaan sungguhan hanya mulai dan submit latihan.
+
+### Yang sengaja belum dikerjakan
+
+- `simpanJawaban` masih membaca pengerjaan tanpa kunci baris.
+- Submit ulang saat Python mati masih mengirim `NilaiUlangJob` baru tiap kali.
+- Service admin Kompetensi, Konteks, dan Tingkat masih memakai Eloquent langsung; `AturanPemetaanController` masih menyuntik kelas konkret.
+- Pemeriksaan tingkat terbuka pada `GET /api/simulasi/syarat` ada di controller, karena `SyaratSimulasiService` tidak boleh menyuntik `PutaranService` (siklus dependensi).
+- Bentuk respons `GET /api/materi`, `/materi/{id}`, dan `/simulasi/syarat` belum diseragamkan ke `{message, data}`.
+- Revisi `ARCHITECTURE_RULES.md` §3.5 dan §8, serta test kontrak terhadap layanan Python (keputusan #6 masih terbuka).
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
@@ -157,7 +175,7 @@ Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
 ## Dokumen yang tertinggal
 
-Tabel status di [BATCH_PLAN.md](BATCH_PLAN.md), [BATCH_PLAN_ORANG_1.md](BATCH_PLAN_ORANG_1.md), dan [BATCH_PLAN_ORANG_2.md](BATCH_PLAN_ORANG_2.md) masih menggambarkan keadaan 3 Oktober (misalnya "B1-C dikerjakan ulang", "B3-A terblokir"). Yang sudah sesuai keadaan sekarang hanya [RINGKASAN-SESI.md](RINGKASAN-SESI.md).
+Saat audit, tabel status di ketiga BATCH_PLAN masih menggambarkan keadaan 3 Oktober. Sudah diperbarui di PR 9.
 
 ## Urutan perbaikan yang disarankan (sebelum B4)
 
