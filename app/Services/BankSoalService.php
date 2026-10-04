@@ -7,7 +7,6 @@ use App\Contracts\Services\BankSoalServiceInterface;
 use App\Enums\Level;
 use App\Enums\Peruntukan;
 use App\Models\Materi;
-use App\Models\PretestJawaban;
 use App\Models\Quiz;
 use App\Models\Simulasi;
 use App\Models\Soal;
@@ -28,19 +27,15 @@ class BankSoalService implements BankSoalServiceInterface
 
         $kuotaPretest = $this->kuotaLevel($aturan->pretestJumlahSoal, $aturan->persenLevelPretest);
 
-        // Pre-test tidak pernah mengulang soal, jadi yang tersedia untuk
-        // putaran berikutnya hanyalah soal yang belum pernah dijawab.
-        $terpakai = PretestJawaban::query()
-            ->whereHas('pretest', fn ($query) => $query->where('tingkat_id', $tingkatId))
-            ->distinct()
-            ->pluck('soal_id')
-            ->all();
-
+        // "Tersedia" adalah stok bank, sama dengan kandidat yang dilihat
+        // SoalPicker. Larangan mengulang soal pre-test berlaku per siswa,
+        // jadi soal yang pernah dipakai siswa lain tetap tersedia; bagian
+        // putaran_pretest yang menjawab berapa kali satu siswa bisa
+        // mengulang pre-test tanpa soal berulang.
         $pretest = Soal::query()
             ->where('tingkat_id', $tingkatId)
             ->where('peruntukan', Peruntukan::Pretest->value)
-            ->get()
-            ->reject(fn (Soal $soal): bool => in_array((int) $soal->id, $terpakai, true));
+            ->get();
 
         $simulasi = Soal::query()
             ->where('tingkat_id', $tingkatId)

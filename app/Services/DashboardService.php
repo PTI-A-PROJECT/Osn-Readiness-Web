@@ -65,6 +65,7 @@ class DashboardService implements DashboardServiceInterface
             'sisa_kuota_simulasi' => max(0, $maksimal - $status->percobaanTerpakai),
             'syarat_simulasi' => [
                 'terpenuhi' => $syarat->terpenuhi,
+                'alasan' => $syarat->alasan,
                 'rincian' => $syarat->rincian,
             ],
             'hasil_simulasi_terakhir' => $terakhir === null ? null : [

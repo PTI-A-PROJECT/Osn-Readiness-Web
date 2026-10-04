@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Contracts\Services\BankSoalServiceInterface;
-use App\Models\TingkatSeleksi;
-use Illuminate\Http\Request;
+use App\Http\Requests\TingkatWajibRequest;
+use Illuminate\Http\JsonResponse;
 
 class BankSoalController
 {
@@ -12,11 +12,11 @@ class BankSoalController
         private readonly BankSoalServiceInterface $bankSoalService,
     ) {}
 
-    public function kecukupan(Request $request, TingkatSeleksi $tingkat)
+    public function kecukupan(TingkatWajibRequest $request): JsonResponse
     {
         return response()->json([
             'message' => 'OK',
-            'data' => $this->bankSoalService->laporan((int) $tingkat->id),
+            'data' => $this->bankSoalService->laporan($request->integer('tingkat_id')),
         ]);
     }
 }
