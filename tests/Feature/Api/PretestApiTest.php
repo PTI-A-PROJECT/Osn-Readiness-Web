@@ -23,6 +23,7 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 use Database\Seeders\TingkatSeleksiSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -488,7 +489,7 @@ class PretestApiTest extends TestCase
 
         $this->actingAs($user)->postJson("/api/pretest/{$pretestPertama}/submit")->assertOk();
 
-        // Tiga percobaan simulasi gagal memakai轮到 pre-test yang sama.
+        // Tiga percobaan simulasi gagal memakai pre-test yang sama.
         for ($i = 0; $i < 3; $i++) {
             HasilSimulasi::factory()->selesai(40.0, lulus: false)->create([
                 'user_id' => $user->id,
@@ -540,9 +541,19 @@ class PretestApiTest extends TestCase
             Soal::factory()->count(2)->untukMateri($materi)->level($level)->peruntukan(Peruntukan::Pretest)->create();
         }
 
+        Log::spy();
+
         $this->mulai($user)
             ->assertStatus(503)
             ->assertJsonPath('kode', 'BANK_SOAL_TIDAK_CUKUP');
+
+        // Rincian kekurangan dicatat untuk admin (BE-03), sebagai peringatan
+        // dan bukan error ber-stack-trace.
+        Log::shouldHaveReceived('warning')
+            ->withArgs(fn (string $pesan, array $konteks): bool => $konteks['kode'] === 'BANK_SOAL_TIDAK_CUKUP'
+                && is_array($konteks['detail']))
+            ->once();
+        Log::shouldNotHaveReceived('error');
 
         $this->assertSame(0, Pretest::count());
     }

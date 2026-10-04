@@ -5,6 +5,7 @@ namespace Tests\Feature\Clients;
 use App\Clients\PerhitunganClient;
 use App\Exceptions\PerhitunganKonfigurasiException;
 use App\Exceptions\PerhitunganTidakTersediaException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
@@ -334,5 +335,27 @@ class PerhitunganClientTest extends TestCase
         }
 
         Http::assertSentCount(1);
+    }
+
+    #[Test]
+    public function koneksi_gagal_diterjemahkan_ke_503_setelah_retry(): void
+    {
+        $percobaan = 0;
+
+        Http::fake(function () use (&$percobaan): never {
+            $percobaan++;
+
+            throw new ConnectionException('Connection timed out');
+        });
+
+        try {
+            $this->client()->hitungPenilaian($this->soal());
+            $this->fail('Harusnya melempar PerhitunganTidakTersediaException.');
+        } catch (PerhitunganTidakTersediaException $e) {
+            $this->assertSame(503, $e->getStatus());
+        }
+
+        // Satu percobaan awal ditambah dua retry.
+        $this->assertSame(3, $percobaan);
     }
 }

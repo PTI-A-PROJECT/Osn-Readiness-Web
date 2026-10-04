@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Contracts\Repositories\HasilSimulasiRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
-use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\DashboardServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SyaratSimulasiServiceInterface;
@@ -16,7 +15,6 @@ class DashboardService implements DashboardServiceInterface
     public function __construct(
         private readonly PutaranServiceInterface $putaranService,
         private readonly SyaratSimulasiServiceInterface $syaratService,
-        private readonly AturanServiceInterface $aturanService,
         private readonly TingkatSeleksiRepositoryInterface $tingkatRepository,
         private readonly HasilSimulasiRepositoryInterface $hasilRepository,
     ) {}
@@ -49,8 +47,6 @@ class DashboardService implements DashboardServiceInterface
         $status = $this->putaranService->status($user, $tingkat);
         $syarat = $this->syaratService->periksa($user, $tingkat);
 
-        $maksimal = (int) $this->aturanService->untukTingkat((int) $tingkat->id)->simulasiMaksPercobaan;
-
         $terakhir = $status->putaranAktifId === null
             ? null
             : $this->hasilRepository->terakhirSelesai($user->id, (int) $status->putaranAktifId);
@@ -62,7 +58,7 @@ class DashboardService implements DashboardServiceInterface
             'tingkat_terbuka' => $status->tingkatTerbuka,
             'tahap' => $status->tahap->value,
             'sudah_lulus' => $status->sudahLulus,
-            'sisa_kuota_simulasi' => max(0, $maksimal - $status->percobaanTerpakai),
+            'sisa_kuota_simulasi' => $status->sisaKuotaSimulasi,
             'syarat_simulasi' => [
                 'terpenuhi' => $syarat->terpenuhi,
                 'alasan' => $syarat->alasan,

@@ -27,3 +27,7 @@ Schedule::job(new PurgeAkunJob)->dailyAt('03:00')->withoutOverlapping();
 // dihitung salah. withoutOverlapping supaya dua siklus tidak menutup baris
 // yang sama secara bersamaan.
 Schedule::command('simulasi:tutup-kedaluwarsa')->everyMinute()->withoutOverlapping();
+
+// Token yang sudah lewat masa berlakunya (7 hari) ditolak Sanctum, tetapi
+// barisnya tetap ada. Dibersihkan harian supaya tabel tidak terus membesar.
+Schedule::command('sanctum:prune-expired --hours=24')->daily();

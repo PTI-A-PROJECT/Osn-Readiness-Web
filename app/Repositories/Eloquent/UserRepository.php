@@ -16,7 +16,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function findByEmail(string $email): ?User
     {
-        return $this->model->newQuery()->where('email', $email)->first();
+        // Tanpa membedakan huruf besar dan kecil; akun terhapus tidak ikut.
+        return $this->model->newQuery()->whereRaw('lower(email) = ?', [strtolower($email)])->first();
     }
 
     public function paginate(int $perPage = 15): LengthAwarePaginator

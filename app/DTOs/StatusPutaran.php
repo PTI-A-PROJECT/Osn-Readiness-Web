@@ -11,6 +11,9 @@ use App\Enums\TahapSiswa;
  * putaran_aktif, percobaan_terpakai, simulasi_berjalan, putaran_habis, dan
  * boleh_pretest_baru. Tidak ada kolom status di database.
  *
+ * sisaKuotaSimulasi diturunkan dari percobaan_terpakai dan aturan tingkat,
+ * supaya dashboard dan daftar simulasi tidak menghitungnya sendiri-sendiri.
+ *
  * Id disimpan, bukan hanya boolean, supaya pemanggil tidak perlu query ulang
  * untuk membuka pre-test atau simulasi yang sedang berjalan.
  */
@@ -27,6 +30,7 @@ final class StatusPutaran
         public readonly bool $putaranHabis,
         public readonly bool $bolehPretestBaru,
         public readonly TahapSiswa $tahap,
+        public readonly int $sisaKuotaSimulasi = 0,
     ) {}
 
     public function pretestBerjalan(): bool

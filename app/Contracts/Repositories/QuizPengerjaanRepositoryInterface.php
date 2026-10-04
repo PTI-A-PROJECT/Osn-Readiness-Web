@@ -37,6 +37,15 @@ interface QuizPengerjaanRepositoryInterface
     public function selesai(User $user, int $quizId): Collection;
 
     /**
+     * Nilai tertinggi pengerjaan selesai milik satu siswa untuk tiap quiz,
+     * dalam satu query. Quiz yang belum pernah selesai tidak ikut.
+     *
+     * @param  list<int>  $quizIds
+     * @return array<int, float> diindeks quiz_id
+     */
+    public function nilaiTerbaikPerQuiz(User $user, array $quizIds): array;
+
+    /**
      * @param  array<string, mixed>  $data
      */
     public function create(array $data): QuizPengerjaan;

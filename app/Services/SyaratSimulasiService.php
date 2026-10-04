@@ -47,6 +47,12 @@ class SyaratSimulasiService implements SyaratSimulasiServiceInterface
         $rekomendasi = $this->rekomendasiRepository->untukPretest((int) $putaranAktif->id);
         $progress = $this->progressRepository->untukUserDiTingkat($user, (int) $tingkat->id);
 
+        // Nilai terbaik semua latihan materi wajib diambil dalam satu query.
+        $nilaiPerQuiz = $this->quizPengerjaanRepository->nilaiTerbaikPerQuiz(
+            $user,
+            $rekomendasi->map(fn ($baris): ?int => $baris->materi?->quiz?->id)->filter()->values()->all(),
+        );
+
         $rincian = [];
         $terpenuhiSemua = true;
 
@@ -59,9 +65,7 @@ class SyaratSimulasiService implements SyaratSimulasiServiceInterface
                 && $progressMateri->status === StatusProgress::Selesai;
 
             // Nilai latihan terbaik = maksimum pengerjaan selesai.
-            $nilaiTerbaik = $quiz === null
-                ? null
-                : ($this->quizPengerjaanRepository->selesai($user, (int) $quiz->id)->first()?->nilai);
+            $nilaiTerbaik = $quiz === null ? null : ($nilaiPerQuiz[(int) $quiz->id] ?? null);
 
             $batas = (float) $aturan->latihanMinNilai;
             $latihanBelumTersedia = $quiz === null;
