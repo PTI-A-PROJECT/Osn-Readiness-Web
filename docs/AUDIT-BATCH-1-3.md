@@ -56,7 +56,13 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - Laporan bank soal menghitung stok bank, tidak lagi mengurangi soal yang pernah dipakai siswa lain. Ini membalik keputusan sesi B2-C, supaya laporan sama dengan kandidat yang dilihat SoalPicker.
   - Rute mengikuti spesifikasi: `GET /api/simulasi/syarat?tingkat_id=` (kini 403 bila tingkat terkunci) dan `GET /api/admin/bank-soal/kecukupan?tingkat_id=`.
   - Balasan syarat simulasi memuat `alasan` (`belum_pretest` saat tidak ada putaran aktif), juga di dashboard.
-- [ ] Temuan lain tetap mengikuti PR 8–9 dalam rencana perbaikan.
+- [x] Temuan rendah: PR 8 di `chore/rapikan-temuan-rendah` (commit lokal, bertumpuk di atas `fix/b2-impor-bank-rute`).
+  - `BisnisException` tidak lagi dicatat sebagai ERROR; yang berstatus 5xx dicatat sebagai peringatan beserta rinciannya (termasuk `BANK_SOAL_TIDAK_CUKUP`).
+  - Auth: email disamakan huruf kecilnya dan dicocokkan tanpa membedakan huruf; pendaftaran bersamaan dibalas 422; `sanctum:prune-expired` terjadwal harian.
+  - `sisaKuotaSimulasi` dihitung `PutaranService`; `RiwayatService` menggantikan repository di controller.
+  - N+1 di daftar materi dan syarat simulasi dihapus (satu query nilai terbaik per siswa).
+  - `PenilaianBelumDiimplementasi` dihapus; pesan validasi progress dan karakter nyasar di test diperbaiki.
+- [ ] PR 9 (dokumen) menyusul.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 

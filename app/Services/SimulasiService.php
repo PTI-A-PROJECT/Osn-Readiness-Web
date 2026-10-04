@@ -78,24 +78,17 @@ class SimulasiService implements SimulasiServiceInterface
             throw new TingkatTerkunciException("Tingkat {$tingkat->nama_tingkat} belum terbuka.");
         }
 
-        $aturan = $this->aturanService->untukTingkat($tingkatId);
-        $maksimal = (int) $aturan->simulasiMaksPercobaan;
-
         $daftar = [];
-        $simulasiTingkat = $this->simulasiRepository->untukTingkat($tingkatId);
 
-        foreach ($simulasiTingkat as $simulasi) {
-            $terpakai = $status->putaranAktifId === null
-                ? 0
-                : $this->hasilRepository->jumlahPercobaan((int) $status->putaranAktifId);
-
+        foreach ($this->simulasiRepository->untukTingkat($tingkatId) as $simulasi) {
             $daftar[] = [
                 'id' => (int) $simulasi->id,
                 'nama_simulasi' => (string) $simulasi->nama_simulasi,
                 'jumlah_soal' => (int) $simulasi->jumlah_soal,
                 'durasi_menit' => (int) $simulasi->durasi_menit,
                 'is_aktif' => (bool) $simulasi->is_aktif,
-                'sisa_kuota' => max(0, $maksimal - $terpakai),
+                // Kuota berlaku per putaran, bukan per simulasi.
+                'sisa_kuota' => $status->sisaKuotaSimulasi,
             ];
         }
 

@@ -53,6 +53,24 @@ class QuizPengerjaanRepository implements QuizPengerjaanRepositoryInterface
             ->get();
     }
 
+    public function nilaiTerbaikPerQuiz(User $user, array $quizIds): array
+    {
+        if ($quizIds === []) {
+            return [];
+        }
+
+        return $this->model->newQuery()
+            ->where('user_id', $user->id)
+            ->whereIn('quiz_id', $quizIds)
+            ->whereNotNull('selesai_pada')
+            ->whereNotNull('nilai')
+            ->groupBy('quiz_id')
+            ->selectRaw('quiz_id, max(nilai) as terbaik')
+            ->pluck('terbaik', 'quiz_id')
+            ->map(fn ($nilai): float => (float) $nilai)
+            ->all();
+    }
+
     public function create(array $data): QuizPengerjaan
     {
         /** @var QuizPengerjaan */

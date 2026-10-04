@@ -8,9 +8,11 @@ use App\Models\Pretest;
 use App\Models\ProgressBelajar;
 use App\Models\Quiz;
 use App\Models\QuizPengerjaan;
+use App\Models\RekomendasiMateri;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class MateriBelajarApiTest extends TestCase
@@ -174,5 +176,82 @@ class MateriBelajarApiTest extends TestCase
         $this->actingAs($this->siswa)
             ->putJson('/api/materi/'.$this->materi->id.'/progress', ['status' => 'lompat'])
             ->assertUnprocessable();
+    }
+
+    public function test_materi_wajib_tampil_lebih_dulu_urut_prioritas(): void
+    {
+        $putaran = $this->buatPutaranAktif();
+
+        $kompetensiId = $this->materi->kompetensi_id;
+        $this->materi->update(['urutan' => 1]);
+
+        $buat = fn (int $urutan): Materi => Materi::factory()->create([
+            'tingkat_id' => $this->tingkat->id,
+            'kompetensi_id' => $kompetensiId,
+            'urutan' => $urutan,
+        ]);
+
+        $dua = $buat(2);
+        $tiga = $buat(3);
+        $empat = $buat(4);
+
+        // Materi urutan 4 paling prioritas, lalu urutan 2. Urutan 1 dan 3
+        // tidak wajib.
+        foreach ([[$empat, 1], [$dua, 2]] as [$materi, $prioritas]) {
+            RekomendasiMateri::create([
+                'pretest_id' => $putaran->id,
+                'user_id' => $this->siswa->id,
+                'materi_id' => $materi->id,
+                'prioritas' => $prioritas,
+            ]);
+        }
+
+        $data = $this->actingAs($this->siswa)
+            ->getJson('/api/materi?tingkat_id='.$this->tingkat->id)
+            ->assertOk()
+            ->json('data');
+
+        $this->assertSame([$empat->id, $dua->id, $this->materi->id, $tiga->id], array_column($data, 'id'));
+        $this->assertSame([true, true, false, false], array_column($data, 'wajib'));
+    }
+
+    public function test_detail_materi_tingkat_terkunci_dibalas_403(): void
+    {
+        $this->tingkat->update(['urutan' => 2]);
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/materi/'.$this->materi->id)
+            ->assertForbidden()
+            ->assertJsonPath('kode', 'TINGKAT_TERKUNCI');
+    }
+
+    public function test_daftar_materi_tidak_menambah_query_per_materi(): void
+    {
+        $this->buatPutaranAktif();
+
+        $hitung = function (): int {
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($this->siswa)
+                ->getJson('/api/materi?tingkat_id='.$this->tingkat->id)
+                ->assertOk();
+
+            return count(DB::getQueryLog());
+        };
+
+        $sebelum = $hitung();
+
+        foreach (range(2, 9) as $urutan) {
+            $materi = Materi::factory()->create([
+                'tingkat_id' => $this->tingkat->id,
+                'kompetensi_id' => $this->materi->kompetensi_id,
+                'urutan' => $urutan + 100,
+            ]);
+
+            Quiz::create(['materi_id' => $materi->id, 'nama_quiz' => 'Quiz '.$urutan, 'jumlah_soal' => 10]);
+        }
+
+        $this->assertSame($sebelum, $hitung(), 'Jumlah query tidak boleh bertambah seiring jumlah materi.');
     }
 }
