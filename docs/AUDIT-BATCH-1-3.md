@@ -39,7 +39,12 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - `SoalGuard` mengunci kunci, level, peruntukan, dan materi dengan membandingkan nilai, sehingga teks soal terpakai bisa diperbaiki. Update menerima sebagian kolom.
   - `sedangDipakai` ikut mengecek jawaban simulasi. Hapus soal tidak lagi menghapus berkas gambar.
   - Soal dan pembahasan admin lewat `SoalAdminService`; tidak ada lagi tulis langsung ke model di controller.
-- [ ] Temuan lain tetap mengikuti PR 5–9 dalam rencana perbaikan.
+- [x] Temuan tinggi #4 dan aturan latihan/simulasi admin: PR 5 di `fix/b1e-admin-latihan-simulasi` (commit lokal, bertumpuk di atas `fix/b1e-admin-soal`).
+  - Argumen controller latihan disamakan dengan parameter rute `{latihan}`, sehingga show, update, dan destroy benar-benar bekerja.
+  - Latihan: satu per materi (422), `jumlah_soal >= latihan_min_soal` (422), hapus ditolak 409 `LATIHAN_MASIH_DIGUNAKAN` bila punya pengerjaan.
+  - Simulasi: hapus ditolak 409 `SIMULASI_MASIH_DIGUNAKAN` bila punya hasil; guard `is_aktif` pindah ke service dan hanya memeriksa bank saat dinyalakan atau saat jumlah soal simulasi aktif berubah.
+  - Query pindah dari controller ke `LatihanAdminService`/`SimulasiAdminService` dan repository. 21 test baru untuk kedua resource.
+- [ ] Temuan lain tetap mengikuti PR 6–9 dalam rencana perbaikan.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 

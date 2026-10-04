@@ -18,7 +18,7 @@ class UpdateSimulasiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_simulasi' => ['required', 'string', 'max:255'],
+            'nama_simulasi' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string'],
             'jumlah_soal' => ['required', 'integer', 'min:1'],
             'durasi_menit' => ['required', 'integer', 'min:1'],

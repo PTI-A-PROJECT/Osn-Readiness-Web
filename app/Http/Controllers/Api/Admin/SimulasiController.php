@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Contracts\Services\BankSoalServiceInterface;
+use App\Contracts\Services\SimulasiAdminServiceInterface;
 use App\Http\Requests\StoreSimulasiRequest;
 use App\Http\Requests\UpdateSimulasiRequest;
 use App\Http\Resources\SimulasiResource;
@@ -10,22 +10,20 @@ use App\Models\Simulasi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\ValidationException;
 
 class SimulasiController
 {
+    public function __construct(
+        private readonly SimulasiAdminServiceInterface $simulasiService,
+    ) {}
+
     public function index(): AnonymousResourceCollection
     {
         Gate::authorize('viewAny', Simulasi::class);
 
         $perPage = (int) request('per_page', 15);
 
-        return SimulasiResource::collection(
-            Simulasi::query()
-                ->with('tingkat')
-                ->latest()
-                ->paginate($perPage)
-        );
+        return SimulasiResource::collection($this->simulasiService->daftar($perPage));
     }
 
     public function show(Simulasi $simulasi): JsonResponse
@@ -40,15 +38,11 @@ class SimulasiController
         ]);
     }
 
-    public function store(StoreSimulasiRequest $request, BankSoalServiceInterface $bankSoal): JsonResponse
+    public function store(StoreSimulasiRequest $request): JsonResponse
     {
         Gate::authorize('create', Simulasi::class);
 
-        // Guard is_aktif: menyalakan simulasi hanya boleh bila bank soal
-        // cukup untuk satu percobaan utuh (BE-19).
-        $this->jagaIsAktif($request->tingkat_id, $request->integer('jumlah_soal'), $request->boolean('is_aktif'), $bankSoal);
-
-        $simulasi = Simulasi::create($request->validated());
+        $simulasi = $this->simulasiService->buat($request->validated());
         $simulasi->load('tingkat');
 
         return response()->json([
@@ -57,18 +51,11 @@ class SimulasiController
         ], 201);
     }
 
-    public function update(UpdateSimulasiRequest $request, Simulasi $simulasi, BankSoalServiceInterface $bankSoal): JsonResponse
+    public function update(UpdateSimulasiRequest $request, Simulasi $simulasi): JsonResponse
     {
         Gate::authorize('update', $simulasi);
 
-        $this->jagaIsAktif(
-            $request->integer('tingkat_id') ?: (int) $simulasi->tingkat_id,
-            $request->integer('jumlah_soal') ?: (int) $simulasi->jumlah_soal,
-            $request->boolean('is_aktif'),
-            $bankSoal,
-        );
-
-        $simulasi->update($request->validated());
+        $simulasi = $this->simulasiService->perbarui($simulasi, $request->validated());
         $simulasi->load('tingkat');
 
         return response()->json([
@@ -81,29 +68,10 @@ class SimulasiController
     {
         Gate::authorize('delete', $simulasi);
 
-        $simulasi->delete();
+        $this->simulasiService->hapus($simulasi);
 
         return response()->json([
             'message' => 'Simulasi berhasil dihapus',
         ]);
-    }
-
-    /**
-     * Guard is_aktif: menyalakan simulasi hanya boleh bila bank soal cukup
-     * untuk satu percobaan utuh (BE-19). Mematikan selalu boleh.
-     *
-     * @throws ValidationException
-     */
-    private function jagaIsAktif(int $tingkatId, int $jumlahSoal, bool $isAktif, BankSoalServiceInterface $bankSoal): void
-    {
-        if (! $isAktif) {
-            return;
-        }
-
-        if (! $bankSoal->cukupUntukSimulasi($tingkatId, $jumlahSoal)) {
-            throw ValidationException::withMessages([
-                'is_aktif' => ['Bank soal tidak cukup untuk satu percobaan simulasi utuh.'],
-            ]);
-        }
     }
 }
