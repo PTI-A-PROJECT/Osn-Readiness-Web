@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Admin\SiswaController;
 use App\Http\Controllers\Api\Admin\SoalController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BelajarController;
+use App\Http\Controllers\Api\HasilSimulasiController;
 use App\Http\Controllers\Api\PretestController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\QuizPengerjaanController;
@@ -70,6 +71,13 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('simulasi/syarat/{tingkat}', [SyaratSimulasiController::class, 'show']);
 
     // [B3-A] Simulasi, kelulusan, dan review.
+    Route::get('simulasi', [App\Http\Controllers\Api\SimulasiController::class, 'index']);
+    Route::post('simulasi/{simulasi}/mulai', [App\Http\Controllers\Api\SimulasiController::class, 'mulai']);
+    Route::get('hasil-simulasi/{hasil}', [HasilSimulasiController::class, 'show']);
+    Route::put('hasil-simulasi/{hasil}/jawaban', [HasilSimulasiController::class, 'simpanJawaban']);
+    Route::post('hasil-simulasi/{hasil}/submit', [HasilSimulasiController::class, 'submit']);
+    Route::get('hasil-simulasi/{hasil}/review', [HasilSimulasiController::class, 'review']);
+
     // [B3-B] Dashboard dan riwayat.
 
     // [B1-D + B1-E] Admin. Satu grup, satu lapisan: middleware role

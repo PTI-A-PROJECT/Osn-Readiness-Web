@@ -39,4 +39,12 @@ class ProgressBelajarRepository implements ProgressBelajarRepositoryInterface
             $data,
         );
     }
+
+    public function hapusUntukMateri(User $user, array $materiIds): void
+    {
+        $this->model->newQuery()
+            ->where('user_id', $user->id)
+            ->whereIn('materi_id', $materiIds)
+            ->delete();
+    }
 }

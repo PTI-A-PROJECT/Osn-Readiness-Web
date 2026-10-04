@@ -21,3 +21,9 @@ Artisan::command('inspire', function () {
 
 // [B3-C] Purge akun.
 Schedule::job(new PurgeAkunJob)->dailyAt('03:00')->withoutOverlapping();
+
+// [B3-A] Menutup percobaan simulasi yang batas waktunya sudah lewat tetapi
+// belum disubmit. Jawaban yang sudah tersimpan dinilai; yang kosong
+// dihitung salah. withoutOverlapping supaya dua siklus tidak menutup baris
+// yang sama secara bersamaan.
+Schedule::command('simulasi:tutup-kedaluwarsa')->everyMinute()->withoutOverlapping();
