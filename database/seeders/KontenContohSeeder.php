@@ -50,12 +50,11 @@ class KontenContohSeeder extends Seeder
                 Level::Sedang->value => 30,
                 Level::Sulit->value => 20,
             ],
-            // SoalPickerService mengambil latihan tanpa pembagian level dari
-            // level mudah, jadi bank latihan per materi seluruhnya mudah.
-            // Semula 4/3/3 membuat quiz dengan jumlah_soal 10 selalu gagal
-            // dengan BANK_SOAL_TIDAK_CUKUP karena hanya 4 yang bisa diambil.
+            // Latihan mengambil semua level tanpa kuota per level.
             Peruntukan::Latihan->value => [
-                Level::Mudah->value => 10,
+                Level::Mudah->value => 4,
+                Level::Sedang->value => 3,
+                Level::Sulit->value => 3,
             ],
             Peruntukan::Simulasi->value => [
                 Level::Mudah->value => 12,
@@ -69,12 +68,11 @@ class KontenContohSeeder extends Seeder
                 Level::Sedang->value => 30,
                 Level::Sulit->value => 20,
             ],
-            // SoalPickerService mengambil latihan tanpa pembagian level dari
-            // level mudah, jadi bank latihan per materi seluruhnya mudah.
-            // Semula 4/3/3 membuat quiz dengan jumlah_soal 10 selalu gagal
-            // dengan BANK_SOAL_TIDAK_CUKUP karena hanya 4 yang bisa diambil.
+            // Latihan mengambil semua level tanpa kuota per level.
             Peruntukan::Latihan->value => [
-                Level::Mudah->value => 10,
+                Level::Mudah->value => 4,
+                Level::Sedang->value => 3,
+                Level::Sulit->value => 3,
             ],
             Peruntukan::Simulasi->value => [
                 Level::Mudah->value => 12,
