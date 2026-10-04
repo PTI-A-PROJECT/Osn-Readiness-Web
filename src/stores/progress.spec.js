@@ -42,6 +42,20 @@ describe('progress store', () => {
     expect(progress.loaded).toBe(false)
   })
 
+  it('markPreTestCompleted membuka akses pre-test di dashboard', () => {
+    const progress = useProgressStore()
+    progress.markPreTestCompleted()
+    expect(progress.data.preTestSelesai).toBe(true)
+  })
+
+  it('fetchDashboard tidak mengunci ulang dashboard setelah pre-test lokal dikumpulkan', async () => {
+    siswaService.dashboard.mockResolvedValue(hasil)
+    const progress = useProgressStore()
+    progress.markPreTestCompleted()
+    await progress.fetchDashboard()
+    expect(progress.data.preTestSelesai).toBe(true)
+  })
+
   it('$reset mengosongkan state', async () => {
     siswaService.dashboard.mockResolvedValue(hasil)
     const progress = useProgressStore()

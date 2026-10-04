@@ -11,6 +11,7 @@ const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
+const SiswaPretestView = () => import('@/views/siswa/Pretest.vue')
 const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
 const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
@@ -51,6 +52,12 @@ export const routes = [
         path: 'siswa/profil',
         name: 'siswa.profil',
         component: SiswaProfileView,
+        meta: { requiresAuth: true, role: 'siswa' },
+      },
+      {
+        path: 'siswa/pretest',
+        name: 'siswa.pretest',
+        component: SiswaPretestView,
         meta: { requiresAuth: true, role: 'siswa' },
       },
       {

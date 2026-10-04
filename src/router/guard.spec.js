@@ -4,6 +4,9 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
 import { routes, setupGuard } from '@/router/index.js'
 
+vi.mock('@/views/LandingPage.vue', () => ({ default: { name: 'LandingPage' } }))
+vi.mock('@/views/LoginView.vue', () => ({ default: { name: 'LoginView' } }))
+
 const siswa = { id: '1', nama: 'Budi', email: 'budi@example.com', role: 'siswa' }
 const admin = { id: '2', nama: 'Admin', email: 'admin@example.com', role: 'super_admin' }
 
@@ -58,6 +61,10 @@ describe('router guard', () => {
 
   it('siswa buka /siswa lolos ke siswa.dashboard', async () => {
     expect(await pushAs('/siswa', siswa)).toBe('siswa.dashboard')
+  })
+
+  it('siswa dapat membuka route pretest', async () => {
+    expect(await pushAs('/siswa/pretest', siswa)).toBe('siswa.pretest')
   })
 
   it('super_admin buka /siswa diarahkan ke forbidden', async () => {
