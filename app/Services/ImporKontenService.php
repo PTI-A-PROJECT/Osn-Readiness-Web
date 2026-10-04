@@ -33,6 +33,8 @@ class ImporKontenService implements ImporKontenServiceInterface
             throw new RuntimeException("Tidak ada berkas materi atau soal di {$folder}");
         }
 
+        $this->tolakIdSumberMateriKembar($berkasMateri);
+
         $soalDikumpulkan = [];
 
         foreach ($berkasSoal as $berkas) {
@@ -68,6 +70,31 @@ class ImporKontenService implements ImporKontenServiceInterface
         }
 
         return DB::transaction(fn (): array => $this->proses($folder, $berkasMateri, $soalDikumpulkan, false));
+    }
+
+    /**
+     * id_sumber materi yang kembar membatalkan seluruh impor, sama seperti
+     * soal: kita tak tahu berkas mana yang benar.
+     *
+     * @param  list<string>  $berkasMateri
+     */
+    private function tolakIdSumberMateriKembar(array $berkasMateri): void
+    {
+        $terlihat = [];
+
+        foreach ($berkasMateri as $berkas) {
+            if (preg_match('/^id_sumber:\s*(.+)$/m', (string) file_get_contents($berkas), $cocok) !== 1) {
+                continue;
+            }
+
+            $idSumber = trim($cocok[1]);
+
+            if (isset($terlihat[$idSumber])) {
+                throw new RuntimeException("id_sumber materi kembar: {$idSumber}. Impor dibatalkan seluruhnya.");
+            }
+
+            $terlihat[$idSumber] = true;
+        }
     }
 
     /**
@@ -243,12 +270,43 @@ class ImporKontenService implements ImporKontenServiceInterface
             return;
         }
 
+        if ((int) $materi->tingkat_id !== (int) $tingkat->id) {
+            $laporan['soal']['ditolak'][] = [
+                'id_sumber' => $idSumber,
+                'alasan' => "Materi {$baris['materi']} bukan dari tingkat {$baris['tingkat']}.",
+            ];
+
+            return;
+        }
+
+        // Nilai di luar daftar menolak soal ini saja; impor yang lain tetap
+        // jalan (BE-21).
+        $level = Level::tryFrom((string) ($baris['tingkat_kesulitan'] ?? ''));
+
+        if (! $level instanceof Level) {
+            $laporan['soal']['ditolak'][] = [
+                'id_sumber' => $idSumber,
+                'alasan' => 'tingkat_kesulitan harus mudah, sedang, atau sulit.',
+            ];
+
+            return;
+        }
+
+        $peruntukan = Peruntukan::tryFrom((string) ($baris['peruntukan'] ?? ''));
+
+        if (! $peruntukan instanceof Peruntukan) {
+            $laporan['soal']['ditolak'][] = [
+                'id_sumber' => $idSumber,
+                'alasan' => 'peruntukan harus pretest, latihan, atau simulasi.',
+            ];
+
+            return;
+        }
+
         $pilihan = $baris['pilihan'] ?? null;
         $isian = ! is_array($pilihan) || $pilihan === [];
 
-        if ($isian) {
-            $level = Level::Mudah;
-        } else {
+        if (! $isian) {
             if (count($pilihan) < 2) {
                 $laporan['soal']['ditolak'][] = [
                     'id_sumber' => $idSumber,
@@ -268,11 +326,8 @@ class ImporKontenService implements ImporKontenServiceInterface
 
                 return;
             }
-
-            $level = Level::from((string) ($baris['tingkat_kesulitan'] ?? 'mudah'));
         }
 
-        $peruntukan = Peruntukan::from((string) ($baris['peruntukan'] ?? 'pretest'));
         $gambar = null;
 
         if (! empty($baris['gambar'])) {

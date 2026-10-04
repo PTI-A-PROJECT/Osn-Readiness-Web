@@ -40,7 +40,7 @@ class SyaratSimulasiService implements SyaratSimulasiServiceInterface
         // Tanpa putaran aktif belum ada materi wajib yang bisa diperiksa:
         // syarat belum terpenuhi dengan alasan belum pre-test.
         if ($putaranAktif === null) {
-            return new SyaratSimulasi(terpenuhi: false, rincian: []);
+            return new SyaratSimulasi(terpenuhi: false, rincian: [], alasan: SyaratSimulasi::ALASAN_BELUM_PRETEST);
         }
 
         $aturan = $this->aturanService->untukTingkat((int) $tingkat->id);

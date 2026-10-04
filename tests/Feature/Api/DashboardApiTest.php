@@ -84,7 +84,7 @@ class DashboardApiTest extends TestCase
             ->json('data');
 
         $syarat = $this->actingAs($this->siswa)
-            ->getJson('/api/simulasi/syarat/'.$this->tingkat->id)
+            ->getJson('/api/simulasi/syarat?tingkat_id='.$this->tingkat->id)
             ->assertOk()
             ->json('data');
 

@@ -51,7 +51,12 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - Siswa: daftar hanya role siswa (aktif maupun nonaktif); akun admin 404 di menu siswa; soft delete dan nonaktif lewat `UserService` sehingga token dicabut.
   - Policy memakai satu gaya `before()` dan nama permission yang sama dengan seeder; `LatihanPolicy` dan `SiswaPolicy` yang tidak terpakai dihapus.
   - Belum dikerjakan: service Kompetensi, Konteks, dan Tingkat admin masih memakai Eloquent langsung.
-- [ ] Temuan lain tetap mengikuti PR 7–9 dalam rencana perbaikan.
+- [x] Importer, laporan bank soal, dan rute: PR 7 di `fix/b2-impor-bank-rute` (commit lokal, bertumpuk di atas `fix/b1d-admin-struktur`).
+  - Importer: level atau peruntukan tidak sah dan materi beda tingkat hanya menolak soal itu; soal isian memakai `tingkat_kesulitan` dari berkas; `id_sumber` materi kembar membatalkan seluruh impor.
+  - Laporan bank soal menghitung stok bank, tidak lagi mengurangi soal yang pernah dipakai siswa lain. Ini membalik keputusan sesi B2-C, supaya laporan sama dengan kandidat yang dilihat SoalPicker.
+  - Rute mengikuti spesifikasi: `GET /api/simulasi/syarat?tingkat_id=` (kini 403 bila tingkat terkunci) dan `GET /api/admin/bank-soal/kecukupan?tingkat_id=`.
+  - Balasan syarat simulasi memuat `alasan` (`belum_pretest` saat tidak ada putaran aktif), juga di dashboard.
+- [ ] Temuan lain tetap mengikuti PR 8–9 dalam rencana perbaikan.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
