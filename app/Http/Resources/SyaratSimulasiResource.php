@@ -22,6 +22,7 @@ class SyaratSimulasiResource extends JsonResource
 
         return [
             'terpenuhi' => $syarat->terpenuhi,
+            'alasan' => $syarat->alasan,
             'rincian' => $syarat->rincian,
         ];
     }

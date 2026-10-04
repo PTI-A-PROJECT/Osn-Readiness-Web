@@ -3,19 +3,15 @@
 namespace App\Services;
 
 use App\Contracts\Repositories\HasilSimulasiRepositoryInterface;
+use App\Contracts\Repositories\KenaikanTingkatRepositoryInterface;
 use App\Contracts\Repositories\MateriRepositoryInterface;
 use App\Contracts\Repositories\ProgressBelajarRepositoryInterface;
 use App\Contracts\Repositories\QuizPengerjaanRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\KelulusanServiceInterface;
-use App\Enums\StatusKenaikan;
 use App\Models\HasilSimulasi;
-use App\Models\KenaikanTingkat;
 use App\Models\Materi;
-use App\Models\ProgressBelajar;
-use App\Models\QuizPengerjaan;
-use Illuminate\Database\QueryException;
 
 class KelulusanService implements KelulusanServiceInterface
 {
@@ -26,6 +22,7 @@ class KelulusanService implements KelulusanServiceInterface
         private readonly MateriRepositoryInterface $materiRepository,
         private readonly AturanServiceInterface $aturanService,
         private readonly TingkatSeleksiRepositoryInterface $tingkatRepository,
+        private readonly KenaikanTingkatRepositoryInterface $kenaikanRepository,
     ) {}
 
     public function menilai(HasilSimulasi $hasil): array
@@ -75,18 +72,9 @@ class KelulusanService implements KelulusanServiceInterface
         $berikutnya = $this->tingkatRepository->semuaTerurut()
             ->firstWhere('urutan', '>', $this->urutanTingkat($tingkatId));
 
-        try {
-            KenaikanTingkat::create([
-                'user_id' => $hasil->user_id,
-                'tingkat_asal_id' => $tingkatId,
-                'tingkat_tujuan_id' => $berikutnya?->id,
-                'status' => StatusKenaikan::Lulus->value,
-                'keterangan' => null,
-            ]);
-        } catch (QueryException $exception) {
-            // Index kenaikan_lulus_unique menjadi penjaga bila penilaian
-            // terpicu dua kali; baris yang sudah ada tetap dipakai.
-        }
+        // Index kenaikan_lulus_unique menjadi penjaga bila penilaian terpicu
+        // dua kali; baris yang sudah ada tetap dipakai.
+        $this->kenaikanRepository->catatLulus((int) $hasil->user_id, $tingkatId, $berikutnya?->id);
 
         return $berikutnya?->id;
     }
@@ -102,27 +90,10 @@ class KelulusanService implements KelulusanServiceInterface
     {
         $terbaik = $this->hasilRepository->nilaiTerbaik((int) $hasil->pretest_id) ?? 0.0;
 
-        KenaikanTingkat::create([
-            'user_id' => $hasil->user_id,
-            'tingkat_asal_id' => $tingkatId,
-            'tingkat_tujuan_id' => null,
-            'status' => StatusKenaikan::TidakLulus->value,
-            'keterangan' => "Nilai terbaik {$terbaik} dari passing grade {$passingGrade}.",
-        ]);
-    }
-
-    private function hapusDataPutaran(int $tingkatId, int $userId): void
-    {
-        $materiIds = Materi::query()->where('tingkat_id', $tingkatId)->pluck('id');
-
-        ProgressBelajar::query()
-            ->where('user_id', $userId)
-            ->whereIn('materi_id', $materiIds)
-            ->delete();
-
-        QuizPengerjaan::query()
-            ->where('user_id', $userId)
-            ->whereHas('quiz', fn ($query) => $query->whereIn('materi_id', $materiIds))
-            ->delete();
+        $this->kenaikanRepository->catatTidakLulus(
+            (int) $hasil->user_id,
+            $tingkatId,
+            "Nilai terbaik {$terbaik} dari passing grade {$passingGrade}.",
+        );
     }
 }

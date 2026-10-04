@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Contracts\Repositories\SoalRepositoryInterface;
-use App\Guards\SoalGuard;
+use App\Contracts\Services\SoalAdminServiceInterface;
 use App\Http\Requests\StoreSoalRequest;
 use App\Http\Requests\UpdateSoalRequest;
 use App\Http\Resources\SoalDetailResource;
@@ -11,12 +10,11 @@ use App\Models\Soal;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 
 class SoalController
 {
     public function __construct(
-        private readonly SoalRepositoryInterface $soalRepository,
+        private readonly SoalAdminServiceInterface $soalService,
     ) {}
 
     public function index(): AnonymousResourceCollection
@@ -25,9 +23,7 @@ class SoalController
 
         $perPage = (int) request('per_page', 15);
 
-        return SoalDetailResource::collection(
-            $this->soalRepository->paginasiAdmin($perPage)
-        );
+        return SoalDetailResource::collection($this->soalService->daftar($perPage));
     }
 
     public function show(Soal $soal): JsonResponse
@@ -46,14 +42,7 @@ class SoalController
     {
         Gate::authorize('create', Soal::class);
 
-        $data = $request->validated();
-
-        // Handle file upload
-        if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('soal', 'public');
-        }
-
-        $soal = Soal::create($data);
+        $soal = $this->soalService->buat($request->validated(), $request->file('gambar'));
         $soal->load('tingkat', 'materi', 'konteks', 'pembahasan');
 
         return response()->json([
@@ -66,19 +55,7 @@ class SoalController
     {
         Gate::authorize('update', $soal);
 
-        SoalGuard::validateUpdate($soal, $request->validated());
-
-        $data = SoalGuard::filterForUpdate($soal, $request->validated());
-
-        // Handle file upload
-        if ($request->hasFile('gambar')) {
-            if ($soal->gambar) {
-                Storage::disk('public')->delete($soal->gambar);
-            }
-            $data['gambar'] = $request->file('gambar')->store('soal', 'public');
-        }
-
-        $soal->update($data);
+        $soal = $this->soalService->perbarui($soal, $request->validated(), $request->file('gambar'));
         $soal->load('tingkat', 'materi', 'konteks', 'pembahasan');
 
         return response()->json([
@@ -91,13 +68,7 @@ class SoalController
     {
         Gate::authorize('delete', $soal);
 
-        // Delete associated image
-        if ($soal->gambar) {
-            Storage::disk('public')->delete($soal->gambar);
-        }
-
-        // SoftDelete — soal tetap bisa diakses untuk review pengerjaan yang sudah selesai
-        $soal->delete();
+        $this->soalService->hapus($soal);
 
         return response()->json([
             'message' => 'Soal berhasil dihapus',

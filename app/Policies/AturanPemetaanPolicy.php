@@ -18,16 +18,16 @@ class AturanPemetaanPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('soal.viewAny');
+        return $user->hasPermissionTo('aturan-pemetaan.viewAny');
     }
 
     public function view(User $user, AturanPemetaan $aturanPemetaan): bool
     {
-        return $user->hasPermissionTo('soal.view');
+        return $user->hasPermissionTo('aturan-pemetaan.view');
     }
 
     public function update(User $user, AturanPemetaan $aturanPemetaan): bool
     {
-        return $user->hasPermissionTo('soal.update');
+        return $user->hasPermissionTo('aturan-pemetaan.update');
     }
 }

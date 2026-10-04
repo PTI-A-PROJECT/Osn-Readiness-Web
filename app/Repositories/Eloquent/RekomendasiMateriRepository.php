@@ -40,6 +40,7 @@ class RekomendasiMateriRepository extends BaseRepository implements RekomendasiM
     public function untukPretest(int $pretestId): Collection
     {
         return $this->model->newQuery()
+            ->with('materi.quiz')
             ->where('pretest_id', $pretestId)
             ->orderBy('prioritas')
             ->get();

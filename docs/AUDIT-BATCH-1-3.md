@@ -12,14 +12,75 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
 
 ## Status perbaikan
 
-- [x] Temuan tinggi #1–3 (SoalPicker): implementasi [PR #27](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/27) (PR 1) di `fix/b1b-picker`; menunggu review dan merge ke `dev`.
+- [x] Temuan tinggi #1–3 (SoalPicker): implementasi [PR #27](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/27) (PR 1) di `fix/b1b-picker`; sudah merge ke `dev`.
   - Randomizer produksi menggunakan `Random\Randomizer` tanpa seed tetap.
   - Latihan mengambil kandidat dari semua level; seeder kembali memakai campuran 4/3/3.
   - Cadangan simulasi mengecualikan soal yang baru dipilih dan melaporkan kekurangan nyata.
   - Lima regresi picker gagal sebelum perbaikan dan lolos sesudahnya; delapan kasus tambahan memeriksa kontrak randomizer.
   - Verifikasi akhir: 344 test / 1305 assertion lolos, Pint bersih, 72 rute API, migrasi + seeder + reset di PostgreSQL 16 sementara berhasil.
   - HTTP dengan seeder dan server hitung palsu: dua siswa mendapat set pretest berbeda; tiga latihan campuran 4/3/3 berhasil dimulai dan disubmit; simulasi kedua dengan hanya lima soal baru per level tetap berisi 30 soal unik dan berhasil disubmit.
-- [ ] Temuan lain tetap mengikuti PR 2–9 dalam rencana perbaikan.
+- [x] Temuan sedang pada alur penilaian dan pengerjaan: implementasi [PR #28](https://github.com/PTI-A-PROJECT/Osn-Readiness-Web/pull/28) (PR 2) di `fix/penilaian-konsisten`; menunggu review dan merge ke `dev`.
+  - `selesaikanPenilaian` (pre-test, latihan, simulasi) mengunci ulang baris dan mengecek `selesai_pada` di transaksi kedua.
+  - `KelulusanService` menulis `kenaikan_tingkat` lewat repository; insert lulus memakai `ON CONFLICT DO NOTHING`.
+  - `NilaiUlangJob` langsung gagal pada kesalahan konfigurasi, tanpa retry.
+  - Index parsial `quiz_pengerjaan_berjalan_unique` mencegah dua pengerjaan latihan berjalan; migration-nya menghapus baris kembar lama dan menyisakan yang terbaru.
+  - Relasi `soal()` pada ketiga model jawaban memuat soal yang di-soft delete.
+  - Simpan jawaban setelah submit dibalas 409 `SUDAH_DISUBMIT` di ketiga alur; argumen `PerhitunganTidakTersediaException` yang tertukar diperbaiki.
+  - Verifikasi: 358 test / 1352 assertion lolos, Pint bersih, 72 rute API, migrasi + seeder di PostgreSQL 16 sementara berhasil; 12 test baru gagal terhadap kode lama.
+  - HTTP dengan seeder dan server hitung palsu: soal terhapus saat pre-test berjalan tetap bisa disubmit; delapan request mulai latihan bersamaan menghasilkan satu pengerjaan; delapan submit bersamaan menghasilkan satu nilai. Alur simulasi hanya diuji lewat feature test.
+  - Belum dikerjakan di PR ini: `simpanJawaban` masih membaca pengerjaan tanpa kunci, dan submit ulang saat Python mati masih mengirim job baru tiap kali.
+- [x] Temuan sedang B3-A (simulasi): PR 3 di `fix/b3a-simulasi` (commit lokal, bertumpuk di atas `fix/penilaian-konsisten`).
+  - `mulai` menutup percobaan kedaluwarsa sebelum transaksi dibuka, sehingga nilai dan kelulusannya tidak lagi ikut di-rollback.
+  - `tutupKedaluwarsa` mencatat dan melewati baris yang gagal, tidak lagi berhenti di baris pertama.
+  - `SYARAT_SIMULASI_BELUM_TERPENUHI` saat mulai membawa rincian per materi (JSON di `detail`).
+  - `SimulasiServiceInterface` mendeklarasikan semua method yang dipakai controller; validasi daftar pindah ke FormRequest; review yang belum dinilai kini 409 `SIMULASI_BELUM_DINILAI` (sebelumnya 404).
+- [x] Temuan tinggi #7–8 dan `sedangDipakai` (soal admin): PR 4 di `fix/b1e-admin-soal` (commit lokal, bertumpuk di atas `fix/b3a-simulasi`).
+  - Pilihan jawaban berkunci huruf (`{"A": ...}`) dan kunci berupa hurufnya, sama dengan importer; soal isian dibuat tanpa pilihan; kunci wajib ada di pilihan; materi dan cerita wajib setingkat.
+  - `SoalGuard` mengunci kunci, level, peruntukan, dan materi dengan membandingkan nilai, sehingga teks soal terpakai bisa diperbaiki. Update menerima sebagian kolom.
+  - `sedangDipakai` ikut mengecek jawaban simulasi. Hapus soal tidak lagi menghapus berkas gambar.
+  - Soal dan pembahasan admin lewat `SoalAdminService`; tidak ada lagi tulis langsung ke model di controller.
+- [x] Temuan tinggi #4 dan aturan latihan/simulasi admin: PR 5 di `fix/b1e-admin-latihan-simulasi` (commit lokal, bertumpuk di atas `fix/b1e-admin-soal`).
+  - Argumen controller latihan disamakan dengan parameter rute `{latihan}`, sehingga show, update, dan destroy benar-benar bekerja.
+  - Latihan: satu per materi (422), `jumlah_soal >= latihan_min_soal` (422), hapus ditolak 409 `LATIHAN_MASIH_DIGUNAKAN` bila punya pengerjaan.
+  - Simulasi: hapus ditolak 409 `SIMULASI_MASIH_DIGUNAKAN` bila punya hasil; guard `is_aktif` pindah ke service dan hanya memeriksa bank saat dinyalakan atau saat jumlah soal simulasi aktif berubah.
+  - Query pindah dari controller ke `LatihanAdminService`/`SimulasiAdminService` dan repository. 21 test baru untuk kedua resource.
+- [x] Temuan tinggi #5–6 dan temuan struktur konten/siswa: PR 6 di `fix/b1d-admin-struktur` (commit lokal, bertumpuk di atas `fix/b1e-admin-latihan-simulasi`).
+  - Hapus materi mengecek soal (termasuk yang di-soft delete), latihan, pemetaan, materi wajib, dan progress lewat repository; semuanya 409 `MATERI_MASIH_DIGUNAKAN`.
+  - Upload gambar pindah ke `POST /api/admin/materi/gambar` dan membalas `data.path` tanpa domain (`/storage/materi/...`). Rute lama `materi/{materi}/upload-image` dan field `gambar` di `MateriResource` dihapus.
+  - Validasi: kompetensi setingkat, `urutan` unik per tingkat, nama kompetensi unik per tingkat, panjang teks mengikuti kolom, tingkat hanya nama dan deskripsi.
+  - Siswa: daftar hanya role siswa (aktif maupun nonaktif); akun admin 404 di menu siswa; soft delete dan nonaktif lewat `UserService` sehingga token dicabut.
+  - Policy memakai satu gaya `before()` dan nama permission yang sama dengan seeder; `LatihanPolicy` dan `SiswaPolicy` yang tidak terpakai dihapus.
+  - Belum dikerjakan: service Kompetensi, Konteks, dan Tingkat admin masih memakai Eloquent langsung.
+- [x] Importer, laporan bank soal, dan rute: PR 7 di `fix/b2-impor-bank-rute` (commit lokal, bertumpuk di atas `fix/b1d-admin-struktur`).
+  - Importer: level atau peruntukan tidak sah dan materi beda tingkat hanya menolak soal itu; soal isian memakai `tingkat_kesulitan` dari berkas; `id_sumber` materi kembar membatalkan seluruh impor.
+  - Laporan bank soal menghitung stok bank, tidak lagi mengurangi soal yang pernah dipakai siswa lain. Ini membalik keputusan sesi B2-C, supaya laporan sama dengan kandidat yang dilihat SoalPicker.
+  - Rute mengikuti spesifikasi: `GET /api/simulasi/syarat?tingkat_id=` (kini 403 bila tingkat terkunci) dan `GET /api/admin/bank-soal/kecukupan?tingkat_id=`.
+  - Balasan syarat simulasi memuat `alasan` (`belum_pretest` saat tidak ada putaran aktif), juga di dashboard.
+- [x] Temuan rendah: PR 8 di `chore/rapikan-temuan-rendah` (commit lokal, bertumpuk di atas `fix/b2-impor-bank-rute`).
+  - `BisnisException` tidak lagi dicatat sebagai ERROR; yang berstatus 5xx dicatat sebagai peringatan beserta rinciannya (termasuk `BANK_SOAL_TIDAK_CUKUP`).
+  - Auth: email disamakan huruf kecilnya dan dicocokkan tanpa membedakan huruf; pendaftaran bersamaan dibalas 422; `sanctum:prune-expired` terjadwal harian.
+  - `sisaKuotaSimulasi` dihitung `PutaranService`; `RiwayatService` menggantikan repository di controller.
+  - N+1 di daftar materi dan syarat simulasi dihapus (satu query nilai terbaik per siswa).
+  - `PenilaianBelumDiimplementasi` dihapus; pesan validasi progress dan karakter nyasar di test diperbaiki.
+- [x] Dokumen: PR 9 di `docs/pasca-audit` (commit lokal, bertumpuk di atas `chore/rapikan-temuan-rendah`).
+  - Tabel status di ketiga BATCH_PLAN diperbarui ke 4 Oktober.
+  - Logic per fitur memuat `SUDAH_DISUBMIT`, format pilihan berhuruf, arti "tersedia" di laporan bank, index latihan berjalan, kolom `alasan` syarat simulasi, dan kode 409 baru untuk hapus latihan/simulasi.
+
+### Verifikasi akhir (di ujung tumpukan, sebelum PR 9)
+
+- `php artisan test`: 432 test, seluruhnya lolos (naik dari 331). Pint bersih. 72 rute API. Tidak ada query di controller.
+- `migrate:fresh --seed` dan `migrate:reset` berhasil di PostgreSQL 16 pada database sementara.
+- HTTP lewat `php artisan serve` dengan data seeder dan server hitung palsu: dua siswa mendapat set pre-test berbeda; latihan berisi tiga level; simulasi kedaluwarsa ditutup lewat `mulai` dan percobaan baru dibuat; hapus materi yang dirujuk 409; upload gambar membalas path; teks soal terpakai bisa diperbaiki tetapi kuncinya tidak; latihan baru bisa diubah dan dihapus; admin tidak bisa menghapus dirinya lewat menu siswa; soft delete siswa mencabut token.
+- Batas verifikasi: layanan hitung yang dipakai adalah tiruan, bukan layanan Python produksi. Balapan penilaian ditiru di test lewat kait pada klien palsu; yang diuji dengan request bersamaan sungguhan hanya mulai dan submit latihan.
+
+### Yang sengaja belum dikerjakan
+
+- `simpanJawaban` masih membaca pengerjaan tanpa kunci baris.
+- Submit ulang saat Python mati masih mengirim `NilaiUlangJob` baru tiap kali.
+- Service admin Kompetensi, Konteks, dan Tingkat masih memakai Eloquent langsung; `AturanPemetaanController` masih menyuntik kelas konkret.
+- Pemeriksaan tingkat terbuka pada `GET /api/simulasi/syarat` ada di controller, karena `SyaratSimulasiService` tidak boleh menyuntik `PutaranService` (siklus dependensi).
+- Bentuk respons `GET /api/materi`, `/materi/{id}`, dan `/simulasi/syarat` belum diseragamkan ke `{message, data}`.
+- Revisi `ARCHITECTURE_RULES.md` §3.5 dan §8, serta test kontrak terhadap layanan Python (keputusan #6 masih terbuka).
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
@@ -114,7 +175,7 @@ Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
 ## Dokumen yang tertinggal
 
-Tabel status di [BATCH_PLAN.md](BATCH_PLAN.md), [BATCH_PLAN_ORANG_1.md](BATCH_PLAN_ORANG_1.md), dan [BATCH_PLAN_ORANG_2.md](BATCH_PLAN_ORANG_2.md) masih menggambarkan keadaan 3 Oktober (misalnya "B1-C dikerjakan ulang", "B3-A terblokir"). Yang sudah sesuai keadaan sekarang hanya [RINGKASAN-SESI.md](RINGKASAN-SESI.md).
+Saat audit, tabel status di ketiga BATCH_PLAN masih menggambarkan keadaan 3 Oktober. Sudah diperbarui di PR 9.
 
 ## Urutan perbaikan yang disarankan (sebelum B4)
 

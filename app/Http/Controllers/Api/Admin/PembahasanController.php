@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Contracts\Services\SoalAdminServiceInterface;
 use App\Http\Requests\UpsertPembahasanRequest;
 use App\Http\Resources\PembahasanResource;
-use App\Models\Pembahasan;
 use App\Models\Soal;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 
 class PembahasanController
 {
+    public function __construct(
+        private readonly SoalAdminServiceInterface $soalService,
+    ) {}
+
     public function show(Soal $soal): JsonResponse
     {
         Gate::authorize('view', $soal);
@@ -33,10 +37,7 @@ class PembahasanController
     {
         Gate::authorize('update', $soal);
 
-        $pembahasan = $soal->pembahasan ?? new Pembahasan;
-        $pembahasan->soal_id = $soal->id;
-        $pembahasan->fill($request->validated());
-        $pembahasan->save();
+        $pembahasan = $this->soalService->simpanPembahasan($soal, $request->validated('isi_pembahasan'));
 
         return response()->json([
             'message' => 'Pembahasan berhasil disimpan',
@@ -48,15 +49,13 @@ class PembahasanController
     {
         Gate::authorize('update', $soal);
 
-        $pembahasan = $soal->pembahasan;
-
-        if (! $pembahasan) {
+        if (! $soal->pembahasan) {
             return response()->json([
                 'message' => 'Pembahasan tidak ditemukan',
             ], 404);
         }
 
-        $pembahasan->update($request->validated());
+        $pembahasan = $this->soalService->simpanPembahasan($soal, $request->validated('isi_pembahasan'));
 
         return response()->json([
             'message' => 'Pembahasan berhasil diperbarui',
@@ -68,15 +67,11 @@ class PembahasanController
     {
         Gate::authorize('update', $soal);
 
-        $pembahasan = $soal->pembahasan;
-
-        if (! $pembahasan) {
+        if (! $this->soalService->hapusPembahasan($soal)) {
             return response()->json([
                 'message' => 'Pembahasan tidak ditemukan',
             ], 404);
         }
-
-        $pembahasan->delete();
 
         return response()->json([
             'message' => 'Pembahasan berhasil dihapus',

@@ -7,6 +7,7 @@ use App\Contracts\Services\PenilaianServiceInterface;
 use App\Contracts\Services\PretestServiceInterface;
 use App\Contracts\Services\SimulasiServiceInterface;
 use App\Enums\JenisPengerjaan;
+use App\Exceptions\PerhitunganKonfigurasiException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -46,16 +47,23 @@ class NilaiUlangJob implements ShouldQueue
         LatihanServiceInterface $latihan,
         SimulasiServiceInterface $simulasi,
     ): void {
-        $this->service($pretest, $latihan, $simulasi)->selesaikanPenilaian($this->id);
+        try {
+            $this->service($pretest, $latihan, $simulasi)->selesaikanPenilaian($this->id);
+        } catch (PerhitunganKonfigurasiException $exception) {
+            // Kesalahan konfigurasi tidak akan membaik dengan mencoba lagi,
+            // jadi job langsung gagal tanpa menghabiskan sisa percobaan.
+            $this->fail($exception);
+        }
     }
 
     /**
-     * Kesalahan konfigurasi tidak akan membaik dengan mencoba lagi, jadi job
-     * langsung gagal agar masuk failed_jobs dan tercatat untuk admin.
+     * Dipanggil saat job berhenti untuk selamanya: percobaan habis, atau
+     * digagalkan langsung karena kesalahan konfigurasi. Job masuk failed_jobs
+     * dan tercatat untuk admin.
      */
     public function failed(?Throwable $exception): void
     {
-        Log::error('Penilaian gagal setelah lima percobaan.', [
+        Log::error('Penilaian gagal dan tidak akan dicoba lagi.', [
             'jenis' => $this->jenis->value,
             'id' => $this->id,
             'exception' => $exception === null ? null : $exception::class,

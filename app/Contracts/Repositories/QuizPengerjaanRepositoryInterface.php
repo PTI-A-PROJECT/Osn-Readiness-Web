@@ -19,6 +19,11 @@ interface QuizPengerjaanRepositoryInterface
     public function findMilik(int $id, int $userId): ?QuizPengerjaan;
 
     /**
+     * Satu pengerjaan tanpa kunci baris.
+     */
+    public function find(int $id): ?QuizPengerjaan;
+
+    /**
      * Satu pengerjaan dengan kunci baris, untuk transaksi submit.
      */
     public function findUntukUpdate(int $id): ?QuizPengerjaan;
@@ -30,6 +35,15 @@ interface QuizPengerjaanRepositoryInterface
      * @return Collection<int, QuizPengerjaan>
      */
     public function selesai(User $user, int $quizId): Collection;
+
+    /**
+     * Nilai tertinggi pengerjaan selesai milik satu siswa untuk tiap quiz,
+     * dalam satu query. Quiz yang belum pernah selesai tidak ikut.
+     *
+     * @param  list<int>  $quizIds
+     * @return array<int, float> diindeks quiz_id
+     */
+    public function nilaiTerbaikPerQuiz(User $user, array $quizIds): array;
 
     /**
      * @param  array<string, mixed>  $data

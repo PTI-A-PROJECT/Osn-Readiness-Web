@@ -69,7 +69,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('quiz-pengerjaan/{pengerjaan}', [QuizPengerjaanController::class, 'show']);
     Route::put('quiz-pengerjaan/{pengerjaan}/jawaban', [QuizPengerjaanController::class, 'simpanJawaban']);
     Route::post('quiz-pengerjaan/{pengerjaan}/submit', [QuizPengerjaanController::class, 'submit']);
-    Route::get('simulasi/syarat/{tingkat}', [SyaratSimulasiController::class, 'show']);
+    Route::get('simulasi/syarat', [SyaratSimulasiController::class, 'show']);
 
     // [B3-A] Simulasi, kelulusan, dan review.
     Route::get('simulasi', [App\Http\Controllers\Api\SimulasiController::class, 'index']);
@@ -91,8 +91,10 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         // endpoint siswa GET /api/tingkat.
         Route::apiResource('tingkat', App\Http\Controllers\Api\Admin\TingkatController::class)->only(['index', 'show', 'update']);
         Route::apiResource('kompetensi', KompetensiController::class);
+        // Didaftarkan sebelum apiResource supaya "gambar" tidak dibaca
+        // sebagai {materi}.
+        Route::post('materi/gambar', [MateriController::class, 'uploadGambar']);
         Route::apiResource('materi', MateriController::class);
-        Route::post('materi/{materi}/upload-image', [MateriController::class, 'uploadImage']);
         Route::apiResource('konteks-soal', KonteksSoalController::class);
         Route::apiResource('siswa', SiswaController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);
@@ -109,7 +111,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         Route::put('tingkat/{tingkat}/aturan-pemetaan', [AturanPemetaanController::class, 'update']);
 
         // [B2-C] Kecukupan bank soal dan dashboard admin
-        Route::get('bank-soal/kecukupan/{tingkat}', [BankSoalController::class, 'kecukupan']);
+        Route::get('bank-soal/kecukupan', [BankSoalController::class, 'kecukupan']);
         Route::get('dashboard', [DashboardController::class, 'ringkasan']);
     });
 });

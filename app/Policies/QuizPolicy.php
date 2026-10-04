@@ -18,26 +18,26 @@ class QuizPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('soal.viewAny');
+        return $user->hasPermissionTo('quiz.viewAny');
     }
 
     public function view(User $user, Quiz $quiz): bool
     {
-        return $user->hasPermissionTo('soal.view');
+        return $user->hasPermissionTo('quiz.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('soal.create');
+        return $user->hasPermissionTo('quiz.create');
     }
 
     public function update(User $user, Quiz $quiz): bool
     {
-        return $user->hasPermissionTo('soal.update');
+        return $user->hasPermissionTo('quiz.update');
     }
 
     public function delete(User $user, Quiz $quiz): bool
     {
-        return $user->hasPermissionTo('soal.delete');
+        return $user->hasPermissionTo('quiz.delete');
     }
 }

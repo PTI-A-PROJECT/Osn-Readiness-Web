@@ -10,26 +10,23 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 ## Urutan kerja
 
-| # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk | Status 3 Okt |
+| # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk | Status 4 Okt |
 | --- | --- | --- | --- | --- |
 | 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya | ✅ merged (`dev` `e860823`) |
 | 1b | B0-B · Kontrak & error (diambil alih) | — | B1-C | ✅ merged (PR#7) |
 | 2 | B1-A · Auth, AturanService, PutaranService | — | B2-B, B3-B | ✅ merged (PR#8) |
 | 3 | B1-B · SoalPicker + SoalResource + Randomizer | — | B1-E, B2-B, B2-C | ✅ merged (PR#10) |
-| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | 🔧 PR#14 open |
-| 5 | B3-A · Simulasi & kelulusan | **B2-B** (SyaratSimulasiService) | B3-B bagian simulasi | ⛔ terblokir |
+| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | ✅ merged (PR#14, PR#17) |
+| 5 | B3-A · Simulasi & kelulusan | **B2-B** (SyaratSimulasiService) | B3-B bagian simulasi | ✅ merged (PR#25) |
 | 6 | B3-C · PurgeAkunJob | — | — | ✅ merged (PR#11) |
-| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | ⛔ terblokir |
+| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | ⬜ setelah perbaikan audit |
 
-**Posisi sekarang.** `dev` hijau di `e860823` (180/180 test). PR#14 (B2-A) menunggu review.
-Tidak ada lagi paket Orang 1 yang bisa dikerjakan sebelum B2-B masuk: B3-A butuh
-B2-B, dan B4 butuh semua paket. Lihat [HANDOFF-KONDISI.md §6](HANDOFF-KONDISI.md).
+**Posisi sekarang.** Semua paket Batch 1–3 milikmu sudah merge ke `dev`. Yang tersisa
+adalah me-review perbaikan audit pada paketmu (SoalPicker, pre-test, simulasi) dan B4.
+Rinciannya ada di [AUDIT-BATCH-1-3.md](AUDIT-BATCH-1-3.md#status-perbaikan).
 
-**Dua hal yang perlu disepakati sebelum Orang 2 mulai B1-D** (detail di
-[HANDOFF-KONDISI.md §7](HANDOFF-KONDISI.md)): rute admin siswa (keputusan #7) dan
-pemilik grup rute `admin`. `tests/Feature/Api/UserApiTest.php` milik B1-A memakai
-`/api/users`, jadi penghapusan rute itu di B1-D akan menggagalkan test yang sudah ada
-di `dev`.
+Keputusan #7 sudah tuntas di PR#20: `/api/users` dihapus dan menu siswa ada di
+`/api/admin/siswa`.
 
 **Bila B1-C belum siap saat mulai B2-A:** pakai `FakePerhitunganClient` / mock `PerhitunganClientInterface` dengan bentuk kontrak di [BATCH_PLAN.md § B1-C](BATCH_PLAN.md#b1-c--perhitunganclient--nilaiulangjob-be-11).
 

@@ -241,4 +241,106 @@ class ImporKontenTest extends TestCase
             exec('rm -rf '.escapeshellarg($folder));
         }
     }
+
+    /**
+     * Jalankan impor atas salinan fixture yang soal pertamanya sudah diubah.
+     *
+     * @param  array<string, mixed>  $ubah
+     */
+    private function imporDenganSoalPertama(array $ubah, bool $harusSukses = true): void
+    {
+        $folder = sys_get_temp_dir().'/impor-'.uniqid();
+
+        exec('cp -R '.escapeshellarg($this->folder).' '.escapeshellarg($folder));
+
+        try {
+            $berkas = $folder.'/soal_kabupaten.json';
+            $isi = json_decode((string) file_get_contents($berkas), true);
+            $isi[0] = array_merge($isi[0], $ubah);
+            file_put_contents($berkas, json_encode($isi, JSON_PRETTY_PRINT));
+
+            // run() dipanggil eksplisit: perintah harus selesai sebelum
+            // folder sementara dihapus di blok finally.
+            $perintah = $this->artisan('impor:konten', ['folder' => $folder]);
+
+            if ($harusSukses) {
+                $perintah->assertSuccessful()->run();
+            } else {
+                $perintah->assertFailed()->run();
+            }
+        } finally {
+            exec('rm -rf '.escapeshellarg($folder));
+        }
+    }
+
+    public function test_level_atau_peruntukan_tidak_sah_hanya_menolak_soal_itu(): void
+    {
+        $this->bankTingkat();
+
+        $this->imporDenganSoalPertama(['tingkat_kesulitan' => 'gampang']);
+
+        // Soal pertama ditolak; materi dan soal lain tetap masuk.
+        $this->assertDatabaseMissing('soal', ['id_sumber' => 'kab-2020-001']);
+        $this->assertDatabaseHas('soal', ['id_sumber' => 'kab-2020-002']);
+        $this->assertDatabaseHas('materi', ['id_sumber' => 'kab-01']);
+    }
+
+    public function test_peruntukan_tidak_sah_hanya_menolak_soal_itu(): void
+    {
+        $this->bankTingkat();
+
+        $this->imporDenganSoalPertama(['peruntukan' => 'ujian']);
+
+        $this->assertDatabaseMissing('soal', ['id_sumber' => 'kab-2020-001']);
+        $this->assertDatabaseHas('soal', ['id_sumber' => 'kab-2020-002']);
+    }
+
+    public function test_materi_dari_tingkat_lain_menolak_soal(): void
+    {
+        $this->bankTingkat();
+        TingkatSeleksi::factory()->create(['urutan' => 2]);
+
+        // Soal mengaku tingkat provinsi tetapi materinya kab-01 (kabupaten).
+        $this->imporDenganSoalPertama(['tingkat' => 'provinsi']);
+
+        $this->assertDatabaseMissing('soal', ['id_sumber' => 'kab-2020-001']);
+        $this->assertDatabaseHas('soal', ['id_sumber' => 'kab-2020-002']);
+    }
+
+    public function test_soal_isian_memakai_tingkat_kesulitan_dari_berkas(): void
+    {
+        $this->bankTingkat();
+
+        $this->imporDenganSoalPertama([
+            'pilihan' => [],
+            'jawaban_benar' => '2',
+            'tingkat_kesulitan' => 'sulit',
+        ]);
+
+        $this->assertDatabaseHas('soal', [
+            'id_sumber' => 'kab-2020-001',
+            'tipe_soal' => 'isian',
+            'level' => 'sulit',
+        ]);
+    }
+
+    public function test_id_sumber_materi_kembar_membatalkan_seluruh_impor(): void
+    {
+        $this->bankTingkat();
+
+        $folder = sys_get_temp_dir().'/impor-'.uniqid();
+
+        exec('cp -R '.escapeshellarg($this->folder).' '.escapeshellarg($folder));
+
+        try {
+            copy($folder.'/materi/kab-01.md', $folder.'/materi/kab-01-salinan.md');
+
+            $this->artisan('impor:konten', ['folder' => $folder])->assertFailed();
+
+            $this->assertDatabaseCount('materi', 0);
+            $this->assertDatabaseCount('soal', 0);
+        } finally {
+            exec('rm -rf '.escapeshellarg($folder));
+        }
+    }
 }
