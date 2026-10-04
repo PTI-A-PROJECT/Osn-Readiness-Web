@@ -9,6 +9,8 @@ const AuthLayout = () => import('@/layouts/AuthLayout.vue')
 const AppLayout = () => import('@/layouts/AppLayout.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
+const LupaKataSandiView = () => import('@/views/LupaKataSandiView.vue')
+const ResetPasswordView = () => import('@/views/ResetPasswordView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
 const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
@@ -32,8 +34,30 @@ export const routes = [
     path: '/',
     component: AuthLayout,
     children: [
-      { path: 'login', name: 'login', component: LoginView, meta: { guestOnly: true } },
-      { path: 'register', name: 'register', component: RegisterView, meta: { guestOnly: true } },
+      {
+        path: 'login',
+        name: 'login',
+        component: LoginView,
+        meta: { guestOnly: true },
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: RegisterView,
+        meta: { guestOnly: true },
+      },
+      {
+        path: 'lupa-kata-sandi',
+        name: 'forgot-password',
+        component: LupaKataSandiView,
+        meta: { guestOnly: true },
+      },
+      {
+        path: 'reset-password',
+        name: 'reset-password',
+        component: ResetPasswordView,
+        meta: { guestOnly: true },
+      },
     ],
   },
   {
