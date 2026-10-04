@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Contracts\Randomizers\RandomizerInterface;
 use App\Contracts\Repositories\MateriRepositoryInterface;
 use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
@@ -13,6 +14,7 @@ use App\Enums\Peruntukan;
 use App\Exceptions\BankSoalTidakCukupException;
 use App\Models\Materi;
 use App\Models\Soal;
+use App\Randomizers\AcakRandomizer;
 use App\Randomizers\SeededRandomizer;
 use App\Services\SoalPickerService;
 use Illuminate\Database\Eloquent\Collection;
@@ -38,6 +40,87 @@ class SoalPickerServiceTest extends TestCase
 
     /** @var array<int, Soal> */
     private array $bank = [];
+
+    #[Test]
+    public function container_memakai_randomizer_produksi_tanpa_seed_tetap(): void
+    {
+        $this->assertInstanceOf(AcakRandomizer::class, $this->app->make(RandomizerInterface::class));
+    }
+
+    #[Test]
+    public function latihan_memakai_campuran_level_saat_soal_mudah_tidak_cukup(): void
+    {
+        $this->siapkanMateri(2);
+        $this->siapkanBank(['mudah' => 2, 'sedang' => 4, 'sulit' => 4], Peruntukan::Latihan);
+
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Latihan,
+            jumlahSoal: 10,
+            materiId: 1,
+        ));
+
+        $this->assertCount(10, array_unique($hasil->soalIds()));
+        $this->assertSame(['mudah' => 2, 'sedang' => 4, 'sulit' => 4], $hasil->jumlahPerLevel());
+        $this->assertSame([1 => 10], $this->hitungPerMateri($hasil));
+    }
+
+    #[Test]
+    public function mode_bebas_memenuhi_batas_materi_dari_semua_level(): void
+    {
+        $this->siapkanMateri(2);
+        $this->siapkanBank(['mudah' => 0, 'sedang' => 1, 'sulit' => 1], Peruntukan::Latihan);
+
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Latihan,
+            jumlahSoal: 4,
+            minimalSoalPerMateri: 2,
+        ));
+
+        $this->assertCount(4, array_unique($hasil->soalIds()));
+        $this->assertSame([1 => 2, 2 => 2], $this->hitungPerMateri($hasil));
+    }
+
+    #[Test]
+    public function simulasi_melengkapi_lima_soal_baru_dengan_tiga_cadangan_unik(): void
+    {
+        $this->siapkanMateri(1);
+        $this->siapkanBank(['mudah' => 10, 'sedang' => 0, 'sulit' => 0], Peruntukan::Simulasi);
+
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Simulasi,
+            jumlahSoal: 8,
+            persenLevel: ['mudah' => 100.0],
+            soalDihindari: range(6, 10),
+        ));
+
+        $this->assertCount(8, array_unique($hasil->soalIds()));
+        $this->assertEqualsCanonicalizing(range(1, 5), array_intersect(range(1, 5), $hasil->soalIds()));
+        $this->assertCount(3, array_intersect(range(6, 10), $hasil->soalIds()));
+    }
+
+    #[Test]
+    public function simulasi_menolak_bank_yang_tetap_kurang_setelah_cadangan(): void
+    {
+        $this->siapkanMateri(1);
+        $this->siapkanBank(['mudah' => 7, 'sedang' => 0, 'sulit' => 0], Peruntukan::Simulasi);
+
+        try {
+            $this->picker()->pilih(new PermintaanSoal(
+                tingkatId: 1,
+                peruntukan: Peruntukan::Simulasi,
+                jumlahSoal: 8,
+                persenLevel: ['mudah' => 100.0],
+                soalDihindari: [6, 7],
+            ));
+
+            $this->fail('Bank yang kurang harus ditolak meskipun memiliki cadangan.');
+        } catch (BankSoalTidakCukupException $e) {
+            $this->assertSame(['mudah' => 1], json_decode($e->getDetail(), true)['kurang_per_level']);
+        }
+    }
 
     protected function tearDown(): void
     {

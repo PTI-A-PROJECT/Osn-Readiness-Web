@@ -71,13 +71,15 @@ class SoalPickerService implements SoalPickerServiceInterface
     /**
      * Kelompokkan kandidat per level, lalu per materi untuk yang dipakai batas
      * materi. Struktur: [level][materi_id] => list butir, dan [level] => list butir.
+     * Gabungan memuat semua level untuk mode bebas.
      *
-     * @return array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>}
+     * @return array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level}>}
      */
     private function kelompokkan(PermintaanSoal $permintaan): array
     {
         $perLevel = [];
         $semua = [];
+        $gabungan = [];
 
         $soal = $this->soalRepository->kandidat(
             $permintaan->tingkatId,
@@ -97,11 +99,12 @@ class SoalPickerService implements SoalPickerServiceInterface
 
             $perLevel[$level][$materiId][] = $butir;
             $semua[$level][] = $butir;
+            $gabungan[] = $butir;
         }
 
         ksort($perLevel);
 
-        return ['perLevel' => $perLevel, 'semua' => $semua];
+        return ['perLevel' => $perLevel, 'semua' => $semua, 'gabungan' => $gabungan];
     }
 
     /**
@@ -136,7 +139,7 @@ class SoalPickerService implements SoalPickerServiceInterface
      * kuota tersisa paling banyak didahulukan; bila kandidat level itu habis
      * untuk materi ini, turun ke level berikutnya.
      *
-     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>}  $kandidat
+     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level}>}  $kandidat
      * @param  array<int, int>  $sisa
      * @param  array<int, array{id: int, materi_id: int, level: Level}>  $terpilih
      */
@@ -151,7 +154,7 @@ class SoalPickerService implements SoalPickerServiceInterface
         $target = $permintaan->minimalSoalPerMateri;
 
         if ($bebas) {
-            $pool = $kandidat['semua'][0] ?? [];
+            $pool = $kandidat['gabungan'];
             $pool = array_values(array_filter(
                 $pool,
                 fn (array $butir): bool => $butir['materi_id'] === $materiId,
@@ -228,7 +231,7 @@ class SoalPickerService implements SoalPickerServiceInterface
     }
 
     /**
-     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>}  $kandidat
+     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level}>}  $kandidat
      * @param  array<int, int>  $sisa
      * @param  array<int, array{id: int, materi_id: int, level: Level}>  $terpilih
      * @return array<int, int> sisa kuota per indeks level yang tidak terpenuhi
@@ -244,7 +247,7 @@ class SoalPickerService implements SoalPickerServiceInterface
 
         foreach ($sisa as $level => $butuh) {
             $pool = $bebas
-                ? ($kandidat['semua'][0] ?? [])
+                ? $kandidat['gabungan']
                 : ($kandidat['semua'][$level] ?? []);
 
             // Langkah 5: kandidat yang tidak ada di daftar dihindari
@@ -254,13 +257,17 @@ class SoalPickerService implements SoalPickerServiceInterface
             $take = array_slice($this->randomizer->acak($diprioritas), 0, $butuh);
             $kurangLevelIni = $butuh - count($take);
 
+            foreach ($take as $butir) {
+                $terpilih[$butir['id']] = $butir;
+            }
+
             if ($kurangLevelIni > 0 && $permintaan->menghindari()) {
                 $penghindaran = $this->saringTerpilih($pool, $terpilih, []);
                 $take = array_merge(
                     $take,
                     array_slice($this->randomizer->acak($penghindaran), 0, $kurangLevelIni),
                 );
-                $kurangLevelIni = 0;
+                $kurangLevelIni = $butuh - count($take);
             }
 
             foreach ($take as $butir) {
