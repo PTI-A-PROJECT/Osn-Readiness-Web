@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Contracts\Services\SimulasiServiceInterface;
+use App\Http\Requests\Simulasi\IndexRequest;
 use App\Http\Resources\SimulasiPengerjaanResource;
 use App\Models\Simulasi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class SimulasiController
 {
@@ -15,19 +15,11 @@ class SimulasiController
         private readonly SimulasiServiceInterface $simulasiService,
     ) {}
 
-    public function index(Request $request)
+    public function index(IndexRequest $request): JsonResponse
     {
-        $tingkatId = $request->query('tingkat_id', $request->user()->tingkat_aktif_id);
-
-        if ($tingkatId === null || ! is_numeric($tingkatId)) {
-            throw ValidationException::withMessages([
-                'tingkat_id' => ['Tingkat belum diketahui: kirim tingkat_id atau selesaikan pre-test dulu.'],
-            ]);
-        }
-
         return response()->json([
             'message' => 'OK',
-            'data' => $this->simulasiService->daftar($request->user(), (int) $tingkatId),
+            'data' => $this->simulasiService->daftar($request->user(), $request->integer('tingkat_id')),
         ]);
     }
 
