@@ -213,4 +213,16 @@ class KelulusanServiceTest extends TestCase
             'bobot' => 1,
         ]);
     }
+
+    public function test_menilai_lulus_dua_kali_tidak_menggandakan_dan_tidak_membatalkan_transaksi(): void
+    {
+        $hasil = $this->hasil(90.0);
+
+        $this->layanan->menilai($hasil);
+        $this->layanan->menilai($hasil);
+
+        // Bila insert kembar sampai melempar unique violation, transaksi
+        // Postgres batal dan query berikut ikut gagal.
+        $this->assertSame(1, KenaikanTingkat::query()->where('status', 'lulus')->count());
+    }
 }

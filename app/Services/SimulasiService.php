@@ -21,6 +21,7 @@ use App\DTOs\SimulasiDimulai;
 use App\Enums\JenisPengerjaan;
 use App\Enums\Peruntukan;
 use App\Exceptions\KuotaSimulasiHabisException;
+use App\Exceptions\PengerjaanSudahDisubmitException;
 use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Exceptions\SimulasiBelumDinilaiException;
 use App\Exceptions\SudahLulusException;
@@ -213,9 +214,7 @@ class SimulasiService implements SimulasiServiceInterface
         }
 
         if ($hasil->disubmit_pada !== null) {
-            throw ValidationException::withMessages([
-                'hasil' => ['Jawaban sudah dikunci saat simulasi disubmit.'],
-            ]);
+            throw new PengerjaanSudahDisubmitException('Jawaban sudah dikunci saat simulasi disubmit.');
         }
 
         $baris = $this->jawabanRepository->findJawaban($hasil->id, $soalId);
@@ -269,20 +268,21 @@ class SimulasiService implements SimulasiServiceInterface
 
             throw new PerhitunganTidakTersediaException(
                 "Penilaian simulasi #{$terkunci->id} gagal dan dijadwalkan untuk dicoba lagi.",
-                $exception->getDetail(),
             );
         }
 
-        return $this->hasilRepository->findUntukUpdate($terkunci->id) ?? $terkunci;
+        return $terkunci->fresh() ?? $terkunci;
     }
 
     /**
      * Susun payload, panggil Python di luar transaksi, simpan hasil beserta
-     * keputusan kelulusan dalam transaksi kedua. Idempoten untuk job.
+     * keputusan kelulusan dalam transaksi kedua. Idempoten untuk job:
+     * pemeriksaan di awal hanya menghemat panggilan Python, penjaga yang
+     * sebenarnya ada di transaksi kedua, di bawah kunci baris.
      */
     public function selesaikanPenilaian(int $id): void
     {
-        $hasil = $this->hasilRepository->findUntukUpdate($id);
+        $hasil = $this->hasilRepository->find($id);
 
         if (! $hasil instanceof HasilSimulasi || $hasil->selesai_pada !== null) {
             return;
@@ -306,7 +306,16 @@ class SimulasiService implements SimulasiServiceInterface
             }
         }
 
-        DB::transaction(function () use ($hasil, $jawaban, $balasan, $statusBenar, $benar, $salah): void {
+        DB::transaction(function () use ($id, $jawaban, $balasan, $statusBenar, $benar, $salah): void {
+            // Job dan submit ulang bisa sampai di sini bersamaan. Yang kalah
+            // menunggu kunci, lalu melihat selesai_pada sudah terisi, sehingga
+            // kelulusan tidak pernah dievaluasi dua kali.
+            $hasil = $this->hasilRepository->findUntukUpdate($id);
+
+            if (! $hasil instanceof HasilSimulasi || $hasil->selesai_pada !== null) {
+                return;
+            }
+
             foreach ($jawaban as $baris) {
                 $status = $statusBenar->get((int) $baris->soal_id);
 
@@ -324,7 +333,7 @@ class SimulasiService implements SimulasiServiceInterface
 
             // Kelulusan ikut dijalankan di sini, sehingga penilaian yang
             // berasal dari job ulang tetap menulis kenaikan tingkat.
-            $this->kelulusanService->menilai($hasil->fresh() ?? $hasil);
+            $this->kelulusanService->menilai($hasil);
         });
     }
 

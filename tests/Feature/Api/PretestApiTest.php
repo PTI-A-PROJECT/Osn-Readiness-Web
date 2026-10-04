@@ -291,7 +291,7 @@ class PretestApiTest extends TestCase
         $this->actingAs($user)->putJson("/api/pretest/{$pretestId}/jawaban", [
             'soal_id' => $soalId,
             'jawaban_user' => 'A',
-        ])->assertStatus(409);
+        ])->assertStatus(409)->assertJsonPath('kode', 'SUDAH_DISUBMIT');
     }
 
     #[Test]
@@ -368,7 +368,9 @@ class PretestApiTest extends TestCase
 
         $this->actingAs($user)->postJson("/api/pretest/{$pretestId}/submit")
             ->assertStatus(503)
-            ->assertJsonPath('kode', 'HASIL_SEDANG_DIPROSES');
+            ->assertJsonPath('kode', 'HASIL_SEDANG_DIPROSES')
+            ->assertJsonPath('message', 'Layanan hitung sedang tidak tersedia.')
+            ->assertJsonPath('detail', "Penilaian pre-test #{$pretestId} gagal dan dijadwalkan untuk dicoba lagi.");
 
         Queue::assertPushed(NilaiUlangJob::class);
 
@@ -543,5 +545,48 @@ class PretestApiTest extends TestCase
             ->assertJsonPath('kode', 'BANK_SOAL_TIDAK_CUKUP');
 
         $this->assertSame(0, Pretest::count());
+    }
+
+    #[Test]
+    public function penilaian_yang_kalah_balapan_tidak_menimpa_hasil(): void
+    {
+        $user = $this->siswa();
+        $this->bank();
+
+        $pretestId = $this->mulai($user)->json('data.id');
+
+        // Saat Python masih menghitung, penilai lain (job atau submit ulang)
+        // sudah menyelesaikan pre-test ini lebih dulu.
+        $this->perhitungan->saatDipanggil = function () use ($pretestId): void {
+            Pretest::where('id', $pretestId)->update(['nilai' => 11, 'selesai_pada' => now()]);
+        };
+
+        $this->actingAs($user)->postJson("/api/pretest/{$pretestId}/submit")->assertOk();
+
+        $pretest = Pretest::findOrFail($pretestId);
+
+        $this->assertSame(11.0, (float) $pretest->nilai, 'Hasil penilai pertama tidak boleh ditimpa.');
+        $this->assertSame(0, $pretest->pemetaanMateri()->count(), 'Penilai yang kalah tidak boleh menulis pemetaan.');
+    }
+
+    #[Test]
+    public function soal_yang_dihapus_admin_tidak_menggagalkan_pretest_berjalan(): void
+    {
+        $user = $this->siswa();
+        $this->bank();
+
+        $pretestId = $this->mulai($user)->json('data.id');
+        $soalId = $this->actingAs($user)->getJson("/api/pretest/{$pretestId}")->json('data.soal.0.id');
+
+        Soal::findOrFail($soalId)->delete();
+
+        $this->actingAs($user)->getJson("/api/pretest/{$pretestId}")
+            ->assertOk()
+            ->assertJsonCount(30, 'data.soal');
+
+        $this->actingAs($user)->postJson("/api/pretest/{$pretestId}/submit")->assertOk();
+
+        $this->assertNotNull(Pretest::findOrFail($pretestId)->selesai_pada);
+        $this->assertCount(30, $this->perhitungan->permintaanPretest[0]['soal']);
     }
 }

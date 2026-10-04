@@ -19,6 +19,11 @@ interface QuizPengerjaanRepositoryInterface
     public function findMilik(int $id, int $userId): ?QuizPengerjaan;
 
     /**
+     * Satu pengerjaan tanpa kunci baris.
+     */
+    public function find(int $id): ?QuizPengerjaan;
+
+    /**
      * Satu pengerjaan dengan kunci baris, untuk transaksi submit.
      */
     public function findUntukUpdate(int $id): ?QuizPengerjaan;

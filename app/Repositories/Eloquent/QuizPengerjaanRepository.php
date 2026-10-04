@@ -30,6 +30,11 @@ class QuizPengerjaanRepository implements QuizPengerjaanRepositoryInterface
             ->first();
     }
 
+    public function find(int $id): ?QuizPengerjaan
+    {
+        return $this->model->newQuery()->find($id);
+    }
+
     public function findUntukUpdate(int $id): ?QuizPengerjaan
     {
         return $this->model->newQuery()
