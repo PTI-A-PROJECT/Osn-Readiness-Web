@@ -53,4 +53,14 @@ class QuizPengerjaanRepository implements QuizPengerjaanRepositoryInterface
         /** @var QuizPengerjaan */
         return $this->model->newQuery()->create($data);
     }
+
+    public function hapusUntukMateri(User $user, array $materiIds): void
+    {
+        $this->model->newQuery()
+            ->where('user_id', $user->id)
+            ->whereHas('quiz', function ($query) use ($materiIds): void {
+                $query->whereIn('materi_id', $materiIds);
+            })
+            ->delete();
+    }
 }
