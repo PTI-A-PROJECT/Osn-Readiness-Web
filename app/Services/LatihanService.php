@@ -13,6 +13,7 @@ use App\DTOs\PermintaanSoal;
 use App\Enums\JenisPengerjaan;
 use App\Enums\Peruntukan;
 use App\Exceptions\BelumPretestException;
+use App\Exceptions\PengerjaanSudahDisubmitException;
 use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Exceptions\TingkatTerkunciException;
 use App\Jobs\NilaiUlangJob;
@@ -23,6 +24,7 @@ use App\Models\Soal;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -70,16 +72,29 @@ class LatihanService implements LatihanServiceInterface
             materiId: (int) $materi->id,
         ));
 
-        $pengerjaan = DB::transaction(function () use ($user, $quiz, $terpilih): QuizPengerjaan {
-            $pengerjaan = $this->pengerjaanRepository->create([
-                'user_id' => $user->id,
-                'quiz_id' => $quiz->id,
-            ]);
+        try {
+            $pengerjaan = DB::transaction(function () use ($user, $quiz, $terpilih): QuizPengerjaan {
+                $pengerjaan = $this->pengerjaanRepository->create([
+                    'user_id' => $user->id,
+                    'quiz_id' => $quiz->id,
+                ]);
 
-            $this->jawabanRepository->buatBanyak($pengerjaan->id, $terpilih->butir);
+                $this->jawabanRepository->buatBanyak($pengerjaan->id, $terpilih->butir);
 
-            return $pengerjaan;
-        });
+                return $pengerjaan;
+            });
+        } catch (UniqueConstraintViolationException $exception) {
+            // Dua request mulai yang bersamaan sama-sama lolos pemeriksaan di
+            // atas. Index parsial quiz_pengerjaan_berjalan_unique menolak yang
+            // kedua, dan siswa melanjutkan pengerjaan yang sudah dibuat.
+            $berjalan = $this->pengerjaanRepository->berjalan($user, (int) $quiz->id);
+
+            if (! $berjalan instanceof QuizPengerjaan) {
+                throw $exception;
+            }
+
+            return $this->balasan($berjalan, baru: false);
+        }
 
         return $this->balasan($pengerjaan, baru: true);
     }
@@ -94,9 +109,7 @@ class LatihanService implements LatihanServiceInterface
         $pengerjaan = $this->pengerjaanMilik($user, $pengerjaanId);
 
         if ($pengerjaan->disubmit_pada !== null) {
-            throw ValidationException::withMessages([
-                'pengerjaan' => ['Jawaban sudah dikunci saat latihan disubmit.'],
-            ]);
+            throw new PengerjaanSudahDisubmitException('Jawaban sudah dikunci saat latihan disubmit.');
         }
 
         $baris = $this->jawabanRepository->findJawaban($pengerjaan->id, $soalId);
@@ -144,20 +157,21 @@ class LatihanService implements LatihanServiceInterface
 
             throw new PerhitunganTidakTersediaException(
                 "Penilaian latihan #{$terkunci->id} gagal dan dijadwalkan untuk dicoba lagi.",
-                $exception->getDetail(),
             );
         }
 
-        return $this->pengerjaanRepository->findUntukUpdate($terkunci->id) ?? $terkunci;
+        return $terkunci->fresh() ?? $terkunci;
     }
 
     /**
      * Susun payload, panggil Python di luar transaksi, simpan hasil dalam
-     * transaksi kedua. Idempoten untuk NilaiUlangJob.
+     * transaksi kedua. Idempoten untuk NilaiUlangJob: pemeriksaan di awal
+     * hanya menghemat panggilan Python, penjaga yang sebenarnya ada di
+     * transaksi kedua, di bawah kunci baris.
      */
     public function selesaikanPenilaian(int $id): void
     {
-        $pengerjaan = $this->pengerjaanRepository->findUntukUpdate($id);
+        $pengerjaan = $this->pengerjaanRepository->find($id);
 
         if (! $pengerjaan instanceof QuizPengerjaan || $pengerjaan->selesai_pada !== null) {
             return;
@@ -171,7 +185,15 @@ class LatihanService implements LatihanServiceInterface
 
         $statusBenar = collect($balasan['jawaban'])->keyBy('soal_id');
 
-        DB::transaction(function () use ($pengerjaan, $jawaban, $balasan, $statusBenar): void {
+        DB::transaction(function () use ($id, $jawaban, $balasan, $statusBenar): void {
+            // Job dan submit ulang bisa sampai di sini bersamaan. Yang kalah
+            // menunggu kunci, lalu melihat selesai_pada sudah terisi.
+            $pengerjaan = $this->pengerjaanRepository->findUntukUpdate($id);
+
+            if (! $pengerjaan instanceof QuizPengerjaan || $pengerjaan->selesai_pada !== null) {
+                return;
+            }
+
             foreach ($jawaban as $baris) {
                 $status = $statusBenar->get((int) $baris->soal_id);
 
