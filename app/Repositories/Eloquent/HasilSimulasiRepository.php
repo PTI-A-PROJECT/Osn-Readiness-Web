@@ -48,6 +48,16 @@ class HasilSimulasiRepository extends BaseRepository implements HasilSimulasiRep
         return $nilai === null ? null : (float) $nilai;
     }
 
+    public function terakhirSelesai(int $userId, int $pretestId): ?HasilSimulasi
+    {
+        return $this->model->newQuery()
+            ->where('user_id', $userId)
+            ->where('pretest_id', $pretestId)
+            ->whereNotNull('selesai_pada')
+            ->orderByDesc('selesai_pada')
+            ->first();
+    }
+
     public function findMilik(int $id, int $userId): ?HasilSimulasi
     {
         return $this->model->newQuery()
