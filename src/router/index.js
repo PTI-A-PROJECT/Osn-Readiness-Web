@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import SiswaDashboardView from '@/views/siswa/DashboardView.vue'
+import SimulasiView from '@/views/siswa/SimulasiView.vue'
 import SiswaProfileView from '@/views/siswa/ProfileView.vue'
 import PlaceholderView from '@/views/siswa/PlaceholderView.vue'
 import AdminDashboardView from '@/views/admin/DashboardView.vue'
@@ -19,6 +20,11 @@ export function dashboardFor(role) {
 
 // Diekspor agar guard.spec.js bisa membuat router sendiri
 // dengan createMemoryHistory dari definisi route yang sama.
+// Mode lihat-tampilan: isi VITE_BYPASS_AUTH=true di .env untuk membuka halaman siswa tanpa login.
+// Default (tanpa variabel itu) = proteksi login aktif, aman untuk di-commit.
+const BYPASS = import.meta.env.VITE_BYPASS_AUTH === 'true'
+const siswaMeta = (title) => ({ requiresAuth: !BYPASS, title })
+
 export const routes = [
   {
     path: '/',
@@ -32,49 +38,14 @@ export const routes = [
     path: '/',
     component: AppLayout,
     children: [
-      { path: '', name: 'home', component: SiswaDashboardView, meta: { requiresAuth: true } },
-      {
-        path: 'siswa',
-        name: 'siswa.dashboard',
-        component: SiswaDashboardView,
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'siswa/profil',
-        name: 'siswa.profil',
-        component: SiswaProfileView,
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'siswa/pemetaan',
-        name: 'siswa.pemetaan',
-        component: PlaceholderView,
-        meta: { requiresAuth: true, title: 'Pemetaan Kompetensi' },
-      },
-      {
-        path: 'siswa/materi',
-        name: 'siswa.materi',
-        component: PlaceholderView,
-        meta: { requiresAuth: true, title: 'Materi' },
-      },
-      {
-        path: 'siswa/progress',
-        name: 'siswa.progress',
-        component: PlaceholderView,
-        meta: { requiresAuth: true, title: 'Progress Belajar' },
-      },
-      {
-        path: 'siswa/simulasi',
-        name: 'siswa.simulasi',
-        component: PlaceholderView,
-        meta: { requiresAuth: true, title: 'Simulasi Seleksi' },
-      },
-      {
-        path: 'siswa/riwayat',
-        name: 'siswa.riwayat',
-        component: PlaceholderView,
-        meta: { requiresAuth: true, title: 'Riwayat Hasil' },
-      },
+      { path: '', name: 'home', component: SiswaDashboardView, meta: { requiresAuth: !BYPASS } },
+      { path: 'siswa', name: 'siswa.dashboard', component: SiswaDashboardView, meta: siswaMeta('Dashboard') },
+      { path: 'siswa/profil', name: 'siswa.profil', component: SiswaProfileView, meta: siswaMeta('Profil') },
+      { path: 'siswa/pemetaan', name: 'siswa.pemetaan', component: PlaceholderView, meta: siswaMeta('Pemetaan Kompetensi') },
+      { path: 'siswa/materi', name: 'siswa.materi', component: PlaceholderView, meta: siswaMeta('Materi') },
+      { path: 'siswa/progress', name: 'siswa.progress', component: PlaceholderView, meta: siswaMeta('Progress Belajar') },
+      { path: 'siswa/simulasi', name: 'siswa.simulasi', component: SimulasiView, meta: siswaMeta('Simulasi Seleksi') },
+      { path: 'siswa/riwayat', name: 'siswa.riwayat', component: PlaceholderView, meta: siswaMeta('Riwayat Hasil') },
       {
         path: 'admin',
         name: 'admin.dashboard',
@@ -94,13 +65,16 @@ export function setupGuard(router) {
     const auth = useAuthStore()
 
     // 1. Hanya sekali per load: isi user dari cookie via /auth/me.
+    //    fetchMe sudah menangkap error sendiri, jadi aman walau backend mati.
     if (!auth.initialized) await auth.fetchMe()
 
-    // 2. Belum login dilarang masuk area auth.
+/* LOGIN DIMATIKAN SEMENTARA
+    //2. Belum login dilarang masuk area auth.
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
       return { name: 'login', query: { redirect: to.fullPath } }
     }
-
+    */
+   
     // 3. Sudah login dilarang kembali ke halaman tamu.
     if (to.meta.guestOnly && auth.isAuthenticated) {
       return dashboardFor(auth.user.role)
@@ -113,7 +87,7 @@ export function setupGuard(router) {
 
     // 5. `/` diarahkan ke dashboard sesuai role.
     if (to.name === 'home') {
-      return dashboardFor(auth.user.role)
+      return dashboardFor(auth.user?.role)
     }
 
     return true
