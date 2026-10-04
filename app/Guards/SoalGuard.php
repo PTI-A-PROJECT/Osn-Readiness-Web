@@ -4,30 +4,53 @@ namespace App\Guards;
 
 use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Models\Soal;
+use BackedEnum;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Guard to protect forbidden fields when updating a Soal that is already in use.
+ * Penjaga soal yang sudah dipakai pengerjaan siswa (BE-17, BE-21).
  *
- * If a Soal has any pengerjaan records associated with it, certain fields
- * become read-only to maintain data integrity:
- * - pertanyaan
- * - pilihan_jawaban
- * - kunci_jawaban
- * - level
- *
- * Soal dipakai berarti barisnya dirujuk oleh jawaban pre-test atau jawaban
- * quiz yang sudah terekam.
+ * Soal dipakai berarti barisnya dirujuk oleh jawaban pre-test, latihan, atau
+ * simulasi. Sejak itu kunci, level, peruntukan, dan materinya tidak boleh
+ * berubah, karena hasil yang sudah dinilai bergantung padanya. Teks
+ * (pertanyaan, pilihan, cerita, gambar) tetap boleh diperbaiki.
  */
 class SoalGuard
 {
+    /** @var list<string> */
+    public const KOLOM_TERKUNCI = ['kunci_jawaban', 'level', 'peruntukan', 'materi_id'];
+
     public static function isInUse(Soal $soal): bool
     {
         return app(SoalRepositoryInterface::class)->sedangDipakai($soal);
     }
 
     /**
-     * Validate that forbidden fields are not being updated if soal is in use.
+     * Kolom terkunci yang nilainya benar-benar berbeda dari soal saat ini.
+     * Mengirim ulang nilai yang sama bukan perubahan.
+     *
+     * @param  array<string, mixed>  $data
+     * @return list<string>
+     */
+    public static function kolomTerkunciYangBerubah(Soal $soal, array $data): array
+    {
+        $berubah = [];
+
+        foreach (self::KOLOM_TERKUNCI as $kolom) {
+            if (! array_key_exists($kolom, $data)) {
+                continue;
+            }
+
+            if (self::teks($data[$kolom]) !== self::teks($soal->getAttribute($kolom))) {
+                $berubah[] = $kolom;
+            }
+        }
+
+        return $berubah;
+    }
+
+    /**
+     * Tolak perubahan kolom terkunci pada soal yang sudah dipakai.
      *
      * @param  array<string, mixed>  $data
      *
@@ -35,35 +58,21 @@ class SoalGuard
      */
     public static function validateUpdate(Soal $soal, array $data): void
     {
-        if (! self::isInUse($soal)) {
+        $berubah = self::kolomTerkunciYangBerubah($soal, $data);
+
+        if ($berubah === [] || ! self::isInUse($soal)) {
             return;
         }
 
-        $forbiddenFields = ['pertanyaan', 'pilihan_jawaban', 'kunci_jawaban', 'level'];
-        $attemptedChanges = array_intersect(array_keys($data), $forbiddenFields);
+        $kolom = implode(', ', $berubah);
 
-        if (! empty($attemptedChanges)) {
-            $fields = implode(', ', $attemptedChanges);
-            throw ValidationException::withMessages([
-                'soal' => "Tidak bisa mengubah {$fields} pada soal yang sedang digunakan.",
-            ]);
-        }
+        throw ValidationException::withMessages([
+            'soal' => "Tidak bisa mengubah {$kolom} pada soal yang sudah dipakai pengerjaan siswa.",
+        ]);
     }
 
-    /**
-     * Filter out forbidden fields if soal is in use.
-     *
-     * @param  array<string, mixed>  $data
-     * @return array<string, mixed>
-     */
-    public static function filterForUpdate(Soal $soal, array $data): array
+    private static function teks(mixed $nilai): string
     {
-        if (! self::isInUse($soal)) {
-            return $data;
-        }
-
-        $forbiddenFields = ['pertanyaan', 'pilihan_jawaban', 'kunci_jawaban', 'level'];
-
-        return array_diff_key($data, array_flip($forbiddenFields));
+        return (string) ($nilai instanceof BackedEnum ? $nilai->value : $nilai);
     }
 }

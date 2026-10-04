@@ -86,12 +86,27 @@ class PembahasanApiTest extends TestCase
             ->assertJsonPath('data.isi_pembahasan', $updateData['isi_pembahasan']);
     }
 
-    /**
-     * @skip Database constraint issue with DELETE in test
-     */
     public function test_can_delete_pembahasan(): void
     {
-        $this->assertTrue(true);
+        Pembahasan::factory()->create(['soal_id' => $this->soal->id]);
+
+        $this->actingAs($this->superAdmin)
+            ->deleteJson("api/admin/soal/{$this->soal->id}/pembahasan")
+            ->assertOk();
+
+        $this->assertDatabaseMissing('pembahasan', ['soal_id' => $this->soal->id]);
+    }
+
+    public function test_simpan_pembahasan_dua_kali_tetap_satu_baris(): void
+    {
+        foreach (['Versi pertama', 'Versi kedua'] as $isi) {
+            $this->actingAs($this->superAdmin)
+                ->postJson("api/admin/soal/{$this->soal->id}/pembahasan", ['isi_pembahasan' => $isi])
+                ->assertCreated();
+        }
+
+        $this->assertDatabaseCount('pembahasan', 1);
+        $this->assertDatabaseHas('pembahasan', ['soal_id' => $this->soal->id, 'isi_pembahasan' => 'Versi kedua']);
     }
 
     public function test_delete_pembahasan_not_found(): void

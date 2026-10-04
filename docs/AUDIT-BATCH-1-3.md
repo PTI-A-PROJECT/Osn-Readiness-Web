@@ -34,7 +34,12 @@ Pelajarannya sama dengan uji manual PR #24: suite hijau belum berarti fitur jala
   - `tutupKedaluwarsa` mencatat dan melewati baris yang gagal, tidak lagi berhenti di baris pertama.
   - `SYARAT_SIMULASI_BELUM_TERPENUHI` saat mulai membawa rincian per materi (JSON di `detail`).
   - `SimulasiServiceInterface` mendeklarasikan semua method yang dipakai controller; validasi daftar pindah ke FormRequest; review yang belum dinilai kini 409 `SIMULASI_BELUM_DINILAI` (sebelumnya 404).
-- [ ] Temuan lain tetap mengikuti PR 4–9 dalam rencana perbaikan.
+- [x] Temuan tinggi #7–8 dan `sedangDipakai` (soal admin): PR 4 di `fix/b1e-admin-soal` (commit lokal, bertumpuk di atas `fix/b3a-simulasi`).
+  - Pilihan jawaban berkunci huruf (`{"A": ...}`) dan kunci berupa hurufnya, sama dengan importer; soal isian dibuat tanpa pilihan; kunci wajib ada di pilihan; materi dan cerita wajib setingkat.
+  - `SoalGuard` mengunci kunci, level, peruntukan, dan materi dengan membandingkan nilai, sehingga teks soal terpakai bisa diperbaiki. Update menerima sebagian kolom.
+  - `sedangDipakai` ikut mengecek jawaban simulasi. Hapus soal tidak lagi menghapus berkas gambar.
+  - Soal dan pembahasan admin lewat `SoalAdminService`; tidak ada lagi tulis langsung ke model di controller.
+- [ ] Temuan lain tetap mengikuti PR 5–9 dalam rencana perbaikan.
 
 Temuan di bawah dipertahankan sebagai catatan kondisi awal audit.
 
