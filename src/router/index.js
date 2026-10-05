@@ -13,6 +13,7 @@ const LupaKataSandiView = () => import('@/views/LupaKataSandiView.vue')
 const ResetPasswordView = () => import('@/views/ResetPasswordView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
+const PemetaanKompetensiView = () => import('@/views/siswa/PemetaanKompetensiView.vue')
 const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
 const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
@@ -80,7 +81,7 @@ export const routes = [
       {
         path: 'siswa/pemetaan',
         name: 'siswa.pemetaan',
-        component: PlaceholderView,
+        component: PemetaanKompetensiView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Pemetaan Kompetensi' },
       },
       {
