@@ -38,3 +38,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# npm (proyek ini pakai bun, jangan commit lockfile npm)
+package-lock.json
