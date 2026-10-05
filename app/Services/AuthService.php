@@ -76,6 +76,26 @@ class AuthService implements AuthServiceInterface
         return true;
     }
 
+    public function updateProfile(User $user, array $data): User
+    {
+        try {
+            return DB::transaction(function () use ($user, $data): User {
+                /** @var User $updated */
+                $updated = $this->userRepository->update($user, [
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                ]);
+
+                return $updated;
+            });
+        } catch (UniqueConstraintViolationException) {
+            // Dua permintaan bersamaan dengan email yang sama sama-sama
+            // lolos validasi; index users_email_aktif_unique menolak yang
+            // kedua, dan ia dibalas seperti gagal validasi biasa.
+            throw ValidationException::withMessages(['email' => ['Email sudah terdaftar.']]);
+        }
+    }
+
     private function buatToken(User $user, ?string $device): string
     {
         return $user->createToken($device ?? 'auth-token')->plainTextToken;

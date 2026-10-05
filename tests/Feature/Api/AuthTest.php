@@ -240,6 +240,73 @@ class AuthTest extends TestCase
             ->assertJsonPath('message', 'Akun tidak aktif');
     }
 
+    public function test_update_profile_mengubah_nama_dan_email(): void
+    {
+        $user = User::factory()->create(['name' => 'Lama', 'email' => 'lama@example.com']);
+
+        $response = $this->actingAs($user)->putJson('/api/auth/profile', [
+            'name' => 'Baru',
+            'email' => 'Baru@Example.com',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('message', 'Profil berhasil diperbarui')
+            ->assertJsonPath('data.name', 'Baru')
+            ->assertJsonPath('data.email', 'baru@example.com')
+            ->assertJsonStructure(['message', 'data' => ['id', 'name', 'email', 'roles']]);
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Baru', 'email' => 'baru@example.com']);
+    }
+
+    public function test_update_profile_tanpa_token_balas_401(): void
+    {
+        $this->putJson('/api/auth/profile', [
+            'name' => 'Baru',
+            'email' => 'baru@example.com',
+        ])->assertUnauthorized();
+    }
+
+    public function test_update_profile_validasi_gagal_balas_422(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->putJson('/api/auth/profile', [
+            'name' => '',
+            'email' => 'bukan-email',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['name', 'email']);
+    }
+
+    public function test_update_profile_menolak_email_milik_akun_lain(): void
+    {
+        User::factory()->create(['email' => 'lain@example.com']);
+        $user = User::factory()->create(['email' => 'saya@example.com']);
+
+        $this->actingAs($user)->putJson('/api/auth/profile', [
+            'name' => 'Saya',
+            'email' => 'LAIN@example.com',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_update_profile_boleh_memakai_email_sendiri(): void
+    {
+        $user = User::factory()->create(['name' => 'Lama', 'email' => 'saya@example.com']);
+
+        $this->actingAs($user)->putJson('/api/auth/profile', [
+            'name' => 'Baru',
+            'email' => 'saya@example.com',
+        ])->assertOk()->assertJsonPath('data.name', 'Baru');
+    }
+
+    public function test_update_profile_mendukung_patch(): void
+    {
+        $user = User::factory()->create(['email' => 'saya@example.com']);
+
+        $this->actingAs($user)->patchJson('/api/auth/profile', [
+            'name' => 'Via Patch',
+            'email' => 'saya@example.com',
+        ])->assertOk()->assertJsonPath('data.name', 'Via Patch');
+    }
+
     private function login(string $email): TestResponse
     {
         return $this->postJson('/api/auth/login', [
