@@ -408,7 +408,8 @@ function pilihKompleks(i) {
   if (dikumpulkan.value) return
   const cur = Array.isArray(jawaban[aktif.value]) ? [...jawaban[aktif.value]] : []
   const idx = cur.indexOf(i)
-  idx === -1 ? cur.push(i) : cur.splice(idx, 1)
+  if (idx === -1) cur.push(i)
+  else cur.splice(idx, 1)
   jawaban[aktif.value] = cur
 }
 function isiUraian(v) {

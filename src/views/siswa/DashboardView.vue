@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
 import { useProgressStore } from '@/stores/progress.js'
 import UserMenu from '@/components/UserMenu.vue'
-import PretestPopup from './Popuppretes.vue'
+import PretestPopup from './PretestPopup.vue'
 
 const auth = useAuthStore()
 const progress = useProgressStore()
