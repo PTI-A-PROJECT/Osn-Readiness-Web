@@ -23,4 +23,12 @@ interface AuthServiceInterface
      * Hapus token yang sedang dipakai saja, bukan semua token user.
      */
     public function logout(User $user): bool;
+
+    /**
+     * Perbarui profil sendiri (name dan email). Hanya dua kolom itu yang
+     * boleh berubah lewat endpoint ini.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateProfile(User $user, array $data): User;
 }

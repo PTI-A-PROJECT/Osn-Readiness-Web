@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::prefix('auth')->group(function (): void {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
+        Route::match(['put', 'patch'], 'profile', [AuthController::class, 'updateProfile']);
     });
 
     // [B1-A] Akses tingkat dan status putaran.

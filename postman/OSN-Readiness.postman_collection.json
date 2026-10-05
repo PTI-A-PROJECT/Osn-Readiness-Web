@@ -248,6 +248,39 @@
           }
         },
         {
+          "name": "Ubah profil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
+            },
+            "description": "Ubah name dan email sendiri. Email disimpan huruf kecil.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Baru\",\n  \"email\": \"nama.baru@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
           "name": "Logout",
           "request": {
             "method": "POST",

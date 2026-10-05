@@ -1,6 +1,6 @@
 # Daftar Endpoint API
 
-Semua endpoint berada di bawah `/api`. Jumlah: 72 endpoint (74 baris di bawah, karena login dan tambah soal masing-masing punya dua contoh), dicocokkan dengan `php artisan route:list --path=api` pada 4 Oktober 2026 (setelah perbaikan audit, branch `docs/pasca-audit`).
+Semua endpoint berada di bawah `/api`. Jumlah: 73 endpoint (75 baris di bawah, karena login dan tambah soal masing-masing punya dua contoh), dicocokkan dengan `php artisan route:list --path=api` pada 4 Oktober 2026 (setelah perbaikan audit, branch `docs/pasca-audit`).
 
 Koleksi Postman yang sama isinya ada di [postman/OSN-Readiness.postman_collection.json](../postman/OSN-Readiness.postman_collection.json). Aturan bisnis tiap endpoint dijelaskan di [Logic per fitur.md](Logic%20per%20fitur.md).
 
@@ -42,6 +42,7 @@ Akses: Token (siswa atau admin).
 | Method | Endpoint | Query / body | Keterangan |
 | --- | --- | --- | --- |
 | GET | `/api/auth/me` | — | Me. Profil, roles, dan tingkat_aktif_id. |
+| PUT | `/api/auth/profile` | Body: `name`, `email` | Ubah profil sendiri. Email disimpan huruf kecil, unik di antara akun aktif kecuali milik sendiri. |
 | POST | `/api/auth/logout` | — | Logout. Mencabut token yang sedang dipakai saja. |
 
 ## Siswa · Tingkat & dashboard

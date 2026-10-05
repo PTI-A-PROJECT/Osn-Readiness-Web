@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\Services\AuthServiceInterface;
 use App\Http\Requests\Auth\ApiLoginRequest;
 use App\Http\Requests\Auth\ApiRegisterRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,6 +59,16 @@ class AuthController
         return response()->json([
             'message' => 'OK',
             'data' => new UserResource($request->user()->load('roles')),
+        ]);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $this->authService->updateProfile($request->user(), $request->validated());
+
+        return response()->json([
+            'message' => 'Profil berhasil diperbarui',
+            'data' => new UserResource($user->load('roles')),
         ]);
     }
 }
