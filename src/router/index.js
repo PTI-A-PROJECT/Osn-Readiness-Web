@@ -15,6 +15,7 @@ const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
 const SiswaPretestView = () => import('@/views/siswa/PretestView.vue')
 const PemetaanKompetensiView = () => import('@/views/siswa/PemetaanKompetensiView.vue')
+const SimulasiView = () => import('@/views/siswa/SimulasiView.vue')
 const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
 const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
@@ -106,7 +107,7 @@ export const routes = [
       {
         path: 'siswa/simulasi',
         name: 'siswa.simulasi',
-        component: PlaceholderView,
+        component: SimulasiView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Simulasi Seleksi' },
       },
       {
