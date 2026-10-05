@@ -7,9 +7,18 @@ import { RouterLink } from 'vue-router'
 // ada dead link. `current`: halaman aktif, CTA-nya disembunyikan agar tidak
 // ada tautan ke diri sendiri.
 defineProps({
-  links: { type: Array, default: () => [] },
-  current: { type: String, default: 'landing' }, // landing | login | register
-  theme: { type: String, default: 'light' }, // light | dark (dark = di atas hero navy)
+  links: {
+    type: Array,
+    default: () => [
+      { label: 'Kenapa SIAP OSN', href: '/#kenapa' },
+      { label: 'Cara Kerja', href: '/#cara-kerja' },
+      { label: 'Fitur', href: '/#fitur' },
+      { label: 'Tingkat Seleksi', href: '/#tingkat' },
+      { label: 'Tim Kami', href: '/#tim' },
+    ],
+  },
+  current: { type: String, default: 'landing' },
+  theme: { type: String, default: 'light' },
 })
 </script>
 
@@ -26,7 +35,7 @@ defineProps({
       </nav>
 
       <div class="pubnav__actions">
-        <RouterLink v-if="current !== 'login'" to="/login" class="pubnav__btn pubnav__btn--outline">Masuk</RouterLink>
+        <RouterLink v-if="current !== 'login'" to="/login" class="pubnav__btn pubnav__btn--primary">Masuk</RouterLink>
         <RouterLink v-if="current !== 'register'" to="/register" class="pubnav__btn pubnav__btn--primary">Daftar Gratis</RouterLink>
       </div>
     </div>
@@ -47,21 +56,24 @@ defineProps({
   margin: 0 auto;
   min-height: 62px;
   padding: 8px 24px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
   align-items: center;
   gap: 20px;
 }
+
 .pubnav__brand {
   display: inline-flex;
   align-items: center;
+  justify-self: start;
   gap: 10px;
-  text-decoration: none;
-  color: #0f1b3d;
+  white-space: nowrap;
 }
+
 .pubnav__logo {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 43px;
+  height: 38px;
+  border-radius: 22px;
   object-fit: cover;
   flex: none;
 }
@@ -73,8 +85,9 @@ defineProps({
 .pubnav__links {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 24px;
-  margin: 0 auto;
+  margin: 0;
 }
 .pubnav__links a {
   font-size: 13px;
@@ -88,8 +101,9 @@ defineProps({
 .pubnav__actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-  margin-left: auto;
+  margin: 0;
 }
 .pubnav__btn {
   padding: 9px 18px;
