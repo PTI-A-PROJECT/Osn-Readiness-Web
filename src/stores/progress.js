@@ -38,7 +38,10 @@ export const useProgressStore = defineStore('progress', () => {
       .dashboard({ signal })
       .then((hasil) => {
         if (signal.aborted) return
-        data.value = hasil
+        data.value = {
+          ...hasil,
+          preTestSelesai: hasil.preTestSelesai || data.value.preTestSelesai,
+        }
         loaded.value = true
         dimuatPada = Date.now()
       })
@@ -67,5 +70,9 @@ export const useProgressStore = defineStore('progress', () => {
     error.value = false
   }
 
-  return { data, loading, loaded, error, progressPersen, fetchDashboard, $reset }
+  function markPreTestCompleted() {
+    data.value = { ...data.value, preTestSelesai: true }
+  }
+
+  return { data, loading, loaded, error, progressPersen, fetchDashboard, markPreTestCompleted, $reset }
 })

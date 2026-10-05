@@ -1,8 +1,10 @@
 <script setup>
 import { computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
 import { useProgressStore } from '@/stores/progress.js'
 
+const route = useRoute()
 const auth = useAuthStore()
 const progress = useProgressStore()
 
@@ -42,7 +44,7 @@ onMounted(() => {
 <template>
   <div class="flex min-h-screen bg-[#f5f8fc]">
     <!-- Sidebar -->
-    <aside class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col bg-[#0a1f47] px-4 py-6">
+    <aside v-if="route.name !== 'siswa.pretest'" class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col bg-[#0a1f47] px-4 py-6">
       <div class="mb-6 flex items-center gap-3 px-2">
         <span class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0a1f47]">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

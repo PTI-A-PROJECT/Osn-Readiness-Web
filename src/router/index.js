@@ -13,6 +13,7 @@ const LupaKataSandiView = () => import('@/views/LupaKataSandiView.vue')
 const ResetPasswordView = () => import('@/views/ResetPasswordView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
+const SiswaPretestView = () => import('@/views/siswa/PretestView.vue')
 const PemetaanKompetensiView = () => import('@/views/siswa/PemetaanKompetensiView.vue')
 const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
 const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
@@ -76,6 +77,12 @@ export const routes = [
         path: 'siswa/profil',
         name: 'siswa.profil',
         component: SiswaProfileView,
+        meta: { requiresAuth: true, role: 'siswa' },
+      },
+      {
+        path: 'siswa/pretest',
+        name: 'siswa.pretest',
+        component: SiswaPretestView,
         meta: { requiresAuth: true, role: 'siswa' },
       },
       {
