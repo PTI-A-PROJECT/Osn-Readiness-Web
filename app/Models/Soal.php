@@ -39,6 +39,13 @@ class Soal extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * Always load the konteks relationship.
+     *
+     * @var array<int, string>
+     */
+    protected $with = ['konteks'];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
