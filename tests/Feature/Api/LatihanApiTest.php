@@ -250,6 +250,28 @@ class LatihanApiTest extends TestCase
         }
     }
 
+    public function test_lihat_pengerjaan_selesai_membalas_hasil_tanpa_soal(): void
+    {
+        $this->buatPutaranAktif();
+        $this->isiBankSoal(15);
+
+        $pengerjaanId = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->json('data.id');
+
+        $this->actingAs($this->siswa)
+            ->postJson('/api/quiz-pengerjaan/'.$pengerjaanId.'/submit')
+            ->assertOk();
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/quiz-pengerjaan/'.$pengerjaanId)
+            ->assertOk()
+            ->assertJsonMissingPath('data.soal')
+            ->assertJsonPath('data.quiz_id', $this->quiz->id)
+            ->assertJsonStructure(['data' => ['id', 'quiz_id', 'materi_id', 'nilai', 'jawaban']]);
+    }
+
     public function test_submit_dua_kali_tidak_menilai_ulang(): void
     {
         $this->buatPutaranAktif();

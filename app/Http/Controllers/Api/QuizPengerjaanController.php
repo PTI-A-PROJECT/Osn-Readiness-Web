@@ -21,6 +21,14 @@ class QuizPengerjaanController
     {
         $dimulai = $this->latihanService->ringkasan($request->user(), $pengerjaan->id);
 
+        // Sudah dinilai: balas hasil, sama seperti pre-test dan simulasi.
+        if ($dimulai->pengerjaan->selesai_pada !== null) {
+            return response()->json([
+                'message' => 'OK',
+                'data' => new HasilLatihanResource($dimulai->pengerjaan),
+            ]);
+        }
+
         return response()->json([
             'message' => 'OK',
             'data' => new LatihanPengerjaanResource($dimulai),

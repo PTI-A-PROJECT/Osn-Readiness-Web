@@ -110,9 +110,19 @@ class MateriBelajarApiTest extends TestCase
             ->assertJsonPath('data.0.wajib', false)
             ->assertJsonPath('data.0.progress.status', 'selesai')
             ->assertJsonPath('data.0.progress.persentase', 100)
+            ->assertJsonPath('data.0.quiz_id', $quiz->id)
             ->assertJsonPath('data.0.latihan_belum_tersedia', false);
 
         $this->assertSame(80.0, (float) $respons->json('data.0.nilai_latihan_terbaik'));
+    }
+
+    public function test_materi_tanpa_latihan_mengirim_quiz_id_null(): void
+    {
+        $this->actingAs($this->siswa)
+            ->getJson('/api/materi?tingkat_id='.$this->tingkat->id)
+            ->assertOk()
+            ->assertJsonPath('data.0.quiz_id', null)
+            ->assertJsonPath('data.0.latihan_belum_tersedia', true);
     }
 
     public function test_detail_materi_memuat_isi(): void
