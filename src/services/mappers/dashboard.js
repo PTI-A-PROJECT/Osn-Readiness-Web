@@ -2,35 +2,53 @@
  * Bentuk data dashboard siswa versi FE. Semua konversi dari respons backend
  * terpusat di sini (dipakai services/siswa.js + stores/progress.js).
  *
- * Kontrak API yang diharapkan (silakan sesuaikan nama field-nya dengan backend):
+ * Kontrak API backend (Laravel Osn-Readiness-Web, terverifikasi 2026-10-05):
  *
- *   GET /siswa/dashboard
+ *   GET /dashboard
  *   -> {
  *        data: {
- *          pre_test_selesai: false,
- *          tingkat: null,                 // 'Kabupaten' | 'Provinsi' | null
- *          streak: 0,                     // jumlah hari berturut-turut
- *          materi_selesai: 0,
- *          materi_total: 0,               // materi yang sudah diambil siswa
- *          simulasi_diikuti: 0,
- *          rata_rata_nilai: 0,
- *          kompetensi: [],                // [{ nama, skor, target }]
- *          rekomendasi: [],               // [{ judul, sub, badge }]
- *          riwayat: [],                   // [{ judul, tanggal, nilai }]
- *          tingkatan: [],                 // [{ nama, terbuka }]
- *          hasil_terakhir: null           // { judul, tanggal, benar, salah, durasi_menit }
- *        }
+ *          tingkat_aktif_id: 1,          // int|null
+ *          tingkat_aktif: 'Kabupaten',   // string|null (nama_tingkat)
+ *          tingkat: [                    // urut backend, belum tentu by urutan
+ *            {
+ *              tingkat_id: 1,
+ *              nama_tingkat: 'Kabupaten',
+ *              urutan: 1,
+ *              tingkat_terbuka: true,
+ *              tahap: 'BELUM_PRETEST',   // lihat TAHAP_* di bawah
+ *              sudah_lulus: false,
+ *              sisa_kuota_simulasi: 2,   // int|null
+ *              syarat_simulasi: {         // dirinci penuh di P4 (simulasi)
+ *                terpenuhi: false,
+ *                alasan: null,
+ *                rincian: null,
+ *              },
+ *              hasil_simulasi_terakhir: null, // { id, nilai, lulus, selesai_pada }
+ *            },
+ *          ],
+ *        },
  *      }
  *
- * Siswa baru = semua field kosong/0/null, dan UI otomatis menampilkan kondisi kosong.
+ * Field yang belum dikirim backend (materi, latihan, riwayat, streak)
+ * default 0/[]/null; UI sudah punya kondisi kosong untuk semuanya.
+ * Diisi bertahap: riwayat di P2, materi di P3.
  */
 
 const angka = (v) => {
   const n = Number(v)
   return Number.isFinite(n) ? n : 0
 }
-const persen = (v) => Math.min(100, Math.max(0, angka(v)))
 const daftar = (v) => (Array.isArray(v) ? v : [])
+
+// Tahap tingkat aktif yang berarti pre-test tingkat itu sudah selesai.
+// PRETEST_BERJALAN = baru mulai, belum submit -> popup pre-test tetap tampil.
+const TAHAP_PRETEST_SELESAI = new Set([
+  'BELAJAR',
+  'SIAP_SIMULASI',
+  'SIMULASI_BERJALAN',
+  'PUTARAN_HABIS',
+  'LULUS',
+])
 
 const TINGKATAN_DEFAULT = [
   { nama: 'Kabupaten', terbuka: false },
@@ -40,7 +58,10 @@ const TINGKATAN_DEFAULT = [
 export function dashboardKosong() {
   return {
     preTestSelesai: false,
+    perluPretestUlang: false,
+    tingkatAktifId: null,
     tingkat: null,
+    tahap: null,
     streak: 0,
     materiSelesai: 0,
     materiTotal: 0,
@@ -57,41 +78,45 @@ export function dashboardKosong() {
 // Mengubah respons backend (snake_case, bisa kosong/null) jadi bentuk yang aman dipakai UI.
 export function mapDashboard(raw) {
   const r = raw ?? {}
-  const h = r.hasil_terakhir
+  const daftarTingkat = daftar(r.tingkat).sort((a, b) => angka(a.urutan) - angka(b.urutan))
 
-  const tingkatan = daftar(r.tingkatan).map((t) => ({ nama: t.nama, terbuka: Boolean(t.terbuka) }))
+  const aktif =
+    daftarTingkat.find((t) => t.tingkat_id === r.tingkat_aktif_id) ?? daftarTingkat[0] ?? null
+
+  const hasilAktif = aktif?.hasil_simulasi_terakhir ?? null
+  const hasilLain = hasilAktif ?? daftarTingkat.map((t) => t.hasil_simulasi_terakhir).find(Boolean) ?? null
+  const tingkatHasil =
+    daftarTingkat.find((t) => t.hasil_simulasi_terakhir === hasilLain) ?? aktif ?? null
 
   return {
-    preTestSelesai: Boolean(r.pre_test_selesai),
-    tingkat: r.tingkat ?? null,
-    streak: angka(r.streak),
-    materiSelesai: angka(r.materi_selesai),
-    materiTotal: angka(r.materi_total),
-    simulasiDiikuti: angka(r.simulasi_diikuti),
-    rataRataNilai: Math.round(angka(r.rata_rata_nilai)),
-    kompetensi: daftar(r.kompetensi).map((k) => ({
-      nama: k.nama,
-      skor: persen(k.skor),
-      target: k.target == null ? null : persen(k.target),
-    })),
-    rekomendasi: daftar(r.rekomendasi).map((x) => ({
-      judul: x.judul,
-      sub: x.sub ?? '',
-      badge: x.badge ?? '',
-    })),
-    riwayat: daftar(r.riwayat).map((x) => ({
-      judul: x.judul,
-      tanggal: x.tanggal ?? null,
-      nilai: x.nilai ?? null,
-    })),
-    tingkatan: tingkatan.length ? tingkatan : TINGKATAN_DEFAULT,
-    hasilTerakhir: h
+    preTestSelesai: aktif ? TAHAP_PRETEST_SELESAI.has(aktif.tahap) : false,
+    // Kuota simulasi habis tanpa lulus: backend mengizinkan pre-test baru,
+    // jadi dashboard harus menawarkan-nya — bukan considers selesai.
+    perluPretestUlang: aktif?.tahap === 'PUTARAN_HABIS',
+    tingkatAktifId: r.tingkat_aktif_id ?? aktif?.tingkat_id ?? null,
+    tingkat: r.tingkat_aktif ?? aktif?.nama_tingkat ?? null,
+    tahap: aktif?.tahap ?? null,
+    streak: 0,
+    materiSelesai: 0,
+    materiTotal: 0,
+    simulasiDiikuti: 0,
+    rataRataNilai: 0,
+    kompetensi: [],
+    rekomendasi: [],
+    riwayat: [],
+    tingkatan: daftarTingkat.length
+      ? daftarTingkat.map((t) => ({ nama: t.nama_tingkat, terbuka: Boolean(t.tingkat_terbuka) }))
+      : TINGKATAN_DEFAULT,
+    hasilTerakhir: hasilLain
       ? {
-          judul: h.judul,
-          tanggal: h.tanggal ?? null,
-          benar: angka(h.benar),
-          salah: angka(h.salah),
-          durasiMenit: h.durasi_menit == null ? null : angka(h.durasi_menit),
+          id: hasilLain.id ?? null,
+          judul: `Simulasi — Tingkat ${tingkatHasil?.nama_tingkat ?? ''}`.trim(),
+          tanggal: hasilLain.selesai_pada ?? null,
+          nilai:
+            hasilLain.nilai == null || !Number.isFinite(Number(hasilLain.nilai))
+              ? null
+              : Math.round(Number(hasilLain.nilai)),
+          lulus: Boolean(hasilLain.lulus),
         }
       : null,
   }

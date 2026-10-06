@@ -16,7 +16,13 @@ const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
 const SiswaPretestView = () => import('@/views/siswa/PretestView.vue')
 const PemetaanKompetensiView = () => import('@/views/siswa/PemetaanKompetensiView.vue')
 const SimulasiView = () => import('@/views/siswa/SimulasiView.vue')
-const PlaceholderView = () => import('@/views/siswa/PlaceholderView.vue')
+const UjianSimulasiView = () => import('@/views/siswa/UjianSimulasiView.vue')
+const HasilSimulasiView = () => import('@/views/siswa/HasilSimulasiView.vue')
+const ReviewSimulasiView = () => import('@/views/siswa/ReviewSimulasiView.vue')
+const RiwayatView = () => import('@/views/siswa/RiwayatView.vue')
+const MateriView = () => import('@/views/siswa/MateriView.vue')
+const LatihanView = () => import('@/views/siswa/LatihanView.vue')
+const ProgressView = () => import('@/views/siswa/ProgressView.vue')
 const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
@@ -87,7 +93,9 @@ export const routes = [
         meta: { requiresAuth: true, role: 'siswa' },
       },
       {
-        path: 'siswa/pemetaan',
+        // id opsional: halaman masih bisa dibuka dari riwayat atau dashboard
+        // tanpa ID, dan view akan Resolve sendiri ke pre-test terakhir.
+        path: 'siswa/pemetaan/:id?',
         name: 'siswa.pemetaan',
         component: PemetaanKompetensiView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Pemetaan Kompetensi' },
@@ -95,13 +103,19 @@ export const routes = [
       {
         path: 'siswa/materi',
         name: 'siswa.materi',
-        component: PlaceholderView,
+        component: MateriView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Materi' },
+      },
+      {
+        path: 'siswa/latihan/:quizId',
+        name: 'siswa.latihan',
+        component: LatihanView,
+        meta: { requiresAuth: true, role: 'siswa', title: 'Latihan' },
       },
       {
         path: 'siswa/progress',
         name: 'siswa.progress',
-        component: PlaceholderView,
+        component: ProgressView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Progress Belajar' },
       },
       {
@@ -111,9 +125,27 @@ export const routes = [
         meta: { requiresAuth: true, role: 'siswa', title: 'Simulasi Seleksi' },
       },
       {
+        path: 'siswa/simulasi/ujian/:simulasiId',
+        name: 'siswa.ujian',
+        component: UjianSimulasiView,
+        meta: { requiresAuth: true, role: 'siswa', title: 'Simulasi' },
+      },
+      {
+        path: 'siswa/simulasi/hasil/:hasilId',
+        name: 'siswa.simulasi.hasil',
+        component: HasilSimulasiView,
+        meta: { requiresAuth: true, role: 'siswa', title: 'Hasil Simulasi' },
+      },
+      {
+        path: 'siswa/simulasi/hasil/:hasilId/pembahasan',
+        name: 'siswa.simulasi.review',
+        component: ReviewSimulasiView,
+        meta: { requiresAuth: true, role: 'siswa', title: 'Pembahasan' },
+      },
+      {
         path: 'siswa/riwayat',
         name: 'siswa.riwayat',
-        component: PlaceholderView,
+        component: RiwayatView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Riwayat Hasil' },
       },
       {

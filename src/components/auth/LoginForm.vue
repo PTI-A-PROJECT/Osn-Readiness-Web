@@ -19,6 +19,7 @@ const tampilkanPassword = ref(false)
 const emailError = ref('')
 const passwordError = ref('')
 const loading = ref(false)
+const berhasil = ref(false)
 
 function validasi() {
   emailError.value = ''
@@ -43,25 +44,40 @@ async function masuk() {
   if (!validasi()) return
 
   loading.value = true
+  berhasil.value = false
 
   try {
     const user = await auth.login({
       email: email.value,
       password: password.value,
+      remember: remember.value,
+    })
+
+    // Login berhasil
+    loading.value = false
+    berhasil.value = true
+    toast.add({
+      severity: 'success',
+      summary: 'Login berhasil',
+      detail: 'Selamat datang kembali! Anda berhasil masuk.',
+      life: 3000,
     })
 
     const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : null
 
-    router.push(redirect ?? dashboardFor(user.role))
+    // Beri waktu agar status berhasil terlihat
+    setTimeout(() => {
+      router.push(redirect ?? dashboardFor(user.role))
+    }, 1000)
   } catch (err) {
+    loading.value = false
+    berhasil.value = false
     toast.add({
       severity: 'error',
       summary: 'Login gagal',
       detail: pesanError(err),
       life: 4000,
     })
-
-    loading.value = false
   }
 }
 
@@ -206,18 +222,30 @@ function masukGoogle() {
 
         <!-- Tombol Login -->
         <button
-          class="flex min-h-11 items-center justify-center gap-[9px] mt-0.5 rounded-md bg-[#0759a5] text-white text-[13px] font-[750] cursor-pointer hover:bg-[#064d91] disabled:cursor-wait disabled:opacity-70"
           type="submit"
-          :disabled="loading"
+          :disabled="loading || berhasil"
+          class="flex min-h-11 items-center justify-center gap-[9px] mt-0.5 rounded-md text-white text-[13px] font-[750] cursor-pointer disabled:cursor-wait"
+          :class="berhasil ? 'bg-[#16a34a]' : 'bg-[#0759a5] hover:bg-[#064d91] disabled:opacity-70'"
         >
-          <template v-if="loading">
+          <!-- Berhasil -->
+          <template v-if="berhasil">
+            <span
+              class="flex items-center justify-center w-[17px] h-[17px] rounded-full bg-white/20"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+            <span>Berhasil, Masuk! Mengalihkan...</span>
+          </template>
+          <!-- Loading -->
+          <template v-else-if="loading">
             <span
               class="w-[15px] h-[15px] border-2 border-white/40 border-t-white rounded-full animate-spin"
               aria-hidden="true"
             ></span>
             <span>Memproses</span>
           </template>
-
+          <!-- Normal -->
           <template v-else>
             <span>Masuk ke Akun</span>
             <span aria-hidden="true">→</span>

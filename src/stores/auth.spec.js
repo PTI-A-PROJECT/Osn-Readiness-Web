@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { authService } from '@/services/auth.js'
 import { useAuthStore } from '@/stores/auth.js'
+import { useLatihanStore } from '@/stores/latihan.js'
+import { useMateriStore } from '@/stores/materi.js'
+import { usePretestStore } from '@/stores/pretest.js'
+import { useRiwayatStore } from '@/stores/riwayat.js'
 
 // Store tidak tahu HTTP: service di-mock total (lihat §1.3.5 + §5.4).
 vi.mock('@/services/auth.js', () => ({
@@ -28,6 +32,7 @@ beforeEach(() => {
   setActivePinia(createPinia())
   vi.resetAllMocks()
   authService.tokenTersimpan.mockReturnValue(null)
+  localStorage.clear()
 })
 
 describe('auth store', () => {
@@ -102,5 +107,23 @@ describe('auth store', () => {
     await auth.logout()
     expect(auth.user).toBeNull()
     expect(authService.simpanToken).toHaveBeenCalledWith(null)
+  })
+
+  it('login akun kedua membuang data akun sebelumnya', async () => {
+    // Sisa akun pertama: pretest berjalan + ID di localStorage.
+    const pretest = usePretestStore()
+    pretest.pretestId = 12
+    pretest.tingkatId = 1
+    localStorage.setItem('siap_osn_pretest_aktif', JSON.stringify({ id: 12, tingkatId: 1 }))
+
+    authService.login.mockResolvedValue({ user: userSiswa, token: 'tok456' })
+    const auth = useAuthStore()
+    await auth.login({ email: 'budi@example.com', password: 'password123' })
+
+    expect(pretest.idTersimpan()).toBeNull()
+    expect(pretest.pretestId).toBeNull()
+    expect(useLatihanStore().status).toBe('idle')
+    expect(useMateriStore().daftar).toEqual([])
+    expect(useRiwayatStore().items).toEqual([])
   })
 })

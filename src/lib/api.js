@@ -7,11 +7,7 @@ export const TOKEN_KEY = 'siap_osn_token'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true,
-  // Request yang menggantung tidak boleh membuat UI loading selamanya.
   timeout: 15000,
-  // Tanpa header ini Laravel bisa membalas 401/422 dengan redirect HTML,
-  // bukan JSON { message, errors }.
   headers: { Accept: 'application/json' },
 })
 
@@ -36,7 +32,8 @@ api.interceptors.response.use(
   (res) => res,
   async (err) => {
     const url = err.config?.url ?? ''
-    const sesiHabis = err.response?.status === 401 && !TANPA_REDIRECT_401.some((p) => url.endsWith(p))
+    const sesiHabis =
+      err.response?.status === 401 && !TANPA_REDIRECT_401.some((p) => url.endsWith(p))
     if (sesiHabis && !sedangRedirect) {
       sedangRedirect = true
       try {

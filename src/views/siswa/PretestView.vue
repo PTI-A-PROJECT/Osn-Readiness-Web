@@ -40,8 +40,61 @@
       </div>
     </header>
 
+    <!-- STATUS AWAL: PILIH TINGKAT / MEMUAT / GALAT -->
+    <section
+      v-if="!bolehMengerjakan && pretest.status !== STATUS.MENILAI"
+      class="mulai-wrap"
+    >
+      <div class="card mulai">
+        <template v-if="memuatAwal">
+          <h2>Menyiapkan pre-test…</h2>
+          <p class="mulai-desc">Menghubungi server.</p>
+        </template>
+        <template v-else-if="galatAwal">
+          <h2>Gagal memuat pre-test</h2>
+          <p class="mulai-desc">{{ galatAwal }}</p>
+          <button class="btn btn-next" @click="cobaLagi">Coba Lagi</button>
+        </template>
+        <template v-else>
+          <h2>Pilih Tingkat Pre-Test</h2>
+          <p class="mulai-desc">Pre-test dikerjakan per tingkat. Tingkat yang terbuka bisa dimulai.</p>
+          <div class="tingkat-list">
+            <button
+              v-for="t in pretest.tingkatList"
+              :key="t.id"
+              class="tingkat-opsi"
+              :class="{ aktif: tingkatDipilih === t.id }"
+              :disabled="!t.terbuka"
+              @click="tingkatDipilih = t.id"
+            >
+              <b>{{ t.nama }}</b>
+              <span>{{ t.terbuka ? 'Terbuka' : 'Terkunci' }}</span>
+            </button>
+          </div>
+          <button
+            class="btn btn-mulai"
+            :disabled="!tingkatDipilih || pretest.loading"
+            @click="mulaiDipilih"
+          >
+            {{ pretest.loading ? 'Memulai…' : 'Mulai Pre-Test' }}
+          </button>
+        </template>
+      </div>
+    </section>
+
+    <!-- STATUS MENILAI: jawaban terkunci, nilai belum keluar -->
+    <section v-else-if="pretest.status === STATUS.MENILAI" class="mulai-wrap">
+      <div class="card mulai menilai">
+        <h2>Jawabanmu sedang dinilai</h2>
+        <p class="mulai-desc">
+          Jawabanmu sudah dikumpulkan dan sedang dinilai. Halaman ini akan berpindah otomatis
+          setelah nilai siap.
+        </p>
+      </div>
+    </section>
+
     <!-- KONTEN -->
-    <main class="main">
+    <main v-else class="main">
       <section class="col-left">
         <!-- PETUNJUK -->
         <div v-if="petunjukTerbuka" class="card petunjuk">
@@ -54,9 +107,8 @@
             </button>
           </div>
           <p class="petunjuk-desc">
-            Simulasi ini meniru kondisi seleksi tingkat provinsi: waktu terbatas dan jawaban tidak bisa
-            diubah setelah dikumpulkan. Status selesai dicatat di sesi ini; nilai dan riwayat hasil
-            memerlukan integrasi backend.
+            Pre-test ini memetakan kompetensi awalmu: waktu terbatas dan jawaban tidak bisa
+            diubah setelah dikumpulkan. Setiap jawaban tersimpan otomatis ke server.
           </p>
           <div class="tipe-grid">
             <div v-for="t in tipeSoal" :key="t.nama" class="tipe" :class="t.kelas">
@@ -68,61 +120,49 @@
         </div>
 
         <!-- SOAL -->
-        <div class="card soal">
+        <div v-if="soalAktif" class="card soal">
           <div class="soal-meta">
             <div class="soal-meta-left">
               <span class="chip chip-blue">Soal {{ aktif + 1 }} dari {{ total }} soal</span>
               <span class="chip chip-gray">{{ labelTipe }}</span>
             </div>
             <div class="soal-meta-right">
-              <span v-if="soalAktif.status === 'terjawab' || sudahDijawab(aktif)" class="tersimpan">
+              <span v-if="sudahDijawab(aktif)" class="tersimpan">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 12l5 5L20 6" />
                 </svg>
                 Tersimpan
               </span>
+              <span v-if="pretest.simpanError" class="belum-tersimpan">Gagal menyimpan, periksa koneksi</span>
               <span class="bobot">Bobot {{ soalAktif.bobot }} poin</span>
             </div>
           </div>
 
-          <h3 class="pertanyaan" v-html="soalAktif.teks"></h3>
+          <div v-if="soalAktif.konteks" class="konteks">
+            <strong>{{ soalAktif.konteks.judul }}</strong>
+            <p>{{ soalAktif.konteks.isi }}</p>
+            <img v-if="soalAktif.konteks.gambar" :src="soalAktif.konteks.gambar" alt="Gambar konteks soal" />
+          </div>
+          <img v-if="soalAktif.gambar" :src="soalAktif.gambar" class="gambar-soal" alt="Gambar soal" />
+          <h3 class="pertanyaan" v-html="soalAktif.pertanyaan"></h3>
           <p class="hint">{{ petunjukTipe }}</p>
 
           <!-- Pilihan Ganda -->
           <div v-if="soalAktif.tipe === 'ganda'" class="opsi-list">
             <button
-              v-for="(o, i) in soalAktif.opsi"
-              :key="i"
+              v-for="o in soalAktif.opsi"
+              :key="o.kode"
               class="opsi"
-              :class="{ aktif: jawaban[aktif] === i }"
-              @click="pilihGanda(i)"
+              :class="{ aktif: jawaban[aktif] === o.kode }"
+              @click="pilihGanda(o.kode)"
             >
-              <span class="radio"><span v-if="jawaban[aktif] === i" class="dot"></span></span>
-              <b>{{ huruf[i] }}.</b>
-              <span>{{ o }}</span>
+              <span class="radio"><span v-if="jawaban[aktif] === o.kode" class="dot"></span></span>
+              <b>{{ o.kode }}.</b>
+              <span>{{ o.teks }}</span>
             </button>
           </div>
 
-          <!-- Pilihan Kompleks -->
-          <div v-else-if="soalAktif.tipe === 'kompleks'" class="opsi-list">
-            <button
-              v-for="(o, i) in soalAktif.opsi"
-              :key="i"
-              class="opsi"
-              :class="{ aktif: (jawaban[aktif] || []).includes(i) }"
-              @click="pilihKompleks(i)"
-            >
-              <span class="check" :class="{ on: (jawaban[aktif] || []).includes(i) }">
-                <svg v-if="(jawaban[aktif] || []).includes(i)" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 12l5 5L20 6" />
-                </svg>
-              </span>
-              <b>{{ huruf[i] }}.</b>
-              <span>{{ o }}</span>
-            </button>
-          </div>
-
-          <!-- Uraian -->
+          <!-- Isian -->
           <div v-else class="opsi-list">
             <textarea
               class="uraian"
@@ -145,7 +185,7 @@
               </span>
               Ragu
             </button>
-            <button v-if="tombolSelesai" class="btn btn-next" :disabled="dikumpulkan" @click="modalSelesai = true">
+            <button v-if="tombolSelesai" class="btn btn-next" @click="modalSelesai = true">
               Selesai <small>→</small>
             </button>
             <button v-else class="btn btn-next" @click="pindah(aktif + 1)">
@@ -217,9 +257,8 @@
     </transition>
 
     <!-- MODAL SELESAI -->
-    <div v-if="modalSelesai" class="overlay" @click.self="!dikumpulkan && (modalSelesai = false)">
+    <div v-if="modalSelesai" class="overlay" @click.self="!mengirim && (modalSelesai = false)">
       <div class="modal" role="dialog" aria-modal="true">
-        <template v-if="!dikumpulkan">
           <div class="modal-head">
             <span class="modal-icon">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -227,7 +266,7 @@
               </svg>
             </span>
             <div>
-              <h3>Yakin ingin mengumpulkan simulasi?</h3>
+              <h3>Yakin ingin mengumpulkan pre-test?</h3>
               <p>Kamu masih memiliki {{ jmlBelum }} soal yang belum dijawab dan {{ jmlRagu }} soal yang ditandai.</p>
             </div>
           </div>
@@ -242,31 +281,13 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="9.5" /><path d="M12 11v5.5" /><circle cx="12" cy="7.8" r=".6" fill="currentColor" />
             </svg>
-            <span>Setelah simulasi dikumpulkan, jawaban tidak dapat diubah kembali.</span>
+            <span>Setelah pre-test dikumpulkan, jawaban tidak dapat diubah kembali.</span>
           </div>
 
           <div class="modal-actions">
-            <button class="mbtn mbtn-yellow" @click="modalSelesai = false">Kembali Mengerjakan</button>
-            <button class="mbtn mbtn-navy" @click="kumpulkan">Kumpulkan Jawaban</button>
+            <button class="mbtn mbtn-yellow" :disabled="mengirim" @click="modalSelesai = false">Kembali Mengerjakan</button>
+            <button class="mbtn mbtn-navy" :disabled="mengirim" @click="kumpulkan">{{ mengirim ? 'Mengumpulkan…' : 'Kumpulkan Jawaban' }}</button>
           </div>
-        </template>
-
-        <template v-else>
-          <div class="modal-head">
-            <span class="modal-icon modal-icon-ok">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9.5" /><path d="M7.8 12.3l3 3 5.6-6" />
-              </svg>
-            </span>
-            <div>
-              <h3>Jawaban sudah dikumpulkan</h3>
-              <p>Kamu menjawab {{ jmlTerjawab }} dari {{ total }} soal. Status selesai dicatat di sesi ini.</p>
-            </div>
-          </div>
-          <div class="modal-actions">
-            <button class="mbtn mbtn-navy" @click="kembaliKeDashboard">Tutup</button>
-          </div>
-        </template>
       </div>
     </div>
 
@@ -283,8 +304,11 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '@/stores/auth.js'
 import { useProgressStore } from '@/stores/progress.js'
+import { usePretestStore, STATUS } from '@/stores/pretest.js'
+import { pesanError } from '@/lib/errors.js'
 
 // true = tombol kanan selalu "Selesai" (seperti pada tampilan modal konfirmasi)
 const props = defineProps({
@@ -298,58 +322,56 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const toast = useToast()
 const auth = useAuthStore()
 const progress = useProgressStore()
-
-const huruf = ['A', 'B', 'C', 'D', 'E']
+const pretest = usePretestStore()
 
 const tipeSoal = [
   { nama: 'Pilihan Ganda', kelas: 'tipe-green', desc: 'Pilih satu jawaban yang paling tepat dari beberapa opsi.' },
-  { nama: 'Pilihan Kompleks', kelas: 'tipe-orange', desc: 'Pilih semua jawaban yang benar. Bisa lebih dari satu opsi.' },
-  { nama: 'Uraian', kelas: 'tipe-red', desc: 'Tulis jawabanmu dengan kalimat sendiri, jelaskan langkah dan alasannya.' },
+  { nama: 'Isian', kelas: 'tipe-red', desc: 'Tulis jawabanmu dengan kalimat sendiri, jelaskan langkah dan alasannya.' },
 ]
 
-/* ---------- Data soal ---------- */
-const poolKompleks = [
-  { teks: 'Manakah struktur data berikut yang mendukung operasi <i>push</i> dan <i>pop</i> dalam O(1)?', opsi: ['Stack', 'Queue (array biasa)', 'Linked List (di head)', 'Binary Search Tree'] },
-  { teks: 'Manakah algoritma pengurutan berikut yang stabil?', opsi: ['Merge Sort', 'Quick Sort', 'Insertion Sort', 'Heap Sort'] },
-]
-const poolGanda = [
-  { teks: 'Diberikan sebuah array bilangan bulat. Algoritma apa yang paling tepat untuk mencari subarray dengan jumlah<br>maksimum dalam waktu O(n)?', opsi: ["Kadane's Algorithm", 'Brute Force O(n²)', 'Binary Search', 'Depth First Search'] },
-  { teks: 'Kompleksitas waktu terburuk dari Binary Search pada array terurut berukuran n adalah ...', opsi: ['O(n)', 'O(log n)', 'O(n log n)', 'O(1)'] },
-  { teks: 'Algoritma yang digunakan untuk mencari jalur terpendek pada graf berbobot non-negatif adalah ...', opsi: ['Dijkstra', 'DFS', 'Kruskal', 'Topological Sort'] },
-]
-const poolUraian = [
-  { teks: 'Jelaskan bagaimana cara kerja algoritma Sieve of Eratosthenes dan berapa kompleksitas waktunya.' },
-  { teks: 'Jelaskan perbedaan pendekatan <i>greedy</i> dan <i>dynamic programming</i> beserta contoh masing-masing.' },
-]
+/* ---------- Sumber soal: store (backend) ---------- */
+const soal = computed(() => pretest.soal)
+const total = computed(() => soal.value.length)
+const bolehMengerjakan = computed(() => pretest.status === STATUS.MENGERJAKAN)
 
-const soal = reactive(
-  Array.from({ length: 20 }, (_, i) => {
-    const no = i + 1
-    if (no <= 10) {
-      const p = poolGanda[(no - 1) % poolGanda.length]
-      return { tipe: 'ganda', bobot: 2, ...p }
-    }
-    if (no <= 15) {
-      const p = poolKompleks[(no - 11) % poolKompleks.length]
-      return { tipe: 'kompleks', bobot: 3, ...p }
-    }
-    const p = poolUraian[(no - 16) % poolUraian.length]
-    return { tipe: 'uraian', bobot: 5, ...p }
-  })
-)
+/* ---------- Polling nilai (status assessing) ---------- */
+let timerPolling = null
+function stopPolling() {
+  clearInterval(timerPolling)
+  timerPolling = null
+}
+function mulaiPolling() {
+  stopPolling()
+  timerPolling = setInterval(async () => {
+    const hasil = await pretest.cekHasil()
+    if (!hasil) return
+    stopPolling()
+    progress.markPreTestCompleted()
+    await progress.fetchDashboard({ force: true }).catch(() => {})
+    router.push({ name: 'siswa.pemetaan', params: { id: pretest.pretestId } })
+  }, 5000)
+}
 
-/* ---------- State ---------- */
+/* ---------- State awal: pilih tingkat ---------- */
+const tingkatDipilih = ref(null)
+const memuatAwal = ref(true)
+const galatAwal = ref('')
+const mengirim = ref(false)
+
+/* ---------- State pengerjaan (UI lokal) ---------- */
 const aktif = ref(0)
 const petunjukTerbuka = ref(true)
 const menuUser = ref(false)
 
+// Jawaban per indeks soal (disalin dari store saat mulai/resume).
+// ganda: kode opsi ('A'), isian: string bebas. Ragu-ragu murni lokal.
 const jawaban = reactive({})
 const ragu = reactive({})
 
-const total = soal.length
-const soalAktif = computed(() => soal[aktif.value])
+const soalAktif = computed(() => soal.value[aktif.value] ?? null)
 
 /* ---------- Helper ---------- */
 function sudahDijawab(i) {
@@ -360,9 +382,9 @@ function sudahDijawab(i) {
   return true
 }
 
-const jmlTerjawab = computed(() => soal.filter((_, i) => sudahDijawab(i)).length)
-const jmlRagu = computed(() => soal.filter((_, i) => ragu[i]).length)
-const jmlBelum = computed(() => total - jmlTerjawab.value - soal.filter((_, i) => ragu[i] && !sudahDijawab(i)).length)
+const jmlTerjawab = computed(() => soal.value.filter((_, i) => sudahDijawab(i)).length)
+const jmlRagu = computed(() => soal.value.filter((_, i) => ragu[i]).length)
+const jmlBelum = computed(() => total.value - jmlTerjawab.value - soal.value.filter((_, i) => ragu[i] && !sudahDijawab(i)).length)
 
 function kelasNomer(i) {
   return {
@@ -374,54 +396,147 @@ function kelasNomer(i) {
 }
 
 const labelTipe = computed(() => {
-  if (soalAktif.value.tipe === 'ganda') return 'Pilihan Ganda · pilih 1'
-  if (soalAktif.value.tipe === 'kompleks') return 'Pilihan Kompleks · pilih semua yang benar'
-  return 'Uraian'
+  if (soalAktif.value?.tipe === 'ganda') return 'Pilihan Ganda · pilih 1'
+  return 'Isian · tulis jawabanmu'
 })
 const petunjukTipe = computed(() => {
-  if (soalAktif.value.tipe === 'ganda') return 'Pilih satu jawaban yang paling tepat.'
-  if (soalAktif.value.tipe === 'kompleks') return 'Pilih semua jawaban yang benar.'
+  if (soalAktif.value?.tipe === 'ganda') return 'Pilih satu jawaban yang paling tepat.'
   return 'Tulis jawabanmu beserta langkah dan alasannya.'
 })
 
-/* ---------- Selesai ---------- */
-const modalSelesai = ref(false)
-const dikumpulkan = ref(false)
-// "Selesai" tampil di soal terakhir, atau di semua soal bila prop tampilkanSelesai = true
-const tombolSelesai = computed(() => props.tampilkanSelesai || aktif.value === total - 1)
-function kumpulkan() {
-  if (dikumpulkan.value) return
-  dikumpulkan.value = true
-  clearInterval(timer)
-  progress.markPreTestCompleted()
-}
-function kembaliKeDashboard() {
-  router.replace({ name: 'siswa.dashboard' })
+/* ---------- Mulai / resume ---------- */
+function seedJawaban() {
+  for (const k of Object.keys(jawaban)) delete jawaban[k]
+  for (const k of Object.keys(ragu)) delete ragu[k]
+  soal.value.forEach((s, i) => {
+    jawaban[i] = s.jawaban ?? null
+  })
+  aktif.value = 0
 }
 
-/* ---------- Aksi ---------- */
-function pilihGanda(i) {
-  if (dikumpulkan.value) return
-  jawaban[aktif.value] = i
+function pilihDefaultTingkat() {
+  const aktifId = progress.data.tingkatAktifId
+  const daftar = pretest.tingkatList
+  const cocok = daftar.find((t) => t.id === aktifId && t.terbuka) ?? daftar.find((t) => t.terbuka) ?? null
+  tingkatDipilih.value = cocok?.id ?? null
 }
-function pilihKompleks(i) {
-  if (dikumpulkan.value) return
-  const cur = Array.isArray(jawaban[aktif.value]) ? [...jawaban[aktif.value]] : []
-  const idx = cur.indexOf(i)
-  if (idx === -1) cur.push(i)
-  else cur.splice(idx, 1)
-  jawaban[aktif.value] = cur
+
+async function siapkanAwal() {
+  memuatAwal.value = true
+  galatAwal.value = ''
+  // Store masih hangat (pindah halaman tanpa reload) -> langsung pakai.
+  if (pretest.status === STATUS.MENGERJAKAN && pretest.soal.length) {
+    seedJawaban()
+    memuatAwal.value = false
+    return
+  }
+  // Resume bila ada ID tersimpan (reload di tengah ujian).
+  const tersimpan = pretest.idTersimpan()
+  if (tersimpan?.id) {
+    try {
+      await pretest.lanjutkan({ id: tersimpan.id })
+    } catch {
+      // ID sudah dibuang store (404) -> lanjut ke pemilih tingkat di bawah.
+      if (pretest.idTersimpan()) {
+        galatAwal.value = 'Tidak dapat membuka pre-test tersimpan. Coba lagi.'
+        memuatAwal.value = false
+        return
+      }
+    }
+    if (pretest.status === STATUS.SELESAI) {
+      router.replace({ name: 'siswa.pemetaan', params: { id: pretest.pretestId } })
+      return
+    }
+    if (pretest.status === STATUS.MENILAI) {
+      mulaiPolling()
+      memuatAwal.value = false
+      return
+    }
+    if (pretest.status === STATUS.MENGERJAKAN) {
+      seedJawaban()
+      memuatAwal.value = false
+      return
+    }
+  }
+  // Belum ada yang berjalan -> pemilih tingkat manual.
+  try {
+    await pretest.muatTingkat()
+    await progress.fetchDashboard().catch(() => {})
+    pilihDefaultTingkat()
+  } catch {
+    galatAwal.value = 'Tidak dapat memuat daftar tingkat. Periksa koneksi lalu coba lagi.'
+  }
+  memuatAwal.value = false
+}
+
+function cobaLagi() {
+  siapkanAwal()
+}
+
+async function mulaiDipilih() {
+  if (!tingkatDipilih.value || pretest.loading) return
+  try {
+    await pretest.mulai({ tingkatId: tingkatDipilih.value })
+    seedJawaban()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Gagal memulai pre-test', detail: pesanError(err), life: 4000 })
+  }
+}
+
+/* ---------- Kumpulkan ---------- */
+const modalSelesai = ref(false)
+// "Selesai" tampil di soal terakhir, atau di semua soal bila prop tampilkanSelesai = true
+const tombolSelesai = computed(() => props.tampilkanSelesai || aktif.value === total.value - 1)
+
+async function kumpulkan() {
+  if (mengirim.value || pretest.status !== STATUS.MENGERJAKAN) return
+  mengirim.value = true
+  try {
+    const hasil = await pretest.kumpulkan()
+    modalSelesai.value = false
+    if (!hasil) {
+      // 503 HASIL_SEDANG_DIPROSES: jawaban sudah terkunci, tunggu nilai.
+      mulaiPolling()
+      return
+    }
+    progress.markPreTestCompleted()
+    await progress.fetchDashboard({ force: true }).catch(() => {})
+    router.push({ name: 'siswa.pemetaan', params: { id: pretest.pretestId } })
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Gagal mengumpulkan', detail: pesanError(err), life: 4000 })
+    modalSelesai.value = false
+  } finally {
+    mengirim.value = false
+  }
+}
+
+/* ---------- Aksi jawab + autosave (debounce per soal) ---------- */
+const timerSimpan = {}
+function jadwalSimpan(i) {
+  clearTimeout(timerSimpan[i])
+  timerSimpan[i] = setTimeout(() => {
+    const target = soal.value[i]
+    if (!target || pretest.status !== STATUS.MENGERJAKAN) return
+    const nilai = jawaban[i]
+    pretest.simpanJawaban({ soalId: target.id, jawaban: nilai === '' ? null : (nilai ?? null) })
+  }, 800)
+}
+function pilihGanda(kode) {
+  if (pretest.status !== STATUS.MENGERJAKAN) return
+  jawaban[aktif.value] = kode
+  jadwalSimpan(aktif.value)
 }
 function isiUraian(v) {
-  if (dikumpulkan.value) return
+  if (pretest.status !== STATUS.MENGERJAKAN) return
   jawaban[aktif.value] = v
+  jadwalSimpan(aktif.value)
 }
 function toggleRagu() {
-  if (dikumpulkan.value) return
+  if (pretest.status !== STATUS.MENGERJAKAN) return
   ragu[aktif.value] = !ragu[aktif.value]
 }
 function pindah(i) {
-  if (i < 0 || i >= total) return
+  if (i < 0 || i >= total.value) return
   aktif.value = i
 }
 
@@ -434,17 +549,22 @@ const waktuTampil = computed(() => {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 })
 onMounted(() => {
+  siapkanAwal()
   timer = setInterval(() => {
     if (sisaDetik.value > 0) {
       sisaDetik.value--
-      if (sisaDetik.value === 0) {
-        modalSelesai.value = true
+      // Batas waktu client-side (backend tidak enforce): habis -> kumpulkan otomatis.
+      if (sisaDetik.value === 0 && pretest.status === STATUS.MENGERJAKAN) {
         kumpulkan()
       }
     }
   }, 1000)
 })
-onBeforeUnmount(() => clearInterval(timer))
+onBeforeUnmount(() => {
+  clearInterval(timer)
+  stopPolling()
+  for (const k of Object.keys(timerSimpan)) clearTimeout(timerSimpan[k])
+})
 
 /* ---------- Status koneksi ---------- */
 // koneksi: 'online' | 'offline' | 'sinkron' | 'terhubung'
@@ -582,7 +702,7 @@ button { font-family: inherit; cursor: pointer; }
 .petunjuk h2 { margin: 0; font-size: 18px; font-weight: 600; color: #0b1220; }
 .close { background: none; border: 0; color: #c8202f; padding: 2px; display: grid; place-items: center; }
 .petunjuk-desc { margin: 12px 0 22px; font-size: 14.5px; line-height: 1.6; color: #4b5563; }
-.tipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.tipe-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 .tipe {
   background: #fff6ec;
   border: 1px solid #fbe3c6;
@@ -818,6 +938,35 @@ button { font-family: inherit; cursor: pointer; }
 .mbtn:active { transform: translateY(1px); }
 .mbtn-yellow { background: #fbb024; }
 .mbtn-navy { background: #1e3a8a; }
+
+/* Layar awal: pilih tingkat */
+.mulai-wrap { flex: 1; width: 100%; max-width: 1440px; margin: 0 auto; padding: 26px 73px 34px 70px; }
+.mulai { padding: 40px 36px; max-width: 640px; }
+.mulai h2 { margin: 0; font-size: 19px; font-weight: 600; color: #0b1220; }
+.mulai-desc { margin: 10px 0 22px; font-size: 14px; line-height: 1.6; color: #4b5563; }
+.tingkat-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.tingkat-opsi {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; background: #fff; border: 1px solid #e3e8f1; border-radius: 10px;
+  font-size: 15px; color: #1e293b; text-align: left;
+}
+.tingkat-opsi b { font-weight: 600; }
+.tingkat-opsi span { font-size: 12.5px; color: #6b7280; }
+.tingkat-opsi.aktif { border-color: #3b6fe0; background: #f6f9ff; }
+.tingkat-opsi:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-mulai { background: #1e3a8a; border: 0; color: #fff; height: 44px; padding: 0 28px; font-size: 15px; font-weight: 600; }
+.mulai.menilai { max-width: 520px; text-align: center; }
+
+/* Konteks & gambar soal dari backend */
+.konteks {
+  margin: 20px 0 6px; padding: 16px 18px;
+  background: #f6f9ff; border: 1px solid #dbe6fb; border-radius: 12px;
+}
+.konteks strong { display: block; font-size: 14px; color: #0b1220; margin-bottom: 6px; }
+.konteks p { margin: 0; font-size: 14px; line-height: 1.6; color: #374151; white-space: pre-line; }
+.konteks img { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+.gambar-soal { max-width: 100%; border-radius: 10px; margin-top: 16px; }
+.belum-tersimpan { color: #b45309; font-weight: 500; }
 
 /* Responsif */
 @media (max-width: 1000px) {

@@ -74,8 +74,8 @@ stores/progress.js   request sedang jalan? → pakai yang sama
                      selain itu → siswaService.dashboard({ signal })
 services/siswa.js    api.get(ENDPOINTS.siswa.dashboard)
 lib/api.js           pasang Bearer token + Accept JSON + timeout → HTTP
-                         ↓
-                     Laravel GET /siswa/dashboard
+                          ↓
+                      Laravel GET /dashboard
 
 RESPONSE (naik)
 lib/api.js           401 sesi habis → reset auth + redirect /login

@@ -12,9 +12,9 @@ beforeEach(() => {
 })
 
 describe('adminService', () => {
-  it('ping mengembalikan pesan pong', async () => {
-    api.get.mockResolvedValue({ data: { message: 'OK', data: { message: 'pong' } } })
-    await expect(adminService.ping()).resolves.toBe('pong')
-    expect(api.get).toHaveBeenCalledWith('/admin/ping')
+  it('dashboard mengambil ringkasan dari endpoint yang ada', async () => {
+    api.get.mockResolvedValue({ data: { message: 'OK', data: { siswa_aktif: 12 } } })
+    await expect(adminService.dashboard()).resolves.toEqual({ siswa_aktif: 12 })
+    expect(api.get).toHaveBeenCalledWith('/admin/dashboard')
   })
 })

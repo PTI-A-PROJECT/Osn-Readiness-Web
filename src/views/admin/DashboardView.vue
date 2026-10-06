@@ -11,12 +11,12 @@ const auth = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 
-// Bukti role-guard backend bekerja dari browser:
-// hanya super_admin yang bisa lolos RequireRole di GET /admin/ping.
+// Bukti role-guard backend bekerja dari browser: hanya super_admin yang
+// bisa lolos RequireRole di GET /admin/dashboard.
 async function tesAksesAdmin() {
   try {
-    const pesan = await adminService.ping()
-    toast.add({ severity: 'success', summary: 'Akses admin OK', detail: pesan, life: 4000 })
+    await adminService.dashboard()
+    toast.add({ severity: 'success', summary: 'Akses admin OK', life: 4000 })
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Akses admin ditolak', detail: pesanError(err), life: 4000 })
   }

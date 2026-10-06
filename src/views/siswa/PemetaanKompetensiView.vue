@@ -1,40 +1,135 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import UserMenu from '@/components/UserMenu.vue'
+import { riwayatService } from '@/services/riwayat.js'
+import { useMateriStore } from '@/stores/materi.js'
+import { usePretestStore } from '@/stores/pretest.js'
+import { STATUS } from '@/stores/pretest.js'
 
+// Hasil dibaca dari store pre-test. Route memakai id opsional: setelah
+// submit sukses id tersimpan dihapus, jadi tanpa id halaman ini harus
+// menemukan sendiri pre-test terakhir lewat riwayat — kalau tidak,
+// refresh akan selalu kosong.
 const route = useRoute()
+const router = useRouter()
+const pretest = usePretestStore()
+const materi = useMateriStore()
 
-const skor = 61
+const memuat = ref(true)
+
+onMounted(async () => {
+  const idDariUrl = Number(route.params.id)
+
+  // Store masih hangat (pindah halaman tanpa reload).
+  if (!idDariUrl && pretest.hasil) {
+    memuat.value = false
+    return
+  }
+
+  try {
+    if (Number.isFinite(idDariUrl) && idDariUrl > 0) {
+      await pretest.lanjutkan({ id: idDariUrl })
+      // Hasil belum keluar (pretest masih dikerjakan): kembalikan ke ujian.
+      if (pretest.status === STATUS.MENGERJAKAN) {
+        router.replace({ name: 'siswa.pretest' })
+        return
+      }
+    } else {
+      // Tanpa id: pakai pre-test terakhir dari riwayat.
+      const { items } = await riwayatService.daftar({ jenis: 'pretest', perPage: 1 })
+      const terakhir = items[0]?.referensiId
+      if (terakhir) {
+        router.replace({ name: 'siswa.pemetaan', params: { id: terakhir } })
+        return
+      }
+      // Tidak ada riwayat sama sekali -> kondisi kosong di bawah.
+    }
+  } catch {
+    // Gagal (404/403): tampilkan kondisi kosong di bawah.
+  }
+  memuat.value = false
+})
+
+const hasil = computed(() => pretest.hasil)
+
+// Nama materi asli dari GET /api/materi (bukan lagi "Materi {id}").
+const namaMateriById = computed(
+  () => new Map(materi.daftar.map((m) => [m.id, m.judul])),
+)
+const prioritasWajib = computed(
+  () => new Map((hasil.value?.materiWajib ?? []).map((m) => [m.materiId, m.prioritas])),
+)
+
+async function muatJudulMateri() {
+  const tingkatId = hasil.value?.tingkatId
+  if (!tingkatId || materi.tingkatId === tingkatId) return
+  await materi.fetchDaftar({ tingkatId }).catch(() => {})
+}
+
+// Judul materi dibutuhkan untuk merender tabel, jadi dipanggil begitu
+// hasil tersedia (onMounted mungkin selesai sebelum hasil ada).
+watchEffect(() => {
+  if (hasil.value) muatJudulMateri()
+})
+
+const skor = computed(() => (hasil.value?.nilai == null ? 0 : Math.round(hasil.value.nilai)))
 const R = 44
 const keliling = 2 * Math.PI * R
-const garis = (keliling * skor) / 100
+const garis = computed(() => (keliling * skor.value) / 100)
 
-const ringkasanTopik = [
-  { nama: 'Materi 1', benar: '7/8', status: 'ok' },
-  { nama: 'Materi 2', benar: '4/7', status: 'mid' },
-  { nama: 'Materi 3', benar: '2/6', status: 'low' },
-  { nama: 'Materi 4', benar: '1/5', status: 'low' },
-  { nama: 'Materi 5', benar: '4/4', status: 'ok' },
-]
+const namaTingkat = computed(
+  () => pretest.tingkatList.find((t) => t.id === hasil.value?.tingkatId)?.nama ?? '',
+)
+const totalSoal = computed(() =>
+  (hasil.value?.pemetaan ?? []).reduce((a, p) => a + p.jumlahSoal, 0),
+)
+const totalBenar = computed(() =>
+  (hasil.value?.pemetaan ?? []).reduce((a, p) => a + p.jumlahBenar, 0),
+)
 
-const topik = [
-  { nama: 'Materi 1', nilai: 82 },
-  { nama: 'Materi 2', nilai: 54 },
-  { nama: 'Materi 3', nilai: 38 },
-  { nama: 'Materi 4', nilai: 29 },
-  { nama: 'Materi 5', nilai: 96 },
-  { nama: 'Materi 6', nilai: 47 },
-]
+// Fallback "Materi {id}" hanya sampai judulnya termuat.
+const namaMateri = (materiId) => namaMateriById.value.get(materiId) ?? `Materi ${materiId}`
+
+const ringkasanTopik = computed(() =>
+  (hasil.value?.pemetaan ?? []).map((p) => ({
+    materiId: p.materiId,
+    nama: namaMateri(p.materiId),
+    wajib: prioritasWajib.value.get(p.materiId) ?? null,
+    benar: `${p.jumlahBenar}/${p.jumlahSoal}`,
+    status: statusNilai(p.persentase),
+  })),
+)
+
+const topik = computed(() =>
+  (hasil.value?.pemetaan ?? []).map((p) => ({
+    materiId: p.materiId,
+    nama: namaMateri(p.materiId),
+    wajib: prioritasWajib.value.get(p.materiId) ?? null,
+    nilai: p.persentase == null ? 0 : Math.round(p.persentase),
+  })),
+)
 const statusNilai = (n) => (n >= 70 ? 'ok' : n >= 40 ? 'mid' : 'low')
 const labelStatus = { ok: 'Dikuasai', mid: 'Perlu latihan', low: 'Belum dikuasai' }
 
-const riwayat = [
-  { tgl: '02 Sep 2026', tingkat: 'Provinsi', skor: '61%', lemah: 'Materi X', tren: 'naik' },
-  { tgl: '10 Agu 2026', tingkat: 'Provinsi', skor: '52%', lemah: 'Materi X', tren: 'naik' },
-  { tgl: '15 Jul 2026', tingkat: 'Provinsi', skor: '47%', lemah: 'Materi X', tren: 'stabil' },
-  { tgl: '28 Jun 2026', tingkat: 'Kabupaten', skor: '88%', lemah: 'Materi X', tren: 'naik' },
-  { tgl: '02 Jun 2026', tingkat: 'Kabupaten', skor: '73%', lemah: 'Materi X', tren: 'turun' },
-]
+const terkuat = computed(() =>
+  topik.value.length ? [...topik.value].sort((a, b) => b.nilai - a.nilai)[0] : null,
+)
+const terlemah = computed(() =>
+  topik.value.length ? [...topik.value].sort((a, b) => a.nilai - b.nilai)[0] : null,
+)
+const jumlahWajib = computed(() => hasil.value?.materiWajib?.length ?? 0)
+
+function formatTanggal(iso) {
+  if (!iso) return ''
+  const t = new Date(iso)
+  if (Number.isNaN(t.getTime())) return ''
+  return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(t)
+}
+const tanggalSubmit = computed(() => formatTanggal(hasil.value?.disubmitPada) || '—')
+
+// P2: diisi dari GET /api/riwayat.
+const riwayat = computed(() => [])
 const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
 </script>
 
@@ -48,10 +143,20 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
     <main class="px-6 py-6">
       <div class="pk">
 
+        <div v-if="memuat" class="card pad kosong">
+          <h3>Memuat hasil pre-test…</h3>
+        </div>
+        <div v-else-if="!hasil" class="card pad kosong">
+          <h3>Belum ada hasil pre-test</h3>
+          <p class="desc">Ikuti pre-test terlebih dahulu untuk melihat pemetaan kompetensimu.</p>
+          <button type="button" class="btn-amber" @click="router.push({ name: 'siswa.pretest' })">Ikuti Pre-Test →</button>
+        </div>
+        <template v-else>
+
         <!-- 01 -->
         <section class="section">
           <p class="eyebrow">01 · HASIL PRE-TEST</p>
-          <h2>Hasil Pre-Test Terakhir Kabupaten</h2>
+          <h2>Hasil Pre-Test Terakhir{{ namaTingkat ? ` ${namaTingkat}` : '' }}</h2>
           <p class="desc">Ringkasan skor dan ketepatan jawabanmu pada pre-test paling baru.</p>
 
           <div class="grid-2">
@@ -70,11 +175,11 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
                   <div class="donut-text"><strong>{{ skor }}%</strong><span>Skor</span></div>
                 </div>
                 <div>
-                  <p class="pt-title">Pre-Test Tingkat Kabupaten</p>
-                  <p class="pt-meta">Dikerjakan 02 September 2026 · 30 soal · 55 menit</p>
+                  <p class="pt-title">Pre-Test Tingkat {{ namaTingkat || '—' }}</p>
+                  <p class="pt-meta">Dikerjakan {{ tanggalSubmit }} · {{ totalSoal }} soal</p>
                   <div class="chips">
-                    <span class="chip blue">Tingkat Provinsi</span>
-                    <span class="chip amber">18 dari 30 benar</span>
+                    <span v-if="namaTingkat" class="chip blue">Tingkat {{ namaTingkat }}</span>
+                    <span class="chip amber">{{ totalBenar }} dari {{ totalSoal }} benar</span>
                   </div>
                 </div>
               </div>
@@ -83,8 +188,11 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
             <div class="card pad">
               <h3>Ringkasan Per Topik</h3>
               <ul class="ringkas">
-                <li v-for="t in ringkasanTopik" :key="t.nama">
-                  <span>{{ t.nama }}</span>
+                <li v-for="t in ringkasanTopik" :key="t.materiId">
+                  <span>
+                    {{ t.nama }}
+                    <em v-if="t.wajib" class="wajib">Wajib · prioritas {{ t.wajib }}</em>
+                  </span>
                   <span><b :class="t.status">{{ t.benar }}</b> benar</span>
                 </li>
               </ul>
@@ -109,8 +217,11 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
               <button type="button" class="link-btn">Unduh laporan</button>
             </div>
 
-            <div v-for="t in topik" :key="t.nama" class="bar-row">
-              <span class="bar-name">{{ t.nama }}</span>
+            <div v-for="t in topik" :key="t.materiId" class="bar-row">
+              <span class="bar-name">
+                {{ t.nama }}
+                <em v-if="t.wajib" class="wajib">Wajib · prioritas {{ t.wajib }}</em>
+              </span>
               <div class="track"><div class="fill" :class="statusNilai(t.nilai)" :style="{ width: t.nilai + '%' }"></div></div>
               <span class="bar-val">{{ t.nilai }}%</span>
               <span class="bar-label" :class="statusNilai(t.nilai)">{{ labelStatus[statusNilai(t.nilai)] }}</span>
@@ -125,21 +236,24 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
               <i class="dot ok"></i>
               <div>
                 <p class="point-tag ok">KEKUATAN UTAMA</p>
-                <p>Matematika Diskrit menjadi topik terkuatmu dengan penguasaan 96%. Struktur Data juga sudah dikuasai dengan 82%.</p>
+                <p v-if="terkuat">{{ terkuat.nama }} menjadi topik terkuatmu dengan penguasaan {{ terkuat.nilai }}%.</p>
+                <p v-else>Belum ada data topik.</p>
               </div>
             </div>
             <div class="point">
               <i class="dot low"></i>
               <div>
                 <p class="point-tag low">PERLU DIPRIORITASKAN</p>
-                <p>Dynamic Programming memiliki penguasaan terendah sebesar 29%, diikuti Graf &amp; Pohon sebesar 38%.</p>
+                <p v-if="terlemah">{{ terlemah.nama }} memiliki penguasaan terendah sebesar {{ terlemah.nilai }}%.</p>
+                <p v-else>Belum ada data topik.</p>
               </div>
             </div>
             <div class="point">
               <i class="dot info"></i>
               <div>
                 <p class="point-tag info">SARAN BELAJAR</p>
-                <p>Fokuskan latihan berikutnya pada Dynamic Programming dan Graf &amp; Pohon sebelum melanjutkan ke topik lain.</p>
+                <p v-if="terlemah">Fokuskan latihan berikutnya pada {{ terlemah.nama }}{{ jumlahWajib ? ` — ada ${jumlahWajib} materi wajib menunggumu` : '' }} sebelum melanjutkan ke topik lain.</p>
+                <p v-else>Ikuti materi yang direkomendasikan untuk meningkatkan penguasaanmu.</p>
               </div>
             </div>
 
@@ -148,7 +262,7 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
                 <p class="cta-title">Lanjutkan belajarmu</p>
                 <p class="cta-desc">Lihat materi yang direkomendasikan berdasarkan topik yang perlu kamu tingkatkan.</p>
               </div>
-              <button type="button" class="btn-amber">Lihat Rekomendasi Materi →</button>
+              <button type="button" class="btn-amber" @click="router.push({ name: 'siswa.materi' })">Lihat Rekomendasi Materi →</button>
             </div>
           </div>
         </section>
@@ -170,6 +284,9 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
                   </tr>
                 </thead>
                 <tbody>
+                  <tr v-if="!riwayat.length">
+                    <td colspan="5" class="riwayat-kosong">Riwayat tampil setelah integrasi tahap berikutnya.</td>
+                  </tr>
                   <tr v-for="r in riwayat" :key="r.tgl">
                     <td>{{ r.tgl }}</td>
                     <td>{{ r.tingkat }}</td>
@@ -183,6 +300,7 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
           </div>
         </section>
 
+        </template>
       </div>
     </main>
   </div>
@@ -212,6 +330,9 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
 .pad { padding: 20px 24px; }
 .card h3 { margin: 0 0 14px; font-size: 13px; font-weight: 600; }
 .card h3.big { font-size: 15px; margin-bottom: 4px; }
+.kosong { text-align: center; padding: 40px 24px; }
+.kosong h3 { font-size: 15px; }
+.riwayat-kosong { text-align: center; color: var(--muted); }
 .analisis { margin-top: 16px; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -234,7 +355,8 @@ const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
 
 /* Ringkasan topik */
 .ringkas { list-style: none; margin: 0; padding: 0; }
-.ringkas li { display: flex; justify-content: space-between; padding: 6px 0; font-size: 11.5px; color: #3a4558; }
+.ringkas li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 11.5px; color: #3a4558; }
+.wajib { font-style: normal; font-size: 10.5px; font-weight: 600; color: var(--amber); }
 .ringkas b { font-weight: 600; }
 .ringkas b.ok, .bar-label.ok { color: var(--ok); }
 .ringkas b.mid, .bar-label.mid { color: var(--mid); }

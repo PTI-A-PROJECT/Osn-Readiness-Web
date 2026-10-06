@@ -44,8 +44,18 @@ const subjudul = computed(() => {
 
 /* ---------- Banner ---------- */
 
-const banner = computed(() =>
-  sudahPreTest.value
+// PUTARAN_HABIS: kuota simulasi habis tanpa lulus. Backend mengizinkan
+// pre-test baru, jadi banner menawarkan putaran baru, bukan sekadar
+// "lanjutkan belajar".
+const banner = computed(() => {
+  if (d.value.perluPretestUlang) {
+    return {
+      judul: 'Kuota Simulasi Putaran Ini Habis',
+      isi: 'Ambil pre-test ulang untuk memulai putaran baru dan mendapatkan peta materi yang diperbarui.',
+    }
+  }
+
+  return sudahPreTest.value
     ? {
         judul: 'Lanjutkan Perjalanan OSN Informatika-mu!',
         isi: 'Teruskan belajar sesuai rekomendasi materi, lalu ikuti simulasi untuk mengukur kesiapanmu.',
@@ -53,8 +63,8 @@ const banner = computed(() =>
     : {
         judul: 'Mulai Perjalanan OSN Informatika-mu!',
         isi: 'Kamu belum mengikuti tes pemetaan awal. Silahkan ambil pre-test terlebih dahulu agar sistem dapat mendeteksi kekuatanmu dan membuka kurikulum belajar yang tepat sasaran.',
-      },
-)
+      }
+})
 
 /* ---------- Kartu Statistik ---------- */
 
@@ -170,19 +180,12 @@ const hasil = computed(() => {
     return null
   }
 
-  const total = h.benar + h.salah
-
   return {
     ...h,
-    total,
-    persen: total
-      ? Math.round((h.benar / total) * 100)
-      : 0,
+    persen: h.nilai ?? 0,
     tanggalLabel: formatTanggal(h.tanggal),
-    durasiLabel:
-      h.durasiMenit == null
-        ? '-'
-        : `${h.durasiMenit}m`,
+    nilaiLabel: h.nilai == null ? '-' : String(h.nilai),
+    statusLabel: h.lulus ? 'Lulus' : 'Selesai',
   }
 })
 
@@ -255,6 +258,15 @@ const dash = computed(() => {
         >
           {{ banner.isi }}
         </p>
+
+        <button
+          v-if="d.perluPretestUlang"
+          type="button"
+          class="mt-4 rounded-full bg-white px-6 py-2.5 text-[13px] font-bold text-[#0b2150]"
+          @click="mulaiPretest"
+        >
+          Ambil Pre-Test Ulang →
+        </button>
       </section>
 
       <!-- ========================================= -->
@@ -776,8 +788,7 @@ const dash = computed(() => {
                 class="mt-1 text-[13px] text-[#6b778c]"
               >
                 {{ hasil.tanggalLabel }} ·
-                {{ hasil.benar }} dari
-                {{ hasil.total }} benar
+                {{ hasil.statusLabel }}
               </p>
             </div>
           </div>
@@ -785,17 +796,17 @@ const dash = computed(() => {
           <!-- Statistik hasil -->
 
           <div
-            class="grid flex-1 grid-cols-3 gap-3"
+            class="grid flex-1 grid-cols-2 gap-3"
           >
             <div
               class="rounded-xl bg-[#f3f6fb] py-3 text-center"
             >
               <p class="text-lg font-bold">
-                {{ hasil.benar }}
+                {{ hasil.nilaiLabel }}
               </p>
 
               <p class="text-xs text-[#6b778c]">
-                Benar
+                Nilai
               </p>
             </div>
 
@@ -803,23 +814,11 @@ const dash = computed(() => {
               class="rounded-xl bg-[#f3f6fb] py-3 text-center"
             >
               <p class="text-lg font-bold">
-                {{ hasil.salah }}
+                {{ hasil.statusLabel }}
               </p>
 
               <p class="text-xs text-[#6b778c]">
-                Salah
-              </p>
-            </div>
-
-            <div
-              class="rounded-xl bg-[#f3f6fb] py-3 text-center"
-            >
-              <p class="text-lg font-bold">
-                {{ hasil.durasiLabel }}
-              </p>
-
-              <p class="text-xs text-[#6b778c]">
-                Durasi
+                Status
               </p>
             </div>
           </div>
