@@ -39,4 +39,9 @@ class UserPolicy
     {
         return $user->hasPermissionTo('siswa.delete');
     }
+
+    public function deactivate(User $user, User $model): bool
+    {
+        return $user->hasPermissionTo('siswa.deactivate');
+    }
 }

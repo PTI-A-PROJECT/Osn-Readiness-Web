@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\TingkatSeleksi;
+use App\Observers\TingkatSeleksiObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -23,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        TingkatSeleksi::observe(TingkatSeleksiObserver::class);
+
         // Login dibatasi per email + IP, supaya satu akun tidak bisa dibombardir
         // dan satu IP tidak bisa mencoba banyak email sekaligus.
         RateLimiter::for('login', function (Request $request): Limit {

@@ -10,18 +10,23 @@ Kamu memegang skema database dan perjalanan siswa dari pre-test sampai lulus: Au
 
 ## Urutan kerja
 
-| # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk | Status 3 Okt |
+| # | Paket | Butuh dari Orang 2 | Ditunggu Orang 2 untuk | Status 4 Okt |
 | --- | --- | --- | --- | --- |
-| 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya | ✅ merged ke `dev` |
-| 1b | B0-B · Kontrak & error (diambil alih) | — | B1-C | ✅ `feat/b0b-kontrak`, siap merge |
-| 2 | B1-A · Auth, AturanService, PutaranService | — | B2-B, B3-B | ✅ `feat/b1a-auth-putaran`, siap merge |
-| 3 | B1-B · SoalPicker + SoalResource + Randomizer | — | B1-E, B2-B, B2-C | Berikutnya |
-| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | |
-| 5 | B3-A · Simulasi & kelulusan | B2-B (SyaratSimulasiService) | B3-B bagian simulasi | |
-| 6 | B3-C · PurgeAkunJob | — | — | |
-| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | |
+| 1 | B0-A · Postgres, migration, model, seeder | — | Semua paketnya | ✅ merged (`dev` `e860823`) |
+| 1b | B0-B · Kontrak & error (diambil alih) | — | B1-C | ✅ merged (PR#7) |
+| 2 | B1-A · Auth, AturanService, PutaranService | — | B2-B, B3-B | ✅ merged (PR#8) |
+| 3 | B1-B · SoalPicker + SoalResource + Randomizer | — | B1-E, B2-B, B2-C | ✅ merged (PR#10) |
+| 4 | B2-A · Pre-test & pemetaan | B1-C (dikerjakan ulang) | NilaiUlangJob jenis pretest | ✅ merged (PR#14, PR#17) |
+| 5 | B3-A · Simulasi & kelulusan | **B2-B** (SyaratSimulasiService) | B3-B bagian simulasi | ✅ merged (PR#25) |
+| 6 | B3-C · PurgeAkunJob | — | — | ✅ merged (PR#11) |
+| 7 | B4 · Test skenario penuh | Semua paket Orang 2 | — | ⬜ setelah perbaikan audit |
 
-**Tugas merge segera** (urutan dari [HANDOFF-KONDISI.md](HANDOFF-KONDISI.md)): PR#5 (revert di `main`) → `feat/b0b-kontrak` ke `dev` → `feat/b1a-auth-putaran` ke `dev` → PR rilis `dev` → `main`. Beri tahu Orang 2 setelah B0-B merge, karena B1-C dibangun ulang di atasnya.
+**Posisi sekarang.** Semua paket Batch 1–3 milikmu sudah merge ke `dev`. Yang tersisa
+adalah me-review perbaikan audit pada paketmu (SoalPicker, pre-test, simulasi) dan B4.
+Rinciannya ada di [AUDIT-BATCH-1-3.md](AUDIT-BATCH-1-3.md#status-perbaikan).
+
+Keputusan #7 sudah tuntas di PR#20: `/api/users` dihapus dan menu siswa ada di
+`/api/admin/siswa`.
 
 **Bila B1-C belum siap saat mulai B2-A:** pakai `FakePerhitunganClient` / mock `PerhitunganClientInterface` dengan bentuk kontrak di [BATCH_PLAN.md § B1-C](BATCH_PLAN.md#b1-c--perhitunganclient--nilaiulangjob-be-11).
 

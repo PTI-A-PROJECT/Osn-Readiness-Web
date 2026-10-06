@@ -41,6 +41,8 @@ class PretestJawaban extends Model
      */
     public function soal(): BelongsTo
     {
-        return $this->belongsTo(Soal::class);
+        // Soal yang di-soft delete admin tetap harus bisa dinilai dan
+        // ditinjau oleh pengerjaan yang sudah memuatnya.
+        return $this->belongsTo(Soal::class)->withTrashed();
     }
 }

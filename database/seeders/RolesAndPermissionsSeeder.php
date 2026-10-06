@@ -15,7 +15,7 @@ class RolesAndPermissionsSeeder extends Seeder
      * @var array<string, array<int, string>>
      */
     private const RESOURCE_ABILITAS = [
-        'siswa' => ['viewAny', 'view', 'create', 'update', 'delete'],
+        'siswa' => ['viewAny', 'view', 'create', 'update', 'delete', 'deactivate'],
         'tingkat' => ['viewAny', 'view', 'update'],
         'kompetensi' => ['viewAny', 'view', 'create', 'update', 'delete'],
         'materi' => ['viewAny', 'view', 'create', 'update', 'delete'],
