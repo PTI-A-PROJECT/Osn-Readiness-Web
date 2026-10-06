@@ -22,6 +22,7 @@
 /storage/pail
 /testing
 /vendor
+/docker-compose.override.yml
 _ide_helper.php
 Homestead.json
 Homestead.yaml
