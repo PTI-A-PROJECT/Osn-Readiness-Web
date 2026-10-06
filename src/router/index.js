@@ -24,6 +24,11 @@ const MateriView = () => import('@/views/siswa/MateriView.vue')
 const LatihanView = () => import('@/views/siswa/LatihanView.vue')
 const ProgressView = () => import('@/views/siswa/ProgressView.vue')
 const AdminDashboardView = () => import('@/views/admin/DashboardView.vue')
+const AdminSiswaView = () => import('@/views/admin/SiswaView.vue')
+const AdminKontenView = () => import('@/views/admin/KontenView.vue')
+const AdminSoalView = () => import('@/views/admin/SoalView.vue')
+const AdminUjianView = () => import('@/views/admin/UjianView.vue')
+const AdminAturanView = () => import('@/views/admin/AturanView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 
@@ -152,7 +157,37 @@ export const routes = [
         path: 'admin',
         name: 'admin.dashboard',
         component: AdminDashboardView,
-        meta: { requiresAuth: true, role: 'super_admin' },
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Dashboard Admin' },
+      },
+      {
+        path: 'admin/siswa',
+        name: 'admin.siswa',
+        component: AdminSiswaView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Kelola Siswa' },
+      },
+      {
+        path: 'admin/konten',
+        name: 'admin.konten',
+        component: AdminKontenView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Kompetensi & Materi' },
+      },
+      {
+        path: 'admin/soal',
+        name: 'admin.soal',
+        component: AdminSoalView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Soal & Pembahasan' },
+      },
+      {
+        path: 'admin/ujian',
+        name: 'admin.ujian',
+        component: AdminUjianView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Latihan & Simulasi' },
+      },
+      {
+        path: 'admin/aturan',
+        name: 'admin.aturan',
+        component: AdminAturanView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Tingkat & Aturan Pemetaan' },
       },
     ],
   },

@@ -16,6 +16,8 @@ const ICON = {
   progress: 'M3 17l6-6 4 4 8-8M15 7h6v6',
   simulasi: 'M4 4h16a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1zM8 21h8M12 17v4M7 9l3 2-3 2M12 13h4',
   riwayat: 'M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5M12 7v5l4 2',
+  siswa: 'M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
+  aturan: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z',
 }
 
 // Nama route harus sama dengan yang ada di router/index.js
@@ -27,7 +29,16 @@ const menuSiswa = [
   { label: 'Simulasi Seleksi', to: { name: 'siswa.simulasi' }, icon: ICON.simulasi },
   { label: 'Riwayat Hasil', to: { name: 'siswa.riwayat' }, icon: ICON.riwayat },
 ]
-const menuAdmin = [{ label: 'Dashboard', to: { name: 'admin.dashboard' }, icon: ICON.dashboard }]
+// Menu admin mengikuti urutan PR Fase 6 di plan: dashboard dulu, lalu
+// siswa, konten, soal, ujian, aturan pemetaan.
+const menuAdmin = [
+  { label: 'Dashboard', to: { name: 'admin.dashboard' }, icon: ICON.dashboard },
+  { label: 'Kelola Siswa', to: { name: 'admin.siswa' }, icon: ICON.siswa },
+  { label: 'Kompetensi & Materi', to: { name: 'admin.konten' }, icon: ICON.materi },
+  { label: 'Soal & Pembahasan', to: { name: 'admin.soal' }, icon: ICON.dashboard },
+  { label: 'Latihan & Simulasi', to: { name: 'admin.ujian' }, icon: ICON.simulasi },
+  { label: 'Tingkat & Aturan', to: { name: 'admin.aturan' }, icon: ICON.aturan },
+]
 
 const isAdmin = computed(() => auth.user?.role === 'super_admin')
 const menu = computed(() => (isAdmin.value ? menuAdmin : menuSiswa))

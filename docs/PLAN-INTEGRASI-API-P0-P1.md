@@ -1,5 +1,22 @@
 # PLAN INTEGRASI API — P0 + P1
 
+> **Semua fase sudah selesai (6 Oktober 2026).** P0–P3 ketiganya sudah
+> terpasang dan P4 sudah dikerjakan. Untuk pekerjaan lanjutan (perbaikan
+> stabilitas, integrasi simulasi, halaman progress, admin, dan keputusan
+> yang masih terbuka), rujuk `PLAN-INTEGRASI-LANJUTAN.md` di root workspace
+> `bigdata/` (file itu berada di luar ketiga repo, jadi tidak bisa
+> ditautkan dari sini).
+>
+> Status akhir per fase:
+>
+> | Fase | Isi | Status |
+> | --- | --- | --- |
+> | P0 | Fondasi: path dashboard, updateProfile | Selesai |
+> | P1 | Pre-test + daftar tingkat | Selesai |
+> | P2 | Dashboard penuh + riwayat | Selesai |
+> | P3 | Materi + latihan | Selesai |
+> | P4 | Simulasi penuh (syarat → mulai → submit → review) | Selesai |
+
 Rencana integrasi frontend ↔ backend Laravel (`Osn-Readiness-Web`,
 `http://localhost:8000/api`). Status riset: 2026-10-05.
 Aturan arsitektur yang mengikat: `docs/ARCHITECTURE_RULES.md`
@@ -109,3 +126,5 @@ dimatikan (bypass tidak mengeluarkan token Sanctum); dev di
 
 P2 dashboard penuh + riwayat (paginasi `meta`); P3 materi + quiz/latihan;
 P4 alur simulasi full (syarat → mulai → kerjakan → submit → review).
+
+**Semua empat sudah selesai** — lihat tabel status di bagian atas.
