@@ -18,8 +18,13 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
         ]);
 
-        // Konten contoh hanya untuk pengembangan lokal dan test.
+        // Konten dan akun contoh hanya untuk pengembangan lokal dan test.
         if (app()->environment('local', 'testing')) {
+            // WAJIB di dalam blok ini. Akun siswa contoh berpassword default
+            // dan jadi milik e2e/helpers.js sebagai AKUN_SISWA; kalau ikut
+            // tercipta di production setiap kali `migrate --seed` dijalankan,
+            // ada akun dengan password yang diketahui publik.
+            $this->call(SiswaContohSeeder::class);
             $this->call(KontenContohSeeder::class);
         }
     }
