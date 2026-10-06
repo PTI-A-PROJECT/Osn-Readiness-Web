@@ -35,4 +35,23 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Layanan hitung Python
+    |--------------------------------------------------------------------------
+    |
+    | Dipanggil lewat PerhitunganClientInterface. Header X-Internal-Token
+    | diambil dari token di sini. Timeout dan retry sengaja pendek karena
+    | pemanggilan berjalan di dalam request web; jeda panjang untuk recovering
+    | ulang ada di NilaiUlangJob.
+    |
+    */
+
+    'perhitungan' => [
+        'url' => env('PERHITUNGAN_URL', 'http://localhost:8001'),
+        'token' => env('PERHITUNGAN_TOKEN'),
+        'timeout' => (int) env('PERHITUNGAN_TIMEOUT', 5),
+        'retry' => (int) env('PERHITUNGAN_RETRY', 2),
+    ],
+
 ];

@@ -76,6 +76,7 @@ class PutaranService implements PutaranServiceInterface
             putaranHabis: $putaranHabis,
             bolehPretestBaru: $bolehPretestBaru,
             tahap: $tahap,
+            sisaKuotaSimulasi: max(0, (int) $aturan->simulasiMaksPercobaan - $percobaanTerpakai),
         );
     }
 

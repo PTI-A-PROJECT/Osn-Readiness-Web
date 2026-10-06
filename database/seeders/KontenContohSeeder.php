@@ -50,6 +50,7 @@ class KontenContohSeeder extends Seeder
                 Level::Sedang->value => 30,
                 Level::Sulit->value => 20,
             ],
+            // Latihan mengambil semua level tanpa kuota per level.
             Peruntukan::Latihan->value => [
                 Level::Mudah->value => 4,
                 Level::Sedang->value => 3,
@@ -67,6 +68,7 @@ class KontenContohSeeder extends Seeder
                 Level::Sedang->value => 30,
                 Level::Sulit->value => 20,
             ],
+            // Latihan mengambil semua level tanpa kuota per level.
             Peruntukan::Latihan->value => [
                 Level::Mudah->value => 4,
                 Level::Sedang->value => 3,
