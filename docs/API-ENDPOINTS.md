@@ -72,11 +72,11 @@ Akses: Token siswa.
 
 | Method | Endpoint | Query / body | Keterangan |
 | --- | --- | --- | --- |
-| GET | `/api/materi` | Query: `tingkat_id` (tanpa ini memakai tingkat aktif siswa) | Daftar materi. Materi wajib lebih dulu (urut prioritas), dengan progress dan nilai latihan terbaik. 403 TINGKAT_TERKUNCI. |
+| GET | `/api/materi` | Query: `tingkat_id` (tanpa ini memakai tingkat aktif siswa) | Daftar materi. Materi wajib lebih dulu (urut prioritas), dengan progress dan nilai latihan terbaik. Tiap baris memuat `quiz_id` (null bila latihan belum tersedia) untuk langsung bisa memanggil `POST /api/quiz/{quiz_id}/mulai`. 403 TINGKAT_TERKUNCI. |
 | GET | `/api/materi/{materi_id}` | — | Detail materi. Isi materi. |
 | PUT | `/api/materi/{materi_id}/progress` | Body: `status` | Perbarui progress. status: belajar atau selesai. 409 BELUM_PRETEST tanpa putaran aktif. |
 | POST | `/api/quiz/{quiz_id}/mulai` | — | Mulai latihan. 201 baru, 200 melanjutkan. 409 BELUM_PRETEST, 503 BANK_SOAL_TIDAK_CUKUP. |
-| GET | `/api/quiz-pengerjaan/{pengerjaan_id}` | — | Lihat pengerjaan latihan. Soal bila berjalan, hasil bila selesai. |
+| GET | `/api/quiz-pengerjaan/{pengerjaan_id}` | — | Lihat pengerjaan latihan. Bentuk bersoal (`data.soal`) selama belum selesai dinilai; bentuk hasil (nilai + jawaban) bila `selesai_pada` terisi. |
 | PUT | `/api/quiz-pengerjaan/{pengerjaan_id}/jawaban` | Body: `soal_id`, `jawaban_user` | Simpan jawaban latihan. 409 SUDAH_DISUBMIT setelah submit. |
 | POST | `/api/quiz-pengerjaan/{pengerjaan_id}/submit` | — | Submit latihan. Menilai latihan. 503 HASIL_SEDANG_DIPROSES bila layanan hitung gagal. |
 

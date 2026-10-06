@@ -209,6 +209,7 @@ class BelajarService implements BelajarServiceInterface
                 'tanggal_selesai' => $progress->tanggal_selesai?->toISOString(),
             ],
             'nilai_latihan_terbaik' => $nilaiTerbaik,
+            'quiz_id' => $materi->quiz === null ? null : (int) $materi->quiz->id,
             'latihan_belum_tersedia' => $materi->quiz === null,
         ];
 
