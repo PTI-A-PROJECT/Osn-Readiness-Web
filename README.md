@@ -83,9 +83,19 @@ docker run --rm \
 ./vendor/bin/sail artisan migrate
 ```
 
-**6. Start the development server:**
+**6. Link the storage directory:**
 
-`artisan dev` menjalankan PHP server, Vite (hot-reload), dan queue worker secara bersamaan dalam satu proses.
+```bash
+./vendor/bin/sail artisan storage:link
+```
+
+Tanpa symlink ini, gambar soal dan file materi yang diunggah admin akan
+balas 404 karena `public/storage` tidak ada.
+
+**7. Start the development server:**
+
+`artisan dev` menjalankan PHP server, Vite (hot-reload), dan queue worker
+secara bersamaan dalam satu proses.
 
 ```bash
 ./vendor/bin/sail artisan dev
@@ -178,12 +188,30 @@ php artisan migrate --seed
 
 `--seed` mengisi role dan permission, tingkat seleksi, aturan pemetaan, dan akun Super Admin. Di lingkungan `local` dan `testing` seeder juga mengisi konten contoh (materi, bank soal, latihan, simulasi).
 
-**6. Start the development server:**
+**6. Link the storage directory:**
 
-`artisan dev` menjalankan PHP server, Vite (hot-reload), dan queue worker secara bersamaan dalam satu proses.
+```bash
+php artisan storage:link
+```
+
+Tanpa symlink ini, gambar soal dan file materi yang diunggah admin akan
+balas 404 karena `public/storage` tidak ada.
+
+**7. Start the development server:**
+
+`composer run dev` menjalankan PHP server, Vite (hot-reload), dan queue worker
+secara bersamaan dalam satu proses. Worker wajib hidup karena submit yang
+gagal menilai dijadwalkan ulang lewat `NilaiUlangJob`:
 
 ```bash
 composer run dev
+```
+
+Kalau menjalankan terpisah di terminal berbeda:
+
+```bash
+php artisan serve
+php artisan queue:work --tries=3
 ```
 
 Visit [http://localhost:8000](http://localhost:8000) in your browser.
