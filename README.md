@@ -1,3 +1,23 @@
+> ## DEPLOY
+>
+> Panduan untuk DevOps: [**docs/PANDUAN-DEPLOY.md**](docs/PANDUAN-DEPLOY.md)
+>
+> Berisi arsitektur dua service, environment variables yang wajib diisi, langkah
+> build/migrate/seed, perilaku seeder di tiap environment, dan checklist
+> pasca-deploy.
+>
+> **Baca sebelum deploy.** Dua hal yang paling sering jadi masalah:
+>
+> 1. `PERHITUNGAN_TOKEN` (Laravel) harus **sama** dengan `INTERNAL_API_TOKEN` (Python).
+>    Kalau berbeda, semua submit pre-test/simulasi berakhir `503`.
+> 2. `PERHITUNGAN_URL` **tidak boleh** `localhost` kalau Laravel jalan di container.
+>    Lihat bagian 5 di panduan.
+>
+> Prasyarat: **PHP 8.4.1+**. `composer.json` masih menulis `^8.3` tetapi lockfile
+> sudah meminta 8.4.1 -- lihat peringatan di bagian 3 panduan.
+
+---
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
