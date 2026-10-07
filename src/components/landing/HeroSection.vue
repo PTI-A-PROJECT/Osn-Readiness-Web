@@ -5,12 +5,10 @@ const stats = [
   { value: '100%', label: 'Materi dipersonalisasi' },
 ]
 
-const competencies = [
-  { name: 'Struktur Data', value: 82, color: 'blue' },
-  { name: 'Algoritma Greedy', value: 54, color: 'blue' },
-  { name: 'Graf & Pohon', value: 38, color: 'yellow' },
-  { name: 'Dynamic Programming', value: 29, color: 'yellow' },
-]
+// Kartu hero hanya menjelaskan alur, bukan hasil siswa: nama kompetensi tampil
+// tanpa angka dan bar-nya kosong. Jangan diisi nilai contoh — di landing page
+// angka percentage dibaca sebagai nilai user yang sungguhan.
+const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dynamic Programming']
 </script>
 
 <template>
@@ -36,26 +34,35 @@ const competencies = [
           </dl>
         </div>
 
-        <div class="map-card" role="img" aria-label="Contoh pemetaan kompetensi tingkat Provinsi">
+        <div
+          class="map-card"
+          role="img"
+          aria-label="Ilustrasi tampilan pemetaan kompetensi; angka muncul setelah kamu selesai pre-test"
+        >
           <div class="map-card__head">
             <strong>Pemetaan Kompetensi</strong>
-            <span class="pill pill--muted">Tingkat Provinsi</span>
+            <span class="pill pill--muted">Contoh Tampilan</span>
           </div>
+
           <ul class="bars">
-            <li v-for="c in competencies" :key="c.name">
-              <span class="bars__name">{{ c.name }}</span>
-              <span class="bars__track">
-                <span class="bars__fill" :class="`bars__fill--${c.color}`" :style="{ width: c.value + '%' }"></span>
-              </span>
-              <span class="bars__value">{{ c.value }}%</span>
+            <li v-for="c in competencies" :key="c">
+              <span class="bars__name">{{ c }}</span>
+              <span class="bars__track"></span>
+              <span class="bars__value">—</span>
             </li>
           </ul>
+
+          <p class="map-card__note">
+            Bar dan persentase terisi otomatis setelah kamu menyelesaikan pre-test. Di halaman ini
+            sengaja dikosongkan karena bukan data siswamu.
+          </p>
+
           <div class="map-card__foot">
             <div>
-              <small>Rekomendasi berikutnya</small>
-              <strong>Latihan Dynamic Programming Dasar</strong>
+              <small>Langkah berikutnya</small>
+              <strong>Selesaikan pre-test</strong>
             </div>
-            <a href="/register" class="btn btn--light btn--xs">Belajar</a>
+            <a href="/register" class="btn btn--light btn--xs">Mulai</a>
           </div>
         </div>
       </div>
@@ -84,12 +91,6 @@ const competencies = [
   align-items: center;
 }
 
-.hero h1 {
-  font-size: clamp(2rem, 4.2vw, 2.9rem);
-  font-weight: 700;
-  margin: 18px 0 16px;
-}
-
 .hero__lead {
   color: #c8d2ea;
   font-size: 0.95rem;
@@ -107,18 +108,6 @@ const competencies = [
   display: flex;
   gap: 40px;
   margin: 0;
-}
-
-.stats dt {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.stats dd {
-  margin: 0;
-  font-size: 0.75rem;
-  color: #9fb0d3;
 }
 
 .stats dt {
@@ -166,15 +155,6 @@ const competencies = [
   color: #d6def0;
 }
 
-.bars li {
-  display: grid;
-  grid-template-columns: 130px 1fr 36px;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.78rem;
-  color: #d6def0;
-}
-
 .bars__track {
   height: 6px;
   background: rgba(255, 255, 255, 0.12);
@@ -182,22 +162,16 @@ const competencies = [
   overflow: hidden;
 }
 
-.bars__fill {
-  display: block;
-  height: 100%;
-  border-radius: 99px;
-}
-
-.bars__fill--blue {
-  background: #4b8df8;
-}
-
-.bars__fill--yellow {
-  background: var(--yellow);
-}
-
 .bars__value {
   text-align: right;
+  color: #9fb0d3;
+}
+
+.map-card__note {
+  margin-top: 20px;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: #9fb0d3;
 }
 
 .map-card__foot {
@@ -205,19 +179,9 @@ const competencies = [
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.map-card__foot small {
-  display: block;
-  font-size: 0.68rem;
-  color: #9fb0d3;
-}
-
-.map-card__foot strong {
-  font-size: 0.85rem;
 }
 
 .map-card__foot small {

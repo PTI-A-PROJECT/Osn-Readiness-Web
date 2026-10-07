@@ -7,6 +7,7 @@ import { usePretestStore } from '@/stores/pretest.js'
 import { useProgressStore } from '@/stores/progress.js'
 import { useSimulasiStore } from '@/stores/simulasi.js'
 import { pesanError } from '@/lib/errors.js'
+import { segeraDatang } from '@/lib/tingkat.js'
 
 // Lobi simulasi. Tingkat, daftar simulasi, dan syarat semuanya dari backend;
 // tidak ada data mock lagi. Modal aturan dipertahankan dari versi sebelumnya.
@@ -23,6 +24,14 @@ const levels = computed(() => pretest.tingkatList)
 const levelDipilihId = ref(null)
 const levelDipilih = computed(() => levels.value.find((l) => l.id === levelDipilihId.value) ?? null)
 const sudahLulus = computed(() => levelDipilih.value?.tahap === 'LULUS')
+// Tingkat yang belum rilis: tampil "Segera" dan tidak bisa dipilih, apa pun
+// status terbuka dari backend.
+function terkunciSegera(l) {
+  return segeraDatang(l)
+}
+function bolehPilih(l) {
+  return l.terbuka && !terkunciSegera(l)
+}
 // Percobaan yang sedang berjalan: tombol menjadi "Lanjutkan".
 const simulasiBerjalan = computed(() => levelDipilih.value?.tahap === 'SIMULASI_BERJALAN')
 
@@ -41,7 +50,7 @@ function bisaMulai(s) {
 }
 
 function pilihLevel(l) {
-  if (!l.terbuka) return
+  if (!l.terbuka || terkunciSegera(l)) return
   levelDipilihId.value = l.id
   simulasi.muatRuang({ tingkatId: l.id }).catch(() => {})
 }
@@ -156,8 +165,9 @@ onMounted(async () => {
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Gagal memuat daftar tingkat', detail: pesanError(err), life: 4000 })
   }
-  // Default: tingkat terbuka pertama yang belum lulus.
-  const kandidat = levels.value.find((l) => l.terbuka && l.tahap !== 'LULUS') ?? levels.value.find((l) => l.terbuka)
+  // Default: tingkat terbuka pertama yang belum lulus (yang belum segera datang).
+  const kandidat =
+    levels.value.find((l) => bolehPilih(l) && l.tahap !== 'LULUS') ?? levels.value.find(bolehPilih)
   if (kandidat) pilihLevel(kandidat)
   window.addEventListener('keydown', onKeydown)
 })
@@ -191,28 +201,32 @@ onBeforeUnmount(() => {
             :key="l.id"
             class="kartu level"
             :class="[
-              !l.terbuka ? 'is-terkunci' : l.tahap === 'LULUS' ? 'is-selesai' : 'is-berjalan',
+              terkunciSegera(l) ? 'is-segera' : !l.terbuka ? 'is-terkunci' : l.tahap === 'LULUS' ? 'is-selesai' : 'is-berjalan',
               levelDipilihId === l.id ? 'is-dipilih' : '',
             ]"
           >
             <span
               class="badge"
-              :class="!l.terbuka ? 'badge-terkunci' : l.tahap === 'LULUS' ? 'badge-selesai' : 'badge-berjalan'"
+              :class="terkunciSegera(l) ? 'badge-segera' : !l.terbuka ? 'badge-terkunci' : l.tahap === 'LULUS' ? 'badge-selesai' : 'badge-berjalan'"
             >
-              <template v-if="!l.terbuka">🔒 </template>
-              {{ !l.terbuka ? 'Terkunci' : l.tahap === 'LULUS' ? 'Sudah Lulus' : l.tahap === 'SIMULASI_BERJALAN' ? 'Simulasi Berjalan' : 'Tersedia' }}
+              <template v-if="terkunciSegera(l)">⏳ </template>
+              <template v-else-if="!l.terbuka">🔒 </template>
+              {{ terkunciSegera(l) ? 'Segera' : !l.terbuka ? 'Terkunci' : l.tahap === 'LULUS' ? 'Sudah Lulus' : l.tahap === 'SIMULASI_BERJALAN' ? 'Simulasi Berjalan' : 'Tersedia' }}
             </span>
             <h3>{{ l.nama }}</h3>
             <p class="desc">{{ l.deskripsi || 'Tahap seleksi OSN.' }}</p>
+            <p v-if="terkunciSegera(l)" class="catatan-segera">
+              Simulasi tingkat ini sedang dipersiapkan. Nanti bisa diakses di sini.
+            </p>
             <div class="info"><span>{{ l.tahap ?? '—' }}</span></div>
             <button
               type="button"
               class="btn"
-              :class="l.terbuka ? 'btn-emas' : 'btn-mati'"
-              :disabled="!l.terbuka"
+              :class="bolehPilih(l) ? 'btn-emas' : 'btn-mati'"
+              :disabled="!bolehPilih(l)"
               @click="pilihLevel(l)"
             >
-              {{ l.terbuka ? (l.tahap === 'LULUS' ? 'Lihat Riwayat' : 'Pilih Tingkat') : 'Terkunci' }}
+              {{ terkunciSegera(l) ? 'Segera Hadir' : l.terbuka ? (l.tahap === 'LULUS' ? 'Lihat Riwayat' : 'Pilih Tingkat') : 'Terkunci' }}
             </button>
           </article>
         </div>
@@ -473,6 +487,9 @@ hr { border: 0; border-top: 1px solid var(--garis); margin: 32px 0; }
 .badge-selesai { background: #e7f6ef; color: var(--hijau); }
 .badge-berjalan { background: #fdf1d3; color: #92400e; }
 .badge-terkunci { background: #eef1f6; color: var(--abu); }
+.badge-segera { background: #fdf1d3; color: #92400e; }
+.level.is-segera { border-style: dashed; background: #fffdf7; }
+.catatan-segera { margin: 0; font-size: 13px; line-height: 1.5; color: #92400e; }
 .desc { font-size: 13px; color: var(--abu); line-height: 1.5; margin: 0; max-width: 260px; flex: 1; }
 .info { display: flex; flex-wrap: nowrap; gap: 16px; font-size: 13px; color: var(--ink); margin: 6px 0 8px; white-space: nowrap; }
 

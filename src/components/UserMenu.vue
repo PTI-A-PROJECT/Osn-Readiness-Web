@@ -35,7 +35,7 @@ async function keluar() {
   <div ref="root" class="relative">
     <button
       type="button"
-      class="flex items-center gap-2.5 rounded-full border border-[#e6ebf2] bg-white py-1.5 pl-1.5 pr-3 text-sm font-medium"
+      class="flex items-center gap-2.5 rounded-full border border-[#e6ebf2] bg-white py-1.5 pl-1.5 pr-3 text-sm font-medium text-[#0f1b33] hover:bg-[#f3f6fb]"
       aria-haspopup="menu"
       :aria-expanded="open"
       @click="open = !open"
@@ -54,7 +54,7 @@ async function keluar() {
       role="menu"
       class="absolute right-0 z-20 mt-2 w-44 overflow-hidden rounded-xl border border-[#e6ebf2] bg-white py-1 shadow-lg"
     >
-      <button v-if="!isAdmin" type="button" role="menuitem" class="block w-full px-4 py-2.5 text-left text-sm hover:bg-[#f3f6fb]" @click="keProfil">
+      <button v-if="!isAdmin" type="button" role="menuitem" class="block w-full px-4 py-2.5 text-left text-sm text-[#0f1b33] hover:bg-[#f3f6fb]" @click="keProfil">
         Profil Akun
       </button>
       <button type="button" role="menuitem" class="block w-full px-4 py-2.5 text-left text-sm text-[#d93a3a] hover:bg-[#f3f6fb]" @click="keluar">

@@ -2,15 +2,18 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
-import UserMenu from '@/components/UserMenu.vue'
 import { usePretestStore } from '@/stores/pretest.js'
 import { useProgressStore } from '@/stores/progress.js'
 import { STATUS_SIMULASI, useSimulasiStore, WAKTU_HABIS } from '@/stores/simulasi.js'
+import PengerjaanSoal from '@/components/soal/PengerjaanSoal.vue'
+import UserMenu from '@/components/UserMenu.vue'
 import { pesanError } from '@/lib/errors.js'
+import { hitungRingkasan } from '@/lib/soal.js'
 
-// Halaman ujian simulasi. Kerangka soal + autosave mengikuti LatihanView.vue;
-// yang berbeda: timer dihitung dari `batas_pada` server (reload tidak menambah
-// waktu) dan setelah selesai selalu pindah ke halaman hasil.
+// Halaman ujian simulasi. Kerangka soal + autosave mengikuti PengerjaanSoal
+// (sama persis dengan pre-test); yang berbeda: timer dihitung dari
+// `batas_pada` server (reload tidak menambah waktu) dan setelah selesai selalu
+// pindah ke halaman hasil.
 
 const route = useRoute()
 const router = useRouter()
@@ -19,18 +22,32 @@ const simulasi = useSimulasiStore()
 const pretest = usePretestStore()
 const progress = useProgressStore()
 
+const petunjuk = {
+  judul: 'Aturan Simulasi',
+  isi: 'Simulasi memakai waktu batas dari server dan dikumpulkan otomatis saat waktu habis. Navigasi bebas antarsoal; jawaban tersimpan otomatis setiap kali kamu mengisi.',
+  tipe: [
+    { nama: 'Pilihan Ganda', kelas: 'tipe-green', desc: 'Pilih satu jawaban yang paling tepat dari beberapa opsi.' },
+    { nama: 'Isian', kelas: 'tipe-red', desc: 'Tulis jawabanmu dengan kalimat sendiri, jelaskan langkah dan alasannya.' },
+  ],
+}
+
 const memuatAwal = ref(true)
 const galatAwal = ref('')
 const aktif = ref(0)
 const jawaban = reactive({})
 const ragu = reactive({})
-const modalSelesai = ref(false)
 const mengirim = ref(false)
 
 const bolehMengerjakan = computed(() => simulasi.status === STATUS_SIMULASI.MENGERJAKAN)
 const soal = computed(() => simulasi.soal)
 const total = computed(() => soal.value.length)
-const soalAktif = computed(() => soal.value[aktif.value] ?? null)
+const ringkasan = computed(() => hitungRingkasan(soal.value, jawaban, ragu))
+const tombolSelesai = computed(() => aktif.value === total.value - 1)
+
+const subjudul = computed(() => {
+  if (!total.value) return 'Menjawab soal dengan batas waktu server.'
+  return `Soal ${aktif.value + 1} dari ${total.value} · jawaban terkunci setelah dikumpulkan`
+})
 
 function seedJawaban() {
   for (const k of Object.keys(jawaban)) delete jawaban[k]
@@ -40,12 +57,6 @@ function seedJawaban() {
   })
   aktif.value = 0
 }
-
-function sudahDijawab(i) {
-  const j = jawaban[i]
-  return !(j === undefined || j === null || (typeof j === 'string' && !j.trim()))
-}
-const jmlTerjawab = computed(() => soal.value.filter((_, i) => sudahDijawab(i)).length)
 
 /* ---------- Navigasi ---------- */
 function pindah(i) {
@@ -61,11 +72,6 @@ function toggleRagu() {
 // Batas waktu dihitung dari `batas_pada`, bukan dari hitungan lokal, sehingga
 // reload di tengah ujian melanjutkan dari sisa waktu yang sama di server.
 const sisaDetik = ref(0)
-const waktuTampil = computed(() => {
-  const m = Math.floor(sisaDetik.value / 60)
-  const s = sisaDetik.value % 60
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-})
 
 let timerJam = null
 function hitungSisa() {
@@ -75,7 +81,7 @@ function hitungSisa() {
   sisaDetik.value = Math.max(0, Math.round((batas - Date.now()) / 1000))
   // Waktu habis -> kumpulkan otomatis (server juga menolak simpan jawaban
   // lewat kode WAKTU_HABIS).
-  if (sisaDetik.value === 0 && bolehMengerjakan.value) kumpulkan()
+  if (sisaDetik.value === 0 && bolehMengerjakan.value) kumpulkan({ paksa: true })
 }
 
 /* ---------- Autosave (debounce 800 ms per soal) ---------- */
@@ -91,7 +97,7 @@ function jadwalSimpan(i) {
       jawaban: nilai === '' ? null : (nilai ?? null),
     })
     // Server sudah menutup percobaan: langsung kumpulkan, jangan diamkan.
-    if (status === WAKTU_HABIS) kumpulkan()
+    if (status === WAKTU_HABIS) kumpulkan({ paksa: true })
   }, 800)
 }
 function pilihGanda(kode) {
@@ -99,7 +105,7 @@ function pilihGanda(kode) {
   jawaban[aktif.value] = kode
   jadwalSimpan(aktif.value)
 }
-function isiIsian(v) {
+function isiUraian(v) {
   if (!bolehMengerjakan.value) return
   jawaban[aktif.value] = v
   jadwalSimpan(aktif.value)
@@ -129,12 +135,13 @@ async function setelahSelesai() {
   router.replace({ name: 'siswa.simulasi.hasil', params: { hasilId: simulasi.hasilId } })
 }
 
-async function kumpulkan() {
+// `paksa` = siswa menekan "Kumpulkan yang Kosong" di modal, atau waktu habis.
+async function kumpulkan({ paksa } = {}) {
   if (mengirim.value || !bolehMengerjakan.value) return
+  if (!paksa && ringkasan.value.belum > 0) return
   mengirim.value = true
   try {
     const hasil = await simulasi.kumpulkan()
-    modalSelesai.value = false
     if (!hasil) {
       // 503 HASIL_SEDANG_DIPROSES: jawaban terkunci, tunggu nilai.
       mulaiPolling()
@@ -143,7 +150,6 @@ async function kumpulkan() {
     await setelahSelesai()
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Gagal mengumpulkan', detail: pesanError(err), life: 4000 })
-    modalSelesai.value = false
   } finally {
     mengirim.value = false
   }
@@ -193,198 +199,117 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="min-h-full bg-[#f5f8fc] text-[#0f1b33]">
-    <header class="flex items-center justify-between border-b border-[#e6ebf2] bg-white px-7 py-4">
-      <div>
-        <h1 class="text-[17px] font-bold leading-tight">Simulasi Seleksi</h1>
-        <p class="mt-0.5 text-[13px] text-[#6b778c]">
-          Soal {{ total ? `${aktif + 1} dari ${total}` : '' }}
-        </p>
-      </div>
-      <div class="flex items-center gap-4">
-        <span
-          class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold"
-          :class="sisaDetik <= 300 ? 'bg-[#fde4e4] text-[#b91c1c]' : 'bg-[#eef1f6] text-[#2a3a52]'"
-        >
-          Sisa Waktu: {{ waktuTampil }}
-        </span>
-        <span v-if="simulasi.simpanError" class="text-xs text-[#b45309]">
-          Gagal menyimpan, periksa koneksi
-        </span>
+  <div class="halaman">
+    <!-- STATUS AWAL -->
+    <template v-if="memuatAwal || galatAwal">
+      <header class="sederhana-header">
+        <div>
+          <h1>Simulasi Seleksi</h1>
+          <p>{{ subjudul }}</p>
+        </div>
         <UserMenu />
-      </div>
-    </header>
+      </header>
 
-    <main class="space-y-5 px-6 py-6">
-      <!-- STATUS AWAL -->
-      <section
-        v-if="memuatAwal"
-        class="rounded-2xl border border-[#e6ebf2] bg-white px-5 py-3 text-[13px] text-[#6b778c]"
-      >
+      <section v-if="memuatAwal" class="kartu-kosong mx-auto max-w-xl">
         Menyiapkan simulasi…
       </section>
-      <section
-        v-else-if="galatAwal"
-        class="space-y-3 rounded-2xl border border-[#f3c2c2] bg-[#fdf0f0] px-5 py-3 text-[13px] text-[#a33333]"
-      >
+
+      <section v-else class="kartu-kosong mx-auto max-w-xl">
         <p>{{ galatAwal }}</p>
-        <button
-          type="button"
-          class="rounded-full border border-[#a33333] px-4 py-1.5 font-semibold"
-          @click="kembaliKeLobi"
-        >
+        <button type="button" class="btn btn-emas" @click="kembaliKeLobi">
           Kembali ke Daftar Simulasi
         </button>
       </section>
+    </template>
 
-      <!-- SEDANG DINILAI -->
-      <section
-        v-else-if="simulasi.status === STATUS_SIMULASI.MENILAI"
-        class="rounded-2xl border border-[#f3d9a8] bg-[#fffaef] px-5 py-3 text-[13px] text-[#8a5a12]"
-      >
-        Jawabanmu sudah dikumpulkan dan sedang dinilai. Halaman ini akan menampilkan hasil
-        otomatis begitu selesai.
-      </section>
-
-      <!-- PENGERJAAN -->
-      <template v-else-if="bolehMengerjakan && soalAktif">
-        <section class="rounded-3xl border border-[#e6ebf2] bg-white p-6">
-          <div class="flex items-center justify-between">
-            <span class="rounded-md bg-[#e8f0fe] px-2.5 py-1 text-xs font-semibold text-[#1d4ed8]">
-              Soal {{ aktif + 1 }} dari {{ total }}
-            </span>
-            <span class="text-xs text-[#6b778c]">Bobot {{ soalAktif.bobot }} poin</span>
-          </div>
-          <div v-if="soalAktif.konteks" class="mt-4 rounded-xl bg-[#f6f9ff] p-4 text-sm">
-            <strong class="block">{{ soalAktif.konteks.judul }}</strong>
-            <p class="mt-1 text-[#374151]">{{ soalAktif.konteks.isi }}</p>
-            <img
-              v-if="soalAktif.konteks.gambar"
-              :src="soalAktif.konteks.gambar"
-              alt="Gambar konteks soal"
-              class="mt-3 max-w-full rounded-lg"
-            />
-          </div>
-          <img
-            v-if="soalAktif.gambar"
-            :src="soalAktif.gambar"
-            alt="Gambar soal"
-            class="mt-4 max-w-full rounded-xl"
-          />
-          <h3 class="mt-4 text-[15px] font-semibold" v-html="soalAktif.pertanyaan"></h3>
-
-          <div v-if="soalAktif.tipe === 'ganda'" class="mt-4 flex flex-col gap-2">
-            <button
-              v-for="o in soalAktif.opsi"
-              :key="o.kode"
-              type="button"
-              class="flex items-center gap-2 rounded-xl border px-4 py-2.5 text-left text-sm"
-              :class="jawaban[aktif] === o.kode ? 'border-[#2563eb] bg-[#f6f9ff]' : 'border-[#e3e8f1]'"
-              @click="pilihGanda(o.kode)"
-            >
-              <b class="text-[#1e3a8a]">{{ o.kode }}.</b>
-              <span>{{ o.teks }}</span>
-            </button>
-          </div>
-          <textarea
-            v-else
-            class="mt-4 w-full rounded-xl border border-[#e3e8f1] p-3 text-sm"
-            rows="5"
-            placeholder="Tulis jawabanmu di sini..."
-            :value="jawaban[aktif] || ''"
-            @input="isiIsian($event.target.value)"
-          ></textarea>
-
-          <div class="mt-4 flex items-center justify-between border-t border-[#eef1f6] pt-4">
-            <button
-              type="button"
-              class="rounded-lg border border-[#ef6b6b] bg-[#fde4e4] px-4 py-2 text-[13px] font-medium text-[#b91c1c] disabled:opacity-40"
-              :disabled="aktif === 0"
-              @click="pindah(aktif - 1)"
-            >
-              ← Sebelumnya
-            </button>
-            <button
-              type="button"
-              class="rounded-lg border border-[#f2ab57] bg-[#fff3e0] px-4 py-2 text-[13px] font-medium text-[#c2610c]"
-              @click="toggleRagu"
-            >
-              {{ ragu[aktif] ? '✓ Ragu' : 'Ragu' }}
-            </button>
-            <button
-              v-if="aktif === total - 1"
-              type="button"
-              class="rounded-lg border border-[#3b6fe0] bg-white px-4 py-2 text-[13px] font-medium text-[#1d4ed8]"
-              @click="modalSelesai = true"
-            >
-              Selesai →
-            </button>
-            <button
-              v-else
-              type="button"
-              class="rounded-lg border border-[#3b6fe0] bg-white px-4 py-2 text-[13px] font-medium text-[#1d4ed8]"
-              @click="pindah(aktif + 1)"
-            >
-              Berikutnya →
-            </button>
-          </div>
-        </section>
-
-        <section class="rounded-3xl border border-[#e6ebf2] bg-white p-6">
-          <h3 class="text-sm font-bold text-[#2a3a52]">
-            Nomor Soal ({{ jmlTerjawab }}/{{ total }} terjawab)
-          </h3>
-          <div class="mt-3 grid grid-cols-5 gap-2">
-            <button
-              v-for="(_, i) in soal"
-              :key="i"
-              type="button"
-              class="rounded-lg border py-2 text-[13px] font-semibold"
-              :class="i === aktif
-                ? 'border-[#2563eb] bg-[#eaf1ff] text-[#1d4ed8]'
-                : sudahDijawab(i)
-                  ? 'border-[#8fe0ae] bg-[#c9f5d9] text-[#15803d]'
-                  : 'border-[#eaeef5] text-[#b45309]'"
-              @click="pindah(i)"
-            >
-              {{ String(i + 1).padStart(2, '0') }}
-            </button>
-          </div>
-        </section>
-      </template>
-
-      <!-- MODAL SELESAI -->
-      <div
-        v-if="modalSelesai"
-        class="fixed inset-0 z-50 grid place-items-center bg-[#1e2d5a80] p-5"
-        @click.self="!mengirim && (modalSelesai = false)"
-      >
-        <div class="w-full max-w-md rounded-2xl bg-white p-6">
-          <h3 class="text-base font-bold">Kumpulkan simulasi?</h3>
-          <p class="mt-1 text-sm text-[#4b5563]">
-            Kamu menjawab {{ jmlTerjawab }} dari {{ total }} soal. Jawaban tidak bisa diubah
-            setelah dikumpulkan.
-          </p>
-          <div class="mt-5 flex justify-end gap-2">
-            <button
-              type="button"
-              :disabled="mengirim"
-              class="rounded-full bg-[#fbb024] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-              @click="modalSelesai = false"
-            >
-              Kembali
-            </button>
-            <button
-              type="button"
-              :disabled="mengirim"
-              class="rounded-full bg-[#1e3a8a] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-              @click="kumpulkan"
-            >
-              {{ mengirim ? 'Mengumpulkan…' : 'Kumpulkan' }}
-            </button>
-          </div>
+    <!-- SEDANG DINILAI -->
+    <template v-else-if="simulasi.status === STATUS_SIMULASI.MENILAI">
+      <header class="sederhana-header">
+        <div>
+          <h1>Simulasi Seleksi</h1>
+          <p>{{ subjudul }}</p>
         </div>
-      </div>
-    </main>
+        <UserMenu />
+      </header>
+
+      <section class="kartu-kosong mx-auto max-w-xl">
+        Jawabanmu sudah dikumpulkan dan sedang dinilai. Halaman ini akan menampilkan hasil otomatis
+        begitu selesai.
+      </section>
+    </template>
+
+    <!-- PENGERJAAN -->
+    <PengerjaanSoal
+      v-else-if="bolehMengerjakan"
+      judul="Simulasi Seleksi"
+      :subjudul="subjudul"
+      :soal="soal"
+      :jawaban="jawaban"
+      :ragu="ragu"
+      :aktif="aktif"
+      :sisa-detik="sisaDetik"
+      :simpan-error="simulasi.simpanError"
+      :tombol-selesai="tombolSelesai"
+      :petunjuk="petunjuk"
+      :mengirim="mengirim"
+      modal-judul="Yakin ingin mengumpulkan simulasi?"
+      modal-peringatan="Setelah simulasi dikumpulkan, jawaban tidak dapat diubah kembali."
+      @pilih-ganda="pilihGanda"
+      @isi-jawaban="isiUraian"
+      @toggle-ragu="toggleRagu"
+      @pindah="pindah"
+      @kumpulkan="kumpulkan"
+    />
   </div>
 </template>
+
+<style scoped>
+.halaman {
+  min-height: 100%;
+  background: #f5f8fd;
+  color: #0f172a;
+  display: flex;
+  flex-direction: column;
+}
+/* Header untuk state fallback (memuat / galat / menilai): PengerjaanSoal belum
+   dirender di sana, dan tanpa UserMenu user tidak bisa logout. */
+.sederhana-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border-bottom: 1px solid #e6ebf3;
+  padding: 18px 28px;
+}
+.sederhana-header h1 { margin: 0; font-size: 20px; font-weight: 600; color: #0b1220; }
+.sederhana-header p { margin: 4px 0 0; font-size: 14px; color: #8a94a6; }
+
+.kartu-kosong {
+  margin: 26px auto;
+  max-width: 36rem;
+  background: #fff;
+  border: 1px solid #e8ecf3;
+  border-radius: 22px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 18px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.btn-emas { background: #fbb024; color: #1a1a1a; }
+.btn-emas:hover { background: #f9bc40; }
+</style>

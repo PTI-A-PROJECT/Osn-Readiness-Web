@@ -1,4 +1,6 @@
 <script setup>
+import { JUMLAH_SOAL_PRETEST, DURASI_PRETEST_MENIT, TIPE_SOAL_PRETEST } from '@/lib/pretest.js'
+
 const emit = defineEmits(['mulai'])
 
 function mulaiPretest() {
@@ -49,7 +51,7 @@ function mulaiPretest() {
           <span
             class="text-[18px] font-bold leading-none text-[#18243b]"
           >
-            20
+            {{ JUMLAH_SOAL_PRETEST }}
           </span>
 
           <span
@@ -66,7 +68,7 @@ function mulaiPretest() {
           <span
             class="text-[18px] font-bold leading-none text-[#18243b]"
           >
-            90
+            {{ DURASI_PRETEST_MENIT }}
           </span>
 
           <span
@@ -83,7 +85,7 @@ function mulaiPretest() {
           <span
             class="text-[18px] font-bold leading-none text-[#18243b]"
           >
-            3
+            {{ TIPE_SOAL_PRETEST }}
           </span>
 
           <span

@@ -3,6 +3,12 @@
 @import "tailwindcss-primeui";
 @import "primeicons/primeicons.css";
 
+/* Reset dasar. Dulu hanya ada di blok <style> global PretestView, jadi
+   halaman latihan & simulasi yang memakai PengerjaanSoal ikut bergantung
+   pada file itu ter-load. */
+* { box-sizing: border-box; }
+body { margin: 0; }
+
 /* Animasi masuk halaman auth (dipakai hero & form register). */
 @keyframes enter {
   from { opacity: 0; transform: translateY(10px); }
