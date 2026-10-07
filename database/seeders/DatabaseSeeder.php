@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
         ]);
 
-        // Konten contoh hanya untuk pengembangan lokal dan test.
+        // Bank soal kabupaten hanya untuk pengembangan lokal dan test.
+        // Tanpa KONTEN_KABUPATEN_FOLDER, seeder hanya mencetak peringatan.
         if (app()->environment('local', 'testing')) {
-            $this->call(KontenContohSeeder::class);
+            $this->call(KontenKabupatenSeeder::class);
         }
     }
 }

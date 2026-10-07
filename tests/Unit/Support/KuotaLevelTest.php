@@ -61,6 +61,25 @@ class KuotaLevelTest extends TestCase
     }
 
     #[Test]
+    public function level_bersen_nol_tidak_ikut_menerima_sisa(): void
+    {
+        // Bank soal kabupaten tidak punya soal pretest berlevel sedang, jadi
+        // kuota diturunkan ke 50/0/20. Sisa soal harus tetap jatuh ke level
+        // yang persennya bukan nol, bukan ke sedang yang sudah dinolkan.
+        $this->assertSame([20, 0, 10], KuotaLevel::hitung(30, [50.0, 0.0, 20.0]));
+    }
+
+    #[Test]
+    public function semua_persen_nol_tetap_menjumlah_ke_jumlah_soal(): void
+    {
+        // Tidak ada level yang berhak, tapi jumlah tetap harus utuh supaya
+        // kuota tidak pernah melebihi jumlah soal.
+        $kuota = KuotaLevel::hitung(10, [0.0, 0.0, 0.0]);
+
+        $this->assertSame(10, array_sum($kuota));
+    }
+
+    #[Test]
     public function jumlah_negatif_ditolak(): void
     {
         $this->expectException(InvalidArgumentException::class);
