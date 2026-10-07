@@ -45,10 +45,23 @@ final class KuotaLevel
         $sisa = $jumlah - array_sum($kuota);
 
         if ($sisa > 0) {
+            // Level dengan persen 0 tidak boleh ikut menerima sisa soal.
+            // Persen 0 berarti level itu memang tidak dipakai, dan kalau ia
+            // ikut pecah sisa, bank soal yang tidak punya soal level tersebut
+            // akan selalu gagal dan tidak ada cara menyalakannya lewat kuota.
+            $urut = array_values(array_filter(
+                array_keys($kuota),
+                fn (int $level): bool => $persen[$level] > 0,
+            ));
+
+            // Seluruh persen nol: tidak ada yang berhak, jadi sisa dibagi
+            // rata ke semua level supaya jumlah tetap utuh.
+            if ($urut === []) {
+                $urut = array_keys($kuota);
+            }
+
             // Pecahan terbesar didahulukan. Seri dipecah menurut indeks level
             // supaya hasilnya deterministik.
-            $urut = array_keys($pecahan);
-
             usort($urut, function (int $a, int $b) use ($pecahan): int {
                 if ($pecahan[$a] === $pecahan[$b]) {
                     return $a <=> $b;
