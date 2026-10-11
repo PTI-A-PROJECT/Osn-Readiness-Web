@@ -9,16 +9,22 @@ class ImporKontenCommand extends Command
 {
     protected $signature = 'impor:konten
         {folder : Path folder impor berisi materi/, soal_*.json, dan gambar/}
-        {--dry-run : Hitung dan laporkan tanpa menyimpan apa pun}';
+        {--dry-run : Hitung dan laporkan tanpa menyimpan apa pun}
+        {--tingkat= : Batasi impor ke satu tingkat (kabupaten atau provinsi)}';
 
     protected $description = 'Impor materi Markdown, soal JSON, dan gambar ke database via id_sumber';
 
     public function handle(ImporKontenServiceInterface $imporKontenService): int
     {
         $folder = rtrim($this->argument('folder'), '/');
+        $tingkat = $this->option('tingkat');
 
         try {
-            $laporan = $imporKontenService->impor($folder, (bool) $this->option('dry-run'));
+            $laporan = $imporKontenService->impor(
+                $folder,
+                (bool) $this->option('dry-run'),
+                is_string($tingkat) && $tingkat !== '' ? $tingkat : null,
+            );
         } catch (\RuntimeException $kegagalan) {
             $this->error($kegagalan->getMessage());
 

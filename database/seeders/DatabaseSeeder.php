@@ -25,7 +25,11 @@ class DatabaseSeeder extends Seeder
             // tercipta di production setiap kali `migrate --seed` dijalankan,
             // ada akun dengan password yang diketahui publik.
             $this->call(SiswaContohSeeder::class);
-            $this->call(KontenContohSeeder::class);
+
+            // Bank soal kabupaten nyata menggantikan KontenContohSeeder yang
+            // memakai SoalFactory. Tanpa KONTEN_KABUPATEN_FOLDER, seeder ini
+            // hanya mencetak peringatan dan tidak apa-apa.
+            $this->call(KontenKabupatenSeeder::class);
         }
     }
 }

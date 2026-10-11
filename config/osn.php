@@ -27,4 +27,20 @@ return [
 
     'purge_akun_chunk' => (int) env('PURGE_AKUN_CHUNK', 100),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Folder impor konten untuk seeder pengembangan
+    |--------------------------------------------------------------------------
+    |
+    | Berisi subfolder materi/ (Markdown), soal_*.json, dan gambar/, sesuai
+    | format yang dibaca ImporKontenService. Dipakai KontenKabupatenSeeder
+    | supaya isi database lokal berasal dari bank soal nyata, bukan data contoh.
+    |
+    | Kosongkan bila folder tidak ada; seeder akan melewati impor dan hanya
+    | mencetak peringatan. Tidak ada path absolut yang ditulis ke sini.
+    |
+    */
+
+    'konten_kabupaten_folder' => env('KONTEN_KABUPATEN_FOLDER', ''),
+
 ];
