@@ -18,7 +18,7 @@ use RuntimeException;
 
 class ImporKontenService implements ImporKontenServiceInterface
 {
-    public function impor(string $folder, bool $dryRun = false): array
+    public function impor(string $folder, bool $dryRun = false, ?string $tingkat = null): array
     {
         $folderMateri = $folder.'/materi';
 
@@ -33,6 +33,12 @@ class ImporKontenService implements ImporKontenServiceInterface
             throw new RuntimeException("Tidak ada berkas materi atau soal di {$folder}");
         }
 
+        // Penyaringan tingkat dilakukan sebelum pemeriksaan id_sumber kembar,
+        // supaya impor satu tingkat tidak gagal gara-gara berkas tingkat lain.
+        if ($tingkat !== null) {
+            $berkasMateri = $this->saringMateri($berkasMateri, $tingkat);
+        }
+
         $this->tolakIdSumberMateriKembar($berkasMateri);
 
         $soalDikumpulkan = [];
@@ -41,6 +47,10 @@ class ImporKontenService implements ImporKontenServiceInterface
             $isi = json_decode((string) file_get_contents($berkas), true, 512, JSON_THROW_ON_ERROR);
 
             foreach ($isi as $baris) {
+                if ($tingkat !== null && strtolower((string) ($baris['tingkat'] ?? '')) !== strtolower($tingkat)) {
+                    continue;
+                }
+
                 $idSumber = $baris['id_sumber'] ?? null;
 
                 if (! is_string($idSumber) || $idSumber === '') {
@@ -57,6 +67,10 @@ class ImporKontenService implements ImporKontenServiceInterface
             }
         }
 
+        if ($berkasMateri === [] && $soalDikumpulkan === []) {
+            throw new RuntimeException("Tidak ada materi atau soal tingkat {$tingkat} di {$folder}");
+        }
+
         // Dry-run memakai transaksi yang di-rollback di akhir, sehingga
         // seluruh alur dan validasinya jalan sungguhan tanpa menyisakan data.
         if ($dryRun) {
@@ -70,6 +84,46 @@ class ImporKontenService implements ImporKontenServiceInterface
         }
 
         return DB::transaction(fn (): array => $this->proses($folder, $berkasMateri, $soalDikumpulkan, false));
+    }
+
+    /**
+     * Ambil hanya berkas materi milik satu tingkat, dibaca dari frontmatter
+     * `tingkat:`. Berkas tanpa frontmatter tingkat ikut serta supaya parsing
+     * berikutnya yang melaporkan kekeliruan.
+     *
+     * @param  list<string>  $berkasMateri
+     * @return list<string>
+     */
+    private function saringMateri(array $berkasMateri, string $tingkat): array
+    {
+        $saring = array_map('strtolower', ['kabupaten', 'provinsi']);
+        $target = strtolower($tingkat);
+
+        return array_values(array_filter(
+            $berkasMateri,
+            function (string $berkas) use ($target, $saring): bool {
+                $isi = (string) file_get_contents($berkas);
+
+                if (preg_match('/^---\n(.+?)\n---\n/s', $isi, $potongan) !== 1) {
+                    return true;
+                }
+
+                if (preg_match('/^tingkat:\s*(.+)$/m', $potongan[1], $cocok) !== 1) {
+                    return true;
+                }
+
+                // Kode short (kab/prov) disamakan dengan nama panjang supaya
+                // pemanggil tidak harus ingat dua ejaan.
+                $nilai = strtolower(trim($cocok[1]));
+                $nilai = match ($nilai) {
+                    'kab' => 'kabupaten',
+                    'prov' => 'provinsi',
+                    default => $nilai,
+                };
+
+                return $nilai === $target || in_array($nilai, $saring, true) === false;
+            },
+        ));
     }
 
     /**
@@ -433,8 +487,22 @@ class ImporKontenService implements ImporKontenServiceInterface
 
         Pembahasan::updateOrCreate(
             ['soal_id' => $soal->id],
-            ['isi_pembahasan' => (string) $baris['pembahasan']],
+            ['isi_pembahasan' => $this->bersihkanTeks((string) $baris['pembahasan'])],
         );
+    }
+
+    /**
+     * Buang artefak scraping sebelum teks disimpan.
+     *
+     * `[cite: N]` adalah penanda rujukan dari sumber web hasil scraping, ada di
+     * sebagian besar pembahasan kabupaten dan tidak pernah ditampilkan sebagai
+     * isi. Sisanya dibiarkan apa adanya supaya teks sumber tetap utuh.
+     */
+    private function bersihkanTeks(string $teks): string
+    {
+        $teks = (string) preg_replace('/\s*\[cite:\s*\d+\]/', '', $teks);
+
+        return trim($teks);
     }
 
     /**
