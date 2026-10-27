@@ -78,8 +78,11 @@ berkala dan uji restore tetap perlu dikonfigurasi.
 
 ## Konfigurasi GitHub
 
-Buat GitHub Environment bernama `production` pada repository. Tambahkan
-environment secrets berikut:
+Buat GitHub Environment bernama `production` pada repository, lalu tambahkan
+repository variable `DEPLOY_VPS_ENABLED=true` di **Settings > Secrets and
+variables > Actions > Variables** hanya setelah VPS siap menerima deployment.
+Tanpa variable tersebut job deploy dilewati, sedangkan test dan build tetap
+berjalan. Tambahkan environment secrets berikut sebelum mengaktifkannya:
 
 | Secret | Nilai |
 | --- | --- |

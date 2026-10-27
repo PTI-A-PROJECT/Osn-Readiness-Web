@@ -83,9 +83,24 @@ jobs:
           extensions: bcmath, exif, gd, mbstring, pcntl, pdo_pgsql, zip
           coverage: none
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/Osn-Readiness-Web/package-lock.json
+
       - name: Install Composer dependencies
         working-directory: apps/Osn-Readiness-Web
         run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Install Laravel frontend dependencies
+        working-directory: apps/Osn-Readiness-Web
+        run: npm ci
+
+      - name: Build Laravel frontend assets
+        working-directory: apps/Osn-Readiness-Web
+        run: npm run build
 
       - name: Run Laravel tests
         working-directory: apps/Osn-Readiness-Web
@@ -160,7 +175,8 @@ jobs:
       - production-images
     if: >-
       github.ref == 'refs/heads/monorepo' &&
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      vars.DEPLOY_VPS_ENABLED == 'true'
     environment:
       name: production
     steps:
