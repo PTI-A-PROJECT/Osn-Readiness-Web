@@ -29,14 +29,19 @@ export const authService = {
   },
 
   // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.
-  async register({ nama, email, password, konfirmasi }) {
-    const res = await api.post(ENDPOINTS.auth.register, {
-      name: nama,
-      email,
-      password,
-      password_confirmation: konfirmasi,
-    })
-    return mapUser(unwrap(res)?.user)
+  // Kode referal opsional: hanya dikirim bila diisi, biar payload bersih.
+  async register({ nama, email, password, konfirmasi, kodeReferal }) {
+    const kode = typeof kodeReferal === 'string' ? kodeReferal.trim() : ''
+    const { user, token } = unwrap(
+      await api.post(ENDPOINTS.auth.register, {
+        name: nama,
+        email,
+        password,
+        password_confirmation: konfirmasi,
+        ...(kode ? { kode_referal: kode } : {}),
+      }),
+    )
+    return { user: mapUser(user), token }
   },
 
   // PUT /auth/profile {name, email} -> { message, data: user }
