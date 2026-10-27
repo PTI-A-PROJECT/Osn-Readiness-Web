@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Support\KodeReferal;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,12 +18,17 @@ class ApiRegisterRequest extends FormRequest
 
     /**
      * Email disamakan huruf kecilnya supaya A@x.com dan a@x.com tidak
-     * menjadi dua akun.
+     * menjadi dua akun. Kode referal dibesarkan dan dirapikan juga supaya
+     * " k7xw " tetap cocok dengan kode tersimpan "K7XW".
      */
     protected function prepareForValidation(): void
     {
         if (is_string($this->input('email'))) {
             $this->merge(['email' => strtolower(trim($this->input('email')))]);
+        }
+
+        if (array_key_exists('kode_referal', $this->all())) {
+            $this->merge(['kode_referal' => KodeReferal::normalisasi($this->input('kode_referal'))]);
         }
     }
 
@@ -46,6 +52,20 @@ class ApiRegisterRequest extends FormRequest
                 },
             ],
             'password' => ['required', 'confirmed', Password::min(8)],
+            // Opsional: kosong berarti tanpa undangan. Nilai yang diisi harus
+            // milik akun yang masih ada (akun terhapus tidak ikut).
+            'kode_referal' => [
+                'nullable', 'string', 'max:255',
+                function (string $attribute, mixed $value, Closure $fail): void {
+                    if ($value === null || $value === '') {
+                        return;
+                    }
+
+                    if (app(UserRepositoryInterface::class)->findByKodeReferal((string) $value) === null) {
+                        $fail('Kode referal tidak ditemukan.');
+                    }
+                },
+            ],
         ];
     }
 }

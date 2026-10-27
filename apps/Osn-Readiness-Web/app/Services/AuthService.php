@@ -7,6 +7,7 @@ use App\Contracts\Services\AuthServiceInterface;
 use App\Exceptions\AkunTidakAktifException;
 use App\Exceptions\KredensialTidakValidException;
 use App\Models\User;
+use App\Support\KodeReferal;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +24,32 @@ class AuthService implements AuthServiceInterface
     {
         try {
             return DB::transaction(function () use ($data, $device): array {
+                // Kode pengundang bukan milik pendaftar: diterjemahkan jadi
+                // id pemilik kode lalu dibuang dari data, supaya create() di
+                // bawah tidak menyimpan kode itu sebagai kode pendaftar sendiri.
+                $kodePemberi = KodeReferal::normalisasi($data['kode_referal'] ?? null);
+                unset($data['kode_referal']);
+
+                $pemberi = null;
+
+                if ($kodePemberi !== null) {
+                    $pemberi = $this->userRepository->findByKodeReferal($kodePemberi);
+
+                    // Validasi request sudah menolak kode tak dikenal; cek
+                    // ulang di sini menutup jeda pemisah keduanya (mis.
+                    // pemilik kode dihapus di antara keduanya).
+                    if (! $pemberi instanceof User) {
+                        throw ValidationException::withMessages([
+                            'kode_referal' => ['Kode referal tidak ditemukan.'],
+                        ]);
+                    }
+                }
+
                 /** @var User $user */
                 $user = $this->userRepository->create([
                     ...$data,
                     'is_active' => true,
+                    'direferensikan_oleh' => $pemberi?->id,
                 ]);
 
                 $user->assignRole('siswa');

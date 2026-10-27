@@ -13,11 +13,13 @@ const nama = ref('')
 const email = ref('')
 const password = ref('')
 const konfirmasi = ref('')
+const referal = ref('')
 const setuju = ref(false)
 const namaError = ref('')
 const emailError = ref('')
 const passwordError = ref('')
 const konfirmasiError = ref('')
+const referalError = ref('')
 const setujuError = ref('')
 const loading = ref(false)
 const tampilkanPassword = ref(false)
@@ -29,9 +31,11 @@ function validasi() {
   emailError.value = ''
   passwordError.value = ''
   konfirmasiError.value = ''
+  referalError.value = ''
   setujuError.value = ''
   nama.value = nama.value.trim()
   email.value = email.value.trim()
+  referal.value = referal.value.trim()
   if (nama.value.trim().length < 3) namaError.value = 'Nama minimal 3 karakter'
   if (!email.value) emailError.value = 'Email wajib diisi'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value))
@@ -46,6 +50,7 @@ function validasi() {
     !emailError.value &&
     !passwordError.value &&
     !konfirmasiError.value &&
+    !referalError.value &&
     !setujuError.value
   )
 }
@@ -62,6 +67,7 @@ async function daftar() {
       email: email.value,
       password: password.value,
       konfirmasi: konfirmasi.value,
+      kodeReferal: referal.value,
     })
 
     registrasiBerhasil.value = true
@@ -74,13 +80,16 @@ async function daftar() {
     })
 
     setTimeout(() => {
-      router.push('/login')
+      router.push({ name: 'siswa.dashboard' })
     }, 1200)
   } catch (err) {
     const emailGanda = pesanField(err, 'email')
+    const galatReferal = pesanField(err, 'kode_referal')
 
     if (emailGanda) {
       emailError.value = emailGanda
+    } else if (galatReferal) {
+      referalError.value = galatReferal
     } else {
       toast.add({
         severity: 'error',
@@ -278,6 +287,30 @@ async function daftar() {
 
           <small v-if="konfirmasiError" id="konfirmasi-error" class="text-[11px] text-[#b33a35]">
             {{ konfirmasiError }}
+          </small>
+        </div>
+
+        <div class="grid gap-1.5">
+          <label for="referal" class="text-[#182238] font-['Inter'] text-xs font-[750]">
+            Kode Referal
+            <span class="text-[#68758a] font-normal">(opsional)</span>
+          </label>
+          <input
+            id="referal"
+            v-model="referal"
+            type="text"
+            maxlength="4"
+            placeholder="Kode teman yang mengundangmu"
+            :aria-invalid="Boolean(referalError)"
+            :aria-describedby="referalError ? 'referal-error' : 'referal-hint'"
+            class="w-full min-h-[42px] px-3 border border-[#d6e0eb] rounded-md outline-none bg-white text-[#17233b] font-inherit text-[13px] uppercase placeholder:text-[#95a5aa] focus:border-[#0759a5] focus:shadow-[0_0_0_3px_rgb(11_104_189/11%)] aria-invalid:border-[#c54c45]"
+            style="text-transform: uppercase"
+          />
+          <small v-if="referalError" id="referal-error" class="text-[11px] text-[#b33a35]">
+            {{ referalError }}
+          </small>
+          <small v-else id="referal-hint" class="text-[11px] text-[#68758a]">
+            Diberikan teman yang mengundangmu — boleh dikosongkan
           </small>
         </div>
 

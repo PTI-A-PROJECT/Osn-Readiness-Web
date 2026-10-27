@@ -23,7 +23,7 @@ class AuthController
         return response()->json([
             'message' => 'Registrasi berhasil',
             'data' => [
-                'user' => new UserResource($result['user']->load('roles')),
+                'user' => new UserResource($result['user']->load('roles')->loadCount('diundang')),
                 'token' => $result['token'],
             ],
         ], 201);
@@ -39,7 +39,7 @@ class AuthController
         return response()->json([
             'message' => 'Login berhasil',
             'data' => [
-                'user' => new UserResource($result['user']->load('roles')),
+                'user' => new UserResource($result['user']->load('roles')->loadCount('diundang')),
                 'token' => $result['token'],
             ],
         ]);
@@ -58,7 +58,7 @@ class AuthController
     {
         return response()->json([
             'message' => 'OK',
-            'data' => new UserResource($request->user()->load('roles')),
+            'data' => new UserResource($request->user()->load('roles')->loadCount('diundang')),
         ]);
     }
 
