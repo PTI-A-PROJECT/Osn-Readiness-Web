@@ -33,6 +33,12 @@ Untuk menghentikan:
 docker compose down
 ```
 
+## Deploy VPS
+
+Panduan CI/CD GitHub Actions dan deployment production ke VPS ada di
+[docs/CI-CD-DEPLOY-VPS.md](docs/CI-CD-DEPLOY-VPS.md). Compose production
+terpisah dari `docker-compose.yml` development.
+
 ## Riwayat commit tetap utuh
 
 Setiap repo digabung dengan `git subtree add` tanpa `--squash`, jadi seluruh commit asli

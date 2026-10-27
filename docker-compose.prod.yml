@@ -1,0 +1,129 @@
+services:
+  frontend:
+    build:
+      context: ./apps/siap-osn-fe
+      dockerfile: Dockerfile.production
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:?Set VITE_API_BASE_URL in .env.production}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"
+    networks:
+      - osn-network
+
+  backend:
+    build:
+      context: ./apps/Osn-Readiness-Web
+      dockerfile: Dockerfile.production
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      APP_NAME: SIAP OSN
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL:?Set APP_URL in .env.production}
+      FRONTEND_URL: ${FRONTEND_URL:?Set FRONTEND_URL in .env.production}
+      DB_CONNECTION: pgsql
+      DB_HOST: app-db
+      DB_PORT: 5432
+      DB_DATABASE: ${APP_DB_DATABASE:?Set APP_DB_DATABASE in .env.production}
+      DB_USERNAME: ${APP_DB_USERNAME:?Set APP_DB_USERNAME in .env.production}
+      DB_PASSWORD: ${APP_DB_PASSWORD:?Set APP_DB_PASSWORD in .env.production}
+      PERHITUNGAN_URL: http://analytics-api:8000
+      PERHITUNGAN_TOKEN: ${INTERNAL_API_TOKEN:?Set INTERNAL_API_TOKEN in .env.production}
+      CACHE_STORE: file
+      SESSION_DRIVER: file
+      QUEUE_CONNECTION: database
+    depends_on:
+      app-db:
+        condition: service_healthy
+      analytics-api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - laravel_public:/var/www/html/storage/app/public
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - osn-network
+
+  queue-worker:
+    build:
+      context: ./apps/Osn-Readiness-Web
+      dockerfile: Dockerfile.production
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      APP_NAME: SIAP OSN
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL:?Set APP_URL in .env.production}
+      DB_CONNECTION: pgsql
+      DB_HOST: app-db
+      DB_PORT: 5432
+      DB_DATABASE: ${APP_DB_DATABASE:?Set APP_DB_DATABASE in .env.production}
+      DB_USERNAME: ${APP_DB_USERNAME:?Set APP_DB_USERNAME in .env.production}
+      DB_PASSWORD: ${APP_DB_PASSWORD:?Set APP_DB_PASSWORD in .env.production}
+      PERHITUNGAN_URL: http://analytics-api:8000
+      PERHITUNGAN_TOKEN: ${INTERNAL_API_TOKEN:?Set INTERNAL_API_TOKEN in .env.production}
+      CACHE_STORE: file
+      SESSION_DRIVER: file
+      QUEUE_CONNECTION: database
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90"]
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - laravel_public:/var/www/html/storage/app/public
+    profiles:
+      - worker
+    networks:
+      - osn-network
+
+  app-db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${APP_DB_DATABASE:?Set APP_DB_DATABASE in .env.production}
+      POSTGRES_USER: ${APP_DB_USERNAME:?Set APP_DB_USERNAME in .env.production}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD:?Set APP_DB_PASSWORD in .env.production}
+    volumes:
+      - app_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - osn-network
+
+  analytics-api:
+    build:
+      context: ./apps/data-analytics
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?Set INTERNAL_API_TOKEN in .env.production}
+    expose:
+      - "8000"
+    networks:
+      - osn-network
+
+networks:
+  osn-network:
+    driver: bridge
+
+volumes:
+  app_pgdata:
+  laravel_public:
