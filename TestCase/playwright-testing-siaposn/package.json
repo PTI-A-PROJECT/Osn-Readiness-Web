@@ -1,0 +1,22 @@
+{
+  "name": "playwright-testing-siaposn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:materi": "playwright test tests/materi-simulasi.spec.ts --project=chromium",
+    "test:register": "playwright test tests/register.spec.ts --project=chromium",
+    "test:e2e": "playwright test tests/end-to-end-flow.spec.ts --project=chromium",
+    "test:bugs": "playwright test tests/bug-detection.spec.ts --project=chromium --workers=1",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5"
+  }
+}
