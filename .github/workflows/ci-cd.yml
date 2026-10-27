@@ -170,7 +170,7 @@ jobs:
 
   deploy:
     name: Deploy to VPS
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - production-images
     if: >-
@@ -179,38 +179,17 @@ jobs:
       vars.DEPLOY_VPS_ENABLED == 'true'
     environment:
       name: production
+    defaults:
+      run:
+        working-directory: /home/guntur/osn/src
     steps:
-      - name: Checkout deployment script
+      - name: Checkout repo
         uses: actions/checkout@v4
-
-      - name: Configure SSH
-        env:
-          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
-        run: |
-          test -n "$VPS_SSH_PRIVATE_KEY" || { echo "Missing VPS_SSH_PRIVATE_KEY" >&2; exit 1; }
-          test -n "$VPS_KNOWN_HOSTS" || { echo "Missing VPS_KNOWN_HOSTS" >&2; exit 1; }
-          install -m 700 -d "$HOME/.ssh"
-          printf '%s\n' "$VPS_SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
-          printf '%s\n' "$VPS_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+        with:
+          fetch-depth: 0
 
       - name: Deploy latest monorepo commit
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
         run: |
-          test -n "$VPS_HOST" || { echo "Missing VPS_HOST" >&2; exit 1; }
-          test -n "$VPS_USER" || { echo "Missing VPS_USER" >&2; exit 1; }
-          test -n "$VPS_DEPLOY_PATH" || { echo "Missing VPS_DEPLOY_PATH" >&2; exit 1; }
-          [[ "$VPS_DEPLOY_PATH" =~ ^/[A-Za-z0-9._/-]+$ ]] || {
-            echo "VPS_DEPLOY_PATH must be an absolute path using only letters, numbers, '.', '_', '/', and '-'" >&2
-            exit 1
-          }
-          printf -v quoted_deploy_path '%q' "$VPS_DEPLOY_PATH"
-          ssh -i "$HOME/.ssh/id_ed25519" \
-            -o BatchMode=yes \
-            -o StrictHostKeyChecking=yes \
-            "$VPS_USER@$VPS_HOST" \
-            "cd $quoted_deploy_path && git pull --ff-only origin monorepo && bash scripts/deploy-vps.sh --skip-pull"
+          git fetch origin monorepo
+          git reset --hard origin/monorepo
+          bash scripts/deploy-vps.sh --skip-pull
