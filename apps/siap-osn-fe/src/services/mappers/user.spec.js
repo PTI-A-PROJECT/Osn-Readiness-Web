@@ -6,6 +6,8 @@ const userLaravel = {
   name: 'Budi',
   email: 'budi@example.com',
   roles: ['siswa'],
+  kode_referal: 'K7XW',
+  jumlah_diundang: 3,
   created_at: '2026-09-25T00:00:00Z',
 }
 
@@ -32,8 +34,27 @@ describe('mapUser', () => {
       nama: 'Budi',
       email: 'budi@example.com',
       role: 'siswa',
+      kodeReferal: 'K7XW',
+      jumlahUndang: 3,
       created_at: '2026-09-25T00:00:00Z',
     })
+  })
+
+  it('kode dan jumlah undangan bawaan bila backend tidak mengirim', () => {
+    expect(mapUser({ id: 2, name: 'Ayu', email: 'ayu@example.com' })).toEqual({
+      id: 2,
+      nama: 'Ayu',
+      email: 'ayu@example.com',
+      role: null,
+      kodeReferal: null,
+      jumlahUndang: 0,
+      created_at: null,
+    })
+  })
+
+  it('jumlah undangan bukan angka dianggap nol', () => {
+    expect(mapUser({ id: 3, jumlah_diundang: undefined }).jumlahUndang).toBe(0)
+    expect(mapUser({ id: 3, jumlah_diundang: '4' }).jumlahUndang).toBe(4)
   })
 
   it('null menjadi null', () => {

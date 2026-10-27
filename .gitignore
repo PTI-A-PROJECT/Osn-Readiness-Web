@@ -30,3 +30,10 @@ coverage/
 /test-results/
 /playwright-report/
 .eslintcache
+
+# Local E2E orchestration and test artifacts
+/.commandcode/
+/docker-compose.e2e.tmp.yml
+**/e2e-tmp/
+**/test-results/
+**/playwright-report/

@@ -18,6 +18,10 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'is_active' => $this->is_active,
             'tingkat_aktif_id' => $this->tingkat_aktif_id,
+            'kode_referal' => $this->kode_referal,
+            // Hanya benar saat loadCount('diundang') dipanggil pemanggil;
+            // tanpa itu angkanya nol, bukan error.
+            'jumlah_diundang' => $this->diundang_count ?? 0,
             'roles' => $this->whenLoaded('roles', function () {
                 return $this->roles->pluck('name');
             }),
