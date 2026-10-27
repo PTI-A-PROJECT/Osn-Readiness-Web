@@ -9,7 +9,9 @@ services:
     ports:
       - "127.0.0.1:8081:80"
     networks:
-      - osn-network
+      osn-network:
+        aliases:
+          - web
 
   backend:
     build:
