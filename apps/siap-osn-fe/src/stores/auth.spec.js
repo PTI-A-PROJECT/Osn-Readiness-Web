@@ -81,14 +81,20 @@ describe('auth store', () => {
     expect(authService.simpanToken).toHaveBeenCalledWith('tok123')
   })
 
-  it('register meneruskan payload tanpa login', async () => {
-    authService.register.mockResolvedValue(userSiswa)
+  it('register menyimpan token dan langsung mengisi user', async () => {
+    authService.register.mockResolvedValue({ user: userSiswa, token: 'tok-register' })
     const auth = useAuthStore()
-    const payload = { nama: 'Budi', email: 'budi@example.com', password: 'password123', konfirmasi: 'password123' }
+    const payload = {
+      nama: 'Budi',
+      email: 'budi@example.com',
+      password: 'password123',
+      konfirmasi: 'password123',
+    }
     const result = await auth.register(payload)
     expect(authService.register).toHaveBeenCalledWith(payload)
     expect(result).toEqual(userSiswa)
-    expect(auth.user).toBeNull()
+    expect(auth.user).toEqual(userSiswa)
+    expect(authService.simpanToken).toHaveBeenCalledWith('tok-register')
   })
 
   it('updateProfile menggabung data server di atas payload', async () => {

@@ -78,8 +78,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Tidak otomatis login — pemanggil redirect ke /login.
-  function register(payload) {
-    return authService.register(payload)
+  async function register(payload) {
+    const res = await authService.register(payload)
+    resetDataAkun()
+    saveToken(res.token)
+    user.value = res.user
+    return user.value
   }
 
   // Simpan perubahan profil (nama, email) dari halaman Profil.

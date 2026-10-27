@@ -32,6 +32,8 @@ describe('authService', () => {
       email: 'budi@example.com',
       role: 'siswa',
       created_at: '2026-09-25T00:00:00Z',
+      kodeReferal: null,
+      jumlahUndang: 0,
     })
   })
 
@@ -48,8 +50,10 @@ describe('authService', () => {
   })
 
   it('register memetakan ke field Laravel', async () => {
-    api.post.mockResolvedValue({ data: { message: 'Registrasi berhasil', data: { user: userLaravel } } })
-    const user = await authService.register({
+    api.post.mockResolvedValue({
+      data: { message: 'Registrasi berhasil', data: { user: userLaravel, token: 'tok-register' } },
+    })
+    const res = await authService.register({
       nama: 'Budi',
       email: 'budi@example.com',
       password: 'password123',
@@ -61,7 +65,7 @@ describe('authService', () => {
       password: 'password123',
       password_confirmation: 'password123',
     })
-    expect(user.nama).toBe('Budi')
+    expect(res).toEqual({ user: expect.objectContaining({ nama: 'Budi' }), token: 'tok-register' })
   })
 
   it('updateProfile mengirim name/email', async () => {

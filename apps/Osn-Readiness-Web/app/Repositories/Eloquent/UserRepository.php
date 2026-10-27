@@ -20,6 +20,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model->newQuery()->whereRaw('lower(email) = ?', [strtolower($email)])->first();
     }
 
+    public function findByKodeReferal(string $kode): ?User
+    {
+        // Kode tersimpan uppercase (KodeReferal::normalisasi); akun terhapus
+        // tidak ikut karena query lewat scope bawaan SoftDeletes.
+        return $this->model->newQuery()->where('kode_referal', $kode)->first();
+    }
+
     public function paginate(int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->newQuery()->with('roles')->latest()->paginate($perPage);

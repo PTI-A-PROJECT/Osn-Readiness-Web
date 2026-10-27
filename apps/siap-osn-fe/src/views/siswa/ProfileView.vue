@@ -23,6 +23,8 @@ function dariUser(u) {
     kelas: u?.kelas ?? '',
     tingkat: u?.tingkat ?? '-',
     bergabung: formatBergabung(u?.created_at ?? u?.bergabung),
+    kodeReferal: u?.kodeReferal ?? '',
+    jumlahUndang: u?.jumlahUndang ?? 0,
   }
 }
 
@@ -46,10 +48,22 @@ const initials = computed(
 
 const saving = ref(false)
 const notice = ref({ type: '', text: '' })
+const editingProfile = ref(false)
+const tersalin = ref(false)
 
 function resetProfile() {
   Object.assign(profile, dariUser(auth.user))
   notice.value = { type: '', text: '' }
+}
+
+function beginEditProfile() {
+  notice.value = { type: '', text: '' }
+  editingProfile.value = true
+}
+
+function cancelEditProfile() {
+  resetProfile()
+  editingProfile.value = false
 }
 
 async function saveProfile() {
@@ -69,6 +83,7 @@ async function saveProfile() {
       kelas: profile.kelas.trim(),
     })
     notice.value = { type: 'success', text: 'Profil berhasil diperbarui.' }
+    editingProfile.value = false
   } catch (e) {
     notice.value = {
       type: 'error',
@@ -81,6 +96,8 @@ async function saveProfile() {
 
 /* ---------- Ubah kata sandi ---------- */
 const password = reactive({ current: '', next: '', confirm: '' })
+const editingPassword = ref(false)
+const passwordNotice = ref({ type: '', text: '' })
 
 const strength = computed(() => {
   const p = password.next
@@ -98,10 +115,46 @@ function resetPassword() {
   Object.assign(password, { current: '', next: '', confirm: '' })
 }
 
+function beginEditPassword() {
+  resetPassword()
+  passwordNotice.value = { type: '', text: '' }
+  editingPassword.value = true
+}
+
+function cancelEditPassword() {
+  resetPassword()
+  passwordNotice.value = { type: '', text: '' }
+  editingPassword.value = false
+}
+
+async function salinKode() {
+  if (!profile.kodeReferal) return
+
+  try {
+    await navigator.clipboard.writeText(profile.kodeReferal)
+    tersalin.value = true
+    window.setTimeout(() => {
+      tersalin.value = false
+    }, 1500)
+  } catch {
+    notice.value = { type: 'error', text: 'Kode belum tersalin. Silakan salin manual.' }
+  }
+}
+
 function updatePassword() {
-  if (password.next.length < 8) return alert('Kata sandi minimal 8 karakter')
-  if (password.next !== password.confirm) return alert('Konfirmasi kata sandi tidak sama')
+  if (password.next.length < 8) {
+    passwordNotice.value = { type: 'error', text: 'Kata sandi minimal 8 karakter.' }
+    return
+  }
+  if (password.next !== password.confirm) {
+    passwordNotice.value = { type: 'error', text: 'Konfirmasi kata sandi tidak sama.' }
+    return
+  }
   // TODO: panggil API ubah kata sandi
+  passwordNotice.value = {
+    type: 'success',
+    text: 'Kata sandi baru memenuhi syarat. Penyimpanan ke server belum aktif.',
+  }
   resetPassword()
 }
 
@@ -131,6 +184,22 @@ async function logout() {
         <p class="section__desc">Perbarui data diri yang tampil di akun SIAP OSN-mu.</p>
 
         <form class="card" @submit.prevent="saveProfile">
+          <div class="card__head">
+            <div class="card__meta">
+              <h3 class="card__title">Data Diri</h3>
+              <p class="card__hint" role="status">
+                {{
+                  editingProfile
+                    ? 'Mode ubah aktif — sunting lalu tekan Simpan Perubahan.'
+                    : 'Mode lihat — tekan Ubah Profil untuk menyunting.'
+                }}
+              </p>
+            </div>
+            <button v-if="!editingProfile" type="button" class="btn btn--primary" @click="beginEditProfile">
+              Ubah Profil
+            </button>
+          </div>
+
           <div class="user">
             <div class="avatar avatar--lg">{{ initials }}</div>
             <div>
@@ -143,19 +212,19 @@ async function logout() {
           <div class="grid">
             <div class="field">
               <label for="nama">Nama Lengkap</label>
-              <input id="nama" v-model="profile.nama" type="text" />
+              <input id="nama" v-model="profile.nama" type="text" :disabled="!editingProfile || saving" />
             </div>
             <div class="field">
               <label for="email">Email Aktif</label>
-              <input id="email" v-model="profile.email" type="email" />
+              <input id="email" v-model="profile.email" type="email" :disabled="!editingProfile || saving" />
             </div>
             <div class="field">
               <label for="sekolah">Asal Sekolah</label>
-              <input id="sekolah" v-model="profile.sekolah" type="text" />
+              <input id="sekolah" v-model="profile.sekolah" type="text" :disabled="!editingProfile || saving" />
             </div>
             <div class="field">
               <label for="kelas">Kelas</label>
-              <input id="kelas" v-model="profile.kelas" type="text" />
+              <input id="kelas" v-model="profile.kelas" type="text" :disabled="!editingProfile || saving" />
             </div>
             <div class="field">
               <label for="tingkat">Tingkat Seleksi Saat Ini</label>
@@ -172,8 +241,10 @@ async function logout() {
             {{ notice.text }}
           </p>
 
-          <div class="actions">
-            <button type="button" class="btn btn--ghost" @click="resetProfile">Batalkan</button>
+          <div v-if="editingProfile" class="actions">
+            <button type="button" class="btn btn--ghost" :disabled="saving" @click="cancelEditProfile">
+              Batalkan
+            </button>
             <button type="submit" class="btn btn--primary" :disabled="saving">
               {{ saving ? 'Menyimpan...' : 'Simpan Perubahan' }}
             </button>
@@ -188,51 +259,110 @@ async function logout() {
         <p class="section__desc">Gunakan kata sandi yang kuat dan belum pernah dipakai di akun lain.</p>
 
         <form class="card" @submit.prevent="updatePassword">
-          <div class="field">
-            <label for="pw-now">Kata Sandi Saat Ini</label>
-            <input id="pw-now" v-model="password.current" type="password" autocomplete="current-password" />
-          </div>
-
-          <div class="field">
-            <label for="pw-new">Kata Sandi Baru</label>
-            <input
-              id="pw-new"
-              v-model="password.next"
-              type="password"
-              placeholder="Kombinasi minimal 8 karakter"
-              autocomplete="new-password"
-            />
-            <div class="strength">
-              <div
-                class="strength__bar"
-                :style="{ width: strength.percent + '%' }"
-                :class="`strength__bar--${strength.score}`"
-              ></div>
+          <div class="card__head">
+            <div class="card__meta">
+              <h3 class="card__title">Kata Sandi</h3>
+              <p class="card__hint" role="status">
+                {{
+                  editingPassword
+                    ? 'Mode ubah aktif — isi ketiga kolom lalu tekan Simpan.'
+                    : 'Kata sandi terlindungi. Tekan Ubah Kata Sandi untuk menggantinya.'
+                }}
+              </p>
             </div>
-            <small>Kekuatan kata sandi: {{ strength.label }}</small>
+            <button v-if="!editingPassword" type="button" class="btn btn--primary" @click="beginEditPassword">
+              Ubah Kata Sandi
+            </button>
           </div>
 
-          <div class="field">
-            <label for="pw-confirm">Konfirmasi Kata Sandi Baru</label>
-            <input
-              id="pw-confirm"
-              v-model="password.confirm"
-              type="password"
-              placeholder="Ulangi kata sandi baru"
-              autocomplete="new-password"
-            />
-          </div>
+          <!-- Formulir hanya tampil saat mode ubah aktif -->
+          <template v-if="editingPassword">
+            <div class="field">
+              <label for="pw-now">Kata Sandi Saat Ini</label>
+              <input id="pw-now" v-model="password.current" type="password" autocomplete="current-password" />
+            </div>
 
-          <div class="actions">
-            <button type="button" class="btn btn--ghost" @click="resetPassword">Batalkan</button>
-            <button type="submit" class="btn btn--primary">Perbarui Kata Sandi</button>
-          </div>
+            <div class="field">
+              <label for="pw-new">Kata Sandi Baru</label>
+              <input
+                id="pw-new"
+                v-model="password.next"
+                type="password"
+                placeholder="Kombinasi minimal 8 karakter"
+                autocomplete="new-password"
+              />
+              <div class="strength">
+                <div
+                  class="strength__bar"
+                  :style="{ width: strength.percent + '%' }"
+                  :class="`strength__bar--${strength.score}`"
+                ></div>
+              </div>
+              <small>Kekuatan kata sandi: {{ strength.label }}</small>
+            </div>
+
+            <div class="field">
+              <label for="pw-confirm">Konfirmasi Kata Sandi Baru</label>
+              <input
+                id="pw-confirm"
+                v-model="password.confirm"
+                type="password"
+                placeholder="Ulangi kata sandi baru"
+                autocomplete="new-password"
+              />
+            </div>
+
+            <div class="actions">
+              <button type="button" class="btn btn--ghost" @click="cancelEditPassword">Batalkan</button>
+              <button type="submit" class="btn btn--primary">Simpan</button>
+            </div>
+          </template>
+
+          <p v-if="passwordNotice.text" class="notice" :class="`notice--${passwordNotice.type}`" role="status">
+            {{ passwordNotice.text }}
+          </p>
         </form>
       </section>
 
-      <!-- 03 Logout -->
+      <!-- 03 Undang Teman -->
       <section class="section">
-        <span class="eyebrow">03 · Logout</span>
+        <span class="eyebrow">03 · Undang Teman</span>
+        <h2 class="section__title">Bagikan Kode Referal</h2>
+        <p class="section__desc">Ajak temanmu mendaftar ke SIAP OSN menggunakan kode ini.</p>
+
+        <div class="card">
+          <div class="card__head">
+            <div class="card__meta">
+              <h3 class="card__title">Kode Referal Kamu</h3>
+              <p class="card__hint">Masukkan kode ini saat temanmu melakukan registrasi.</p>
+            </div>
+          </div>
+          <div class="referal-share">
+            <input
+              :value="profile.kodeReferal || 'Belum tersedia'"
+              type="text"
+              readonly
+              aria-label="Kode referal kamu"
+              class="referal-share__code"
+            />
+            <button
+              type="button"
+              class="btn btn--primary"
+              :disabled="!profile.kodeReferal"
+              @click="salinKode"
+            >
+              {{ tersalin ? 'Tersalin' : 'Salin' }}
+            </button>
+          </div>
+          <p class="referal-share__count">
+            {{ profile.jumlahUndang }} pengguna sudah mendaftar lewat kode Anda
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 Logout -->
+      <section class="section">
+        <span class="eyebrow">04 · Logout</span>
         <h2 class="section__title">Keluar dari Akun</h2>
         <p class="section__desc">Akhiri sesi login di perangkat ini.</p>
 
@@ -298,6 +428,13 @@ async function logout() {
   background: #fff; border: 1px solid var(--border);
   border-radius: 16px; padding: 20px;
 }
+.card__head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; margin-bottom: 18px;
+}
+.card__meta { min-width: 0; }
+.card__title { margin: 0; font-size: 14px; font-weight: 700; }
+.card__hint { margin: 3px 0 0; font-size: 11px; line-height: 1.5; color: var(--muted); }
 
 /* Avatar & user */
 .avatar {
@@ -361,8 +498,18 @@ async function logout() {
 }
 .device strong { color: var(--text); }
 
+/* Referral */
+.referal-share { display: flex; align-items: center; gap: 10px; }
+.referal-share__code {
+  flex: 1; height: 38px; padding: 0 14px; border: 1px dashed var(--yellow);
+  border-radius: 8px; background: #fffaf0; color: var(--navy);
+  font-size: 18px; font-weight: 800; letter-spacing: 0.16em; text-align: center;
+}
+.referal-share__count { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
+
 @media (max-width: 640px) {
   .grid { grid-template-columns: 1fr; }
+  .card__head { flex-direction: column; align-items: stretch; }
   .logout { flex-direction: column; align-items: flex-start; }
   .device { flex-direction: column; }
 }
