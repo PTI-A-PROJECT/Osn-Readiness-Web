@@ -10,6 +10,7 @@ sumber kebenaran rumus tetap terjaga.
 from __future__ import annotations
 
 from collections.abc import Sequence
+from typing import cast
 
 from data_analytics.models import TipeSoal
 from data_analytics.schemas import (
@@ -67,13 +68,12 @@ def peta_pretest(
     materi: Sequence[LaravelMateriItem],
     jumlah_materi_wajib: int,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
-    """Baris pemetaan untuk SETIAP materi yang dikirim (bukan hanya yang punya
-    soal — Laravel mewajibkan tiap materi punya baris), plus daftar materi
-    wajib = N materi pertama sesuai urutan permintaan.
+    """Hitung pemetaan setiap materi dan pilih materi wajib terlemah.
 
-    Mengembalikan (pemetaan, materi_wajib). persentase berbobot
-    (poin_didapat/poin_maksimal × 100, aturan final v1), 0.0 bila materi tak
-    punya soal.
+    Laravel mewajibkan setiap materi yang dikirim memiliki baris pemetaan.
+    Materi wajib dipilih dari persentase berbobot terendah, dengan
+    ``materi_id`` sebagai tie-break deterministik. Materi tanpa soal mendapat
+    persentase 0.0 dan menjadi kandidat terlemah.
     """
     if jumlah_materi_wajib > len(materi):
         raise ValueError(
@@ -105,9 +105,16 @@ def peta_pretest(
             }
         )
 
-    materi_wajib = [
-        {"materi_id": m.materi_id, "prioritas": prioritas}
-        for prioritas, m in enumerate(materi[:jumlah_materi_wajib], start=1)
+    kandidat = sorted(
+        pemetaan,
+        key=lambda item: (
+            cast(float, item["persentase"]),
+            cast(int, item["materi_id"]),
+        ),
+    )
+    materi_wajib: list[dict[str, object]] = [
+        {"materi_id": cast(int, item["materi_id"]), "prioritas": prioritas}
+        for prioritas, item in enumerate(kandidat[:jumlah_materi_wajib], start=1)
     ]
 
     return pemetaan, materi_wajib
