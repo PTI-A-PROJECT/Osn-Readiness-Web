@@ -186,10 +186,11 @@ def test_hitung_pretest_kontrak_laravel():
             "peringkat": 3,
         },
     ]
-    # Materi wajib = N pertama sesuai urutan permintaan.
+    # Materi wajib dipilih dari persentase terendah: materi 12 tidak teruji
+    # dihitung 0%, lalu materi 10 mendapat 33.33%.
     assert body["materi_wajib"] == [
-        {"materi_id": 10, "prioritas": 1},
-        {"materi_id": 11, "prioritas": 2},
+        {"materi_id": 12, "prioritas": 1},
+        {"materi_id": 10, "prioritas": 2},
     ]
 
 
@@ -301,7 +302,9 @@ def test_hitung_latihan_wajib_materi_id():
 
 def test_hitung_simulasi_kabupaten_tepat_70_lulus():
     # 7 dari 10 soal mudah benar = 70 -> lulus kabupaten (inklusif).
-    soal = [_soal(f"x{i}", "mudah", "A", "A" if i < 7 else "B", "m1") for i in range(10)]
+    soal = [
+        _soal(f"x{i}", "mudah", "A", "A" if i < 7 else "B", "m1") for i in range(10)
+    ]
     r = client.post(
         "/hitung/simulasi", headers=HEADERS, json={"tingkat": "kabupaten", "soal": soal}
     )
@@ -314,7 +317,9 @@ def test_hitung_simulasi_kabupaten_tepat_70_lulus():
 
 def test_hitung_simulasi_provinsi_tepat_80_lulus():
     # 8 dari 10 soal mudah benar = 80 -> lulus provinsi (passing 80).
-    soal = [_soal(f"x{i}", "mudah", "A", "A" if i < 8 else "B", "m1") for i in range(10)]
+    soal = [
+        _soal(f"x{i}", "mudah", "A", "A" if i < 8 else "B", "m1") for i in range(10)
+    ]
     r = client.post(
         "/hitung/simulasi", headers=HEADERS, json={"tingkat": "provinsi", "soal": soal}
     )
@@ -327,7 +332,9 @@ def test_hitung_simulasi_provinsi_tepat_80_lulus():
 
 def test_hitung_simulasi_provinsi_di_bawah_80_tidak_lulus():
     # 7 dari 10 soal mudah benar = 70 -> tidak lulus provinsi (passing 80).
-    soal = [_soal(f"x{i}", "mudah", "A", "A" if i < 7 else "B", "m1") for i in range(10)]
+    soal = [
+        _soal(f"x{i}", "mudah", "A", "A" if i < 7 else "B", "m1") for i in range(10)
+    ]
     r = client.post(
         "/hitung/simulasi", headers=HEADERS, json={"tingkat": "provinsi", "soal": soal}
     )

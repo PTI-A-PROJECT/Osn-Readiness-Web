@@ -81,7 +81,6 @@ from data_analytics.leaderboard import (
 )
 from data_analytics.materi_wajib import selesai_dipelajari
 from data_analytics.scoring import cocokkan_jawaban, hitung_skor, tentukan_predikat
-from tests.conftest import session
 
 DEFAULT_ATURAN_PREDIKAT: Final[tuple[tuple[str, float], ...]] = (
     ("Sangat Baik", 90),
