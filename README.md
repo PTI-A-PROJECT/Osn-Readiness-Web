@@ -67,3 +67,30 @@ Melihat commit dari repo tertentu saja:
 
 Ketiga repo asal tidak diubah oleh proses penggabungan ini (hanya ada satu commit
 penutup untuk file yang sebelumnya belum di-commit). Keduanya bisa dipakai berdampingan.
+
+---
+
+## Tim Kontributor
+
+Seluruh kontributor dari ketiga repositori proyek yang digabung ke dalam monorepo ini:
+
+| Bagian | Kontributor | GitHub / Email |
+|---|---|---|
+| **Backend** (`Osn-Readiness-Web`) | Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
+| | Sultonaru | `arifsetiawan.achmad2004@gmail.com` |
+| | Haman Haris | `hamanharis308@gmail.com` |
+| **Frontend** (`siap-osn-fe`) | Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
+| | Alvina | `amaliavina34@gmail.com` |
+| | Elvira | [@Elvira2334](https://github.com/Elvira2334) |
+| | Fajar Purba | [@Fajarpurba](https://github.com/Fajarpurba) |
+| | Nikola Okin | [@OKIN0902](https://github.com/OKIN0902) |
+| | Ibra Fahro (bjirkah) | `achmadibraalfahro@gmail.com` |
+| | Anisatul Qomariyah (nisajs) | `anisatulqomariyah95@gmail.com` |
+| | Bimo Taraqie | `bimotaraqie87@gmail.com` |
+| **Data Analytics** (`data-analytics`) | Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
+| | Muhammad Hanif Abdur Razaq | [@Razzoom23](https://github.com/Razzoom23) |
+| | Fakhri Ahmadi (Nexus) | `fakhriahmadi559@gmail.com` |
+| | Falih (PalihGit) | `falih.thefal@gmail.com` |
+| | Putra Lyan (PuLyan123) | `putralyan127@gmail.com` |
+| | Hilmi Zakin Putra | `hilmizakin12@gmail.com` |
+| | Dea Alensa | `dea.alensa11@gmail.com` |
