@@ -120,6 +120,7 @@ function masukGoogle() {
 
           <input
             id="email"
+            name="email"
             v-model="email"
             autocomplete="email"
             type="email"
@@ -153,6 +154,7 @@ function masukGoogle() {
           <div class="relative">
             <input
               id="password"
+              name="password"
               v-model="password"
               autocomplete="current-password"
               :type="tampilkanPassword ? 'text' : 'password'"
@@ -210,7 +212,7 @@ function masukGoogle() {
 
         <!-- Ingat saya -->
         <div class="agreement flex items-start gap-[9px] mt-[3px]">
-          <input id="remember" v-model="remember" type="checkbox" />
+          <input id="remember" name="remember" v-model="remember" type="checkbox" />
 
           <label
             for="remember"

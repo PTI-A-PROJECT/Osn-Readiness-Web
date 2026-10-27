@@ -125,6 +125,7 @@ async function daftar() {
           >
           <input
             id="nama"
+            name="name"
             v-model="nama"
             autocomplete="name"
             type="text"
@@ -144,6 +145,7 @@ async function daftar() {
           >
           <input
             id="email"
+            name="email"
             v-model="email"
             autocomplete="email"
             type="email"
@@ -165,6 +167,7 @@ async function daftar() {
           <div class="relative">
             <input
               id="password"
+              name="password"
               v-model="password"
               autocomplete="new-password"
               :type="tampilkanPassword ? 'text' : 'password'"
@@ -234,6 +237,7 @@ async function daftar() {
           <div class="relative">
             <input
               id="konfirmasi"
+              name="password_confirmation"
               v-model="konfirmasi"
               autocomplete="new-password"
               :type="tampilkanKonfirmasi ? 'text' : 'password'"
@@ -297,6 +301,7 @@ async function daftar() {
           </label>
           <input
             id="referal"
+            name="kode_referal"
             v-model="referal"
             type="text"
             maxlength="4"
@@ -317,6 +322,7 @@ async function daftar() {
         <div class="agreement flex items-start gap-[9px] mt-[3px]">
           <input
             id="agreement"
+            name="agreement"
             v-model="setuju"
             type="checkbox"
             :aria-invalid="Boolean(setujuError)"
