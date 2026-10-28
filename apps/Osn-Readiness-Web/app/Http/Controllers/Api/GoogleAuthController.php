@@ -30,6 +30,9 @@ class GoogleAuthController
             'data' => [
                 'user' => new UserResource($result['user']->load('roles')->loadCount('diundang')),
                 'token' => $result['token'],
+                // Hanya akun Google yang baru dibuat dan belum memutuskan
+                // soal kode referal; sisanya tidak pernah diberi opsi.
+                'perlu_kode_referal' => $result['user']->referal_diisi_at === null,
             ],
         ]);
     }

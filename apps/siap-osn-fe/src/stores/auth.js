@@ -26,6 +26,8 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const initialized = ref(false)
   const token = ref(authService.tokenTersimpan())
+  // Hanya true sesaat setelah login Google akun baru; sumbernya backend.
+  const perluKodeReferal = ref(false)
 
   const isAuthenticated = computed(() => user.value !== null)
   const isSuperAdmin = computed(() => user.value?.role === 'super_admin')
@@ -93,6 +95,15 @@ export const useAuthStore = defineStore('auth', () => {
     resetDataAkun()
     saveToken(res.token)
     user.value = res.user
+    perluKodeReferal.value = res.perluKodeReferal
+    return user.value
+  }
+
+  // Isi atau lewati kode referal sekali untuk akun Google baru. Setelah
+  // berhasil flag dimatikan sehingga halaman ini tidak muncul lagi.
+  async function simpanReferal(kodeReferal) {
+    user.value = await authService.simpanReferal(kodeReferal)
+    perluKodeReferal.value = false
     return user.value
   }
 
@@ -124,6 +135,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     initialized.value = false
     saveToken(null)
+    perluKodeReferal.value = false
     resetDataAkun()
   }
 
@@ -141,6 +153,8 @@ export const useAuthStore = defineStore('auth', () => {
     masukDenganGoogle,
     updateProfile,
     logout,
+    perluKodeReferal,
+    simpanReferal,
     $reset,
   }
 })
