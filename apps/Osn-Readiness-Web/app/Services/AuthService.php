@@ -50,6 +50,9 @@ class AuthService implements AuthServiceInterface
                     ...$data,
                     'is_active' => true,
                     'direferensikan_oleh' => $pemberi?->id,
+                    // Register lewat form sudah memutuskan soal kode referal,
+                    // jadi opsi input kode tidak pernah muncul untuk akun ini.
+                    'referal_diisi_at' => now(),
                 ]);
 
                 $user->assignRole('siswa');

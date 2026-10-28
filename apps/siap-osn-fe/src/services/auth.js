@@ -32,8 +32,17 @@ export const authService = {
   // Kode sekali pakai dari fragmen callback; dikirim lewat body supaya
   // tidak pernah masuk URL yang muncul di log.
   async exchangeGoogle(kode) {
-    const { user, token } = unwrap(await api.post(ENDPOINTS.auth.googleExchange, { kode }))
-    return { user: mapUser(user), token }
+    const { user, token, perlu_kode_referal } = unwrap(
+      await api.post(ENDPOINTS.auth.googleExchange, { kode }),
+    )
+    return { user: mapUser(user), token, perluKodeReferal: perlu_kode_referal === true }
+  },
+
+  // POST /auth/referal {kode_referal} -> { message, data: user }
+  // Kosong/null = lewati. Hanya berhasil sekali per akun.
+  async simpanReferal(kodeReferal) {
+    const kode = typeof kodeReferal === 'string' ? kodeReferal.trim() : ''
+    return mapUser(unwrap(await api.post(ENDPOINTS.auth.referal, { kode_referal: kode || null })))
   },
 
   // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.

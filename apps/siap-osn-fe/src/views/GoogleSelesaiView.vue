@@ -26,8 +26,10 @@ async function tukarkan(kode) {
   try {
     const user = await auth.masukDenganGoogle(kode)
     keadaan.value = 'berhasil'
-    // Beri waktu keadaan terbaca sebelum pindah halaman dashboard.
-    setTimeout(() => router.replace(dashboardFor(user.role)), 800)
+    // Beri waktu keadaan terbaca sebelum pindah halaman. Akun Google baru
+    // ditanya kode referal dulu, akun lain langsung ke dashboard.
+    const tujuan = auth.perluKodeReferal ? '/oauth/google/referal' : dashboardFor(user.role)
+    setTimeout(() => router.replace(tujuan), 800)
   } catch (err) {
     keadaan.value = 'gagal'
     pesanGagal.value = pesanExchangeGagal(err.response?.data?.kode)

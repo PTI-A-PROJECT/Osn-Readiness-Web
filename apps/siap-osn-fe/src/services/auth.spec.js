@@ -87,12 +87,44 @@ describe('authService', () => {
 })
 
 describe('authService.exchangeGoogle', () => {
-  it('menukar kode ke endpoint exchange dan memetakan hasilnya', async () => {
+  it('menukar kode dan menandai akun baru yang perlu kode referal', async () => {
     api.post.mockResolvedValue({
-      data: { message: 'Login berhasil', data: { user: userLaravel, token: 'tok-google' } },
+      data: {
+        message: 'Login berhasil',
+        data: { user: userLaravel, token: 'tok-google', perlu_kode_referal: true },
+      },
     })
     const res = await authService.exchangeGoogle('kode-sekali-pakai')
     expect(api.post).toHaveBeenCalledWith('/auth/google/exchange', { kode: 'kode-sekali-pakai' })
-    expect(res).toEqual({ user: expect.objectContaining({ nama: 'Budi' }), token: 'tok-google' })
+    expect(res).toEqual({
+      user: expect.objectContaining({ nama: 'Budi' }),
+      token: 'tok-google',
+      perluKodeReferal: true,
+    })
+  })
+
+  it('akun yang sudah ada tidak ditandai perlu kode referal', async () => {
+    api.post.mockResolvedValue({
+      data: {
+        message: 'Login berhasil',
+        data: { user: userLaravel, token: 'tok-google', perlu_kode_referal: false },
+      },
+    })
+    const res = await authService.exchangeGoogle('kode')
+    expect(res.perluKodeReferal).toBe(false)
+  })
+})
+
+describe('authService.simpanReferal', () => {
+  it('mengirim kode yang sudah dirapikan ke endpoint referal', async () => {
+    api.post.mockResolvedValue({ data: { message: 'ok', data: userLaravel } })
+    await authService.simpanReferal('  k7xw ')
+    expect(api.post).toHaveBeenCalledWith('/auth/referal', { kode_referal: 'k7xw' })
+  })
+
+  it('mengirim null ketika dilewati', async () => {
+    api.post.mockResolvedValue({ data: { message: 'ok', data: userLaravel } })
+    await authService.simpanReferal('   ')
+    expect(api.post).toHaveBeenCalledWith('/auth/referal', { kode_referal: null })
   })
 })

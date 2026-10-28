@@ -14,6 +14,7 @@ const TermsOfServiceView = () => import('@/views/TermsOfServiceView.vue')
 const LupaKataSandiView = () => import('@/views/LupaKataSandiView.vue')
 const ResetPasswordView = () => import('@/views/ResetPasswordView.vue')
 const GoogleSelesaiView = () => import('@/views/GoogleSelesaiView.vue')
+const GoogleReferalView = () => import('@/views/GoogleReferalView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
 const SiswaPretestView = () => import('@/views/siswa/PretestView.vue')
@@ -51,6 +52,8 @@ export const routes = [
   // Tujuan callback Google: publik. Jika pengguna sudah login, tukaran kode
   // tetap berjalan (sesi diganti dengan akun Google yang ditukarkan).
   { path: '/oauth/google/selesai', name: 'oauth.google.selesai', component: GoogleSelesaiView },
+  // Hanya bisa dibuka setelah login Google akun baru (lihat GoogleReferalView).
+  { path: '/oauth/google/referal', name: 'oauth.google.referal', component: GoogleReferalView, meta: { requiresAuth: true } },
 
   {
     path: '/',
