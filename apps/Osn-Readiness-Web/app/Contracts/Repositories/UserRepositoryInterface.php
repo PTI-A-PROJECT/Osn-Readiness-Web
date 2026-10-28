@@ -10,6 +10,12 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
     public function findByEmail(string $email): ?User;
 
     /**
+     * Akun yang Google-nya tertaut pada `sub` ini. Satu Google hanya
+     * boleh melekat pada satu akun (unique, termasuk akun terhapus).
+     */
+    public function findByGoogleSub(string $sub): ?User;
+
+    /**
      * Pemilik satu kode referal. Akun yang sudah dihapus dianggap tidak
      * memiliki kode lagi, jadi kodenya tidak bisa dipakai mendaftar.
      */

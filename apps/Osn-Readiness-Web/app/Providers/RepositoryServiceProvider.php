@@ -6,6 +6,7 @@ use App\Clients\PerhitunganClient;
 use App\Contracts\Clients\PerhitunganClientInterface;
 use App\Contracts\Randomizers\RandomizerInterface;
 use App\Contracts\Repositories\AturanPemetaanRepositoryInterface;
+use App\Contracts\Repositories\GoogleLoginCodeRepositoryInterface;
 use App\Contracts\Repositories\HasilSimulasiJawabanRepositoryInterface;
 use App\Contracts\Repositories\HasilSimulasiRepositoryInterface;
 use App\Contracts\Repositories\KenaikanTingkatRepositoryInterface;
@@ -29,6 +30,7 @@ use App\Contracts\Services\BankSoalServiceInterface;
 use App\Contracts\Services\BelajarServiceInterface;
 use App\Contracts\Services\DashboardAdminServiceInterface;
 use App\Contracts\Services\DashboardServiceInterface;
+use App\Contracts\Services\GoogleOAuthServiceInterface;
 use App\Contracts\Services\ImporKontenServiceInterface;
 use App\Contracts\Services\KelulusanServiceInterface;
 use App\Contracts\Services\KompetensiServiceInterface;
@@ -50,6 +52,7 @@ use App\Contracts\Services\TingkatServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Randomizers\AcakRandomizer;
 use App\Repositories\Eloquent\AturanPemetaanRepository;
+use App\Repositories\Eloquent\GoogleLoginCodeRepository;
 use App\Repositories\Eloquent\HasilSimulasiJawabanRepository;
 use App\Repositories\Eloquent\HasilSimulasiRepository;
 use App\Repositories\Eloquent\KenaikanTingkatRepository;
@@ -81,6 +84,7 @@ use App\Services\BankSoalService;
 use App\Services\BelajarService;
 use App\Services\DashboardAdminService;
 use App\Services\DashboardService;
+use App\Services\GoogleOAuthService;
 use App\Services\ImporKontenService;
 use App\Services\KelulusanService;
 use App\Services\LatihanService;
@@ -100,6 +104,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         // Repository bindings
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(GoogleLoginCodeRepositoryInterface::class, GoogleLoginCodeRepository::class);
         $this->app->bind(TingkatSeleksiRepositoryInterface::class, TingkatSeleksiRepository::class);
         $this->app->bind(AturanPemetaanRepositoryInterface::class, AturanPemetaanRepository::class);
         $this->app->bind(PretestRepositoryInterface::class, PretestRepository::class);
@@ -114,6 +119,7 @@ class RepositoryServiceProvider extends ServiceProvider
         // Service bindings
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(GoogleOAuthServiceInterface::class, GoogleOAuthService::class);
         $this->app->bind(TingkatServiceInterface::class, TingkatService::class);
 
         // [B1-D] Admin services

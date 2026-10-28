@@ -15,6 +15,7 @@ vi.mock('@/services/auth.js', () => ({
     me: vi.fn(),
     login: vi.fn(),
     register: vi.fn(),
+    exchangeGoogle: vi.fn(),
     updateProfile: vi.fn(),
     logout: vi.fn(),
   },
@@ -125,6 +126,33 @@ describe('auth store', () => {
     authService.login.mockResolvedValue({ user: userSiswa, token: 'tok456' })
     const auth = useAuthStore()
     await auth.login({ email: 'budi@example.com', password: 'password123' })
+
+    expect(pretest.idTersimpan()).toBeNull()
+    expect(pretest.pretestId).toBeNull()
+    expect(useLatihanStore().status).toBe('idle')
+    expect(useMateriStore().daftar).toEqual([])
+    expect(useRiwayatStore().items).toEqual([])
+  })
+
+  it('masukDenganGoogle menukar kode dan menyimpan token + user', async () => {
+    authService.exchangeGoogle.mockResolvedValue({ user: userSiswa, token: 'tok-google' })
+    const auth = useAuthStore()
+    const user = await auth.masukDenganGoogle('kode-sekali-pakai')
+    expect(authService.exchangeGoogle).toHaveBeenCalledWith('kode-sekali-pakai')
+    expect(user).toEqual(userSiswa)
+    expect(auth.isAuthenticated).toBe(true)
+    expect(authService.simpanToken).toHaveBeenCalledWith('tok-google')
+  })
+
+  it('masukDenganGoogle membuang data akun sebelumnya', async () => {
+    const pretest = usePretestStore()
+    pretest.pretestId = 12
+    pretest.tingkatId = 1
+    localStorage.setItem('siap_osn_pretest_aktif', JSON.stringify({ id: 12, tingkatId: 1 }))
+
+    authService.exchangeGoogle.mockResolvedValue({ user: userSiswa, token: 'tok-google' })
+    const auth = useAuthStore()
+    await auth.masukDenganGoogle('kode-sekali-pakai')
 
     expect(pretest.idTersimpan()).toBeNull()
     expect(pretest.pretestId).toBeNull()

@@ -28,6 +28,14 @@ export const authService = {
     return { user: mapUser(user), token }
   },
 
+  // POST /auth/google/exchange {kode} -> { message, data: {user, token} }
+  // Kode sekali pakai dari fragmen callback; dikirim lewat body supaya
+  // tidak pernah masuk URL yang muncul di log.
+  async exchangeGoogle(kode) {
+    const { user, token } = unwrap(await api.post(ENDPOINTS.auth.googleExchange, { kode }))
+    return { user: mapUser(user), token }
+  },
+
   // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.
   // Kode referal opsional: hanya dikirim bila diisi, biar payload bersih.
   async register({ nama, email, password, konfirmasi, kodeReferal }) {

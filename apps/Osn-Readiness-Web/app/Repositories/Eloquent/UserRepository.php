@@ -20,6 +20,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model->newQuery()->whereRaw('lower(email) = ?', [strtolower($email)])->first();
     }
 
+    public function findByGoogleSub(string $sub): ?User
+    {
+        // Query sempit: kecocokan unik index, akun terhapus otomatis
+        // tidak ikut karena scope bawaan SoftDeletes.
+        return $this->model->newQuery()->where('google_sub', $sub)->first();
+    }
+
     public function findByKodeReferal(string $kode): ?User
     {
         // Kode tersimpan uppercase (KodeReferal::normalisasi); akun terhapus

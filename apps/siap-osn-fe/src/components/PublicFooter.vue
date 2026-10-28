@@ -13,6 +13,8 @@ const footerColumns = [
     links: [
       { label: 'Tim Kami', href: '#tim' },
       { label: 'Kenapa SIAP OSN', href: '#kenapa' },
+      { label: 'Kebijakan Privasi', href: '/kebijakan-privasi' },
+      { label: 'Ketentuan Layanan', href: '/ketentuan-layanan' },
     ],
   },
   {
@@ -29,12 +31,12 @@ const footerColumns = [
 <footer id="tim" class="footer">
       <div class="container footer__grid">
         <div class="footer__about">
-          <a href="#" class="brand" aria-label="SIAP OSN">
+          <a href="/" class="brand" aria-label="SIAP OSN">
             <img class="brand__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
             <span>SIAP OSN</span>
           </a>
           <p>
-            Sistem Interaktif Adaptif Persiapan OSN — membantu siswa mempersiapkan diri menghadapi
+            Sistem Interaktif Adaptif Persiapan OSN, membantu siswa mempersiapkan diri menghadapi
             seleksi OSN Bidang Informatika secara adaptif.
           </p>
         </div>
@@ -82,22 +84,6 @@ const footerColumns = [
   gap: 32px;
 }
 
-.footer .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-.footer .brand__logo {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  object-fit: cover;
-}
-
 .footer__about p {
   font-size: 0.78rem;
   margin-top: 12px;
@@ -109,15 +95,6 @@ const footerColumns = [
   gap: 10px;
   align-content: start;
   font-size: 0.8rem;
-}
-
-.footer__col strong {
-  color: #fff;
-  font-size: 0.82rem;
-}
-
-.footer__col a:hover {
-  color: #fff;
 }
 
 .footer__col strong {

@@ -21,6 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'active' => CheckUserStatus::class,
             'role' => RoleMiddleware::class,
         ]);
+
+        // Semua request produksi masuk lewat Cloudflare, sehingga Laravel
+        // hanya melihat proxy (bukan klien langsung) dan bila header
+        // X-Forwarded-* dipercaya. Deteksi HTTPS pada alur OAuth Google
+        // (redirect dan cookie secure callback) bergantung pada ini.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

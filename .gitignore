@@ -38,3 +38,5 @@ coverage/
 **/e2e-tmp/
 **/test-results/
 **/playwright-report/
+
+/.github/agents

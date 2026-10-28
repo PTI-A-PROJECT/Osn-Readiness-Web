@@ -22,8 +22,15 @@ api.interceptors.request.use((config) => {
 
 // 401 dari endpoint ini adalah respons normal, bukan sesi kedaluwarsa:
 // /auth/me (pengunjung anonim), /auth/login ("Email atau password salah"),
-// /auth/logout (store sudah membersihkan sesi sendiri).
-const TANPA_REDIRECT_401 = [ENDPOINTS.auth.me, ENDPOINTS.auth.login, ENDPOINTS.auth.logout]
+// /auth/google/exchange (kode tidak sah/kedaluwarsa, halaman selesai yang
+// menampilkan pesannya sendiri), /auth/logout (store sudah membersihkan
+// sesi sendiri).
+const TANPA_REDIRECT_401 = [
+  ENDPOINTS.auth.me,
+  ENDPOINTS.auth.login,
+  ENDPOINTS.auth.logout,
+  ENDPOINTS.auth.googleExchange,
+]
 
 // Beberapa request paralel bisa 401 bersamaan; cukup satu yang redirect.
 let sedangRedirect = false

@@ -9,8 +9,11 @@ const AuthLayout = () => import('@/layouts/AuthLayout.vue')
 const AppLayout = () => import('@/layouts/AppLayout.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
+const PrivacyPolicyView = () => import('@/views/PrivacyPolicyView.vue')
+const TermsOfServiceView = () => import('@/views/TermsOfServiceView.vue')
 const LupaKataSandiView = () => import('@/views/LupaKataSandiView.vue')
 const ResetPasswordView = () => import('@/views/ResetPasswordView.vue')
+const GoogleSelesaiView = () => import('@/views/GoogleSelesaiView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
 const SiswaPretestView = () => import('@/views/siswa/PretestView.vue')
@@ -43,6 +46,11 @@ export function dashboardFor(role) {
 export const routes = [
   // Landing page publik, tanpa layout
   { path: '/', name: 'landing', component: LandingPage },
+  { path: '/kebijakan-privasi', name: 'privacy-policy', component: PrivacyPolicyView },
+  { path: '/ketentuan-layanan', name: 'terms-of-service', component: TermsOfServiceView },
+  // Tujuan callback Google: publik. Jika pengguna sudah login, tukaran kode
+  // tetap berjalan (sesi diganti dengan akun Google yang ditukarkan).
+  { path: '/oauth/google/selesai', name: 'oauth.google.selesai', component: GoogleSelesaiView },
 
   {
     path: '/',

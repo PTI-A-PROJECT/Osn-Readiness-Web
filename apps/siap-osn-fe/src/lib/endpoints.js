@@ -5,6 +5,8 @@ export const ENDPOINTS = {
   auth: {
     register: '/auth/register',
     login: '/auth/login',
+    // Kode sekali pakai dari callback Google ditukar lewat body, bukan URL.
+    googleExchange: '/auth/google/exchange',
     logout: '/auth/logout',
     me: '/auth/me',
     profile: '/auth/profile',

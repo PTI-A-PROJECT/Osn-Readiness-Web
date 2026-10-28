@@ -85,3 +85,14 @@ describe('authService', () => {
     expect(authService.tokenTersimpan()).toBeNull()
   })
 })
+
+describe('authService.exchangeGoogle', () => {
+  it('menukar kode ke endpoint exchange dan memetakan hasilnya', async () => {
+    api.post.mockResolvedValue({
+      data: { message: 'Login berhasil', data: { user: userLaravel, token: 'tok-google' } },
+    })
+    const res = await authService.exchangeGoogle('kode-sekali-pakai')
+    expect(api.post).toHaveBeenCalledWith('/auth/google/exchange', { kode: 'kode-sekali-pakai' })
+    expect(res).toEqual({ user: expect.objectContaining({ nama: 'Budi' }), token: 'tok-google' })
+  })
+})

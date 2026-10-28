@@ -86,6 +86,16 @@ export const useAuthStore = defineStore('auth', () => {
     return user.value
   }
 
+  // Tukarkan kode sekali pakai hasil callback Google. Alurnya sama dengan
+  // login: data akun sebelumnya dibuang dulu supaya tidak kabur campur.
+  async function masukDenganGoogle(kode) {
+    const res = await authService.exchangeGoogle(kode)
+    resetDataAkun()
+    saveToken(res.token)
+    user.value = res.user
+    return user.value
+  }
+
   // Simpan perubahan profil (nama, email) dari halaman Profil.
   // sekolah/kelas hanya disimpan lokal (belum ada kolomnya di backend).
   // Karena sapaan & avatar membaca user.value, nama baru langsung tampil di mana-mana.
@@ -128,6 +138,7 @@ export const useAuthStore = defineStore('auth', () => {
     fetchMe,
     login,
     register,
+    masukDenganGoogle,
     updateProfile,
     logout,
     $reset,

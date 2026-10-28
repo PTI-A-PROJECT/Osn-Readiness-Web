@@ -4,6 +4,7 @@ import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '@/stores/auth.js'
 import { dashboardFor } from '@/router/index.js'
+import { urlRedirectGoogle } from '@/lib/oauth.js'
 import { pesanError } from '@/lib/errors.js'
 
 const auth = useAuthStore()
@@ -81,13 +82,10 @@ async function masuk() {
   }
 }
 
+// Google ternavigasi penuh browser (bukan route SPA) ke route redirect
+// backend; sesi state OAuth dan callback terjadi di domain API.
 function masukGoogle() {
-  toast.add({
-    severity: 'info',
-    summary: 'Segera hadir',
-    detail: 'Login dengan Google belum tersedia.',
-    life: 3000,
-  })
+  window.location.assign(urlRedirectGoogle())
 }
 </script>
 
