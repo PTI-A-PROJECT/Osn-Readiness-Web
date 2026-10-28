@@ -39,6 +39,7 @@ class MateriBelajarApiTest extends TestCase
         $this->materi = Materi::factory()->create([
             'tingkat_id' => $this->tingkat->id,
             'kompetensi_id' => $kompetensi->id,
+            'urutan' => 1,
         ]);
     }
 
