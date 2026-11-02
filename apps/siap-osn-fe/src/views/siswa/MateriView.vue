@@ -190,6 +190,11 @@ function tutupDetail() {
   dibukaId.value = null
 }
 
+function lompatKeSubmateri(id) {
+  const target = document.getElementById('submateri-' + id)
+  target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 async function tandaiSubmateriSelesai(bagian) {
   const id = dibukaId.value
   if (!id || !bagian || bagian.selesai || submateriMenandai.value) return
@@ -281,7 +286,35 @@ onMounted(muatKatalog)
             </div>
           </div>
 
-          <div v-if="submateri.length" class="lesson-reader">
+          <div v-if="submateri.length" class="lesson-layout">
+            <nav class="lesson-toc" aria-label="Daftar isi materi">
+              <div class="lesson-toc-heading">
+                <div>
+                  <span class="lesson-toc-eyebrow">NAVIGASI MATERI</span>
+                  <h3>Daftar Isi</h3>
+                </div>
+                <span class="lesson-toc-count">{{ submateri.length }} bagian</span>
+              </div>
+              <div class="lesson-toc-list">
+                <button
+                  v-for="(bagian, index) in submateri"
+                  :key="'toc-' + bagian.id"
+                  type="button"
+                  class="lesson-toc-item"
+                  @click="lompatKeSubmateri(bagian.id)"
+                >
+                  <span class="lesson-toc-index">{{ String(index + 1).padStart(2, '0') }}</span>
+                  <span class="lesson-toc-label">{{ bagian.judul }}</span>
+                  <span
+                    class="lesson-toc-state"
+                    :class="{ 'is-complete': bagian.selesai }"
+                    :aria-label="bagian.selesai ? 'Sudah selesai' : 'Belum selesai'"
+                  >{{ bagian.selesai ? '✓' : '○' }}</span>
+                </button>
+              </div>
+            </nav>
+
+            <div class="lesson-reader">
             <article
               v-for="(bagian, index) in submateri"
               :id="'submateri-' + bagian.id"
@@ -335,6 +368,7 @@ onMounted(muatKatalog)
                 <span v-else class="complete-note">Selesai</span>
               </div>
             </article>
+            </div>
           </div>
           <div v-else class="lesson-empty">
             <strong>Konten submateri belum tersedia</strong>
@@ -780,8 +814,103 @@ onMounted(muatKatalog)
 .learning-progress-head > strong { color: #bd7a14; font-size: 20px; }
 .learning-progress-track { height: 8px; margin-top: 13px; overflow: hidden; border-radius: 999px; background: #e5ebf2; }
 .learning-progress-track .progress-fill { background: #18a675; }
-.lesson-reader {
+.lesson-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
   margin-top: 26px;
+}
+.lesson-toc {
+  position: sticky;
+  top: 22px;
+  min-width: 0;
+  padding: 19px 14px 14px;
+  border: 1px solid #e3e9f1;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(23 42 77 / 3%);
+}
+.lesson-toc-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 5px 14px;
+  border-bottom: 1px solid #edf1f6;
+}
+.lesson-toc-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: #a0aabd;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .09em;
+}
+.lesson-toc-heading h3 {
+  margin: 0;
+  color: #172943;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+.lesson-toc-count {
+  flex: none;
+  padding: 5px 7px;
+  border-radius: 7px;
+  background: #f0f4f9;
+  color: #718096;
+  font-size: 10px;
+  font-weight: 700;
+}
+.lesson-toc-list { display: grid; gap: 4px; padding-top: 9px; }
+.lesson-toc-item {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 7px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #586981;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.lesson-toc-item:hover, .lesson-toc-item:focus-visible {
+  outline: none;
+  background: #f1f5fa;
+  color: #1d4b7d;
+}
+.lesson-toc-index {
+  flex: none;
+  color: #9aa7b8;
+  font-size: 10px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.lesson-toc-label {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.45;
+  font-weight: 650;
+  text-overflow: ellipsis;
+}
+.lesson-toc-state {
+  flex: none;
+  color: #b5bfcc;
+  font-size: 12px;
+  font-weight: 800;
+}
+.lesson-toc-state.is-complete { color: #16865b; }
+.lesson-reader {
+  min-width: 0;
   padding: 0 30px;
   border: 1px solid #e3e9f1;
   border-radius: 18px;
@@ -871,8 +1000,30 @@ onMounted(muatKatalog)
   .filters { justify-content: flex-start; }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+@media (max-width: 1100px) {
+  .lesson-layout { grid-template-columns: minmax(190px, 220px) minmax(0, 1fr); gap: 14px; }
+  .lesson-reader { padding-inline: 22px; }
+}
 @media (max-width: 760px) {
   .page-header { padding: 14px 18px; }
+  .lesson-layout { grid-template-columns: minmax(0, 1fr); }
+  .lesson-toc { position: static; padding: 15px 13px 12px; }
+  .lesson-toc-list {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 10px 1px 3px;
+    scrollbar-width: thin;
+  }
+  .lesson-toc-item {
+    width: max-content;
+    max-width: 230px;
+    min-width: 150px;
+    flex: 0 0 auto;
+    border: 1px solid #e8edf4;
+    background: #fbfcfe;
+  }
+  .lesson-toc-label { white-space: nowrap; }
   .materi-main { padding: 22px 18px 40px; }
   .detail-panel { padding: 22px 20px 26px; }
   .detail-title-row { flex-direction: column; }
@@ -884,6 +1035,7 @@ onMounted(muatKatalog)
 }
 @media (max-width: 600px) {
   .header-copy p { max-width: 235px; }
+  .lesson-reader { padding-inline: 16px; }
   .materi-main { padding: 18px 14px 32px; }
   .section-block > h2, .detail-title-row h2 { font-size: 22px; }
   .card-grid { grid-template-columns: 1fr; }
@@ -894,7 +1046,6 @@ onMounted(muatKatalog)
   .recommendation-row { align-items: flex-start; flex-direction: column; gap: 12px; }
   .recommendation-row > .btn { align-self: flex-end; }
   .recommendation-status { align-items: flex-start; flex-direction: column; padding: 6px 0; }
-  .lesson-reader { padding-inline: 16px; }
   .lesson-section-header { align-items: flex-start; flex-direction: column; gap: 12px; }
   .lesson-section-title { align-items: flex-start; gap: 11px; }
   .lesson-section-number { width: 40px; height: 40px; border-radius: 11px; }
