@@ -20,17 +20,16 @@ const ICON = {
   aturan: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z',
 }
 
-// Nama route harus sama dengan yang ada di router/index.js
+// Menu siswa mengikuti desain dashboard terbaru.
 const menuSiswa = [
   { label: 'Dashboard', to: { name: 'siswa.dashboard' }, icon: ICON.dashboard },
   { label: 'Pemetaan Kompetensi', to: { name: 'siswa.pemetaan' }, icon: ICON.pemetaan },
   { label: 'Materi', to: { name: 'siswa.materi' }, icon: ICON.materi },
-  { label: 'Progress Belajar', to: { name: 'siswa.progress' }, icon: ICON.progress },
   { label: 'Simulasi Seleksi', to: { name: 'siswa.simulasi' }, icon: ICON.simulasi },
   { label: 'Riwayat Hasil', to: { name: 'siswa.riwayat' }, icon: ICON.riwayat },
 ]
-// Menu admin mengikuti urutan PR Fase 6 di plan: dashboard dulu, lalu
-// siswa, konten, soal, ujian, aturan pemetaan.
+
+// Menu admin dipertahankan seperti sebelumnya.
 const menuAdmin = [
   { label: 'Dashboard', to: { name: 'admin.dashboard' }, icon: ICON.dashboard },
   { label: 'Kelola Siswa', to: { name: 'admin.siswa' }, icon: ICON.siswa },
@@ -52,37 +51,75 @@ onMounted(() => {
 <template>
   <div class="flex min-h-screen bg-[#f5f8fc]">
     <!-- Sidebar -->
-    <aside v-if="route.name !== 'siswa.pretest'" class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col bg-[#0a1f47] px-4 py-6">
-      <div class="mb-6 flex items-center gap-3 px-2">
+    <aside
+      v-if="route.name !== 'siswa.pretest'"
+      class="sticky top-0 flex h-screen shrink-0 flex-col bg-[#0a1f3f] text-white"
+      :class="isAdmin ? 'w-[250px] px-4 py-6' : 'w-[182px] px-3 py-5'"
+    >
+      <div
+        class="mb-6 flex items-center"
+        :class="isAdmin ? 'gap-3 px-2' : 'gap-2.5 px-1.5'"
+      >
         <img
           src="/logo-icon.png"
           alt="Logo SIAP OSN"
-          class="h-10 w-10 shrink-0 rounded-full object-contain"
+          class="shrink-0 rounded-full object-contain"
+          :class="isAdmin ? 'h-10 w-10' : 'h-7 w-7'"
         />
 
-        <span class="text-[15px] font-bold tracking-tight text-white">
+        <span
+          class="font-bold tracking-tight text-white"
+          :class="isAdmin ? 'text-[15px]' : 'text-[13px]'"
+        >
           SIAP OSN
         </span>
       </div>
 
-      <nav class="flex flex-col gap-1.5" aria-label="Menu utama">
+      <nav
+        class="flex flex-col"
+        :class="isAdmin ? 'gap-1.5' : 'gap-1'"
+        aria-label="Menu utama"
+      >
         <RouterLink
           v-for="item in menu"
           :key="item.label"
           :to="item.to"
           exact-active-class="is-active"
-          class="nav-link flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm text-white/60 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f0b323]"
+          class="nav-link flex items-center rounded-xl transition-colors hover:bg-white/5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f0b323]"
+          :class="isAdmin
+            ? 'gap-3 px-3.5 py-3 text-sm text-white/60'
+            : 'gap-2 px-2.5 py-2.5 text-[11px] leading-tight text-[#91a0b6]'"
         >
-          <svg class="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg
+            class="shrink-0"
+            :class="isAdmin ? 'h-[18px] w-[18px]' : 'h-[14px] w-[14px]'"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
             <path :d="item.icon" />
           </svg>
-          {{ item.label }}
+          <span>{{ item.label }}</span>
         </RouterLink>
       </nav>
 
-      <!-- Kartu streak disembunyikan: backend belum punya endpoint streak,
-           jadi angkanya selalu 0 dan selalu tampil "Belum ada streak".
-           Lihat keputusan #4 di PLAN-INTEGRASI-LANJUTAN.md §7.2. -->
+      <!-- Kartu motivasi siswa. Tidak menampilkan angka streak palsu
+           karena backend belum menyediakan data streak. -->
+      <div
+        v-if="!isAdmin"
+        class="mt-4 rounded-xl bg-[#17477e] px-3 py-3"
+      >
+        <p class="text-[13px] font-bold leading-tight text-white">
+          Terus jaga semangat!
+        </p>
+        <p class="mt-1.5 text-[10px] leading-snug text-[#b8c9df]">
+          Belajar sedikit setiap hari untuk menjaga progres persiapan OSN-mu.
+        </p>
+      </div>
     </aside>
 
     <!-- Konten halaman -->
@@ -94,7 +131,7 @@ onMounted(() => {
 
 <style scoped>
 .nav-link.is-active {
-  background: rgb(240 179 35 / 0.14);
+  background: rgb(240 179 35 / 0.16);
   color: #f0b323;
   font-weight: 600;
 }
