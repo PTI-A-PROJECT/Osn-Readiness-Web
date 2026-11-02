@@ -1,3 +1,28 @@
+# Environment bersama untuk semua container Laravel (backend + queue worker).
+x-backend-env: &backend-env
+  APP_NAME: Laravel
+  APP_ENV: local
+  APP_DEBUG: "${APP_DEBUG:-false}"
+  APP_URL: http://localhost:${BACKEND_PORT:-8000}
+  # CORS: daftar origin dipisah koma (config/cors.php). localhost + 127.0.0.1
+  # karena keduanya dianggap origin berbeda oleh browser.
+  FRONTEND_URL: http://localhost:${FRONTEND_PORT:-5173},http://127.0.0.1:${FRONTEND_PORT:-5173}
+  DB_CONNECTION: pgsql
+  DB_HOST: app-db
+  DB_PORT: 5432
+  DB_DATABASE: ${APP_DB_DATABASE:-osn_readiness}
+  DB_USERNAME: ${APP_DB_USERNAME:-sail}
+  DB_PASSWORD: ${APP_DB_PASSWORD:-password}
+  PERHITUNGAN_URL: http://analytics-api:8000
+  PERHITUNGAN_TOKEN: ${INTERNAL_API_TOKEN:-changeme-generate-a-real-secret}
+  AUTO_MIGRATE: "true"
+  # Folder impor konten (materi/, soal_*.json, gambar/) untuk KontenKabupatenSeeder.
+  # Di-mount read-only ke backend dari apps/data-analytics/soal/impor.
+  KONTEN_KABUPATEN_FOLDER: /var/www/html/konten-impor
+  # Dibaca SuperAdminSeeder. Isi di .env root; tidak ada nilai default di kode.
+  SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL:-}
+  SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-}
+
 services:
   # ============================================================================
   # 1. FRONTEND: Vue 3 + Vite (siap-osn-fe)
@@ -31,21 +56,41 @@ services:
     restart: unless-stopped
     ports:
       - "${BACKEND_PORT:-8000}:8000"
+    environment: *backend-env
+    volumes:
+      - ./apps/Osn-Readiness-Web:/var/www/html
+      - /var/www/html/vendor
+      # Bank soal siap impor dari data-analytics (dipakai seeder & impor:konten).
+      - ./apps/data-analytics/soal/impor:/var/www/html/konten-impor:ro
+    depends_on:
+      app-db:
+        condition: service_healthy
+      analytics-api:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/up"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 90s
+    networks:
+      - osn-network
+
+  # ============================================================================
+  # 2b. QUEUE WORKER: memproses NilaiUlangJob & PurgeAkunJob
+  #     (QUEUE_CONNECTION=database, lihat apps/Osn-Readiness-Web/.env.example)
+  # ============================================================================
+  queue:
+    build:
+      context: ./apps/Osn-Readiness-Web
+      dockerfile: Dockerfile
+    container_name: osn-queue
+    restart: unless-stopped
+    command: ["php", "artisan", "queue:work", "--tries=3", "--sleep=3"]
     environment:
-      APP_NAME: Laravel
-      APP_ENV: local
-      APP_DEBUG: "true"
-      APP_URL: http://localhost:${BACKEND_PORT:-8000}
-      FRONTEND_URL: http://localhost:${FRONTEND_PORT:-5173}
-      DB_CONNECTION: pgsql
-      DB_HOST: app-db
-      DB_PORT: 5432
-      DB_DATABASE: ${APP_DB_DATABASE:-osn_readiness}
-      DB_USERNAME: ${APP_DB_USERNAME:-sail}
-      DB_PASSWORD: ${APP_DB_PASSWORD:-password}
-      PERHITUNGAN_URL: http://analytics-api:8000
-      PERHITUNGAN_TOKEN: ${INTERNAL_API_TOKEN:-changeme-generate-a-real-secret}
-      AUTO_MIGRATE: "true"
+      <<: *backend-env
+      # Backend sudah memigrasi; worker tidak perlu (dan tidak boleh) migrasi sendiri.
+      AUTO_MIGRATE: "false"
     volumes:
       - ./apps/Osn-Readiness-Web:/var/www/html
       - /var/www/html/vendor
@@ -54,6 +99,33 @@ services:
         condition: service_healthy
       analytics-api:
         condition: service_started
+      backend:
+        condition: service_healthy
+    networks:
+      - osn-network
+
+  # ============================================================================
+  # 2c. SCHEDULER: menjalankan routes/console.php tiap menit (PurgeAkunJob,
+  #     simulasi:tutup-kedaluwarsa, sanctum:prune-expired) — pengganti cron
+  # ============================================================================
+  scheduler:
+    build:
+      context: ./apps/Osn-Readiness-Web
+      dockerfile: Dockerfile
+    container_name: osn-scheduler
+    restart: unless-stopped
+    command: ["php", "artisan", "schedule:work"]
+    environment:
+      <<: *backend-env
+      AUTO_MIGRATE: "false"
+    volumes:
+      - ./apps/Osn-Readiness-Web:/var/www/html
+      - /var/www/html/vendor
+    depends_on:
+      app-db:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
     networks:
       - osn-network
 
@@ -72,6 +144,7 @@ services:
       POSTGRES_PASSWORD: ${APP_DB_PASSWORD:-password}
     volumes:
       - app_pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${APP_DB_USERNAME:-sail} -d ${APP_DB_DATABASE:-osn_readiness}"]
       interval: 5s
@@ -96,6 +169,8 @@ services:
       INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-changeme-generate-a-real-secret}
     volumes:
       - ./apps/data-analytics:/app
+      # Jangan biarkan bind mount menutupi .venv hasil `uv sync` di image.
+      - analytics_venv:/app/.venv
     networks:
       - osn-network
 
@@ -105,3 +180,4 @@ networks:
 
 volumes:
   app_pgdata:
+  analytics_venv:
