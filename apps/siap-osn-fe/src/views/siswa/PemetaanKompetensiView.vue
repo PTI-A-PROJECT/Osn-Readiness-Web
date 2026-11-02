@@ -28,7 +28,7 @@ const namaTingkatById = computed(() =>
   Object.fromEntries(pretest.tingkatList.map((tingkat) => [tingkat.id, tingkat.nama])),
 )
 const namaTingkat = computed(
-  () => namaTingkatById.value[hasil.value?.tingkatId] ?? '',
+  () => namaTingkatById.value[hasil.value?.tingkatId ?? pretest.tingkatId] ?? '',
 )
 const subjudul = computed(() =>
   namaTingkat.value
