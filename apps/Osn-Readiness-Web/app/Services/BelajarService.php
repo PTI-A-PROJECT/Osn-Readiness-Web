@@ -153,6 +153,14 @@ class BelajarService implements BelajarServiceInterface
                 ]);
             }
 
+            // Kunci baris induk agar dua klik pada submateri berbeda tidak
+            // menghitung persentase dari snapshot yang sama secara bersamaan.
+            DB::table('progress_belajar')
+                ->where('id', $progress->id)
+                ->lockForUpdate()
+                ->first();
+            $progress->refresh();
+
             $totalSubmateri = count($bagian);
             $kodeSubmateri = array_column($bagian, 'id');
 
