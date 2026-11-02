@@ -33,7 +33,6 @@ const detail = computed(() => materi.detail)
 const isiHtml = computed(() => renderKonten(detail.value?.isi))
 const hasilPretest = computed(() => pretest.hasil)
 const sudahPretest = computed(() => Boolean(hasilPretest.value?.id))
-const namaSiswa = computed(() => pretest.tingkatList.find((t) => t.id === pretest.tingkatId)?.nama || '')
 
 function namaTingkat(id) {
   return pretest.tingkatList.find((t) => t.id === id)?.nama || 'Tingkat'
@@ -455,9 +454,9 @@ onMounted(muatKatalog)
             </p>
             <div class="empty-actions">
               <button type="button" class="btn btn-amber" @click="bukaPretest">
-                {{ pretest.status === STATUS.MENILAI ? 'Lihat Pemetaan' : 'Kerjakan Pre-Test' }} →
+                {{ pretest.status === STATUS.MENILAI ? 'Lihat Proses Pre-Test' : 'Kerjakan Pre-Test' }} →
               </button>
-              <button type="button" class="btn btn-outline" @click="filterTingkat = 'semua'; filterStatus = 'semua'; window.scrollTo({ top: 0, behavior: 'smooth' })">
+              <button type="button" class="btn btn-outline" @click="filterTingkat = 'semua'; filterStatus = 'semua'; filterJenis = 'semua'; pencarian = ''">
                 Lihat Semua Materi
               </button>
             </div>
