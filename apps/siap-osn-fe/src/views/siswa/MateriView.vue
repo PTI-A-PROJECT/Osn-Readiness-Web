@@ -275,7 +275,7 @@ onMounted(muatKatalog)
             <div class="detail-overview">
               <div class="detail-overview-copy">
                 <div class="detail-badges">
-                  <span class="pill pill-blue">Materi OSN</span>
+                  <span class="pill pill-blue">{{ detail.wajib ? 'Materi Wajib' : 'Materi OSN' }}</span>
                   <span class="pill" :class="statusMateri(detail) === 'selesai' ? 'pill-green' : 'pill-amber'">
                     {{ statusLabel(detail) }}
                   </span>
@@ -1270,7 +1270,6 @@ onMounted(muatKatalog)
   .lesson-toc-list { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 3px; scrollbar-width: thin; }
   .lesson-toc-item { width: max-content; max-width: 240px; min-width: 150px; flex: 0 0 auto; border: 1px solid #e8edf4; background: #fbfcfe; }
   .lesson-toc-item.is-active { border-color: #d4e3ff; background: #e5efff; }
-  .lesson-practice-card { display: none; }
   .lesson-section-header { align-items: flex-start; flex-direction: row; }
   .lesson-section h3 { font-size: 18px; }
 }
@@ -1281,7 +1280,6 @@ onMounted(muatKatalog)
   .lesson-section h3 { font-size: 17px; }
   .lesson-completion { align-items: flex-start; flex-direction: column; }
   .completion-button { width: 100%; }
-  .lesson-practice-card { display: block; }
 }
 
 </style>
