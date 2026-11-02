@@ -40,12 +40,23 @@ export function mapMateri(r) {
   }
 }
 
+export function mapSubmateri(r) {
+  return {
+    id: r.id,
+    judul: r.judul ?? '',
+    konten: r.konten ?? '',
+    selesai: Boolean(r.selesai),
+    tanggalSelesai: r.tanggal_selesai ?? null,
+  }
+}
+
 export function mapMateriDetail(r) {
   return {
     ...mapMateri(r),
     isi: r.isi_materi ?? '',
     fileUrl: urlStorage(r.file_materi),
     gambarUrl: urlStorage(r.gambar),
+    submateri: Array.isArray(r.submateri) ? r.submateri.map(mapSubmateri) : [],
   }
 }
 
@@ -55,5 +66,15 @@ export function mapProgressTersimpan(r) {
     status: r.status ?? null,
     persentase: r.persentase == null ? 0 : Number(r.persentase),
     tanggalSelesai: r.tanggal_selesai ?? null,
+  }
+}
+
+export function mapProgressSubmateriTersimpan(r) {
+  return {
+    ...mapProgressTersimpan(r),
+    submateriId: r.submateri_id ?? null,
+    submateriSelesai: Number(r.submateri_selesai ?? 0),
+    totalSubmateri: Number(r.total_submateri ?? 0),
+    submateri: Array.isArray(r.submateri) ? r.submateri.map(mapSubmateri) : [],
   }
 }

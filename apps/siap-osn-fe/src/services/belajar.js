@@ -1,6 +1,6 @@
 import { api } from '@/lib/api.js'
 import { ENDPOINTS } from '@/lib/endpoints.js'
-import { mapMateri, mapMateriDetail, mapProgressTersimpan } from '@/services/mappers/belajar.js'
+import { mapMateri, mapMateriDetail, mapProgressTersimpan, mapProgressSubmateriTersimpan } from '@/services/mappers/belajar.js'
 import { unwrap } from '@/services/envelope.js'
 
 // Satu fungsi = satu endpoint. Daftar/detail me-return Resource langsung
@@ -24,6 +24,13 @@ export const belajarService = {
   async tandaiSelesai({ id, signal } = {}) {
     return mapProgressTersimpan(
       unwrap(await api.put(ENDPOINTS.siswa.materiProgress(id), { status: 'selesai' }, { signal })),
+    )
+  },
+
+  // PUT /materi/{id}/submateri/{kode}/selesai.
+  async tandaiSubmateriSelesai({ id, submateriId, signal } = {}) {
+    return mapProgressSubmateriTersimpan(
+      unwrap(await api.put(ENDPOINTS.siswa.materiSubmateriSelesai(id, submateriId), {}, { signal })),
     )
   },
 }

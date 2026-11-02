@@ -70,6 +70,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('materi', [BelajarController::class, 'index']);
     Route::get('materi/{materi}', [BelajarController::class, 'show']);
     Route::put('materi/{materi}/progress', [BelajarController::class, 'perbaruiProgress']);
+    Route::put('materi/{materi}/submateri/{submateri}/selesai', [BelajarController::class, 'tandaiSubmateriSelesai']);
     Route::post('quiz/{quiz}/mulai', [QuizController::class, 'mulai']);
     Route::get('quiz-pengerjaan/{pengerjaan}', [QuizPengerjaanController::class, 'show']);
     Route::put('quiz-pengerjaan/{pengerjaan}/jawaban', [QuizPengerjaanController::class, 'simpanJawaban']);

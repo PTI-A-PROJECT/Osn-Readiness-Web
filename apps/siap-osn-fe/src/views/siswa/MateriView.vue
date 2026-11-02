@@ -27,10 +27,14 @@ const filterTingkat = ref('semua')
 const filterJenis = ref('semua')
 const filterStatus = ref('semua')
 const dibukaId = ref(null)
-const menandai = ref(false)
+const submateriMenandai = ref(null)
 
 const detail = computed(() => materi.detail)
-const isiHtml = computed(() => renderKonten(detail.value?.isi))
+const submateri = computed(() => detail.value?.submateri ?? [])
+const jumlahSubmateriSelesai = computed(() => submateri.value.filter((bagian) => bagian.selesai).length)
+const persentaseDetail = computed(() => submateri.value.length
+  ? Math.round((jumlahSubmateriSelesai.value / submateri.value.length) * 100)
+  : 0)
 const hasilPretest = computed(() => pretest.hasil)
 const sudahPretest = computed(() => Boolean(hasilPretest.value?.id))
 
@@ -186,27 +190,40 @@ function tutupDetail() {
   dibukaId.value = null
 }
 
-async function tandaiSelesai() {
-  if (!dibukaId.value || menandai.value) return
-  menandai.value = true
+async function tandaiSubmateriSelesai(bagian) {
+  const id = dibukaId.value
+  if (!id || !bagian || bagian.selesai || submateriMenandai.value) return
+
+  submateriMenandai.value = bagian.id
   try {
-    const tersimpan = await belajarService.tandaiSelesai({ id: dibukaId.value })
-    const patch = {
-      progress: {
-        status: tersimpan.status,
-        persentase: tersimpan.persentase,
-        tanggalSelesai: tersimpan.tanggalSelesai,
-      },
+    const tersimpan = await belajarService.tandaiSubmateriSelesai({
+      id,
+      submateriId: bagian.id,
+    })
+    const progressTersimpan = {
+      status: tersimpan.status,
+      persentase: tersimpan.persentase,
+      tanggalSelesai: tersimpan.tanggalSelesai,
     }
-    const item = katalog.value.find((m) => m.id === dibukaId.value)
-    if (item) Object.assign(item, patch)
-    if (detail.value?.id === dibukaId.value) Object.assign(detail.value, patch)
+    const item = katalog.value.find((m) => m.id === id)
+    if (item) item.progress = progressTersimpan
+
+    if (detail.value?.id === id) {
+      detail.value.progress = progressTersimpan
+      detail.value.submateri = tersimpan.submateri
+    }
+
     await progress.fetchDashboard({ force: true }).catch(() => {})
-    toast.add({ severity: 'success', summary: 'Materi selesai', detail: 'Progress tersimpan.', life: 3500 })
+    toast.add({
+      severity: 'success',
+      summary: 'Submateri selesai',
+      detail: 'Progress materi ' + tersimpan.persentase + '% tersimpan.',
+      life: 3500,
+    })
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Gagal menyimpan', detail: pesanError(err), life: 4000 })
   } finally {
-    menandai.value = false
+    submateriMenandai.value = null
   }
 }
 
@@ -251,21 +268,75 @@ onMounted(muatKatalog)
             <span v-if="detail.wajib" class="pill pill-amber">Materi wajib</span>
           </div>
           <img v-if="detail.gambarUrl" :src="detail.gambarUrl" alt="Ilustrasi materi" class="detail-image" />
-          <div v-if="detail.isi" class="konten-richtext detail-content" v-html="isiHtml"></div>
+          <div class="learning-progress">
+            <div class="learning-progress-head">
+              <div>
+                <strong>Progress belajar</strong>
+                <span>{{ jumlahSubmateriSelesai }} dari {{ submateri.length }} submateri selesai</span>
+              </div>
+              <strong>{{ persentaseDetail }}%</strong>
+            </div>
+            <div class="learning-progress-track">
+              <div class="progress-fill" :style="{ width: persentaseDetail + '%' }"></div>
+            </div>
+          </div>
+
+          <div class="submateri-layout">
+            <aside class="submateri-toc">
+              <h3>Daftar isi</h3>
+              <nav aria-label="Daftar submateri">
+                <a
+                  v-for="(bagian, index) in submateri"
+                  :key="bagian.id"
+                  :href="'#submateri-' + bagian.id"
+                  :class="{ 'is-complete': bagian.selesai }"
+                >
+                  <span class="toc-index">{{ index + 1 }}</span>
+                  <span class="toc-title">{{ bagian.judul }}</span>
+                  <span class="toc-state">{{ bagian.selesai ? '✓' : '○' }}</span>
+                </a>
+              </nav>
+            </aside>
+
+            <div class="submateri-list">
+              <article
+                v-for="(bagian, index) in submateri"
+                :id="'submateri-' + bagian.id"
+                :key="bagian.id"
+                class="submateri-card"
+              >
+                <div class="submateri-meta">
+                  <span>SUBMATERI {{ String(index + 1).padStart(2, '0') }}</span>
+                  <span :class="bagian.selesai ? 'submateri-status-done' : 'submateri-status-pending'">
+                    {{ bagian.selesai ? 'Selesai' : 'Belum selesai' }}
+                  </span>
+                </div>
+                <h3>{{ bagian.judul }}</h3>
+                <div
+                  v-if="bagian.konten"
+                  class="konten-richtext detail-content"
+                  v-html="renderKonten(bagian.konten)"
+                ></div>
+                <p v-else class="submateri-empty">Belum ada isi pada bagian ini.</p>
+                <div class="submateri-footer">
+                  <button
+                    v-if="!bagian.selesai"
+                    type="button"
+                    class="btn btn-primary"
+                    :disabled="submateriMenandai === bagian.id"
+                    @click="tandaiSubmateriSelesai(bagian)"
+                  >
+                    {{ submateriMenandai === bagian.id ? 'Menyimpan...' : 'Tandai Selesai' }}
+                  </button>
+                  <span v-else class="complete-note">✓ Bagian ini sudah diselesaikan</span>
+                </div>
+              </article>
+            </div>
+          </div>
           <div v-if="detail.fileUrl" class="file-link-wrap">
             <a :href="detail.fileUrl" target="_blank" rel="noopener" class="file-link">Buka / unduh file materi ↗</a>
           </div>
           <div class="detail-actions">
-            <button
-              v-if="detail.progress?.status !== 'selesai'"
-              type="button"
-              class="btn btn-primary"
-              :disabled="menandai"
-              @click="tandaiSelesai"
-            >
-              {{ menandai ? 'Menyimpan...' : 'Tandai Selesai' }}
-            </button>
-            <span v-else class="complete-note">✓ Materi sudah selesai</span>
             <button
               v-if="detail.latihanTersedia && detail.quizId"
               type="button"
@@ -678,7 +749,37 @@ onMounted(muatKatalog)
 .detail-title-row h2 { margin-top: 5px; }
 .detail-title-row p { margin: 5px 0 0; color: #8795aa; font-size: 10px; }
 .detail-image { max-width: 100%; max-height: 360px; margin-top: 18px; border-radius: 10px; object-fit: contain; }
-.detail-content { margin-top: 18px; color: #334155; font-size: 13px; line-height: 1.8; }
+.detail-content { margin-top: 14px; color: #334155; font-size: 13px; line-height: 1.8; }
+.learning-progress { margin-top: 18px; padding: 13px 15px; border: 1px solid #e4eaf2; border-radius: 10px; background: #f8fafc; }
+.learning-progress-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.learning-progress-head > div { display: flex; flex-direction: column; gap: 3px; }
+.learning-progress-head strong { color: #24334d; font-size: 10px; font-weight: 800; }
+.learning-progress-head span { color: #8795aa; font-size: 8px; }
+.learning-progress-head > strong { color: #d97706; font-size: 13px; }
+.learning-progress-track { height: 6px; margin-top: 10px; overflow: hidden; border-radius: 999px; background: #e8edf4; }
+.learning-progress-track .progress-fill { background: #10b981; }
+.submateri-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: start; gap: 16px; margin-top: 16px; }
+.submateri-toc { position: sticky; top: 14px; padding: 13px; border: 1px solid #e4eaf2; border-radius: 10px; background: #fbfcfe; }
+.submateri-toc h3 { margin: 0 0 9px; color: #24334d; font-size: 10px; font-weight: 800; }
+.submateri-toc nav { display: grid; gap: 4px; }
+.submateri-toc a { min-width: 0; display: grid; grid-template-columns: 20px minmax(0, 1fr) 14px; align-items: center; gap: 6px; padding: 7px 6px; border-radius: 6px; color: #64748b; font-size: 8px; line-height: 1.4; text-decoration: none; }
+.submateri-toc a:hover { background: #eef3f9; color: #24334d; }
+.submateri-toc a.is-complete { color: #13865e; }
+.toc-index { color: #a0adbd; font-size: 8px; font-weight: 750; text-align: center; }
+.toc-title { overflow-wrap: anywhere; }
+.toc-state { font-weight: 800; text-align: center; }
+.submateri-list { min-width: 0; display: grid; gap: 13px; }
+.submateri-card { min-width: 0; padding: 17px 18px; border: 1px solid #e4eaf2; border-radius: 10px; background: #fff; scroll-margin-top: 18px; }
+.submateri-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.submateri-meta > span:first-child { color: #a0adbd; font-size: 7px; font-weight: 800; letter-spacing: .05em; }
+.submateri-status-done, .submateri-status-pending { padding: 3px 7px; border-radius: 999px; font-size: 7px; font-weight: 750; }
+.submateri-status-done { background: #e6fbf2; color: #16865b; }
+.submateri-status-pending { background: #fff5dc; color: #a76600; }
+.submateri-card h3 { margin: 9px 0 0; color: #1c2940; font-size: 14px; font-weight: 800; }
+.submateri-card .detail-content { margin-top: 8px; }
+.submateri-empty { margin: 10px 0 0; color: #8795aa; font-size: 9px; }
+.submateri-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 14px; padding-top: 11px; border-top: 1px solid #edf1f6; }
+.submateri-footer .complete-note { font-size: 9px; }
 .file-link-wrap { margin-top: 16px; }
 .file-link { color: #2563eb; font-size: 11px; font-weight: 700; }
 .detail-actions { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
@@ -702,6 +803,11 @@ onMounted(muatKatalog)
   .search-box { width: 100%; }
   .filters { justify-content: flex-start; }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .submateri-layout { grid-template-columns: 1fr; }
+  .submateri-toc { position: static; }
+  .submateri-toc nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
   .page-header { padding: 10px 14px; }

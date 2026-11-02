@@ -20,6 +20,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class BelajarService implements BelajarServiceInterface
 {
@@ -111,6 +113,95 @@ class BelajarService implements BelajarServiceInterface
         ]);
     }
 
+    /**
+     * Tandai satu submateri selesai. Progress materi dihitung dari jumlah
+     * submateri unik yang selesai dan disimpan pada akun siswa.
+     *
+     * @return array<string, mixed>
+     */
+    public function tandaiSubmateriSelesai(User $user, int $materiId, string $submateriId): array
+    {
+        $materi = $this->materiRepository->findOrFail($materiId);
+        $statusPutaran = $this->pastikanTerbuka($user, (int) $materi->tingkat_id);
+
+        if ($statusPutaran->putaranAktifId === null) {
+            throw new BelumPretestException('Tandai materi selesai setelah pre-test.');
+        }
+
+        $bagian = $this->pecahSubmateri($materi->isi_materi, $materi->judul);
+        $target = null;
+
+        foreach ($bagian as $item) {
+            if ($item['id'] === $submateriId) {
+                $target = $item;
+                break;
+            }
+        }
+
+        if ($target === null) {
+            abort(404, 'Submateri tidak ditemukan.');
+        }
+
+        return DB::transaction(function () use ($user, $materi, $materiId, $submateriId, $target, $bagian): array {
+            $progress = $this->progressRepository->find($user, $materiId);
+
+            if ($progress === null) {
+                $progress = $this->progressRepository->simpan($user, $materiId, [
+                    'status' => StatusProgress::Belajar->value,
+                    'persentase' => 0,
+                    'tanggal_selesai' => null,
+                ]);
+            }
+
+            $totalSubmateri = count($bagian);
+            $kodeSubmateri = array_column($bagian, 'id');
+
+            // Progress lama yang sudah 100% tetap dianggap selesai.
+            if ($progress->status === StatusProgress::Selesai) {
+                $jumlahSelesai = $totalSubmateri;
+            } else {
+                $sekarang = now();
+                DB::table('progress_submateri')->updateOrInsert(
+                    [
+                        'progress_belajar_id' => $progress->id,
+                        'kode' => $submateriId,
+                    ],
+                    [
+                        'judul' => $target['judul'],
+                        'selesai_pada' => $sekarang,
+                        'created_at' => $sekarang,
+                        'updated_at' => $sekarang,
+                    ],
+                );
+
+                $jumlahSelesai = DB::table('progress_submateri')
+                    ->where('progress_belajar_id', $progress->id)
+                    ->whereIn('kode', $kodeSubmateri)
+                    ->count();
+
+                $semuaSelesai = $jumlahSelesai >= $totalSubmateri;
+                $progress = $this->progressRepository->simpan($user, $materiId, [
+                    'status' => $semuaSelesai
+                        ? StatusProgress::Selesai->value
+                        : StatusProgress::Belajar->value,
+                    'persentase' => (int) round(($jumlahSelesai / $totalSubmateri) * 100),
+                    'tanggal_selesai' => $semuaSelesai ? now() : null,
+                ]);
+            }
+
+            return [
+                'materi_id' => (int) $materi->id,
+                'submateri_id' => $submateriId,
+                'status' => $progress->status->value,
+                'persentase' => (int) $progress->persentase,
+                'tanggal_selesai' => $progress->tanggal_selesai?->toISOString(),
+                'submateri_selesai' => $jumlahSelesai,
+                'total_submateri' => $totalSubmateri,
+                'submateri' => $this->daftarSubmateri($materi, $progress),
+            ];
+        });
+    }
+
     private function pastikanTerbuka(User $user, int $tingkatId): StatusPutaran
     {
         $tingkat = $this->tingkatRepository->find($tingkatId);
@@ -184,6 +275,124 @@ class BelajarService implements BelajarServiceInterface
     }
 
     /**
+     * Pisahkan konten Markdown berdasarkan heading level dua. Jika materi
+     * belum memiliki heading, seluruh isi tetap menjadi satu submateri.
+     *
+     * @return list<array{id: string, judul: string, konten: string}>
+     */
+    private function pecahSubmateri(?string $isi, string $judulMateri): array
+    {
+        $isi = (string) $isi;
+
+        if (trim($isi) === '') {
+            return [[
+                'id' => 'materi-utama',
+                'judul' => $judulMateri !== '' ? $judulMateri : 'Materi Utama',
+                'konten' => '',
+            ]];
+        }
+
+        $baris = preg_split('/\R/u', $isi) ?: [];
+        $hasil = [];
+        $judulBagian = null;
+        $kontenBagian = [];
+        $dalamKode = false;
+        $penandaKode = null;
+        $slugDipakai = [];
+
+        $simpanBagian = function (string $judul, array $konten) use (&$hasil, &$slugDipakai): void {
+            $slug = Str::slug($judul);
+            $slug = $slug !== '' ? substr($slug, 0, 90) : 'submateri';
+            $slugDipakai[$slug] = ($slugDipakai[$slug] ?? 0) + 1;
+            $id = $slugDipakai[$slug] === 1 ? $slug : $slug.'-'.$slugDipakai[$slug];
+
+            $hasil[] = [
+                'id' => $id,
+                'judul' => trim($judul),
+                'konten' => trim(implode("\n", $konten)),
+            ];
+        };
+
+        foreach ($baris as $teksBaris) {
+            $trimmed = ltrim($teksBaris);
+            $penanda = str_starts_with($trimmed, '~~~')
+                ? '~'
+                : (str_starts_with($trimmed, str_repeat(chr(96), 3)) ? chr(96) : null);
+
+            if ($penanda !== null) {
+                if (! $dalamKode) {
+                    $dalamKode = true;
+                    $penandaKode = $penanda;
+                } elseif ($penanda === $penandaKode) {
+                    $dalamKode = false;
+                    $penandaKode = null;
+                }
+            }
+
+            if (! $dalamKode && preg_match('/^\s{0,3}##[ \t]+(.+?)[ \t]*#*[ \t]*$/u', $teksBaris, $cocok) === 1) {
+                if ($judulBagian !== null) {
+                    $simpanBagian($judulBagian, $kontenBagian);
+                } elseif (trim(implode("\n", $kontenBagian)) !== '') {
+                    $simpanBagian('Pendahuluan', $kontenBagian);
+                }
+
+                $judulBagian = trim($cocok[1]);
+                $kontenBagian = [];
+
+                continue;
+            }
+
+            $kontenBagian[] = $teksBaris;
+        }
+
+        if ($judulBagian !== null) {
+            $simpanBagian($judulBagian, $kontenBagian);
+        }
+
+        if ($hasil === []) {
+            return [[
+                'id' => 'materi-utama',
+                'judul' => $judulMateri !== '' ? $judulMateri : 'Materi Utama',
+                'konten' => trim($isi),
+            ]];
+        }
+
+        return $hasil;
+    }
+
+    /**
+     * @return list<array{id: string, judul: string, konten: string, selesai: bool, tanggal_selesai: string|null}>
+     */
+    private function daftarSubmateri(Materi $materi, ?ProgressBelajar $progress): array
+    {
+        $bagian = $this->pecahSubmateri($materi->isi_materi, $materi->judul);
+        $kode = array_column($bagian, 'id');
+        $tersimpan = $progress === null
+            ? collect()
+            : DB::table('progress_submateri')
+                ->where('progress_belajar_id', $progress->id)
+                ->whereIn('kode', $kode)
+                ->get()
+                ->keyBy('kode');
+        $legacySelesai = $progress?->status === StatusProgress::Selesai;
+
+        return array_map(function (array $item) use ($tersimpan, $legacySelesai, $progress): array {
+            $rekaman = $tersimpan->get($item['id']);
+            $selesai = $legacySelesai || $rekaman !== null;
+
+            return [
+                'id' => $item['id'],
+                'judul' => $item['judul'],
+                'konten' => $item['konten'],
+                'selesai' => $selesai,
+                'tanggal_selesai' => $legacySelesai
+                    ? $progress?->tanggal_selesai?->toISOString()
+                    : $rekaman?->selesai_pada,
+            ];
+        }, $bagian);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function butir(
@@ -217,6 +426,7 @@ class BelajarService implements BelajarServiceInterface
             $baris['isi_materi'] = $materi->isi_materi;
             $baris['file_materi'] = $materi->file_materi;
             $baris['gambar'] = $materi->gambar;
+            $baris['submateri'] = $this->daftarSubmateri($materi, $progress);
         }
 
         return $baris;

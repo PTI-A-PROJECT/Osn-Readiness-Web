@@ -189,6 +189,90 @@ class MateriBelajarApiTest extends TestCase
             ->assertUnprocessable();
     }
 
+    public function test_detail_materi_memecah_konten_menjadi_submateri(): void
+    {
+        $this->materi->update([
+            'isi_materi' => "Pengantar singkat.\n\n## Konsep Dasar\nPenjelasan konsep.\n\n## Contoh Soal\nContoh dan pembahasan.",
+        ]);
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/materi/'.$this->materi->id)
+            ->assertOk()
+            ->assertJsonPath('data.submateri.0.id', 'pendahuluan')
+            ->assertJsonPath('data.submateri.1.id', 'konsep-dasar')
+            ->assertJsonPath('data.submateri.1.judul', 'Konsep Dasar')
+            ->assertJsonPath('data.submateri.1.selesai', false)
+            ->assertJsonPath('data.submateri.2.id', 'contoh-soal');
+    }
+
+    public function test_progress_submateri_dihitung_dan_disimpan_per_bagian(): void
+    {
+        $this->buatPutaranAktif();
+        $this->materi->update([
+            'isi_materi' => "## Konsep Dasar\nPenjelasan konsep.\n\n## Contoh Soal\nContoh soal.",
+        ]);
+
+        $url = '/api/materi/'.$this->materi->id.'/submateri/';
+
+        $this->actingAs($this->siswa)
+            ->putJson($url.'konsep-dasar/selesai')
+            ->assertOk()
+            ->assertJsonPath('data.status', 'belajar')
+            ->assertJsonPath('data.persentase', 50)
+            ->assertJsonPath('data.submateri_selesai', 1)
+            ->assertJsonPath('data.submateri.0.selesai', true)
+            ->assertJsonPath('data.submateri.1.selesai', false);
+
+        $this->assertDatabaseHas('progress_belajar', [
+            'user_id' => $this->siswa->id,
+            'materi_id' => $this->materi->id,
+            'status' => 'belajar',
+            'persentase' => 50,
+        ]);
+        $this->assertDatabaseHas('progress_submateri', [
+            'kode' => 'konsep-dasar',
+        ]);
+
+        // Request berulang idempoten dan tidak membuat baris duplikat.
+        $this->putJson($url.'konsep-dasar/selesai')->assertOk();
+        $this->assertDatabaseCount('progress_submateri', 1);
+
+        $this->putJson($url.'contoh-soal/selesai')
+            ->assertOk()
+            ->assertJsonPath('data.status', 'selesai')
+            ->assertJsonPath('data.persentase', 100)
+            ->assertJsonPath('data.submateri_selesai', 2);
+
+        $this->assertDatabaseCount('progress_submateri', 2);
+        $this->assertDatabaseHas('progress_belajar', [
+            'user_id' => $this->siswa->id,
+            'materi_id' => $this->materi->id,
+            'status' => 'selesai',
+            'persentase' => 100,
+        ]);
+    }
+
+    public function test_submateri_tidak_dikenal_dibalas_404(): void
+    {
+        $this->buatPutaranAktif();
+        $this->materi->update(['isi_materi' => "## Konsep Dasar\nIsi."]);
+
+        $this->actingAs($this->siswa)
+            ->putJson('/api/materi/'.$this->materi->id.'/submateri/tidak-ada/selesai')
+            ->assertNotFound();
+    }
+
+    public function test_progress_submateri_tanpa_putaran_aktif_dibalas_409(): void
+    {
+        $this->materi->update(['isi_materi' => "## Konsep Dasar\nIsi."]);
+
+        $response = $this->actingAs($this->siswa)
+            ->putJson('/api/materi/'.$this->materi->id.'/submateri/konsep-dasar/selesai');
+
+        $response->assertStatus(409);
+        $this->assertSame('BELUM_PRETEST', $response->json('kode'));
+    }
+
     public function test_materi_wajib_tampil_lebih_dulu_urut_prioritas(): void
     {
         $putaran = $this->buatPutaranAktif();

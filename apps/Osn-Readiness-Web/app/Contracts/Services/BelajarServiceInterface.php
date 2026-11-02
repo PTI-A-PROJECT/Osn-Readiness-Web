@@ -35,4 +35,11 @@ interface BelajarServiceInterface
      * Buat atau perbarui satu baris progress belajar.
      */
     public function perbaruiProgress(User $user, int $materiId, string $status): ProgressBelajar;
+
+    /**
+     * Tandai satu submateri selesai dan hitung ulang progress keseluruhan.
+     *
+     * @return array<string, mixed>
+     */
+    public function tandaiSubmateriSelesai(User $user, int $materiId, string $submateriId): array;
 }
