@@ -40,16 +40,24 @@ function mapOpsi(pilihan) {
     .map(([kode, teks]) => ({ kode: String(kode), teks: teks ?? '' }))
 }
 
+
 export function mapSoal(r) {
   const tipe = r.tipe_soal === 'isian' ? 'isian' : 'ganda'
+
   return {
     id: r.id,
     materiId: r.materi_id ?? null,
     level: r.level ?? null,
     tipe,
+
+    pengantar: r.pengantar ?? null,
+    kode: r.kode ?? r.konteks?.kode ?? null,
+    bahasa: r.bahasa ?? null,
+
     pertanyaan: r.pertanyaan ?? '',
     opsi: tipe === 'ganda' ? mapOpsi(r.pilihan_jawaban) : [],
     gambar: r.gambar ?? null,
+
     konteks: r.konteks
       ? {
           judul: r.konteks.judul ?? '',
@@ -57,11 +65,13 @@ export function mapSoal(r) {
           gambar: r.konteks.gambar ?? null,
         }
       : null,
+
     urutan: angka(r.urutan),
     bobot: angka(r.bobot),
     jawaban: r.jawaban_user ?? null,
   }
 }
+
 
 export function mapHasilPretest(r) {
   return {

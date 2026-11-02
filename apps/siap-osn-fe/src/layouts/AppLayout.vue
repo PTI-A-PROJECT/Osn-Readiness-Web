@@ -54,12 +54,15 @@ onMounted(() => {
     <!-- Sidebar -->
     <aside v-if="route.name !== 'siswa.pretest'" class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col bg-[#0a1f47] px-4 py-6">
       <div class="mb-6 flex items-center gap-3 px-2">
-        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0a1f47]">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path :d="ICON.materi" />
-          </svg>
+        <img
+          src="/logo-icon.png"
+          alt="Logo SIAP OSN"
+          class="h-10 w-10 shrink-0 rounded-full object-contain"
+        />
+
+        <span class="text-[15px] font-bold tracking-tight text-white">
+          SIAP OSN
         </span>
-        <span class="text-[15px] font-bold tracking-tight text-white">SIAP OSN</span>
       </div>
 
       <nav class="flex flex-col gap-1.5" aria-label="Menu utama">

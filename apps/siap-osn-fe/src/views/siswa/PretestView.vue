@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useProgressStore } from '@/stores/progress.js'
@@ -28,10 +28,23 @@ const pretest = usePretestStore()
 
 const petunjuk = {
   judul: 'Petunjuk Pengerjaan',
-  isi: 'Pre-test ini memetakan kompetensi awalmu: waktu terbatas dan jawaban tidak bisa diubah setelah dikumpulkan. Setiap jawaban tersimpan otomatis ke server.',
+  isi: 'Pre-test ini memetakan kompetensimu di setiap sub-bab Informatika. Kerjakan sejujurnya, karena hasilnya dipakai untuk menyusun rekomendasi belajar kamu temui.',
   tipe: [
-    { nama: 'Pilihan Ganda', kelas: 'tipe-green', desc: 'Pilih satu jawaban yang paling tepat dari beberapa opsi.' },
-    { nama: 'Isian', kelas: 'tipe-red', desc: 'Tulis jawabanmu dengan kalimat sendiri, jelaskan langkah dan alasannya.' },
+    {
+      nama: 'Pilihan Ganda',
+      kelas: 'tipe-green',
+      desc: 'Pilih satu jawaban yang paling tepat dari beberapa opsi.',
+    },
+    {
+      nama: 'Pilihan Kompleks',
+      kelas: 'tipe-yellow',
+      desc: 'Pilih semua jawaban yang benar. Bisa lebih dari satu opsi.',
+    },
+    {
+      nama: 'Uraian',
+      kelas: 'tipe-red',
+      desc: 'Tulis jawabanmu dengan kalimat sendiri, jelaskan langkah dan alasannya.',
+    },
   ],
 }
 
@@ -208,41 +221,83 @@ function pindah(i) {
   aktif.value = i
 }
 
-/* ---------- Timer (60 menit) ---------- */
-// Durasi pre-test. Timer hanya berjalan saat soal dikerjakan, jadi memilih
-// tingkat tidak memotong waktu siswa.
+
+/* ---------- Timer Pre-Test ---------- */
 const sisaDetik = ref(DURASI_PRETEST_DETIK)
-// Format mm:ss, sama seperti PengerjaanSoal. Header state awal memakainya
-// dengan label "Durasi :", jadi angkanya belum countdown selama memilih
-// tingkat; baru turun begitu soal dikerjakan.
-const waktuTampil = computed(() => {
-  const totalDetik = sisaDetik.value
-  const m = Math.floor(totalDetik / 60)
-  const s = totalDetik % 60
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+
+console.log('Durasi awal:', DURASI_PRETEST_DETIK)
+
+watch(sisaDetik, (nilai) => {
+  console.log('Sisa waktu:', nilai)
 })
+
+const waktuTampil = computed(() => {
+  const menit = Math.floor(sisaDetik.value / 60)
+  const detik = sisaDetik.value % 60
+
+  return `${String(menit).padStart(2, '0')}:${String(detik).padStart(2, '0')}`
+})
+
 let timer = null
-function mulaiTimer() {
-  clearInterval(timer)
-  timer = setInterval(() => {
-    if (!bolehMengerjakan.value) return
-    if (sisaDetik.value > 0) {
-      sisaDetik.value--
-      // Batas waktu client-side (backend tidak enforce): habis -> kumpulkan otomatis.
-      if (sisaDetik.value === 0 && pretest.status === STATUS.MENGERJAKAN) {
-        kumpulkan({ paksa: true })
-      }
-    }
-  }, 1000)
+let batasWaktu = null
+let sudahKumpulOtomatis = false
+
+function perbaruiTimer() {
+  if (!bolehMengerjakan.value || batasWaktu === null) return
+
+  sisaDetik.value = Math.max(
+    0,
+    Math.ceil((batasWaktu - Date.now()) / 1000)
+  )
+
+  if (sisaDetik.value === 0 && !sudahKumpulOtomatis) {
+    sudahKumpulOtomatis = true
+    berhentiTimer()
+    kumpulkan({ paksa: true })
+  }
 }
+
+function mulaiTimer() {
+  if (!bolehMengerjakan.value || timer !== null) return
+
+  // Hitung batas waktu saat pre-test benar-benar dimulai.
+  batasWaktu = Date.now() + sisaDetik.value * 1000
+
+  perbaruiTimer()
+  timer = setInterval(perbaruiTimer, 250)
+}
+
+function berhentiTimer() {
+  if (timer !== null) {
+    clearInterval(timer)
+    timer = null
+  }
+}
+
+// Mengikuti perubahan status pre-test.
+watch(
+  bolehMengerjakan,
+  (sedangMengerjakan) => {
+    if (sedangMengerjakan) {
+      mulaiTimer()
+    } else {
+      berhentiTimer()
+    }
+  },
+  { immediate: true }
+)
+
 onMounted(() => {
   siapkanAwal()
-  mulaiTimer()
 })
+
 onBeforeUnmount(() => {
-  clearInterval(timer)
+  berhentiTimer()
   stopPolling()
-  for (const k of Object.keys(timerSimpan)) clearTimeout(timerSimpan[k])
+
+  for (const k of Object.keys(timerSimpan)) {
+    clearTimeout(timerSimpan[k])
+  }
 })
 
 /* ---------- Status koneksi ---------- */
@@ -376,29 +431,33 @@ onBeforeUnmount(() => {
     </section>
 
     <!-- PENGERJAAN -->
-    <PengerjaanSoal
-      v-else
-      :judul="judul"
-      :subjudul="subjudul"
-      :soal="soal"
-      :jawaban="jawaban"
-      :ragu="ragu"
-      :aktif="aktif"
-      :sisa-detik="sisaDetik"
-      :timer-label="bolehMengerjakan ? 'Sisa Waktu :' : 'Durasi :'"
-      :timer-aktif="bolehMengerjakan"
-      :simpan-error="pretest.simpanError"
-      :tombol-selesai="tombolSelesai"
-      :petunjuk="petunjuk"
-      :mengirim="mengirim"
-      modal-judul="Yakin ingin mengumpulkan pre-test?"
-      modal-peringatan="Setelah pre-test dikumpulkan, jawaban tidak dapat diubah kembali."
-      @pilih-ganda="pilihGanda"
-      @isi-jawaban="isiUraian"
-      @toggle-ragu="toggleRagu"
-      @pindah="pindah"
-      @kumpulkan="kumpulkan"
-    />
+  <PengerjaanSoal
+    v-else
+    :judul="judul"
+    :subjudul="subjudul"
+    :soal="soal"
+    :jawaban="jawaban"
+    :ragu="ragu"
+    :aktif="aktif"
+    :total="total"
+    :waktu-tampil="waktuTampil"
+    :mepet="sisaDetik <= 300"
+    :timer-label="'Sisa Waktu :'"
+    :timer-aktif="bolehMengerjakan"
+    :simpan-error="pretest.simpanError"
+    :tombol-selesai="tombolSelesai"
+    :petunjuk="petunjuk"
+    :tipe-soal="petunjuk.tipe"
+    :mengirim="mengirim"
+    modal-judul="Yakin ingin mengumpulkan pre-test?"
+    modal-peringatan="Setelah pre-test dikumpulkan, jawaban tidak dapat diubah kembali."
+    @pilih-ganda="pilihGanda"
+    @isi-jawaban="isiUraian"
+    @toggle-ragu="toggleRagu"
+    @pindah="pindah"
+    @kumpulkan="kumpulkan"
+    @kumpulkan-kosong="kumpulkan({ paksa: true })"
+  />
 
     <!-- NOTIFIKASI KONEKSI -->
     <div v-if="offlineTampil" class="overlay-offline"></div>

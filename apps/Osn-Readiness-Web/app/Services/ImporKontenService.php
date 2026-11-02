@@ -12,6 +12,7 @@ use App\Models\Materi;
 use App\Models\Pembahasan;
 use App\Models\Soal;
 use App\Models\TingkatSeleksi;
+use App\Support\NormalisasiProgramSoal;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
@@ -186,6 +187,9 @@ class ImporKontenService implements ImporKontenServiceInterface
     private function imporMateri(string $folder, string $berkas, array &$laporan, bool $dryRun): void
     {
         $isi = (string) file_get_contents($berkas);
+
+        $isi = preg_replace('/^\xEF\xBB\xBF/', '', $isi);
+        $isi = str_replace(["\r\n", "\r"], "\n", $isi);
 
         if (! preg_match('/^---\n(.+?)\n---\n(.*)$/s', $isi, $potongan)) {
             throw new RuntimeException("Frontmatter tidak ditemukan di {$berkas}.");
@@ -401,9 +405,26 @@ class ImporKontenService implements ImporKontenServiceInterface
 
         $konteks = null;
 
-        if (! empty($baris['deskripsi_soal'])) {
-            $teksKonteks = (string) $baris['deskripsi_soal'];
+        $deskripsi = trim((string) ($baris['deskripsi_soal'] ?? ''));
+        $kodeEksplisit = trim((string) ($baris['kode'] ?? ''));
+        $pengantar = null;
+        $kodeProgram = null;
+        $bahasaProgram = null;
 
+        // Hanya gunakan kode eksplisit dari sumber JSON.
+        // Normalisasi otomatis belum diaktifkan karena masih
+        // terdapat soal ambigu dan kode program tidak lengkap.
+        if ($kodeEksplisit !== '') {
+            $kodeProgram = $kodeEksplisit;
+            $pengantar = $deskripsi !== '' ? $deskripsi : null;
+            $bahasaProgram = trim((string) ($baris['bahasa'] ?? '')) ?: null;
+        }
+
+        // Untuk data yang belum mempunyai kode eksplisit,
+        // pertahankan deskripsi sebagai konteks asli.
+        $teksKonteks = $kodeProgram === null ? $deskripsi : '';
+
+        if ($teksKonteks !== '') {
             $konteks = KonteksSoal::query()
                 ->where('tingkat_id', $tingkat->id)
                 ->where('isi_konteks', $teksKonteks)
@@ -412,7 +433,7 @@ class ImporKontenService implements ImporKontenServiceInterface
             if (! $konteks instanceof KonteksSoal) {
                 $konteks = KonteksSoal::create([
                     'tingkat_id' => $tingkat->id,
-                    'judul' => mb_substr($teksKonteks, 0, 200),
+                    'judul' => 'Konteks Soal',
                     'isi_konteks' => $teksKonteks,
                 ]);
             }
@@ -426,6 +447,9 @@ class ImporKontenService implements ImporKontenServiceInterface
             'level' => $level->value,
             'peruntukan' => $peruntukan->value,
             'tipe_soal' => $isian ? 'isian' : 'pilihan_ganda',
+            'pengantar' => $pengantar,
+            'kode' => $kodeProgram,
+            'bahasa' => $bahasaProgram,
             'pertanyaan' => (string) $baris['soal'],
             'pilihan_jawaban' => $isian ? null : $pilihan,
             'kunci_jawaban' => $isian
@@ -438,6 +462,16 @@ class ImporKontenService implements ImporKontenServiceInterface
 
         if ($ada instanceof Soal) {
             $berubah = $this->perubahanYangMenyimpang($ada, $data);
+
+            // Selama migrasi format, pertahankan konteks dan
+            // pertanyaan asli untuk seluruh soal yang sudah ada.
+            if ($kodeEksplisit === '') {
+                unset(
+                    $berubah['pengantar'],
+                    $berubah['kode'],
+                    $berubah['bahasa']
+                );
+            }
             $terlarang = array_intersect(array_keys($berubah), SoalGuard::KOLOM_TERKUNCI);
 
             if ($terlarang !== [] && SoalGuard::isInUse($ada)) {
