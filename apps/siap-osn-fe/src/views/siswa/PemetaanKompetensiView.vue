@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import UserMenu from '@/components/UserMenu.vue'
 import { belajarService } from '@/services/belajar.js'
@@ -21,6 +21,7 @@ const riwayatMemuat = ref(false)
 const riwayatError = ref(false)
 
 const hasil = computed(() => pretest.hasil)
+const sedangAnalisis = computed(() => pretest.status === STATUS.MENILAI && !hasil.value)
 const namaSiswa = computed(() => auth.nama || 'Siswa')
 
 const namaTingkatById = computed(() =>
@@ -39,10 +40,39 @@ async function muatDaftarRiwayat() {
   await pretest.muatTingkat()
   const { items } = await riwayatService.daftar({
     jenis: 'pretest',
-    perPage: 5,
+    // Ambil satu ekstra karena percobaan yang sedang dinilai tidak
+    // ditampilkan sebagai riwayat sampai nilainya sudah tersedia.
+    perPage: 6,
     namaTingkatById: namaTingkatById.value,
   })
   return items
+}
+
+let timerPolling = null
+
+function stopPolling() {
+  if (timerPolling !== null) {
+    clearInterval(timerPolling)
+    timerPolling = null
+  }
+}
+
+async function cekHasilBerkala() {
+  if (pretest.status !== STATUS.MENILAI) {
+    stopPolling()
+    return
+  }
+
+  const hasilBaru = await pretest.cekHasil()
+  if (!hasilBaru) return
+
+  stopPolling()
+  await muatRiwayat()
+}
+
+function mulaiPolling() {
+  if (timerPolling !== null) return
+  timerPolling = setInterval(cekHasilBerkala, 5000)
 }
 
 async function muatHasilHalaman() {
@@ -56,16 +86,23 @@ async function muatHasilHalaman() {
       if (pretest.hasil?.id !== idDariUrl) {
         await pretest.lanjutkan({ id: idDariUrl })
       }
-
-      if (pretest.status === STATUS.MENGERJAKAN) {
-        router.replace({ name: 'siswa.pretest' })
-        return
-      }
     } else if (!pretest.hasil) {
-      // Saat halaman dibuka langsung/di-refresh, ambil hasil pre-test terbaru.
-      daftarRiwayat = await muatDaftarRiwayat()
-      const idTerakhir = daftarRiwayat[0]?.referensiId
-      if (idTerakhir) await pretest.lanjutkan({ id: idTerakhir })
+      // Utamakan pengerjaan tersimpan (termasuk yang sedang dinilai).
+      // Jika tidak ada, buka percobaan pre-test terbaru dari riwayat.
+      const idTersimpan = pretest.pretestId ?? pretest.idTersimpan()?.id ?? null
+
+      if (idTersimpan) {
+        await pretest.lanjutkan({ id: idTersimpan })
+      } else {
+        daftarRiwayat = await muatDaftarRiwayat()
+        const idTerakhir = daftarRiwayat.find((item) => item.referensiId)?.referensiId
+        if (idTerakhir) await pretest.lanjutkan({ id: idTerakhir })
+      }
+    }
+
+    if (pretest.status === STATUS.MENGERJAKAN) {
+      router.replace({ name: 'siswa.pretest' })
+      return
     }
   } catch {
     // Kondisi kosong ditampilkan jika hasil tidak dapat ditemukan/dimuat.
@@ -73,12 +110,16 @@ async function muatHasilHalaman() {
     memuat.value = false
   }
 
-  if (hasil.value) {
+  if (pretest.status === STATUS.MENILAI) {
+    await muatRiwayat(daftarRiwayat)
+    mulaiPolling()
+  } else if (hasil.value) {
     await muatRiwayat(daftarRiwayat)
   }
 }
 
 onMounted(muatHasilHalaman)
+onBeforeUnmount(stopPolling)
 
 // Nama materi asli dari GET /api/materi, bukan label "Materi {id}".
 const namaMateriById = computed(
@@ -88,14 +129,16 @@ const prioritasWajib = computed(
   () => new Map((hasil.value?.materiWajib ?? []).map((item) => [item.materiId, item.prioritas])),
 )
 
+const tingkatMateriId = computed(() => hasil.value?.tingkatId ?? pretest.tingkatId)
+
 async function muatJudulMateri() {
-  const tingkatId = hasil.value?.tingkatId
+  const tingkatId = tingkatMateriId.value
   if (!tingkatId || materi.tingkatId === tingkatId) return
   await materi.fetchDaftar({ tingkatId }).catch(() => {})
 }
 
 watchEffect(() => {
-  if (hasil.value) muatJudulMateri()
+  if (tingkatMateriId.value) muatJudulMateri()
 })
 
 const skor = computed(() =>
@@ -166,6 +209,25 @@ function formatTanggal(iso, ringkas = false) {
 const tanggalSubmit = computed(() => formatTanggal(hasil.value?.disubmitPada))
 const teksTren = { naik: '↑ Naik', turun: '↓ Turun', stabil: '→ Stabil' }
 
+const barisSkeleton = computed(() => {
+  const lebar = [76, 51, 40, 34, 80, 51]
+  const daftar = materi.daftar.slice(0, 6)
+
+  if (daftar.length) {
+    return daftar.map((item, index) => ({
+      id: item.id,
+      nama: item.judul || `Materi ${index + 1}`,
+      lebar: `${lebar[index]}%`,
+    }))
+  }
+
+  return lebar.map((nilai, index) => ({
+    id: `placeholder-${index + 1}`,
+    nama: `Materi ${index + 1}`,
+    lebar: `${nilai}%`,
+  }))
+})
+
 // Riwayat diambil dari endpoint riwayat pre-test. Detail tiap percobaan
 // dipakai untuk menemukan topik terlemah, bukan mengisi tabel dengan data contoh.
 async function muatRiwayat(itemsAwal = null) {
@@ -173,7 +235,13 @@ async function muatRiwayat(itemsAwal = null) {
   riwayatError.value = false
 
   try {
-    const items = itemsAwal ?? await muatDaftarRiwayat()
+    const semuaItems = itemsAwal ?? await muatDaftarRiwayat()
+    const items = semuaItems
+      .filter((item) => !(
+        pretest.status === STATUS.MENILAI &&
+        item.referensiId === pretest.pretestId
+      ))
+      .slice(0, 5)
     const tingkatIds = [...new Set(items.map((item) => item.tingkatId).filter(Boolean))]
     const judulMateri = new Map()
 
@@ -276,10 +344,95 @@ function unduhLaporan() {
 
     <main class="px-4 py-5 sm:px-5 lg:px-6">
       <div class="pk">
-        <div v-if="memuat" class="card pad kosong">
-          <h3>Memuat hasil pre-test…</h3>
-        </div>
+        <!-- STATE: SEDANG DIANALISIS -->
+        <template v-if="memuat || sedangAnalisis">
+          <section class="section">
+            <p class="eyebrow">01 · HASIL PRE-TEST</p>
+            <h2>Hasil Pre-Test Terakhir{{ namaTingkat ? ` ${namaTingkat}` : '' }}</h2>
+            <p class="desc">Ringkasan skor dan ketepatan jawabanmu pada pre-test paling baru.</p>
 
+            <div class="grid-2">
+              <div class="card pad">
+                <h3>Skor Keseluruhan</h3>
+                <div class="skor-wrap">
+                  <div class="donut skeleton-donut" aria-label="Skor sedang dihitung">
+                    <svg viewBox="0 0 100 100" aria-hidden="true">
+                      <circle cx="50" cy="50" :r="R" class="d-track" />
+                      <circle
+                        cx="50" cy="50" :r="R" class="d-fill"
+                        stroke-dasharray="58 276"
+                        transform="rotate(-125 50 50)"
+                      />
+                    </svg>
+                    <div class="donut-text">
+                      <strong class="skeleton skeleton-score"></strong>
+                      <span>Skor</span>
+                    </div>
+                  </div>
+                  <div class="score-detail skeleton-detail">
+                    <span class="skeleton skeleton-line line-medium"></span>
+                    <span class="skeleton skeleton-line line-long"></span>
+                    <div class="chips">
+                      <span class="skeleton skeleton-chip"></span>
+                      <span class="skeleton skeleton-chip wide"></span>
+                    </div>
+                    <p class="loading-note"><i class="loading-dot"></i>Sedang menghitung skor...</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card pad">
+                <div class="loading-card-head">
+                  <h3>Ringkasan Per Topik</h3>
+                  <span class="loading-caption"><i class="loading-dot"></i>Menganalisis hasil...</span>
+                </div>
+                <ul class="ringkas skeleton-list" aria-label="Ringkasan topik sedang dianalisis">
+                  <li v-for="baris in barisSkeleton.slice(0, 5)" :key="baris.id">
+                    <span class="skeleton skeleton-line" :style="{ width: baris.lebar }"></span>
+                    <span class="skeleton skeleton-line skeleton-value"></span>
+                  </li>
+                </ul>
+                <p class="skeleton-footnote">Sedang menganalisis hasil per topik...</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <p class="eyebrow">02 · GRAFIK PER TOPIK</p>
+            <h2>Peta Kompetensi Saat Ini</h2>
+            <p class="desc">Persentase penguasaan tiap topik berdasarkan hasil pemetaan kompetensimu.</p>
+
+            <div class="card pad">
+              <div class="bar-head loading-bar-head">
+                <div class="loading-title-wrap">
+                  <div class="loading-title-line">
+                    <h3>Semua Topik</h3>
+                    <span class="analysis-pill"><i class="loading-ring"></i>Menganalisis hasil kompetensi...</span>
+                  </div>
+                  <p>Proses ini biasanya hanya membutuhkan beberapa detik.</p>
+                </div>
+                <button type="button" class="link-btn" disabled>Unduh laporan</button>
+              </div>
+
+              <div class="legend">
+                <span><i class="dot ok"></i>Dikuasai (≥70%)</span>
+                <span><i class="dot mid"></i>Perlu latihan (40–69%)</span>
+                <span><i class="dot low"></i>Belum dikuasai (&lt;40%)</span>
+              </div>
+
+              <div v-for="baris in barisSkeleton" :key="baris.id" class="bar-row skeleton-row">
+                <span class="bar-name">{{ baris.nama }}</span>
+                <div class="track skeleton-track">
+                  <div class="skeleton-fill" :style="{ width: baris.lebar }"></div>
+                </div>
+                <span class="skeleton skeleton-small-block"></span>
+                <span class="skeleton skeleton-status-block"></span>
+              </div>
+            </div>
+          </section>
+        </template>
+
+        <!-- STATE: BELUM ADA HASIL -->
         <div v-else-if="!hasil" class="card pad kosong">
           <h3>Belum ada hasil pre-test</h3>
           <p class="desc">Ikuti pre-test terlebih dahulu untuk melihat pemetaan kompetensimu.</p>
@@ -288,6 +441,7 @@ function unduhLaporan() {
           </button>
         </div>
 
+        <!-- STATE: HASIL SUDAH SELESAI -->
         <template v-else>
           <section class="section">
             <p class="eyebrow">01 · HASIL PRE-TEST</p>
@@ -432,51 +586,52 @@ function unduhLaporan() {
               </div>
             </div>
           </section>
-
-          <section class="section">
-            <p class="eyebrow">03 · RIWAYAT PEMETAAN</p>
-            <h2>Perkembangan Pemetaan dari Waktu ke Waktu</h2>
-            <p class="desc">Bandingkan skor pemetaan kompetensimu di setiap percobaan pre-test sebelumnya.</p>
-
-            <div class="card pad">
-              <h3>Riwayat Pemetaan Kompetensi</h3>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Tanggal</th>
-                      <th>Tingkat</th>
-                      <th>Skor Keseluruhan</th>
-                      <th>Topik Terlemah</th>
-                      <th>Tren</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-if="riwayatMemuat">
-                      <td colspan="5" class="riwayat-kosong">Memuat riwayat pre-test…</td>
-                    </tr>
-                    <tr v-else-if="riwayatError">
-                      <td colspan="5" class="riwayat-kosong">
-                        Riwayat belum dapat dimuat.
-                        <button type="button" class="retry-btn" @click="muatRiwayat()">Coba lagi</button>
-                      </td>
-                    </tr>
-                    <tr v-else-if="!riwayat.length">
-                      <td colspan="5" class="riwayat-kosong">Belum ada riwayat pre-test sebelumnya.</td>
-                    </tr>
-                    <tr v-for="item in riwayat" v-else :key="item.id">
-                      <td>{{ item.tgl }}</td>
-                      <td>{{ item.tingkat }}</td>
-                      <td><b>{{ item.skor }}</b></td>
-                      <td>{{ item.lemah }}</td>
-                      <td><span class="badge" :class="item.tren">{{ teksTren[item.tren] }}</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
         </template>
+
+        <!-- RIWAYAT TETAP TERLIHAT SAAT HASIL TERBARU DIANALISIS -->
+        <section v-if="memuat || sedangAnalisis || hasil" class="section">
+          <p class="eyebrow">03 · RIWAYAT PEMETAAN</p>
+          <h2>Perkembangan Pemetaan dari Waktu ke Waktu</h2>
+          <p class="desc">Bandingkan skor pemetaan kompetensimu di setiap percobaan pre-test sebelumnya.</p>
+
+          <div class="card pad">
+            <h3>Riwayat Pemetaan Kompetensi</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Tingkat</th>
+                    <th>Skor Keseluruhan</th>
+                    <th>Topik Terlemah</th>
+                    <th>Tren</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="riwayatMemuat || (memuat && !riwayat.length)">
+                    <td colspan="5" class="riwayat-kosong">Memuat riwayat pemetaan...</td>
+                  </tr>
+                  <tr v-else-if="riwayatError">
+                    <td colspan="5" class="riwayat-kosong">
+                      Riwayat belum dapat dimuat.
+                      <button type="button" class="retry-btn" @click="muatRiwayat()">Coba lagi</button>
+                    </td>
+                  </tr>
+                  <tr v-else-if="!riwayat.length">
+                    <td colspan="5" class="riwayat-kosong">Belum ada riwayat pre-test sebelumnya.</td>
+                  </tr>
+                  <tr v-for="item in riwayat" v-else :key="item.id">
+                    <td>{{ item.tgl }}</td>
+                    <td>{{ item.tingkat }}</td>
+                    <td><b>{{ item.skor }}</b></td>
+                    <td>{{ item.lemah }}</td>
+                    <td><span class="badge" :class="item.tren">{{ teksTren[item.tren] }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   </div>
@@ -590,6 +745,94 @@ td b { color: #1e293b; font-weight: 700; }
 .badge.naik { background: #e5f8ef; color: #059669; }
 .badge.turun { background: #fff0f1; color: #e11d48; }
 .badge.stabil { background: #f1f5f9; color: #64748b; }
+
+
+/* Skeleton state saat hasil pre-test sedang dianalisis */
+.skeleton {
+  display: inline-block;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #e7ecf3 25%, #f3f6fa 45%, #e7ecf3 65%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.35s ease-in-out infinite;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+.skeleton-donut .d-fill { stroke: #fbb32f; }
+.skeleton-score { width: 23px; height: 12px; }
+.skeleton-detail { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.skeleton-line { height: 12px; }
+.line-medium { width: 118px; }
+.line-long { width: 164px; }
+.skeleton-chip { width: 76px; height: 19px; border-radius: 999px; }
+.skeleton-chip.wide { width: 92px; }
+.loading-note, .loading-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 0;
+  color: #8493a8;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.loading-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: loading-pulse 1.2s ease-in-out infinite;
+}
+@keyframes loading-pulse {
+  50% { opacity: .35; transform: scale(.8); }
+}
+.loading-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.loading-card-head h3 { margin-bottom: 12px; }
+.skeleton-list { margin-top: 0; }
+.skeleton-list li { min-height: 28px; align-items: center; border-bottom: 1px solid #edf1f6; }
+.skeleton-list li:last-child { border-bottom: 0; }
+.skeleton-list .skeleton-line { height: 13px; }
+.skeleton-list .skeleton-value { width: 52px; }
+.skeleton-footnote { margin: 4px 0 0; color: #a1aec0; font-size: 8px; text-align: right; }
+.loading-bar-head {
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #edf0f5;
+}
+.loading-title-wrap { min-width: 0; }
+.loading-title-line { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+.loading-title-line h3 { margin: 0; }
+.loading-title-wrap > p { margin: 5px 0 0; color: #9aa8bc; font-size: 9px; }
+.analysis-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 1px solid #fde5a7;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #b66b00;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.loading-ring {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid #f3b33d;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: loading-rotate .9s linear infinite;
+}
+@keyframes loading-rotate { to { transform: rotate(360deg); } }
+.loading-bar-head + .legend { margin: 2px 0 12px; }
+.skeleton-row { min-height: 33px; }
+.skeleton-track { background: #f0f3f8; }
+.skeleton-fill { height: 100%; border-radius: 999px; background: #e1e7ef; }
+.skeleton-small-block { width: 26px; height: 14px; justify-self: end; }
+.skeleton-status-block { width: 65px; height: 16px; justify-self: end; }
 
 @media (max-width: 900px) {
   .grid-2 { grid-template-columns: 1fr; }
