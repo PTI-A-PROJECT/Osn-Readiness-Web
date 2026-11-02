@@ -28,6 +28,7 @@ const filterJenis = ref('semua')
 const filterStatus = ref('semua')
 const dibukaId = ref(null)
 const submateriMenandai = ref(null)
+const submateriAktifId = ref(null)
 
 const detail = computed(() => materi.detail)
 const submateri = computed(() => detail.value?.submateri ?? [])
@@ -178,6 +179,7 @@ async function buka(id) {
   memuatDetail.value = true
   try {
     await materi.fetchDetail({ id })
+    submateriAktifId.value = materi.detail?.submateri?.[0]?.id ?? null
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Gagal membuka materi', detail: pesanError(err), life: 4000 })
     dibukaId.value = null
@@ -188,9 +190,11 @@ async function buka(id) {
 
 function tutupDetail() {
   dibukaId.value = null
+  submateriAktifId.value = null
 }
 
 function lompatKeSubmateri(id) {
+  submateriAktifId.value = id
   const target = document.getElementById('submateri-' + id)
   target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
@@ -260,135 +264,156 @@ onMounted(muatKatalog)
 
     <main class="materi-main">
       <!-- DETAIL MATERI -->
-      <section v-if="dibukaId" class="detail-panel">
-        <button type="button" class="back-link" @click="tutupDetail">← Kembali ke semua materi</button>
-        <div v-if="memuatDetail" class="detail-loading">Memuat materi...</div>
-        <template v-else-if="detail">
-          <div class="detail-title-row">
-            <div>
-              <span class="section-kicker">MATERI BELAJAR · {{ namaTingkat(detail.tingkatId) }}</span>
-              <h2>{{ detail.judul }}</h2>
-              <p>{{ detail.deskripsi }}</p>
-            </div>
-            <span v-if="detail.wajib" class="pill pill-amber">Materi wajib</span>
-          </div>
-          <img v-if="detail.gambarUrl" :src="detail.gambarUrl" alt="Ilustrasi materi" class="detail-image" />
-          <div class="learning-progress">
-            <div class="learning-progress-head">
-              <div>
-                <strong>Progress belajar</strong>
-                <span>{{ jumlahSubmateriSelesai }} dari {{ submateri.length }} submateri selesai</span>
-              </div>
-              <strong>{{ persentaseDetail }}%</strong>
-            </div>
-            <div class="learning-progress-track">
-              <div class="progress-fill" :style="{ width: persentaseDetail + '%' }"></div>
-            </div>
-          </div>
+      <section v-if="dibukaId" class="detail-view">
+        <button type="button" class="back-link detail-breadcrumb" @click="tutupDetail">
+          ← Materi <span aria-hidden="true">/</span> {{ detail?.judul || 'Detail Materi' }}
+        </button>
 
-          <div v-if="submateri.length" class="lesson-layout">
-            <nav class="lesson-toc" aria-label="Daftar isi materi">
-              <div class="lesson-toc-heading">
-                <div>
-                  <span class="lesson-toc-eyebrow">NAVIGASI MATERI</span>
-                  <h3>Daftar Isi</h3>
-                </div>
-                <span class="lesson-toc-count">{{ submateri.length }} bagian</span>
-              </div>
-              <div class="lesson-toc-list">
-                <button
-                  v-for="(bagian, index) in submateri"
-                  :key="'toc-' + bagian.id"
-                  type="button"
-                  class="lesson-toc-item"
-                  @click="lompatKeSubmateri(bagian.id)"
-                >
-                  <span class="lesson-toc-index">{{ String(index + 1).padStart(2, '0') }}</span>
-                  <span class="lesson-toc-label">{{ bagian.judul }}</span>
-                  <span
-                    class="lesson-toc-state"
-                    :class="{ 'is-complete': bagian.selesai }"
-                    :aria-label="bagian.selesai ? 'Sudah selesai' : 'Belum selesai'"
-                  >{{ bagian.selesai ? '✓' : '○' }}</span>
-                </button>
-              </div>
-            </nav>
-
-            <div class="lesson-reader">
-            <article
-              v-for="(bagian, index) in submateri"
-              :id="'submateri-' + bagian.id"
-              :key="bagian.id"
-              class="lesson-section"
-            >
-              <header class="lesson-section-header">
-                <div class="lesson-section-title">
-                  <span class="lesson-section-number">{{ String(index + 1).padStart(2, '0') }}</span>
-                  <div class="lesson-section-heading-copy">
-                    <span class="lesson-section-eyebrow">SUBMATERI {{ String(index + 1).padStart(2, '0') }}</span>
-                    <h3>{{ bagian.judul }}</h3>
-                  </div>
-                </div>
-                <span class="lesson-status" :class="{ 'is-complete': bagian.selesai }">
-                  <span aria-hidden="true">{{ bagian.selesai ? '✓' : '○' }}</span>
-                  {{ bagian.selesai ? 'Selesai' : 'Belum selesai' }}
-                </span>
-              </header>
-
-              <div
-                v-if="bagian.konten"
-                class="konten-richtext lesson-content-body"
-                v-html="renderKonten(bagian.konten)"
-              ></div>
-              <p v-else class="submateri-empty">Belum ada isi pada bagian ini.</p>
-
-              <div class="lesson-completion" :class="{ 'is-complete': bagian.selesai }">
-                <div class="lesson-completion-copy">
-                  <span class="lesson-completion-icon" aria-hidden="true">
-                    {{ bagian.selesai ? '✓' : '○' }}
+        <div class="detail-panel">
+          <div v-if="memuatDetail" class="detail-loading">Memuat materi...</div>
+          <template v-else-if="detail">
+            <div class="detail-overview">
+              <div class="detail-overview-copy">
+                <div class="detail-badges">
+                  <span class="pill pill-blue">Materi OSN</span>
+                  <span class="pill" :class="statusMateri(detail) === 'selesai' ? 'pill-green' : 'pill-amber'">
+                    {{ statusLabel(detail) }}
                   </span>
-                  <div>
-                    <strong>{{ bagian.selesai ? 'Bagian ini sudah diselesaikan' : 'Sudah memahami bagian ini?' }}</strong>
-                    <p>
-                      {{ bagian.selesai
-                        ? 'Progres submateri ini sudah tersimpan.'
-                        : 'Tandai sebagai selesai untuk menyimpan progres belajarmu.' }}
-                    </p>
-                  </div>
                 </div>
-                <button
-                  v-if="!bagian.selesai"
-                  type="button"
-                  class="btn btn-primary completion-button"
-                  :disabled="submateriMenandai === bagian.id"
-                  @click="tandaiSubmateriSelesai(bagian)"
-                >
-                  {{ submateriMenandai === bagian.id ? 'Menyimpan...' : 'Tandai Selesai' }}
-                </button>
-                <span v-else class="complete-note">Selesai</span>
+                <h2>{{ detail.judul }}</h2>
+                <p>{{ detail.deskripsi || 'Pelajari materi ini untuk memperkuat kompetensimu.' }}</p>
               </div>
-            </article>
-            </div>
-          </div>
-          <div v-else class="lesson-empty">
-            <strong>Konten submateri belum tersedia</strong>
-            <p>Materi ini belum memiliki bagian pembelajaran yang dapat ditampilkan.</p>
-          </div>
 
-          <div v-if="detail.fileUrl" class="file-link-wrap">
-            <a :href="detail.fileUrl" target="_blank" rel="noopener" class="file-link">Buka / unduh file materi ↗</a>
-          </div>
-          <div class="detail-actions">
-            <button
-              v-if="detail.latihanTersedia && detail.quizId"
-              type="button"
-              class="btn btn-outline"
-              @click="mulaiLatihan(detail)"
-            >
-              Mulai Latihan →
-            </button>
-          </div>
-        </template>
+              <div class="detail-progress">
+                <div class="detail-progress-label">
+                  <span>Progress Membaca</span>
+                  <strong>{{ persentaseDetail }}% selesai</strong>
+                </div>
+                <div class="learning-progress-track">
+                  <div class="progress-fill" :style="{ width: persentaseDetail + '%' }"></div>
+                </div>
+                <span class="detail-progress-meta">
+                  {{ jumlahSubmateriSelesai }} dari {{ submateri.length }} submateri selesai
+                </span>
+              </div>
+            </div>
+
+            <img
+              v-if="detail.gambarUrl"
+              :src="detail.gambarUrl"
+              alt="Ilustrasi materi"
+              class="detail-image"
+            />
+
+            <div v-if="submateri.length" class="lesson-layout">
+              <div class="lesson-reader">
+                <article
+                  v-for="(bagian, index) in submateri"
+                  :id="'submateri-' + bagian.id"
+                  :key="bagian.id"
+                  class="lesson-section"
+                >
+                  <header class="lesson-section-header">
+                    <div class="lesson-section-title">
+                      <span class="lesson-section-number">{{ index + 1 }}.</span>
+                      <div class="lesson-section-heading-copy">
+                        <h3>{{ bagian.judul }}</h3>
+                      </div>
+                    </div>
+                    <span class="lesson-status" :class="{ 'is-complete': bagian.selesai }">
+                      <span aria-hidden="true">{{ bagian.selesai ? '✓' : '○' }}</span>
+                      {{ bagian.selesai ? 'Selesai' : 'Belum selesai' }}
+                    </span>
+                  </header>
+
+                  <div
+                    v-if="bagian.konten"
+                    class="konten-richtext lesson-content-body"
+                    v-html="renderKonten(bagian.konten)"
+                  ></div>
+                  <p v-else class="submateri-empty">Belum ada isi pada bagian ini.</p>
+
+                  <div class="lesson-completion" :class="{ 'is-complete': bagian.selesai }">
+                    <div class="lesson-completion-copy">
+                      <strong>{{ bagian.selesai ? 'Submateri ini sudah selesai' : 'Selesai membaca sub-bab?' }}</strong>
+                      <p>
+                        {{ bagian.selesai
+                          ? 'Progress submateri ini sudah tersimpan.'
+                          : 'Tandai untuk memperbarui peta kemampuan dan progress belajarmu.' }}
+                      </p>
+                    </div>
+                    <button
+                      v-if="!bagian.selesai"
+                      type="button"
+                      class="btn btn-amber completion-button"
+                      :disabled="submateriMenandai === bagian.id"
+                      @click="tandaiSubmateriSelesai(bagian)"
+                    >
+                      {{ submateriMenandai === bagian.id ? 'Menyimpan...' : '✓  Tandai sebagai Selesai' }}
+                    </button>
+                    <span v-else class="complete-note">✓ Selesai</span>
+                  </div>
+                </article>
+
+                <div v-if="detail.fileUrl" class="file-link-wrap">
+                  <a :href="detail.fileUrl" target="_blank" rel="noopener" class="file-link">
+                    Buka / unduh file materi ↗
+                  </a>
+                </div>
+              </div>
+
+              <aside class="lesson-sidebar">
+                <nav class="lesson-toc" aria-label="Daftar isi materi">
+                  <h3 class="lesson-toc-title">DAFTAR ISI MATERI</h3>
+                  <div class="lesson-toc-list">
+                    <button
+                      v-for="(bagian, index) in submateri"
+                      :key="'toc-' + bagian.id"
+                      type="button"
+                      class="lesson-toc-item"
+                      :class="{
+                        'is-active': bagian.id === submateriAktifId,
+                        'is-complete': bagian.selesai,
+                      }"
+                      :aria-current="bagian.id === submateriAktifId ? 'location' : undefined"
+                      @click="lompatKeSubmateri(bagian.id)"
+                    >
+                      <span class="lesson-toc-index" :class="{ 'is-complete': bagian.selesai }">
+                        {{ bagian.selesai ? '✓' : index + 1 }}
+                      </span>
+                      <span class="lesson-toc-label">{{ bagian.judul }}</span>
+                    </button>
+                  </div>
+                </nav>
+
+                <section class="lesson-practice-card" aria-label="Latihan materi">
+                  <div class="lesson-practice-topline">
+                    <span class="lesson-practice-level">{{ namaTingkat(detail.tingkatId) }}</span>
+                    <span>{{ detail.quizId ? 'Latihan tersedia' : 'Latihan belum tersedia' }}</span>
+                  </div>
+                  <h3>Latihan Materi</h3>
+                  <p>Uji pemahamanmu melalui latihan soal yang berkaitan dengan materi ini.</p>
+                  <div class="lesson-practice-footer">
+                    <span>{{ detail.quizId ? 'Siap untuk berlatih?' : 'Latihan belum tersedia' }}</span>
+                    <button
+                      v-if="detail.quizId && detail.latihanTersedia"
+                      type="button"
+                      class="btn btn-amber"
+                      @click="mulaiLatihan(detail)"
+                    >
+                      Mulai Latihan
+                    </button>
+                  </div>
+                </section>
+              </aside>
+            </div>
+
+            <div v-else class="lesson-empty">
+              <strong>Konten submateri belum tersedia</strong>
+              <p>Materi ini belum memiliki bagian pembelajaran yang dapat ditampilkan.</p>
+            </div>
+          </template>
+        </div>
       </section>
 
       <template v-else>
@@ -1053,4 +1078,210 @@ onMounted(muatKatalog)
   .lesson-content-body { margin-top: 17px; font-size: 14px; }
   .lesson-completion { padding: 14px; }
 }
+
+/* Detail materi: layout referensi — bacaan kiri, daftar isi dan latihan kanan. */
+.detail-view { min-width: 0; }
+.detail-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 16px 2px;
+  color: #526783;
+  font-size: 12px;
+  font-weight: 600;
+}
+.detail-breadcrumb span { color: #a1adbd; }
+.detail-panel { padding: 30px 32px 38px; }
+.detail-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(245px, 300px);
+  align-items: end;
+  gap: 30px;
+  margin-bottom: 38px;
+}
+.detail-overview-copy { min-width: 0; }
+.detail-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 15px; }
+.pill-blue { background: #edf2ff; color: #4356c7; }
+.detail-overview h2 {
+  margin: 0;
+  color: #102d53;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 29px;
+  line-height: 1.25;
+  font-weight: 750;
+  letter-spacing: -.035em;
+}
+.detail-overview-copy > p { margin: 9px 0 0; color: #718096; font-size: 13px; line-height: 1.6; }
+.detail-progress { min-width: 0; padding-bottom: 4px; }
+.detail-progress-label { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 13px; color: #64748b; font-size: 13px; }
+.detail-progress-label strong { color: #102d53; font-size: 13px; white-space: nowrap; }
+.detail-progress .learning-progress-track { margin: 0; height: 7px; background: #e3e9f1; }
+.detail-progress .progress-fill { background: #f59e0b; }
+.detail-progress-meta { display: block; margin-top: 7px; color: #93a0b2; font-size: 10px; text-align: right; }
+.detail-image { margin: 0 auto 26px; }
+.lesson-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 276px);
+  align-items: start;
+  gap: 28px;
+  margin-top: 0;
+}
+.lesson-reader {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.lesson-section { padding: 0 0 27px; scroll-margin-top: 24px; }
+.lesson-section + .lesson-section { padding-top: 27px; border-top: 1px solid #e8edf4; }
+.lesson-section-header { align-items: center; gap: 12px; }
+.lesson-section-title { display: block; }
+.lesson-section-number {
+  display: inline;
+  width: auto;
+  height: auto;
+  margin-right: 5px;
+  border-radius: 0;
+  background: transparent;
+  color: #102d53;
+  font: inherit;
+  font-size: 20px;
+}
+.lesson-section-heading-copy { display: inline; }
+.lesson-section-eyebrow { display: none; }
+.lesson-section h3 {
+  display: inline;
+  color: #102d53;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+.lesson-status { padding: 5px 8px; font-size: 10px; }
+.lesson-content-body { margin-top: 17px; color: #263a56; font-size: 14px; line-height: 1.8; }
+.lesson-content-body :deep(h1),
+.lesson-content-body :deep(h2),
+.lesson-content-body :deep(h3) { color: #102d53; }
+.lesson-completion {
+  margin-top: 27px;
+  padding: 17px 0 0;
+  border: 0;
+  border-top: 1px solid #e5ebf2;
+  border-radius: 0;
+  background: transparent;
+}
+.lesson-completion.is-complete { border-color: #d5eee1; background: transparent; }
+.lesson-completion-copy { align-items: flex-start; gap: 0; }
+.lesson-completion-copy strong { color: #263750; font-size: 12px; }
+.lesson-completion-copy p { max-width: 420px; font-size: 11px; }
+.completion-button { min-width: 0; min-height: 40px; padding-inline: 16px; background: #f59e0b; color: #fff; }
+.completion-button:hover { background: #e89405; }
+.lesson-sidebar { min-width: 0; display: grid; gap: 18px; }
+.lesson-toc {
+  position: sticky;
+  top: 20px;
+  padding: 24px 18px 20px;
+  border: 1px solid #e5ebf3;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: none;
+}
+.lesson-toc-title {
+  margin: 0 0 12px;
+  padding: 0 4px 13px;
+  border-bottom: 1px solid #edf1f6;
+  color: #34445d;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 750;
+}
+.lesson-toc-heading { display: none; }
+.lesson-toc-list { display: grid; gap: 3px; padding-top: 0; }
+.lesson-toc-item {
+  min-height: 38px;
+  padding: 7px 8px;
+  gap: 9px;
+  color: #243650;
+}
+.lesson-toc-item.is-active { background: #e5efff; color: #1557d5; }
+.lesson-toc-index {
+  width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid #dce5f1;
+  border-radius: 50%;
+  background: #fff;
+  color: #8292a8;
+  font-size: 10px;
+}
+.lesson-toc-index.is-complete {
+  border-color: #12a365;
+  background: #12a365;
+  color: #fff;
+}
+.lesson-toc-label { font-size: 12px; font-weight: 600; }
+.lesson-practice-card {
+  padding: 18px 17px 16px;
+  border-radius: 14px;
+  background: #102f55;
+  color: #fff;
+  box-shadow: 0 4px 12px rgb(16 47 85 / 12%);
+}
+.lesson-practice-topline, .lesson-practice-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.lesson-practice-topline { color: #c4d2e4; font-size: 10px; }
+.lesson-practice-level {
+  padding: 4px 8px;
+  border: 1px solid rgb(245 158 11 / 45%);
+  border-radius: 999px;
+  color: #fbbf24;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.lesson-practice-card h3 { margin: 12px 0 6px; color: #fff; font-size: 14px; font-weight: 750; }
+.lesson-practice-card p { margin: 0; color: #c2d0e1; font-size: 11px; line-height: 1.55; }
+.lesson-practice-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgb(255 255 255 / 12%); }
+.lesson-practice-footer > span { color: #c2d0e1; font-size: 10px; }
+.lesson-practice-card .btn { min-height: 34px; padding-inline: 13px; background: #f59e0b; color: #fff; font-size: 10px; }
+.detail-view .lesson-empty { margin-top: 0; }
+
+@media (max-width: 1050px) {
+  .detail-panel { padding: 26px 24px 32px; }
+  .lesson-layout { grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; }
+  .detail-overview { grid-template-columns: minmax(0, 1fr) minmax(220px, 270px); gap: 20px; }
+}
+@media (max-width: 760px) {
+  .detail-panel { padding: 22px 18px 28px; }
+  .detail-overview { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-bottom: 26px; }
+  .detail-overview h2 { font-size: 24px; }
+  .detail-progress { max-width: none; }
+  .detail-progress-meta { text-align: left; }
+  .lesson-layout { grid-template-columns: minmax(0, 1fr); }
+  .lesson-sidebar { grid-row: 1; }
+  .lesson-toc { position: static; padding: 17px 14px 14px; }
+  .lesson-toc-list { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 3px; scrollbar-width: thin; }
+  .lesson-toc-item { width: max-content; max-width: 240px; min-width: 150px; flex: 0 0 auto; border: 1px solid #e8edf4; background: #fbfcfe; }
+  .lesson-toc-item.is-active { border-color: #d4e3ff; background: #e5efff; }
+  .lesson-practice-card { display: none; }
+  .lesson-section-header { align-items: flex-start; flex-direction: row; }
+  .lesson-section h3 { font-size: 18px; }
+}
+@media (max-width: 600px) {
+  .detail-badges { margin-bottom: 11px; }
+  .detail-overview h2 { font-size: 22px; }
+  .lesson-section-header { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .lesson-section h3 { font-size: 17px; }
+  .lesson-completion { align-items: flex-start; flex-direction: column; }
+  .completion-button { width: 100%; }
+  .lesson-practice-card { display: block; }
+}
+
 </style>
