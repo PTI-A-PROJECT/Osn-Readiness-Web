@@ -427,6 +427,9 @@ class BelajarService implements BelajarServiceInterface
             ],
             'nilai_latihan_terbaik' => $nilaiTerbaik,
             'quiz_id' => $materi->quiz === null ? null : (int) $materi->quiz->id,
+            'quiz_nama' => $materi->quiz?->nama_quiz,
+            'quiz_deskripsi' => $materi->quiz?->deskripsi,
+            'quiz_jumlah_soal' => $materi->quiz?->jumlah_soal === null ? null : (int) $materi->quiz->jumlah_soal,
             'latihan_belum_tersedia' => $materi->quiz === null,
         ];
 
