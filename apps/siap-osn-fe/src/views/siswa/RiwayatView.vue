@@ -73,15 +73,13 @@ const pretestsAllSorted = computed(() =>
     (a, b) => new Date(b.tanggal || 0).getTime() - new Date(a.tanggal || 0).getTime(),
   ),
 )
-const allStagesComplete = computed(
-  () => levels.value.length > 0 && levels.value.every((t) => t.tahap === 'LULUS'),
-)
+const selectedStageComplete = computed(() => selectedLevel.value?.tahap === 'LULUS')
 const banner = computed(() => {
-  if (allStagesComplete.value) {
+  if (selectedStageComplete.value) {
     return {
       tone: 'success',
       title: 'Luar biasa, semua tahap tuntas!',
-      body: 'Kamu menyelesaikan seluruh materi, latihan, dan simulasi dari Kabupaten. Ini hasil konsistensi yang panjang. Siap lanjut ke tingkat berikutnya?',
+      body: 'Kamu menyelesaikan seluruh materi, latihan, dan simulasi pada tahap ' + selectedLevel.value.nama + '. Ini hasil konsistensi yang panjang.',
     }
   }
 
@@ -573,7 +571,7 @@ onMounted(muatRiwayat)
               </div>
             </div>
             <p class="mt-1 text-[10px] text-[#71809a]">
-              Garis emas menunjukkan arah nilaimu dari materi ke materi.
+              Nilai di atas batang menunjukkan nilai terbaik pada masing-masing materi.
             </p>
           </article>
 
