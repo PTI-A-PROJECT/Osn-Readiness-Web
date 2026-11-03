@@ -112,9 +112,44 @@ class MateriBelajarApiTest extends TestCase
             ->assertJsonPath('data.0.progress.status', 'selesai')
             ->assertJsonPath('data.0.progress.persentase', 100)
             ->assertJsonPath('data.0.quiz_id', $quiz->id)
+            ->assertJsonPath('data.0.quiz_nama', 'Quiz '.$this->materi->judul)
+            ->assertJsonPath('data.0.quiz_jumlah_soal', 10)
             ->assertJsonPath('data.0.latihan_belum_tersedia', false);
 
         $this->assertSame(80.0, (float) $respons->json('data.0.nilai_latihan_terbaik'));
+    }
+
+    public function test_detail_dua_materi_mengirim_quiz_masing_masing(): void
+    {
+        $materiKedua = Materi::factory()->create([
+            'tingkat_id' => $this->tingkat->id,
+            'kompetensi_id' => $this->materi->kompetensi_id,
+            'urutan' => 2,
+        ]);
+
+        $quizPertama = Quiz::create([
+            'materi_id' => $this->materi->id,
+            'nama_quiz' => 'Latihan Materi Pertama',
+            'jumlah_soal' => 10,
+        ]);
+        $quizKedua = Quiz::create([
+            'materi_id' => $materiKedua->id,
+            'nama_quiz' => 'Latihan Materi Kedua',
+            'jumlah_soal' => 15,
+        ]);
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/materi/'.$this->materi->id)
+            ->assertOk()
+            ->assertJsonPath('data.quiz_id', $quizPertama->id)
+            ->assertJsonPath('data.quiz_nama', 'Latihan Materi Pertama')
+            ->assertJsonPath('data.quiz_jumlah_soal', 10);
+
+        $this->getJson('/api/materi/'.$materiKedua->id)
+            ->assertOk()
+            ->assertJsonPath('data.quiz_id', $quizKedua->id)
+            ->assertJsonPath('data.quiz_nama', 'Latihan Materi Kedua')
+            ->assertJsonPath('data.quiz_jumlah_soal', 15);
     }
 
     public function test_materi_tanpa_latihan_mengirim_quiz_id_null(): void
