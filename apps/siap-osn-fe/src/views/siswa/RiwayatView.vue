@@ -273,6 +273,14 @@ async function muatRiwayat() {
     }
   } catch (err) {
     loadError.value = true
+    const province = pretest.tingkatList.find((t) =>
+      String(t.nama).toLowerCase().includes('provinsi'),
+    )
+    if (province) {
+      const tahapSudahPretest = TAHAP_PRETEST_SELESAI.has(province.tahap)
+      const adaHasilPretest = pretestResults.value.some((r) => r.tingkatId === province.id)
+      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest)
+    }
     toast.add({
       severity: 'error',
       summary: 'Gagal memuat riwayat',
@@ -324,6 +332,13 @@ onMounted(muatRiwayat)
       </div>
 
       <template v-else>
+        <div
+          v-if="loadError"
+          class="rounded-xl border border-[#f3d1a0] bg-[#fff8e8] px-4 py-3 text-[12px] text-[#8a5a00]"
+        >
+          Sebagian data belum dapat dimuat. Informasi yang tersedia tetap ditampilkan.
+        </div>
+
         <!-- BANNER MOTIVASI DINAMIS -->
         <section
           class="rounded-2xl px-7 py-5 text-white sm:px-8"
