@@ -208,7 +208,7 @@ async function muatRiwayat() {
   try {
     await Promise.all([
       pretest.muatTingkat({ force: true }),
-      progress.fetchDashboard({ force: true }),
+      progress.fetchDashboard(),
     ])
 
     const lookup = Object.fromEntries(pretest.tingkatList.map((t) => [t.id, t.nama]))
