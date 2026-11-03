@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import UserMenu from '@/components/UserMenu.vue'
@@ -26,13 +26,21 @@ const pencarian = ref('')
 const filterTingkat = ref('semua')
 const filterJenis = ref('semua')
 const filterStatus = ref('semua')
+function resetFilter() {
+  pencarian.value = ''
+  filterTingkat.value = 'semua'
+  filterJenis.value = 'semua'
+  filterStatus.value = 'semua'
+}
 const dibukaId = ref(null)
 const submateriMenandai = ref(null)
 const submateriAktifId = ref(null)
+const pembacaRef = ref(null)
 
 const detail = computed(() => materi.detail)
 const submateri = computed(() => detail.value?.submateri ?? [])
 const jumlahSubmateriSelesai = computed(() => submateri.value.filter((bagian) => bagian.selesai).length)
+const semuaSubmateriSelesai = computed(() => submateri.value.length > 0 && submateri.value.every((bagian) => bagian.selesai))
 const persentaseDetail = computed(() => submateri.value.length
   ? Math.round((jumlahSubmateriSelesai.value / submateri.value.length) * 100)
   : 0)
@@ -185,6 +193,11 @@ async function buka(id) {
     dibukaId.value = null
   } finally {
     memuatDetail.value = false
+    await nextTick()
+    if (dibukaId.value === id && pembacaRef.value) {
+      pembacaRef.value.scrollTop = 0
+      perbaruiSubmateriAktif()
+    }
   }
 }
 
@@ -194,9 +207,28 @@ function tutupDetail() {
 }
 
 function lompatKeSubmateri(id) {
+  const container = pembacaRef.value
+  if (!container) return
+  const targetId = id === 'latihan' ? 'latihan-materi' : 'submateri-' + id
+  const target = Array.from(container.querySelectorAll('.lesson-section, .lesson-final-practice')).find((el) => el.id === targetId)
+  if (!target) return
   submateriAktifId.value = id
-  const target = document.getElementById('submateri-' + id)
-  target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const top = target.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+  container.scrollTo({ top, behavior: 'smooth' })
+}
+
+function perbaruiSubmateriAktif() {
+  const container = pembacaRef.value
+  if (!container) return
+  const nodes = Array.from(container.querySelectorAll('.lesson-section, .lesson-final-practice'))
+  const batas = container.getBoundingClientRect().top + 80
+  let aktif = submateri.value[0]?.id ?? null
+  for (const node of nodes) {
+    if (node.getBoundingClientRect().top > batas) break
+    aktif = node.id === 'latihan-materi' ? 'latihan' : submateri.value.find((x) => 'submateri-' + x.id === node.id)?.id ?? aktif
+  }
+  if (nodes.length && container.scrollTop + container.clientHeight >= container.scrollHeight - 4) aktif = 'latihan'
+  submateriAktifId.value = aktif
 }
 
 async function tandaiSubmateriSelesai(bagian) {
@@ -306,7 +338,7 @@ onMounted(muatKatalog)
             />
 
             <div v-if="submateri.length" class="lesson-layout">
-              <div class="lesson-reader">
+              <div ref="pembacaRef" class="lesson-reader" tabindex="0" aria-label="Konten pembelajaran" @scroll.passive="perbaruiSubmateriAktif">
                 <article
                   v-for="(bagian, index) in submateri"
                   :id="'submateri-' + bagian.id"
@@ -346,7 +378,7 @@ onMounted(muatKatalog)
                       v-if="!bagian.selesai"
                       type="button"
                       class="btn btn-amber completion-button"
-                      :disabled="submateriMenandai === bagian.id"
+                      :disabled="submateriMenandai !== null"
                       @click="tandaiSubmateriSelesai(bagian)"
                     >
                       {{ submateriMenandai === bagian.id ? 'Menyimpan...' : '✓  Tandai sebagai Selesai' }}
@@ -360,6 +392,19 @@ onMounted(muatKatalog)
                     Buka / unduh file materi ↗
                   </a>
                 </div>
+                <section id="latihan-materi" class="lesson-final-practice" aria-label="Latihan materi">
+                  <h2>{{ detail.quizNama || ('Latihan ' + detail.judul) }}</h2>
+                  <p class="final-practice-description">{{ detail.quizDeskripsi || 'Uji pemahamanmu sebelum melanjutkan ke materi berikutnya. Hasil latihan membantu memperbarui peta kompetensimu.' }}</p>
+                  <div class="final-practice-stats">
+                    <div class="final-stat"><strong>{{ detail.jumlahSoalLatihan ?? '—' }}</strong><span>Soal</span></div>
+                    <div class="final-stat"><strong>Tanpa batas</strong><span>Waktu pengerjaan</span></div>
+                    <div v-if="detail.nilaiTerbaik != null" class="final-stat"><strong>{{ Math.round(detail.nilaiTerbaik) }}</strong><span>Nilai terbaik</span></div>
+                  </div>
+                  <button type="button" class="btn final-practice-button" :disabled="!detail.quizId || !detail.latihanTersedia" @click="mulaiLatihan(detail)">
+                    {{ detail.quizId && detail.latihanTersedia ? 'Mulai latihan' : 'Latihan belum tersedia' }}
+                  </button>
+                  <p class="final-practice-note">{{ semuaSubmateriSelesai ? '✓ Semua submateri sudah selesai dibaca.' : 'Tandai setiap submateri sebagai selesai untuk memperbarui progress belajarmu.' }}</p>
+                </section>
               </div>
 
               <aside class="lesson-sidebar">
@@ -369,42 +414,23 @@ onMounted(muatKatalog)
                     <button
                       v-for="(bagian, index) in submateri"
                       :key="'toc-' + bagian.id"
-                      type="button"
-                      class="lesson-toc-item"
-                      :class="{
-                        'is-active': bagian.id === submateriAktifId,
-                        'is-complete': bagian.selesai,
-                      }"
+                      type="button" class="lesson-toc-item"
+                      :class="{ 'is-active': bagian.id === submateriAktifId, 'is-complete': bagian.selesai }"
                       :aria-current="bagian.id === submateriAktifId ? 'location' : undefined"
                       @click="lompatKeSubmateri(bagian.id)"
                     >
-                      <span class="lesson-toc-index" :class="{ 'is-complete': bagian.selesai }">
-                        {{ bagian.selesai ? '✓' : index + 1 }}
-                      </span>
+                      <span class="lesson-toc-index" :class="{ 'is-complete': bagian.selesai }">{{ bagian.selesai ? '✓' : index + 1 }}</span>
                       <span class="lesson-toc-label">{{ bagian.judul }}</span>
+                    </button>
+                    <button type="button" class="lesson-toc-item lesson-toc-practice"
+                      :class="{ 'is-active': submateriAktifId === 'latihan' }"
+                      :aria-current="submateriAktifId === 'latihan' ? 'location' : undefined"
+                      @click="lompatKeSubmateri('latihan')">
+                      <span class="lesson-toc-star" aria-hidden="true">★</span>
+                      <span class="lesson-toc-label">{{ detail.quizNama || ('Latihan ' + detail.judul) }}</span>
                     </button>
                   </div>
                 </nav>
-
-                <section class="lesson-practice-card" aria-label="Latihan materi">
-                  <div class="lesson-practice-topline">
-                    <span class="lesson-practice-level">{{ namaTingkat(detail.tingkatId) }}</span>
-                    <span>{{ detail.quizId ? 'Latihan tersedia' : 'Latihan belum tersedia' }}</span>
-                  </div>
-                  <h3>Latihan Materi</h3>
-                  <p>Uji pemahamanmu melalui latihan soal yang berkaitan dengan materi ini.</p>
-                  <div class="lesson-practice-footer">
-                    <span>{{ detail.quizId ? 'Siap untuk berlatih?' : 'Latihan belum tersedia' }}</span>
-                    <button
-                      v-if="detail.quizId && detail.latihanTersedia"
-                      type="button"
-                      class="btn btn-amber"
-                      @click="mulaiLatihan(detail)"
-                    >
-                      Mulai Latihan
-                    </button>
-                  </div>
-                </section>
               </aside>
             </div>
 
@@ -511,7 +537,7 @@ onMounted(muatKatalog)
             <button
               type="button"
               class="btn btn-outline"
-              @click="pencarian = ''; filterTingkat = 'semua'; filterJenis = 'semua'; filterStatus = 'semua'"
+              @click="resetFilter"
             >
               Reset Filter
             </button>
@@ -594,7 +620,7 @@ onMounted(muatKatalog)
               <button type="button" class="btn btn-amber" @click="bukaPretest">
                 {{ pretest.status === STATUS.MENILAI ? 'Lihat Proses Pre-Test' : 'Kerjakan Pre-Test' }} →
               </button>
-              <button type="button" class="btn btn-outline" @click="filterTingkat = 'semua'; filterStatus = 'semua'; filterJenis = 'semua'; pencarian = ''">
+              <button type="button" class="btn btn-outline" @click="resetFilter">
                 Lihat Semua Materi
               </button>
             </div>
@@ -632,7 +658,7 @@ onMounted(muatKatalog)
           <div v-else class="recommendation-empty compact-empty">
             <h3>Semua rekomendasi sudah terpenuhi</h3>
             <p>Tidak ada materi prioritas tambahan dari hasil pre-test terakhir.</p>
-            <button type="button" class="btn btn-outline" @click="filterTingkat = 'semua'; filterStatus = 'semua'">
+            <button type="button" class="btn btn-outline" @click="resetFilter">
               Lihat Semua Materi
             </button>
           </div>
@@ -1280,6 +1306,39 @@ onMounted(muatKatalog)
   .lesson-section h3 { font-size: 17px; }
   .lesson-completion { align-items: flex-start; flex-direction: column; }
   .completion-button { width: 100%; }
+}
+
+
+/* Detail materi: scroll konten kiri, daftar isi kanan tetap diam. */
+.detail-view .lesson-layout { grid-template-columns: minmax(0, 1fr) 276px; gap: 28px; align-items: start; }
+.detail-view .lesson-reader {
+  min-width: 0; height: min(72vh, 760px); min-height: 420px; overflow-y: auto;
+  overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin; padding: 0 12px 0 0;
+}
+.detail-view .lesson-reader:focus-visible { outline: 2px solid #bfdbfe; outline-offset: 2px; }
+.detail-view .lesson-sidebar { min-width: 0; width: 100%; display: block; }
+.detail-view .lesson-toc { position: static; top: auto; width: 100%; margin: 0; padding: 24px 18px; box-sizing: border-box; }
+.detail-view .lesson-toc-practice { margin-top: 12px; padding-top: 14px; border-top: 1px solid #e8edf4; border-radius: 0 0 9px 9px; }
+.detail-view .lesson-toc-practice.is-active { border-radius: 9px; }
+.detail-view .lesson-toc-practice .lesson-toc-label { font-weight: 750; }
+.detail-view .lesson-toc-star { display: inline-grid; place-items: center; flex: none; width: 23px; height: 23px; border-radius: 50%; background: #fbbf24; color: #102f55; font-size: 12px; }
+.detail-view .lesson-final-practice { min-height: 380px; margin-top: 27px; padding: 30px 28px; border-radius: 15px; background: linear-gradient(120deg, #10214b 0%, #15396f 55%, #2455aa 100%); color: #fff; }
+.detail-view .lesson-final-practice h2 { margin: 0 0 14px; color: #fff; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 23px; font-weight: 750; }
+.detail-view .final-practice-description { max-width: 650px; margin: 0 0 18px; color: #dae5f5; font-size: 13px; line-height: 1.65; }
+.detail-view .final-practice-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.detail-view .final-stat { min-width: 96px; padding: 13px 16px; display: flex; flex-direction: column; align-items: center; gap: 5px; border-radius: 12px; background: rgb(255 255 255 / 12%); }
+.detail-view .final-stat strong { color: #fff; font-size: 18px; font-weight: 800; }
+.detail-view .final-stat span { color: #c2d3ec; font-size: 11px; }
+.detail-view .final-practice-button { min-height: 43px; padding-inline: 22px; border-radius: 10px; background: #fbbf24; color: #102f55; }
+.detail-view .final-practice-note { margin: 18px 0 0; color: #b9c9e4; font-size: 11px; }
+@media (max-width: 760px) {
+  .detail-view .lesson-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .detail-view .lesson-sidebar { grid-row: 1; }
+  .detail-view .lesson-toc-list { display: flex; gap: 7px; overflow-x: auto; }
+  .detail-view .lesson-toc-item { width: max-content; min-width: 150px; flex: 0 0 auto; }
+  .detail-view .lesson-toc-practice { margin-top: 0; padding-top: 8px; border-top: 0; }
+  .detail-view .lesson-reader { height: min(70vh, 650px); min-height: 360px; }
+  .detail-view .lesson-final-practice { min-height: 320px; padding: 24px 19px; }
 }
 
 </style>
