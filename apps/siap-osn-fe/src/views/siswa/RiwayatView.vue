@@ -68,11 +68,6 @@ const weakestTopic = computed(() => {
   const materi = selectedMaterials.value.find((m) => m.id === mapping.materiId)
   return materi?.judul ?? 'Topik belum tersedia'
 })
-const pretestsAllSorted = computed(() =>
-  [...pretestResults.value].sort(
-    (a, b) => new Date(b.tanggal || 0).getTime() - new Date(a.tanggal || 0).getTime(),
-  ),
-)
 const selectedStageComplete = computed(() => selectedLevel.value?.tahap === 'LULUS')
 const banner = computed(() => {
   if (selectedStageComplete.value) {
@@ -83,8 +78,8 @@ const banner = computed(() => {
     }
   }
 
-  const latest = pretestsAllSorted.value[0]
-  const previous = pretestsAllSorted.value[1]
+  const latest = selectedPretests.value[0]
+  const previous = selectedPretests.value[1]
   if (latest && previous && latest.nilai != null && previous.nilai != null) {
     if (latest.nilai > previous.nilai) {
       return {
@@ -102,11 +97,11 @@ const banner = computed(() => {
     }
   }
 
-  if (!pretestsAllSorted.value.length) {
+  if (!latest) {
     return {
       tone: 'info',
       title: 'Satu langkah kecil untuk memulai',
-      body: 'Kerjakan pre-test pertamamu, lalu kami tunjukkan materi mana yang paling perlu kamu kuatkan.',
+      body: 'Kerjakan pre-test pada tahap ini, lalu kami tunjukkan materi mana yang paling perlu kamu kuatkan.',
     }
   }
 
