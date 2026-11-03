@@ -8,7 +8,6 @@ import { useProgressStore } from '@/stores/progress.js'
 import { simulasiService } from '@/services/simulasi.js'
 import { riwayatService } from '@/services/riwayat.js'
 import { pesanError } from '@/lib/errors.js'
-import { segeraDatang } from '@/lib/tingkat.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,12 +20,8 @@ const levels = computed(() => pretest.tingkatList)
 const ruangPerTingkat = ref({})
 const memuatRuang = ref(false)
 
-function terkunciSegera(level) {
-  return segeraDatang(level)
-}
-
 function bolehPilih(level) {
-  return Boolean(level?.terbuka) && !terkunciSegera(level)
+  return Boolean(level?.terbuka)
 }
 
 function simulasiUntuk(level) {
@@ -39,7 +34,6 @@ function syaratUntuk(level) {
 }
 
 function statusLevel(level) {
-  if (terkunciSegera(level)) return 'Segera Hadir'
   if (!level.terbuka) return 'Terkunci'
   if (level.tahap === 'LULUS') return 'Sudah Dilalui'
   if (level.tahap === 'SIMULASI_BERJALAN') return 'Sedang Berjalan'
@@ -48,7 +42,7 @@ function statusLevel(level) {
 }
 
 function kelasStatusLevel(level) {
-  if (terkunciSegera(level) || !level.terbuka || level.tahap === 'PUTARAN_HABIS') return 'status-muted'
+  if (!level.terbuka || level.tahap === 'PUTARAN_HABIS') return 'status-muted'
   if (level.tahap === 'LULUS') return 'status-success'
   if (level.tahap === 'SIMULASI_BERJALAN') return 'status-warning'
   return syaratUntuk(level)?.terpenuhi ? 'status-success' : 'status-muted'
@@ -80,7 +74,7 @@ function bisaMulai(item, level) {
 async function muatRuangSemuaTingkat() {
   memuatRuang.value = true
   try {
-    const dapatDiakses = levels.value.filter((level) => level.terbuka && !terkunciSegera(level))
+    const dapatDiakses = levels.value.filter((level) => level.terbuka)
     const hasil = await Promise.all(
       dapatDiakses.map(async (level) => {
         const [daftarResult, syaratResult] = await Promise.allSettled([
