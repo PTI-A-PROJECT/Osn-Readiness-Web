@@ -5,7 +5,6 @@ import { useToast } from 'primevue/usetoast'
 import UserMenu from '@/components/UserMenu.vue'
 import { usePretestStore } from '@/stores/pretest.js'
 import { useProgressStore } from '@/stores/progress.js'
-import { useSimulasiStore } from '@/stores/simulasi.js'
 import { simulasiService } from '@/services/simulasi.js'
 import { riwayatService } from '@/services/riwayat.js'
 import { pesanError } from '@/lib/errors.js'
@@ -16,7 +15,6 @@ const router = useRouter()
 const toast = useToast()
 const pretest = usePretestStore()
 const progress = useProgressStore()
-const simulasi = useSimulasiStore()
 
 /* Tingkat dan ruang simulasi */
 const levels = computed(() => pretest.tingkatList)
