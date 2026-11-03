@@ -264,7 +264,9 @@ async function muatRiwayat() {
     if (province) {
       const tahapSudahPretest = TAHAP_PRETEST_SELESAI.has(province.tahap)
       const adaHasilPretest = detailPretest.some((r) => r.tingkatId === province.id)
-      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest)
+      const pretestTersimpan = pretest.idTersimpan()
+      const sedangMengerjakanProvinsi = Number(pretestTersimpan?.tingkatId) === province.id
+      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest || sedangMengerjakanProvinsi)
     }
   } catch (err) {
     loadError.value = true
@@ -274,7 +276,9 @@ async function muatRiwayat() {
     if (province) {
       const tahapSudahPretest = TAHAP_PRETEST_SELESAI.has(province.tahap)
       const adaHasilPretest = pretestResults.value.some((r) => r.tingkatId === province.id)
-      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest)
+      const pretestTersimpan = pretest.idTersimpan()
+      const sedangMengerjakanProvinsi = Number(pretestTersimpan?.tingkatId) === province.id
+      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest || sedangMengerjakanProvinsi)
     }
     toast.add({
       severity: 'error',
