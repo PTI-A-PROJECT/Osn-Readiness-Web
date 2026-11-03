@@ -1,16 +1,15 @@
 <script setup>
-import { computed, ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import UserMenu from '@/components/UserMenu.vue'
 import { usePretestStore } from '@/stores/pretest.js'
 import { useProgressStore } from '@/stores/progress.js'
 import { useSimulasiStore } from '@/stores/simulasi.js'
+import { simulasiService } from '@/services/simulasi.js'
+import { riwayatService } from '@/services/riwayat.js'
 import { pesanError } from '@/lib/errors.js'
 import { segeraDatang } from '@/lib/tingkat.js'
-
-// Lobi simulasi. Tingkat, daftar simulasi, dan syarat semuanya dari backend;
-// tidak ada data mock lagi. Modal aturan dipertahankan dari versi sebelumnya.
 
 const route = useRoute()
 const router = useRouter()
@@ -19,156 +18,323 @@ const pretest = usePretestStore()
 const progress = useProgressStore()
 const simulasi = useSimulasiStore()
 
-/* ---------- Tingkat ---------- */
+/* Tingkat dan ruang simulasi */
 const levels = computed(() => pretest.tingkatList)
-const levelDipilihId = ref(null)
-const levelDipilih = computed(() => levels.value.find((l) => l.id === levelDipilihId.value) ?? null)
-const sudahLulus = computed(() => levelDipilih.value?.tahap === 'LULUS')
-// Tingkat yang belum rilis: tampil "Segera" dan tidak bisa dipilih, apa pun
-// status terbuka dari backend.
-function terkunciSegera(l) {
-  return segeraDatang(l)
-}
-function bolehPilih(l) {
-  return l.terbuka && !terkunciSegera(l)
-}
-// Percobaan yang sedang berjalan: tombol menjadi "Lanjutkan".
-const simulasiBerjalan = computed(() => levelDipilih.value?.tahap === 'SIMULASI_BERJALAN')
+const ruangPerTingkat = ref({})
+const memuatRuang = ref(false)
 
-/* ---------- Simulasi di tingkat terpilih ---------- */
-const daftarSimulasi = computed(() => simulasi.daftar)
-const syarat = computed(() => simulasi.syarat)
+function terkunciSegera(level) {
+  return segeraDatang(level)
+}
 
-function alasanMulaiNonaktif(s) {
-  if (!s.aktif) return 'Simulasi ini sedang tidak aktif.'
-  if (!syarat.value?.terpenuhi) return 'Syarat simulasi belum terpenuhi.'
-  if (s.sisaKuota === 0) return 'Kuota simulasi untuk putaran ini sudah habis.'
+function bolehPilih(level) {
+  return Boolean(level?.terbuka) && !terkunciSegera(level)
+}
+
+function simulasiUntuk(level) {
+  const daftar = ruangPerTingkat.value[level?.id]?.daftar ?? []
+  return daftar.find((item) => item.aktif) ?? daftar[0] ?? null
+}
+
+function syaratUntuk(level) {
+  return ruangPerTingkat.value[level?.id]?.syarat ?? null
+}
+
+function statusLevel(level) {
+  if (terkunciSegera(level)) return 'Segera Hadir'
+  if (!level.terbuka) return 'Terkunci'
+  if (level.tahap === 'LULUS') return 'Sudah Dilalui'
+  if (level.tahap === 'SIMULASI_BERJALAN') return 'Sedang Berjalan'
+  if (level.tahap === 'PUTARAN_HABIS') return 'Percobaan Habis'
+  return syaratUntuk(level)?.terpenuhi ? 'Tersedia' : 'Belum Memenuhi Syarat'
+}
+
+function kelasStatusLevel(level) {
+  if (terkunciSegera(level) || !level.terbuka || level.tahap === 'PUTARAN_HABIS') return 'status-muted'
+  if (level.tahap === 'LULUS') return 'status-success'
+  if (level.tahap === 'SIMULASI_BERJALAN') return 'status-warning'
+  return syaratUntuk(level)?.terpenuhi ? 'status-success' : 'status-muted'
+}
+
+function alasanMulaiNonaktif(item, level) {
+  if (!item) return 'Belum ada simulasi yang tersedia untuk tingkat ini.'
+  if (!bolehPilih(level)) return 'Tingkat ini belum dapat diakses.'
+  if (!item.aktif) return 'Simulasi ini sedang tidak aktif.'
+
+  // Percobaan yang sedang berjalan harus tetap bisa dilanjutkan walaupun
+  // kuota tersisa sudah nol atau syarat putaran sudah berubah.
+  if (level.tahap === 'SIMULASI_BERJALAN') return ''
+
+  const syarat = syaratUntuk(level)
+  if (!syarat) return 'Syarat simulasi belum dapat diperiksa. Coba muat ulang halaman.'
+  if (!syarat.terpenuhi) {
+    if (syarat.alasan === 'belum_pretest') return 'Selesaikan pre-test terlebih dahulu.'
+    return 'Selesaikan materi dan latihan wajib sebelum memulai simulasi.'
+  }
+  if (item.sisaKuota === 0) return 'Kuota simulasi untuk putaran ini sudah habis.'
   return ''
 }
-function bisaMulai(s) {
-  return alasanMulaiNonaktif(s) === ''
+
+function bisaMulai(item, level) {
+  return alasanMulaiNonaktif(item, level) === ''
 }
 
-function pilihLevel(l) {
-  if (!l.terbuka || terkunciSegera(l)) return
-  levelDipilihId.value = l.id
-  simulasi.muatRuang({ tingkatId: l.id }).catch(() => {})
-}
-
-/* ---------- Syarat ---------- */
-function syaratTerpenuhi(r) {
-  return r.selesai && (!r.latihanTersedia || (r.nilaiLatihan ?? 0) >= r.batas)
-}
-function labelSyarat(r) {
-  const parts = []
-  parts.push(r.selesai ? 'Materi selesai' : 'Belum tandai selesai')
-  if (r.latihanTersedia) {
-    parts.push(
-      (r.nilaiLatihan ?? 0) >= r.batas
-        ? `Nilai latihan ${Math.round(r.nilaiLatihan)} ≥ ${r.batas}`
-        : `Nilai latihan ${r.nilaiLatihan == null ? 'belum ada' : Math.round(r.nilaiLatihan)} < ${r.batas}`,
+async function muatRuangSemuaTingkat() {
+  memuatRuang.value = true
+  try {
+    const dapatDiakses = levels.value.filter((level) => level.terbuka && !terkunciSegera(level))
+    const hasil = await Promise.all(
+      dapatDiakses.map(async (level) => {
+        const [daftarResult, syaratResult] = await Promise.allSettled([
+          simulasiService.daftar({ tingkatId: level.id }),
+          simulasiService.syarat({ tingkatId: level.id }),
+        ])
+        return [
+          level.id,
+          {
+            daftar: daftarResult.status === 'fulfilled' ? daftarResult.value : [],
+            syarat: syaratResult.status === 'fulfilled' ? syaratResult.value : null,
+          },
+        ]
+      }),
     )
-  } else {
-    parts.push('Latihan belum tersedia')
+    ruangPerTingkat.value = Object.fromEntries(hasil)
+  } finally {
+    memuatRuang.value = false
   }
-  return parts
 }
 
-function kePretest() {
-  router.push({ name: 'siswa.pretest' })
-}
-function keMateri() {
-  router.push({ name: 'siswa.materi' })
+/* Navigasi dari kartu tingkat */
+function lihatRiwayat() {
+  router.push({ name: 'siswa.riwayat' })
 }
 
-/* ---------- Hasil terakhir ---------- */
-const hasilTerakhir = computed(() => progress.data.hasilTerakhir)
-const skor = computed(() => {
-  const n = hasilTerakhir.value?.nilai
-  return n == null ? 0 : Math.max(0, Math.min(100, n))
+function klikTingkat(level) {
+  if (level.tahap === 'LULUS') {
+    lihatRiwayat()
+    return
+  }
+
+  const item = simulasiUntuk(level)
+  const alasan = alasanMulaiNonaktif(item, level)
+  if (alasan) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Simulasi belum dapat dimulai',
+      detail: alasan,
+      life: 4000,
+    })
+    return
+  }
+
+  bukaModal(item, level)
+}
+
+/* Modal aturan simulasi */
+const modalTerbuka = ref(false)
+const simulasiDipilih = ref(null)
+const levelDipilihId = ref(null)
+const setuju = ref(false)
+const modalEl = ref(null)
+
+const levelDipilih = computed(
+  () => levels.value.find((level) => level.id === levelDipilihId.value) ?? null,
+)
+const simulasiBerjalan = computed(() => levelDipilih.value?.tahap === 'SIMULASI_BERJALAN')
+const aturan = computed(() => {
+  const menit = simulasiDipilih.value?.durasiMenit ?? 0
+  return [
+    {
+      judul: 'Timer Berjalan Otomatis',
+      isi: 'Timer mulai berjalan langsung setelah simulasi dimulai dan tidak dapat dijeda atau dihentikan sementara.',
+    },
+    {
+      judul: 'Penyimpanan Jawaban Otomatis (Autosave)',
+      isi: 'Setiap opsi yang kamu klik akan otomatis tersimpan ke server evaluasi secara real-time.',
+    },
+    {
+      judul: 'Navigasi Bebas Antarsoal',
+      isi: 'Kamu bebas berpindah antarsoal kapan saja melalui panel nomor soal di sisi kanan ruang ujian.',
+    },
+    {
+      judul: 'Pengumpulan Otomatis oleh Sistem',
+      isi: 'Simulasi akan dikumpulkan secara otomatis oleh sistem tepat saat waktu ' + menit + ' menit habis.',
+    },
+    {
+      judul: 'Kestabilan Koneksi Jaringan',
+      isi: 'Pastikan koneksi internet tetap aktif dan stabil selama pengerjaan untuk menghindari keterlambatan sinkronisasi data.',
+    },
+  ]
 })
+
+function bukaModal(item, level) {
+  simulasiDipilih.value = item
+  levelDipilihId.value = level.id
+  setuju.value = false
+  modalTerbuka.value = true
+}
+
+function tutupModal() {
+  modalTerbuka.value = false
+}
+
+function mulaiUjian() {
+  if (!setuju.value || !simulasiDipilih.value) return
+  const item = simulasiDipilih.value
+  modalTerbuka.value = false
+  router.push({ name: 'siswa.ujian', params: { simulasiId: item.id } })
+}
+
+watch(modalTerbuka, (terbuka) => {
+  document.body.style.overflow = terbuka ? 'hidden' : ''
+  if (terbuka) nextTick(() => modalEl.value?.focus())
+})
+
+function onKeydown(event) {
+  if (event.key === 'Escape' && modalTerbuka.value) tutupModal()
+}
+
+/* Hasil simulasi terakhir dan kisi pembahasan */
+const hasilTerakhir = computed(() => progress.data.hasilTerakhir)
+const hasilDetail = ref(null)
+const hasilSebelumnya = ref(null)
+const memuatHasil = ref(false)
+const galatHasil = ref(false)
+
+const skor = computed(() => {
+  const nilai = hasilDetail.value?.nilai ?? hasilTerakhir.value?.nilai
+  return nilai == null ? 0 : Math.max(0, Math.min(100, Number(nilai)))
+})
+
 const R = 36
 const keliling = 2 * Math.PI * R
 const offset = computed(() => keliling * (1 - skor.value / 100))
 
+const kisiJawaban = computed(() => hasilDetail.value?.jawaban ?? [])
+const jumlahBenar = computed(
+  () => hasilDetail.value?.jumlahBenar ?? kisiJawaban.value.filter((item) => item.benar).length,
+)
+const jumlahSalah = computed(
+  () => hasilDetail.value?.jumlahSalah ?? kisiJawaban.value.filter((item) => !item.benar).length,
+)
+const totalSoalHasil = computed(
+  () => kisiJawaban.value.length || jumlahBenar.value + jumlahSalah.value,
+)
+
+const durasiMenit = computed(() => {
+  const mulai = Date.parse(hasilDetail.value?.mulaiPada ?? '')
+  const selesai = Date.parse(
+    hasilDetail.value?.disubmitPada ?? hasilDetail.value?.selesaiPada ?? '',
+  )
+  if (Number.isFinite(mulai) && Number.isFinite(selesai) && selesai >= mulai) {
+    return Math.max(1, Math.round((selesai - mulai) / 60000))
+  }
+
+  const tingkatId = hasilTerakhir.value?.tingkatId
+  const fallback = ruangPerTingkat.value[tingkatId]?.daftar?.[0]?.durasiMenit
+  return Number.isFinite(Number(fallback)) && Number(fallback) > 0 ? Number(fallback) : null
+})
+
+const perubahanNilai = computed(() => {
+  const sekarang = hasilDetail.value?.nilai ?? hasilTerakhir.value?.nilai
+  const sebelumnya = hasilSebelumnya.value?.nilai
+  if (sekarang == null || sebelumnya == null) return null
+  return Math.round(Number(sekarang) - Number(sebelumnya))
+})
+
+function labelPerubahan() {
+  if (perubahanNilai.value == null) return '—'
+  if (perubahanNilai.value > 0) return '+' + perubahanNilai.value
+  if (perubahanNilai.value < 0) return '−' + Math.abs(perubahanNilai.value)
+  return '0'
+}
+
 function formatTanggal(iso) {
   if (!iso) return '—'
-  const d = new Date(iso)
-  return Number.isNaN(d.getTime())
+  const tanggal = new Date(iso)
+  return Number.isNaN(tanggal.getTime())
     ? '—'
-    : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+    : tanggal.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
 }
 
-/* ---------- Modal aturan ---------- */
-const modalTerbuka = ref(false)
-const simulasiDipilih = ref(null)
-const setuju = ref(false)
-const modalEl = ref(null)
+const judulHasilTerakhir = computed(() => {
+  const judul = hasilTerakhir.value?.judul ?? 'Simulasi Seleksi'
+  return judul.replace('Simulasi —', 'Simulasi Seleksi —')
+})
 
-const aturan = computed(() => {
-  const menit = simulasiDipilih.value?.durasiMenit ?? 0
-  return [
-    { judul: 'Timer Berjalan Otomatis', isi: 'Timer dihitung dari batas waktu server dan berjalan sejak simulasi dimulai. Reload tidak menambah waktu.' },
-    { judul: 'Penyimpanan Jawaban Otomatis (Autosave)', isi: 'Setiap jawaban yang kamu isi otomatis tersimpan ke server. Killing internet tidak menghapus jawaban yang sudah terkirim.' },
-    { judul: 'Navigasi Bebas Antarsoal', isi: 'Kamu bebas berpindah antarsoal kapan saja melalui panel nomor soal.' },
-    { judul: 'Pengumpulan Otomatis oleh Sistem', isi: `Simulasi dikumpulkan otomatis tepat saat waktu ${menit} menit habis.` },
-    { judul: 'Kestabilan Koneksi Jaringan', isi: 'Pastikan koneksi internet tetap aktif dan stabil selama pengerjaan.' },
+async function muatDetailHasilTerakhir() {
+  const ringkasan = hasilTerakhir.value
+  if (!ringkasan?.id) return
+
+  memuatHasil.value = true
+  galatHasil.value = false
+
+  const tugas = [
+    simulasiService
+      .lihat({ id: ringkasan.id })
+      .then((paket) => {
+        if (paket.jenis === 'hasil') hasilDetail.value = paket.hasil
+      }),
   ]
-})
 
-function bukaModal(s) {
-  simulasiDipilih.value = s
-  setuju.value = false
-  modalTerbuka.value = true
-}
-function tutupModal() {
-  modalTerbuka.value = false
-}
-function mulaiUjian() {
-  if (!setuju.value || !simulasiDipilih.value) return
-  const s = simulasiDipilih.value
-  modalTerbuka.value = false
-  router.push({ name: 'siswa.ujian', params: { simulasiId: s.id } })
-}
-
-watch(modalTerbuka, (buka) => {
-  document.body.style.overflow = buka ? 'hidden' : ''
-  if (buka) nextTick(() => modalEl.value?.focus())
-})
-function onKeydown(e) {
-  if (e.key === 'Escape' && modalTerbuka.value) tutupModal()
-}
-
-/* ---------- Navigasi ---------- */
-function lihatRiwayat() {
-  router.push({ name: 'siswa.riwayat' })
-}
-function lihatHasil(hasilId) {
-  if (!hasilId) {
-    lihatRiwayat()
-    return
+  if (ringkasan.tingkatId) {
+    tugas.push(
+      riwayatService
+        .daftar({
+          jenis: 'simulasi',
+          tingkatId: ringkasan.tingkatId,
+          perPage: 20,
+        })
+        .then((riwayat) => {
+          const daftar = riwayat.items
+            .filter((item) => item.nilai != null)
+            .sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime())
+          const indeksTerakhir = daftar.findIndex(
+            (item) => Number(item.referensiId) === Number(ringkasan.id),
+          )
+          hasilSebelumnya.value =
+            indeksTerakhir >= 0
+              ? daftar[indeksTerakhir + 1] ?? null
+              : daftar.find((item) => Number(item.referensiId) !== Number(ringkasan.id)) ?? null
+        }),
+    )
   }
+
+  const hasilTugas = await Promise.allSettled(tugas)
+  galatHasil.value = hasilTugas[0]?.status === 'rejected'
+  memuatHasil.value = false
+}
+
+/* Navigasi hasil dan pembahasan */
+function lihatHasil(hasilId) {
+  if (!hasilId) return lihatRiwayat()
   router.push({ name: 'siswa.simulasi.hasil', params: { hasilId } })
 }
+
 function lihatPembahasan(hasilId) {
-  if (!hasilId) {
-    lihatRiwayat()
-    return
-  }
+  if (!hasilId) return lihatRiwayat()
   router.push({ name: 'siswa.simulasi.review', params: { hasilId } })
 }
 
 onMounted(async () => {
-  await progress.fetchDashboard().catch(() => {})
+  await progress.fetchDashboard({ force: true }).catch(() => {})
   try {
     await pretest.muatTingkat({ force: true })
-  } catch (err) {
-    toast.add({ severity: 'error', summary: 'Gagal memuat daftar tingkat', detail: pesanError(err), life: 4000 })
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Gagal memuat daftar tingkat',
+      detail: pesanError(error),
+      life: 4000,
+    })
   }
-  // Default: tingkat terbuka pertama yang belum lulus (yang belum segera datang).
-  const kandidat =
-    levels.value.find((l) => bolehPilih(l) && l.tahap !== 'LULUS') ?? levels.value.find(bolehPilih)
-  if (kandidat) pilihLevel(kandidat)
+
+  await muatRuangSemuaTingkat()
+  await muatDetailHasilTerakhir()
   window.addEventListener('keydown', onKeydown)
 })
 
@@ -181,190 +347,235 @@ onBeforeUnmount(() => {
 <template>
   <div class="halaman">
     <header class="topbar">
-      <div>
+      <div class="header-copy">
         <h1>{{ route.meta.title || 'Simulasi Seleksi' }}</h1>
         <p>Rasakan kondisi ujian sesungguhnya, sesuai standar TOKI</p>
       </div>
       <UserMenu />
     </header>
 
-    <div class="konten">
-      <!-- 01 Pilih tingkat -->
-      <section>
-        <span class="eyebrow">01 · Pilih Tingkat</span>
+    <main class="konten">
+      <section class="section-block">
+        <span class="eyebrow">01 · PILIH TINGKAT</span>
         <h2>Pilih Tingkat Simulasi</h2>
-        <p class="sub">Pilih tingkat untuk melihat simulasi dan syarat mengikutinya.</p>
+        <p class="sub">Tekan Mulai Simulasi untuk membuka halaman ujian.</p>
 
-        <div class="grid-level">
+        <div v-if="memuatRuang && !levels.length" class="empty-card">
+          Memuat tingkat simulasi...
+        </div>
+
+        <div v-else-if="levels.length" class="grid-level">
           <article
-            v-for="l in levels"
-            :key="l.id"
-            class="kartu level"
-            :class="[
-              terkunciSegera(l) ? 'is-segera' : !l.terbuka ? 'is-terkunci' : l.tahap === 'LULUS' ? 'is-selesai' : 'is-berjalan',
-              levelDipilihId === l.id ? 'is-dipilih' : '',
-            ]"
+            v-for="level in levels"
+            :key="level.id"
+            class="level-card"
+            :class="{
+              'is-current': level.tahap === 'SIMULASI_BERJALAN',
+              'is-passed': level.tahap === 'LULUS',
+              'is-locked': !bolehPilih(level),
+            }"
           >
-            <span
-              class="badge"
-              :class="terkunciSegera(l) ? 'badge-segera' : !l.terbuka ? 'badge-terkunci' : l.tahap === 'LULUS' ? 'badge-selesai' : 'badge-berjalan'"
-            >
-              <template v-if="terkunciSegera(l)">⏳ </template>
-              <template v-else-if="!l.terbuka">🔒 </template>
-              {{ terkunciSegera(l) ? 'Segera' : !l.terbuka ? 'Terkunci' : l.tahap === 'LULUS' ? 'Sudah Lulus' : l.tahap === 'SIMULASI_BERJALAN' ? 'Simulasi Berjalan' : 'Tersedia' }}
-            </span>
-            <h3>{{ l.nama }}</h3>
-            <p class="desc">{{ l.deskripsi || 'Tahap seleksi OSN.' }}</p>
-            <p v-if="terkunciSegera(l)" class="catatan-segera">
-              Simulasi tingkat ini sedang dipersiapkan. Nanti bisa diakses di sini.
+            <div class="level-card-top">
+              <span class="status-badge" :class="kelasStatusLevel(level)">
+                {{ statusLevel(level) }}
+              </span>
+            </div>
+
+            <h3>{{ level.nama }}</h3>
+            <p class="level-description">
+              {{ level.deskripsi || 'Persiapkan dirimu untuk mengikuti seleksi OSN tingkat ' + level.nama + '.' }}
             </p>
-            <div class="info"><span>{{ l.tahap ?? '—' }}</span></div>
+
+            <p
+              v-if="alasanMulaiNonaktif(simulasiUntuk(level), level) && level.tahap !== 'LULUS'"
+              class="level-notice"
+            >
+              {{ alasanMulaiNonaktif(simulasiUntuk(level), level) }}
+            </p>
+
+            <div class="level-meta">
+              <span>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M5 2.8h7l3 3v11.4H5z" />
+                  <path d="M12 2.8v3h3M7.5 9h5M7.5 12h5" />
+                </svg>
+                {{ simulasiUntuk(level)?.jumlahSoal ?? '—' }} soal
+              </span>
+              <span>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <circle cx="10" cy="10.5" r="6.5" />
+                  <path d="M10 7v3.8l2.5 1.5M7.5 2.5h5" />
+                </svg>
+                {{ simulasiUntuk(level)?.durasiMenit ?? '—' }} menit
+              </span>
+            </div>
+
             <button
               type="button"
-              class="btn"
-              :class="bolehPilih(l) ? 'btn-emas' : 'btn-mati'"
-              :disabled="!bolehPilih(l)"
-              @click="pilihLevel(l)"
+              class="btn-level"
+              :class="level.tahap === 'LULUS' ? 'btn-history' : 'btn-start'"
+              :disabled="
+                level.tahap !== 'LULUS' &&
+                (!bolehPilih(level) || !bisaMulai(simulasiUntuk(level), level))
+              "
+              @click="klikTingkat(level)"
             >
-              {{ terkunciSegera(l) ? 'Segera Hadir' : l.terbuka ? (l.tahap === 'LULUS' ? 'Lihat Riwayat' : 'Pilih Tingkat') : 'Terkunci' }}
+              {{
+                level.tahap === 'LULUS'
+                  ? 'Lihat Riwayat'
+                  : level.tahap === 'SIMULASI_BERJALAN'
+                    ? 'Lanjutkan Simulasi →'
+                    : !bolehPilih(level)
+                      ? 'Terkunci'
+                      : bisaMulai(simulasiUntuk(level), level)
+                        ? 'Mulai Simulasi →'
+                        : 'Belum Tersedia'
+              }}
             </button>
           </article>
         </div>
 
-        <p v-if="!levels.length" class="sub mt-3">Belum ada data tingkat. Coba muat ulang halaman.</p>
+        <div v-else class="empty-card">
+          <strong>Belum ada tingkat simulasi</strong>
+          <p>Daftar tingkat belum tersedia. Silakan muat ulang halaman.</p>
+        </div>
       </section>
 
-      <hr />
+      <div class="section-divider"></div>
 
-      <!-- 02 Simulasi di tingkat terpilih -->
-      <section v-if="levelDipilih">
-        <span class="eyebrow">02 · Simulasi</span>
-        <h2>Simulasi Tingkat {{ levelDipilih.nama }}</h2>
-        <p class="sub">
-          Kuota tersisa: {{ daftarSimulasi[0]?.sisaKuota ?? '—' }} percobaan.
-        </p>
-
-        <!-- SYARAT -->
-        <div class="kartu syarat-kartu">
-          <div class="syarat-kepala">
-            <h3>
-              Syarat Mengikuti Simulasi
-              <span class="syarat-status" :class="syarat?.terpenuhi ? 'ok' : 'belum'">
-                {{ syarat?.terpenuhi ? 'Terpenuhi' : 'Belum Terpenuhi' }}
-              </span>
-            </h3>
-            <button type="button" class="btn-link" @click="keMateri">Buka halaman Materi →</button>
-          </div>
-
-          <p v-if="syarat?.alasan === 'belum_pretest'" class="syarat-alasan">
-            Kamu belum menyelesaikan pre-test di tingkat ini.
-            <button type="button" class="btn-link inline" @click="kePretest">Ambil pre-test →</button>
-          </p>
-
-          <ul v-if="syarat?.rincian?.length" class="syarat-daftar">
-            <li
-              v-for="r in syarat.rincian"
-              :key="r.materiId"
-              :class="syaratTerpenuhi(r) ? 'ok' : 'belum'"
-            >
-              <span class="syarat-nama">
-                {{ r.judul }}
-                <em v-if="r.prioritas">· prioritas {{ r.prioritas }}</em>
-              </span>
-              <span class="syarat-butir">
-                <span v-for="(t, i) in labelSyarat(r)" :key="t">
-                  {{ i > 0 ? ' · ' : '' }}{{ t }}
-                </span>
-              </span>
-            </li>
-          </ul>
-          <p v-else-if="syarat && !syarat.rincian.length" class="sub">
-            Tidak ada materi wajib di tingkat ini.
-          </p>
-        </div>
-
-        <!-- DAFTAR SIMULASI -->
-        <div v-if="daftarSimulasi.length" class="grid-simulasi">
-          <article v-for="s in daftarSimulasi" :key="s.id" class="kartu simulasi-kartu">
-            <div class="simulasi-atas">
-              <h3>{{ s.nama }}</h3>
-              <span class="badge" :class="s.aktif ? 'badge-berjalan' : 'badge-terkunci'">
-                {{ s.aktif ? 'Aktif' : 'Tidak Aktif' }}
-              </span>
-            </div>
-            <div class="info">
-              <span>📝 {{ s.jumlahSoal }} soal</span>
-              <span>⏱ {{ s.durasiMenit }} menit</span>
-            </div>
-            <p v-if="alasanMulaiNonaktif(s)" class="simulasi-alasan">{{ alasanMulaiNonaktif(s) }}</p>
-            <button
-              v-if="sudahLulus"
-              type="button"
-              class="btn btn-hijau"
-              @click="lihatRiwayat"
-            >
-              Sudah Lulus — Lihat Riwayat
-            </button>
-            <button
-              v-else
-              type="button"
-              class="btn"
-              :class="bisaMulai(s) ? 'btn-emas' : 'btn-mati'"
-              :disabled="!bisaMulai(s)"
-              @click="bukaModal(s)"
-            >
-              {{ simulasiBerjalan ? 'Lanjutkan Simulasi →' : 'Mulai Simulasi →' }}
-            </button>
-          </article>
-        </div>
-        <p v-else-if="simulasi.loading" class="sub mt-3">Memuat daftar simulasi…</p>
-        <p v-else class="sub mt-3">Belum ada simulasi untuk tingkat ini.</p>
-      </section>
-
-      <hr class="hr-lebar" />
-
-      <!-- 03 Hasil terakhir -->
-      <section>
-        <span class="eyebrow">03 · Hasil Terakhir</span>
+      <section class="section-block">
+        <span class="eyebrow">02 · HASIL TERAKHIR</span>
         <h2>Hasil Simulasi Terakhir</h2>
-        <p class="sub">Ringkasan nilai dari simulasi terakhirmu.</p>
+        <p class="sub">Ringkasan skor dari simulasi yang baru kamu selesaikan.</p>
 
-        <div v-if="hasilTerakhir" class="kartu hasil">
-          <div class="hasil-atas">
-            <div class="ring">
-              <svg viewBox="0 0 88 88" width="80" height="80" aria-hidden="true">
-                <circle cx="44" cy="44" :r="R" fill="none" stroke="#f1f3f7" stroke-width="8" />
-                <circle cx="44" cy="44" :r="R" fill="none" stroke="#f0a30f" stroke-width="8" stroke-linecap="round"
-                  :stroke-dasharray="keliling" :stroke-dashoffset="offset" transform="rotate(-90 44 44)" />
+        <article v-if="hasilTerakhir" class="result-card">
+          <div class="result-heading">
+            <div class="score-ring">
+              <svg viewBox="0 0 88 88" aria-hidden="true">
+                <circle cx="44" cy="44" :r="R" fill="none" stroke="#edf1f5" stroke-width="7" />
+                <circle
+                  cx="44"
+                  cy="44"
+                  :r="R"
+                  fill="none"
+                  stroke="#f59e0b"
+                  stroke-width="7"
+                  stroke-linecap="round"
+                  :stroke-dasharray="keliling"
+                  :stroke-dashoffset="offset"
+                  transform="rotate(-90 44 44)"
+                />
               </svg>
-              <div class="ring-teks"><strong>{{ Math.round(skor) }}</strong><small>Skor</small></div>
+              <div class="score-ring-label">
+                <strong>{{ Math.round(skor) }}%</strong>
+                <small>Skor</small>
+              </div>
             </div>
-            <div>
-              <h3>{{ hasilTerakhir.judul }}</h3>
-              <p class="meta">{{ formatTanggal(hasilTerakhir.tanggal) }}</p>
-              <p class="meta">
-                {{ hasilTerakhir.lulus ? 'Lulus' : 'Belum lulus' }}
+
+            <div class="result-title">
+              <h3>{{ judulHasilTerakhir }}</h3>
+              <p>
+                {{ formatTanggal(hasilTerakhir.tanggal) }}
+                <span v-if="hasilDetail?.jumlahBenar != null">
+                  · {{ jumlahBenar }} dari {{ totalSoalHasil }} benar
+                </span>
+                <span v-if="durasiMenit != null"> · Durasi {{ durasiMenit }} menit</span>
               </p>
             </div>
           </div>
-          <div class="hasil-kaki">
-            <button type="button" class="btn-auto btn-hijau" @click="lihatHasil(hasilTerakhir.id)">
-              Lihat Hasil →
-            </button>
-            <button type="button" class="btn-auto btn-emas" @click="lihatPembahasan(hasilTerakhir.id)">
-              Lihat Pembahasan Soal →
-            </button>
-          </div>
-        </div>
 
-        <div v-else class="kartu kosong">
-          <p>Belum ada hasil simulasi. Selesaikan satu simulasi untuk melihat ringkasannya di sini.</p>
-          <button type="button" class="btn-auto btn-emas" @click="lihatRiwayat">Buka Riwayat →</button>
+          <div class="result-stats">
+            <div class="result-stat">
+              <strong>{{ hasilDetail ? jumlahBenar : '—' }}</strong>
+              <span>Benar</span>
+            </div>
+            <div class="result-stat">
+              <strong>{{ hasilDetail ? jumlahSalah : '—' }}</strong>
+              <span>Salah</span>
+            </div>
+            <div class="result-stat">
+              <strong>{{ durasiMenit == null ? '—' : durasiMenit + 'm' }}</strong>
+              <span>Durasi</span>
+            </div>
+            <div class="result-stat">
+              <strong :class="{
+                'delta-positive': perubahanNilai > 0,
+                'delta-negative': perubahanNilai < 0,
+              }">
+                {{ labelPerubahan() }}
+              </strong>
+              <span>Dari sebelumnya</span>
+            </div>
+          </div>
+
+          <p v-if="memuatHasil" class="result-footnote">Memuat rincian hasil simulasi...</p>
+          <p v-else-if="galatHasil" class="result-footnote">
+            Rincian hasil belum dapat dimuat. Kamu tetap bisa membuka hasil melalui riwayat.
+            <button type="button" class="inline-link" @click="lihatHasil(hasilTerakhir.id)">
+              Lihat hasil
+            </button>
+          </p>
+        </article>
+
+        <div v-else class="empty-card result-empty">
+          <strong>Belum ada hasil simulasi</strong>
+          <p>Selesaikan satu simulasi untuk melihat ringkasan nilai dan perkembanganmu di sini.</p>
+          <button type="button" class="btn-level btn-start empty-action" @click="lihatRiwayat">
+            Lihat Riwayat →
+          </button>
         </div>
       </section>
-    </div>
 
-    <!-- Modal aturan simulasi -->
+      <div class="section-divider section-divider-large"></div>
+
+      <section class="section-block">
+        <span class="eyebrow">03 · PEMBAHASAN</span>
+        <h2>Pembahasan Soal</h2>
+        <p class="sub">Jawabanmu dibandingkan dengan jawaban benar, lengkap dengan penjelasannya.</p>
+
+        <article v-if="hasilTerakhir" class="discussion-card">
+          <div class="discussion-copy">
+            <h3>{{ totalSoalHasil || hasilDetail?.jawaban?.length || '—' }} soal siap dibahas</h3>
+            <p>
+              Dari {{ judulHasilTerakhir }}
+              <span v-if="hasilTerakhir.tanggal"> · {{ formatTanggal(hasilTerakhir.tanggal) }}</span>
+            </p>
+
+            <div v-if="kisiJawaban.length" class="answer-grid" aria-label="Status jawaban setiap soal">
+              <span
+                v-for="jawaban in kisiJawaban"
+                :key="jawaban.soalId"
+                class="answer-cell"
+                :class="jawaban.benar ? 'answer-correct' : 'answer-wrong'"
+                :title="'Soal ' + jawaban.urutan + (jawaban.benar ? ' benar' : ' salah')"
+              ></span>
+            </div>
+            <p v-else-if="memuatHasil" class="discussion-loading">Memuat status jawaban...</p>
+            <p v-else class="discussion-loading">Kisi jawaban belum tersedia.</p>
+
+            <div v-if="kisiJawaban.length" class="answer-legend">
+              <span><i class="legend-dot correct-dot"></i>{{ jumlahBenar }} benar</span>
+              <span><i class="legend-dot wrong-dot"></i>{{ jumlahSalah }} salah</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="btn-discussion"
+            :disabled="!hasilTerakhir.id"
+            @click="lihatPembahasan(hasilTerakhir.id)"
+          >
+            Lihat Pembahasan Soal →
+          </button>
+        </article>
+
+        <div v-else class="empty-card">
+          <strong>Pembahasan belum tersedia</strong>
+          <p>Pembahasan soal akan muncul setelah kamu menyelesaikan simulasi pertama.</p>
+        </div>
+      </section>
+    </main>
+
     <Teleport to="body">
       <Transition name="fade-modal">
         <div v-if="modalTerbuka && simulasiDipilih" class="overlay" @click.self="tutupModal">
@@ -376,67 +587,105 @@ onBeforeUnmount(() => {
             aria-labelledby="judul-modal"
             tabindex="-1"
           >
-            <div class="modal-kepala">
-              <h3 id="judul-modal" class="modal-judul"><i class="titik-emas"></i>Detail Simulasi</h3>
-              <span class="pil-status">Tersedia untuk Dikerjakan</span>
+            <div class="modal-header">
+              <h3 id="judul-modal" class="modal-title">
+                <span class="modal-title-dot"></span>
+                Detail Simulasi
+              </h3>
+              <span class="modal-status">
+                {{ simulasiBerjalan ? 'Simulasi Sedang Berjalan' : 'Tersedia untuk Dikerjakan' }}
+              </span>
             </div>
 
-            <div class="grid-info">
-              <div class="kartu-info">
-                <span class="label-info">Tingkat Seleksi</span>
-                <b class="nilai-info">{{ levelDipilih?.nama ?? '—' }}</b>
+            <div class="modal-info-grid">
+              <div class="modal-info-card">
+                <span class="modal-info-label">TINGKAT SELEKSI</span>
+                <strong class="modal-info-value">{{ levelDipilih?.nama ?? '—' }}</strong>
+                <span class="modal-info-tag">OSN-P {{ new Date().getFullYear() }}</span>
               </div>
-              <div class="kartu-info">
-                <span class="label-info">Jumlah Soal</span>
-                <span class="nilai-info"><b>{{ simulasiDipilih.jumlahSoal }}</b> Soal</span>
-                <span class="sub-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>
+
+              <div class="modal-info-card">
+                <span class="modal-info-label">JUMLAH SOAL</span>
+                <strong class="modal-info-value">
+                  {{ simulasiDipilih.jumlahSoal }} <span>Soal</span>
+                </strong>
+                <span class="modal-info-sub">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                  </svg>
                   Bank Soal Acak
                 </span>
               </div>
-              <div class="kartu-info">
-                <span class="label-info">Durasi Waktu</span>
-                <span class="nilai-info"><b>{{ simulasiDipilih.durasiMenit }}</b> Menit</span>
-                <span class="sub-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2M9 2h6" /></svg>
-                  Batas Waktu Server
+
+              <div class="modal-info-card">
+                <span class="modal-info-label">DURASI WAKTU</span>
+                <strong class="modal-info-value">
+                  {{ simulasiDipilih.durasiMenit }} <span>Menit</span>
+                </strong>
+                <span class="modal-info-sub">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="13" r="8" />
+                    <path d="M12 9v4l2 2M9 2h6" />
+                  </svg>
+                  Countdown Statis
                 </span>
               </div>
-              <div class="kartu-info">
-                <span class="label-info">Sisa Kuota</span>
-                <b class="nilai-info">{{ simulasiDipilih.sisaKuota ?? '—' }} percobaan</b>
+
+              <div class="modal-info-card">
+                <span class="modal-info-label">TIPE SOAL</span>
+                <strong class="modal-info-value">Pilihan Ganda</strong>
+                <span class="modal-info-sub">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="m8 12 2.5 2.5L16 9" />
+                  </svg>
+                  5 Opsi (A–E)
+                </span>
               </div>
             </div>
 
-            <hr class="garis-modal" />
+            <hr class="modal-divider" />
 
-            <h4 class="judul-aturan">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z" /><path d="M9 12l2 2 4-4" /></svg>
+            <h4 class="rules-heading">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
               Aturan dan Ketentuan Simulasi
             </h4>
-            <ol class="aturan">
-              <li v-for="(a, i) in aturan" :key="a.judul">
-                <span class="nomor">{{ i + 1 }}</span>
+
+            <ol class="rules-list">
+              <li v-for="(item, index) in aturan" :key="item.judul">
+                <span class="rule-number">{{ index + 1 }}</span>
                 <div>
-                  <p class="aturan-judul">{{ a.judul }}</p>
-                  <p class="aturan-isi">{{ a.isi }}</p>
+                  <strong>{{ item.judul }}</strong>
+                  <p>{{ item.isi }}</p>
                 </div>
               </li>
             </ol>
 
-            <label class="setuju">
+            <label class="agreement">
               <input v-model="setuju" type="checkbox" />
               <span>Saya telah membaca dan memahami aturan simulasi.</span>
             </label>
 
-            <div class="modal-kaki">
-              <button type="button" class="btn-modal btn-batal" @click="tutupModal">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+            <div class="modal-footer">
+              <button type="button" class="modal-button button-cancel" @click="tutupModal">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
                 Batal
               </button>
-              <button type="button" class="btn-modal btn-mulai" :disabled="!setuju" @click="mulaiUjian">
-                Mulai Simulasi
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              <button
+                type="button"
+                class="modal-button button-confirm"
+                :disabled="!setuju"
+                @click="mulaiUjian"
+              >
+                {{ simulasiBerjalan ? 'Lanjutkan Simulasi' : 'Mulai Simulasi' }}
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </button>
             </div>
           </div>
@@ -447,220 +696,1039 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.halaman { min-height: 100%; background: #f7f9fc; }
-.topbar {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  background: #fff; border-bottom: 1px solid #e6ebf2; padding: 18px 28px;
+.halaman {
+  min-height: 100%;
+  background: #f5f8fc;
+  color: #111f38;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-.topbar h1 { font-size: 20px; font-weight: 700; line-height: 1.25; margin: 0; color: #0f1b33; }
-.topbar p { font-size: 14px; color: #6b778c; margin: 4px 0 0; }
+
+.topbar {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e4eaf2;
+}
+
+.header-copy h1 {
+  margin: 0;
+  color: #111f38;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 750;
+}
+
+.header-copy p {
+  margin: 3px 0 0;
+  color: #71819a;
+  font-size: 12px;
+  line-height: 1.45;
+}
 
 .konten {
-  --emas: #f59e0b;
-  --emas-tua: #d9780a;
-  --hijau: #12805a;
-  --merah: #e11d48;
-  --ink: #0f1b33;
-  --abu: #6b778c;
-  --garis: #e6e9f0;
+  --ink: #111f38;
+  --muted: #71819a;
+  --line: #e4eaf2;
+  --orange: #f59e0b;
+  --green: #159b66;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 27px 24px 52px;
   color: var(--ink);
-  padding: 32px 28px 56px;
 }
-.konten, .konten *, .konten *::before, .konten *::after { box-sizing: border-box; }
 
-.eyebrow { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--emas-tua); text-transform: uppercase; }
-h2 { font-size: 26px; font-weight: 700; line-height: 1.25; margin: 4px 0 2px; }
-h3 { font-size: 16px; font-weight: 700; margin: 0; }
-.sub { font-size: 14px; color: var(--abu); margin: 0 0 14px; }
-hr { border: 0; border-top: 1px solid var(--garis); margin: 32px 0; }
-.hr-lebar { margin: 56px 0 32px; }
-
-.kartu { background: #fff; border: 1px solid var(--garis); border-radius: 16px; padding: 24px; }
-
-/* Level */
-.grid-level { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
-.level { display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 3px rgba(15, 27, 51, .05); }
-.level.is-berjalan { border: 2px solid var(--emas); padding: 23px; box-shadow: 0 6px 20px rgba(245, 158, 11, .15); }
-.level.is-dipilih { outline: 2px solid var(--emas); outline-offset: 1px; }
-.level h3 { font-size: 20px; margin-top: 8px; }
-.badge { align-self: flex-start; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
-.badge-selesai { background: #e7f6ef; color: var(--hijau); }
-.badge-berjalan { background: #fdf1d3; color: #92400e; }
-.badge-terkunci { background: #eef1f6; color: var(--abu); }
-.badge-segera { background: #fdf1d3; color: #92400e; }
-.level.is-segera { border-style: dashed; background: #fffdf7; }
-.catatan-segera { margin: 0; font-size: 13px; line-height: 1.5; color: #92400e; }
-.desc { font-size: 13px; color: var(--abu); line-height: 1.5; margin: 0; max-width: 260px; flex: 1; }
-.info { display: flex; flex-wrap: nowrap; gap: 16px; font-size: 13px; color: var(--ink); margin: 6px 0 8px; white-space: nowrap; }
-
-/* Syarat */
-.syarat-kartu { margin-bottom: 24px; }
-.syarat-kepala { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.syarat-kepala h3 { display: flex; align-items: center; gap: 10px; }
-.syarat-status { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; }
-.syarat-status.ok { background: #e7f6ef; color: var(--hijau); }
-.syarat-status.belum { background: #fde8ec; color: var(--merah); }
-.syarat-alasan { margin: 12px 0 0; font-size: 13px; color: #92400e; background: #fdf1d3; padding: 10px 14px; border-radius: 10px; }
-.syarat-daftar { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.syarat-daftar li {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-  border: 1px solid var(--garis); border-radius: 10px; padding: 10px 14px; font-size: 13px;
+.konten,
+.konten *,
+.konten *::before,
+.konten *::after {
+  box-sizing: border-box;
 }
-.syarat-daftar li.ok { background: #f7fdfa; border-color: #cdeedd; }
-.syarat-daftar li.belum { background: #fffafb; border-color: #f9c4cf; }
-.syarat-nama { font-weight: 600; }
-.syarat-nama em { font-style: normal; font-weight: 400; color: var(--abu); font-size: 12px; }
-.syarat-butir { color: var(--abu); font-size: 12.5px; }
-.btn-link { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--emas-tua); cursor: pointer; text-decoration: underline; }
-.btn-link.inline { display: inline; }
 
-/* Simulasi */
-.grid-simulasi { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.simulasi-kartu { display: flex; flex-direction: column; gap: 10px; }
-.simulasi-atas { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.simulasi-alasan { margin: 0; font-size: 12.5px; color: #92400e; }
-
-/* Tombol */
-.btn {
-  width: 100%; border: 0; border-radius: 10px; padding: 11px 14px;
-  font: inherit; font-size: 13px; font-weight: 600; line-height: 1.2; white-space: nowrap; cursor: pointer;
-  transition: background .15s ease;
+.section-block {
+  min-width: 0;
 }
-.btn-hijau { background: #e9f7f0; color: var(--hijau); }
-.btn-hijau:hover { background: #dcf1e7; }
-.btn-emas { background: var(--emas); color: #1a1a1a; }
-.btn-emas:hover { background: #f7ae2e; }
-.btn-mati { background: #eef1f6; color: var(--abu); cursor: not-allowed; }
-.btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.btn-auto { width: auto; padding: 11px 20px; border-radius: 8px; border: 0; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
-.btn-auto:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
-/* Hasil */
-.hasil { padding: 28px; }
-.hasil-atas { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.hasil-kaki { display: flex; gap: 10px; flex-wrap: wrap; }
-.ring { position: relative; width: 80px; height: 80px; flex: none; }
-.ring-teks { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.ring-teks strong { font-size: 17px; line-height: 1.1; }
-.ring-teks small { font-size: 11px; color: var(--abu); }
-.hasil-atas h3 { font-size: 17px; }
-.meta { font-size: 13px; color: var(--abu); margin: 4px 0 0; }
-.kosong { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-.kosong p { margin: 0; font-size: 14px; color: var(--abu); }
+.eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: #d97706;
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
 
-/* Modal detail simulasi (dirender di <body>, jadi punya variabel sendiri) */
+.section-block > h2 {
+  margin: 0;
+  color: #111f38;
+  font-size: 21px;
+  line-height: 1.3;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.sub {
+  margin: 3px 0 13px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.section-divider {
+  height: 1px;
+  margin: 16px 0 23px;
+  background: #e3eaf2;
+}
+
+.section-divider-large {
+  margin-top: 47px;
+  margin-bottom: 24px;
+}
+
+.grid-level {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.level-card {
+  min-width: 0;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 19px 20px 17px;
+  border: 1px solid #e2e9f2;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 35 65 / 4%);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.level-card.is-current {
+  border: 1.5px solid #f5a000;
+  box-shadow: 0 2px 7px rgb(245 158 11 / 8%);
+}
+
+.level-card.is-passed {
+  border-color: #e2e9f2;
+}
+
+.level-card.is-locked {
+  background: #fbfcfe;
+}
+
+.level-card-top {
+  min-height: 23px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.status-success {
+  background: #e8faf2;
+  color: #087b53;
+}
+
+.status-warning {
+  background: #fff4d9;
+  color: #a45a00;
+}
+
+.status-muted {
+  background: #eef2f7;
+  color: #718096;
+}
+
+.level-card h3 {
+  margin: 10px 0 7px;
+  color: #17243b;
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 750;
+}
+
+.level-description {
+  max-width: 390px;
+  min-height: 34px;
+  margin: 0;
+  color: #77869c;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.level-notice {
+  margin: 7px 0 0;
+  color: #a45a00;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.level-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: auto 0 15px;
+  padding-top: 11px;
+  color: #53647e;
+  font-size: 10.5px;
+}
+
+.level-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.level-meta svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: #8291a6;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.btn-level {
+  min-height: 34px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 10.5px;
+  line-height: 1.2;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-level:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn-level:focus-visible,
+.btn-discussion:focus-visible,
+.inline-link:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.btn-level:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-start {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.btn-start:hover:not(:disabled) {
+  background: #e99100;
+}
+
+.btn-history {
+  background: #e7f7f1;
+  color: #087b53;
+}
+
+.btn-history:hover:not(:disabled) {
+  background: #d9f1e8;
+}
+
+.empty-card {
+  padding: 25px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.empty-card strong {
+  display: block;
+  color: #263650;
+  font-size: 14px;
+}
+
+.empty-card p {
+  margin: 5px 0 0;
+}
+
+.result-card {
+  padding: 20px 22px 18px;
+  border: 1px solid #e3eaf2;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 35 65 / 4%);
+}
+
+.result-heading {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+  margin-bottom: 19px;
+}
+
+.score-ring {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  flex: 0 0 70px;
+}
+
+.score-ring svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.score-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring-label strong {
+  color: #17243b;
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.score-ring-label small {
+  margin-top: 2px;
+  color: #8a98aa;
+  font-size: 8px;
+}
+
+.result-title {
+  min-width: 0;
+}
+
+.result-title h3 {
+  margin: 0;
+  color: #17243b;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+.result-title p {
+  margin: 4px 0 0;
+  color: #7a8aa1;
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.result-stat {
+  min-height: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid #edf1f6;
+  border-radius: 11px;
+  background: #f8fafc;
+}
+
+.result-stat strong {
+  color: #17243b;
+  font-size: 17px;
+  line-height: 1.15;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-stat span {
+  color: #8291a6;
+  font-size: 9px;
+}
+
+.result-stat .delta-positive {
+  color: #159b66;
+}
+
+.result-stat .delta-negative {
+  color: #dc3e55;
+}
+
+.result-footnote {
+  margin: 11px 0 0;
+  color: #8291a6;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.inline-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1d4ed8;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.result-empty {
+  text-align: left;
+}
+
+.empty-action {
+  width: auto;
+  min-width: 140px;
+  margin-top: 14px;
+}
+
+.discussion-card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 19px 20px;
+  border: 1px solid #e3eaf2;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 35 65 / 4%);
+}
+
+.discussion-copy {
+  min-width: 0;
+}
+
+.discussion-copy h3 {
+  margin: 0;
+  color: #17243b;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+.discussion-copy > p {
+  margin: 3px 0 0;
+  color: #7a8aa1;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.answer-grid {
+  width: fit-content;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(16, 14px);
+  gap: 4px;
+  margin-top: 11px;
+}
+
+.answer-cell {
+  width: 14px;
+  height: 14px;
+  border: 1px solid;
+  border-radius: 4px;
+}
+
+.answer-correct {
+  border-color: #bcebd2;
+  background: #e5f8ee;
+}
+
+.answer-wrong {
+  border-color: #f7c7d0;
+  background: #fff0f2;
+}
+
+.answer-legend {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 8px;
+  color: #7b8aa0;
+  font-size: 9px;
+}
+
+.answer-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.correct-dot {
+  background: #16a365;
+}
+
+.wrong-dot {
+  background: #e43e5c;
+}
+
+.discussion-loading {
+  margin-top: 10px !important;
+  color: #8b98aa !important;
+}
+
+.btn-discussion {
+  min-height: 36px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: #f59e0b;
+  color: #fff;
+  font: inherit;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-discussion:hover:not(:disabled) {
+  background: #e99100;
+}
+
+.btn-discussion:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Modal konfirmasi */
 .overlay {
-  --emas: #f59e0b;
-  --ink: #0f1b33;
-  --garis: #e6e9f0;
-  position: fixed; inset: 0; z-index: 1000;
-  display: flex; padding: 24px 16px;
-  background: rgba(15, 27, 51, .55);
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
   overflow-y: auto;
+  background: rgb(8 25 49 / 48%);
+  backdrop-filter: blur(2px);
 }
-.overlay, .overlay *, .overlay *::before, .overlay *::after { box-sizing: border-box; }
+
+.overlay,
+.overlay *,
+.overlay *::before,
+.overlay *::after {
+  box-sizing: border-box;
+}
 
 .modal {
-  width: 100%; max-width: 960px; margin: auto;
-  background: #fff; color: var(--ink); border-radius: 14px;
-  padding: 32px 44px 28px;
-  box-shadow: 0 24px 60px rgba(15, 27, 51, .3);
+  width: 100%;
+  max-width: 1016px;
+  max-height: calc(100vh - 48px);
+  margin: auto;
+  padding: 42px 60px 46px;
+  overflow-y: auto;
+  border-radius: 15px;
+  background: #fff;
+  color: #10213d;
+  box-shadow: 0 24px 65px rgb(7 22 43 / 24%);
   outline: none;
 }
 
-.modal svg {
-  width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor;
-  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 25px;
 }
 
-.modal-kepala { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-.modal-judul { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; margin: 0; }
-.titik-emas { width: 8px; height: 8px; border-radius: 50%; background: var(--emas); display: inline-block; }
-
-.pil-status {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #fde3b8; color: #5c3200; font-size: 12.5px; font-weight: 500;
-  padding: 6px 12px; border-radius: 99px;
-}
-.pil-status::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
-
-.grid-info { display: grid; grid-template-columns: 1.08fr 1fr 1fr .94fr; gap: 12px; }
-.kartu-info {
-  border: 1px solid var(--garis); border-radius: 12px; padding: 14px 20px;
-  display: flex; flex-direction: column; gap: 7px;
-}
-.label-info { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
-.nilai-info { font-size: 13.5px; }
-.nilai-info b, b.nilai-info { font-weight: 700; }
-.sub-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #3c4658; }
-
-.garis-modal { border: 0; border-top: 1px solid var(--garis); margin: 22px 0; }
-
-.judul-aturan { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; margin: 0 0 14px; }
-.judul-aturan svg { color: #b7791f; }
-
-.aturan { list-style: none; margin: 0; padding: 22px 26px; background: #f5f8fe; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
-.aturan li { display: flex; gap: 12px; align-items: flex-start; }
-.nomor {
-  flex: none; width: 24px; height: 24px; border-radius: 50%;
-  display: grid; place-items: center; background: #e4ecf9; font-size: 12px; font-weight: 700;
-}
-.aturan p { margin: 0; font-size: 13px; line-height: 1.5; max-width: 640px; }
-.aturan-judul { font-weight: 600; }
-.aturan-isi { color: #2b3447; }
-
-.setuju { display: flex; align-items: center; gap: 10px; margin: 20px 0 0 10px; font-size: 13px; font-weight: 500; cursor: pointer; width: fit-content; }
-.setuju input { width: 16px; height: 16px; margin: 0; accent-color: var(--emas); cursor: pointer; }
-
-.modal-kaki { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; }
-
-.btn-modal {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  border: 0; border-radius: 8px; padding: 9px 18px;
-  font: inherit; font-size: 13px; font-weight: 600; line-height: 1.2; cursor: pointer;
-  transition: background .15s ease, opacity .15s ease;
-}
-.btn-batal { background: #b91c1c; color: #fff; padding: 9px 16px; }
-.btn-batal:hover { background: #a11818; }
-.btn-mulai { background: var(--emas); color: #1a1a1a; }
-.btn-mulai:hover:not(:disabled) { background: #f7ae2e; }
-.btn-mulai:disabled { opacity: .45; cursor: not-allowed; }
-
-.btn-modal:focus-visible, .setuju input:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-
-.fade-modal-enter-active, .fade-modal-leave-active { transition: opacity .18s ease; }
-.fade-modal-enter-active .modal, .fade-modal-leave-active .modal { transition: transform .18s ease; }
-.fade-modal-enter-from, .fade-modal-leave-to { opacity: 0; }
-.fade-modal-enter-from .modal, .fade-modal-leave-to .modal { transform: translateY(8px); }
-
-@media (prefers-reduced-motion: reduce) {
-  .fade-modal-enter-active, .fade-modal-leave-active,
-  .fade-modal-enter-active .modal, .fade-modal-leave-active .modal { transition: none; }
+.modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #10213d;
+  font-size: 13px;
+  font-weight: 750;
 }
 
-/* Responsif */
+.modal-title-dot {
+  width: 9px;
+  height: 9px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #f59e0b;
+}
+
+.modal-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ffe0b6;
+  color: #663800;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.modal-status::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.modal-info-card {
+  min-width: 0;
+  min-height: 106px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 16px 20px;
+  border: 1px solid #e2e9f2;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.modal-info-label {
+  color: #444b56;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 750;
+  letter-spacing: 0.025em;
+}
+
+.modal-info-value {
+  color: #142440;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 750;
+}
+
+.modal-info-value span {
+  font-weight: 500;
+}
+
+.modal-info-tag {
+  padding: 4px 7px;
+  border-radius: 4px;
+  background: #fff0cf;
+  color: #8b5700;
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.modal-info-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #596273;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.modal-info-sub svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.modal-divider {
+  height: 1px;
+  margin: 27px 0;
+  border: 0;
+  background: #e1e8f1;
+}
+
+.rules-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: #142440;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+.rules-heading svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #a56b00;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+  padding: 25px 31px;
+  border-radius: 12px;
+  background: #f5f7fe;
+  list-style: none;
+}
+
+.rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rule-number {
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e4ecfa;
+  color: #162c50;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.rules-list strong {
+  display: block;
+  margin: 0;
+  color: #142440;
+  font-size: 11.5px;
+  line-height: 1.45;
+  font-weight: 750;
+}
+
+.rules-list p {
+  max-width: 680px;
+  margin: 2px 0 0;
+  color: #535c6b;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.agreement {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 29px 10px 0;
+  color: #142440;
+  font-size: 11.5px;
+  line-height: 1.45;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.agreement input {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 49px;
+}
+
+.modal-button {
+  min-height: 39px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 17px;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 11.5px;
+  line-height: 1.2;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.modal-button svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button-cancel {
+  background: #bd1e1e;
+  color: #fff;
+}
+
+.button-cancel:hover {
+  background: #a91919;
+}
+
+.button-confirm {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.button-confirm:hover:not(:disabled) {
+  background: #e99100;
+}
+
+.button-confirm:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.modal-button:focus-visible,
+.agreement input:focus-visible {
+  outline: 2px solid #183d70;
+  outline-offset: 3px;
+}
+
+.fade-modal-enter-active,
+.fade-modal-leave-active {
+  transition: opacity 0.18s ease;
+}
+
+.fade-modal-enter-active .modal,
+.fade-modal-leave-active .modal {
+  transition: transform 0.18s ease;
+}
+
+.fade-modal-enter-from,
+.fade-modal-leave-to {
+  opacity: 0;
+}
+
+.fade-modal-enter-from .modal,
+.fade-modal-leave-to .modal {
+  transform: translateY(8px);
+}
+
 @media (max-width: 1000px) {
-  .modal { padding: 28px 24px 24px; }
-  .grid-info { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .modal {
+    padding: 30px 28px;
+  }
+
+  .modal-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .modal-footer {
+    margin-top: 32px;
+  }
 }
 
-@media (max-width: 768px) {
-  .topbar { padding: 14px 16px; }
-  .konten { padding: 22px 16px 40px; }
-  h2 { font-size: 22px; }
-  .grid-level { grid-template-columns: 1fr; gap: 16px; }
-  .hasil { padding: 20px; }
-  .hasil-kaki { flex-direction: column; align-items: stretch; }
-  .btn-auto { width: 100%; }
+@media (max-width: 760px) {
+  .topbar {
+    padding: 13px 16px;
+  }
+
+  .konten {
+    padding: 22px 16px 38px;
+  }
+
+  .grid-level {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .level-card {
+    min-height: 205px;
+  }
+
+  .section-divider-large {
+    margin-top: 32px;
+  }
+
+  .discussion-card {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .btn-discussion {
+    width: 100%;
+  }
+
+  .answer-grid {
+    grid-template-columns: repeat(12, 14px);
+  }
 }
 
 @media (max-width: 560px) {
-  .overlay { padding: 12px 8px; }
-  .modal { padding: 20px 14px 16px; }
-  .grid-info { grid-template-columns: 1fr; }
-  .kartu-info { padding: 12px 16px; }
-  .aturan { padding: 16px 14px; }
-  .setuju { margin-left: 0; align-items: flex-start; }
-  .modal-kaki { margin-top: 22px; }
+  .section-block > h2 {
+    font-size: 19px;
+  }
+
+  .result-card {
+    padding: 17px 14px;
+  }
+
+  .result-heading {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .score-ring {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
+  }
+
+  .result-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .result-stat {
+    min-height: 62px;
+  }
+
+  .answer-grid {
+    grid-template-columns: repeat(10, 14px);
+  }
+
+  .overlay {
+    align-items: flex-start;
+    padding: 10px 8px;
+  }
+
+  .modal {
+    max-height: calc(100vh - 20px);
+    padding: 22px 15px 18px;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 18px;
+  }
+
+  .modal-info-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .modal-info-card {
+    min-height: 100px;
+    padding: 12px;
+  }
+
+  .modal-info-label {
+    font-size: 9px;
+  }
+
+  .modal-info-value {
+    font-size: 12px;
+  }
+
+  .modal-info-sub {
+    font-size: 9px;
+  }
+
+  .modal-divider {
+    margin: 20px 0;
+  }
+
+  .rules-list {
+    gap: 12px;
+    padding: 17px 13px;
+  }
+
+  .rules-list strong,
+  .rules-list p {
+    font-size: 10.5px;
+  }
+
+  .agreement {
+    align-items: flex-start;
+    margin: 20px 0 0;
+    font-size: 10.5px;
+  }
+
+  .modal-footer {
+    gap: 8px;
+    margin-top: 25px;
+  }
+
+  .modal-button {
+    min-height: 38px;
+    padding: 9px 12px;
+    font-size: 10.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-modal-enter-active,
+  .fade-modal-leave-active,
+  .fade-modal-enter-active .modal,
+  .fade-modal-leave-active .modal {
+    transition: none;
+  }
 }
 </style>
