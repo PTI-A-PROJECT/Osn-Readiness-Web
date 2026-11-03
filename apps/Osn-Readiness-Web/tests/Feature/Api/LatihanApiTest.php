@@ -136,6 +136,60 @@ class LatihanApiTest extends TestCase
         $this->assertArrayNotHasKey('kunci_jawaban', $soal[0]);
     }
 
+    public function test_setiap_quiz_hanya_mengambil_soal_dari_materinya(): void
+    {
+        $this->buatPutaranAktif();
+
+        $materiLain = Materi::factory()->create([
+            'tingkat_id' => $this->tingkat->id,
+            'kompetensi_id' => $this->materi->kompetensi_id,
+            'urutan' => 2,
+        ]);
+        $quizLain = Quiz::create([
+            'materi_id' => $materiLain->id,
+            'nama_quiz' => 'Latihan '.$materiLain->judul,
+            'jumlah_soal' => 10,
+        ]);
+
+        $soalMateriPertama = Soal::factory()->count(15)->create([
+            'tingkat_id' => $this->tingkat->id,
+            'materi_id' => $this->materi->id,
+            'peruntukan' => 'latihan',
+            'level' => 'mudah',
+        ])->modelKeys();
+
+        $soalMateriKedua = Soal::factory()->count(15)->create([
+            'tingkat_id' => $this->tingkat->id,
+            'materi_id' => $materiLain->id,
+            'peruntukan' => 'latihan',
+            'level' => 'mudah',
+        ])->modelKeys();
+
+        $hasilMateriPertama = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$this->quiz->id.'/mulai')
+            ->assertCreated()
+            ->assertJsonPath('data.quiz_id', $this->quiz->id)
+            ->assertJsonPath('data.materi_id', $this->materi->id)
+            ->json('data.soal');
+
+        $hasilMateriKedua = $this->actingAs($this->siswa)
+            ->postJson('/api/quiz/'.$quizLain->id.'/mulai')
+            ->assertCreated()
+            ->assertJsonPath('data.quiz_id', $quizLain->id)
+            ->assertJsonPath('data.materi_id', $materiLain->id)
+            ->json('data.soal');
+
+        $idTerpilihPertama = array_column($hasilMateriPertama, 'id');
+        $idTerpilihKedua = array_column($hasilMateriKedua, 'id');
+
+        $this->assertCount(10, $idTerpilihPertama);
+        $this->assertCount(10, $idTerpilihKedua);
+        $this->assertSame([], array_values(array_diff($idTerpilihPertama, $soalMateriPertama)));
+        $this->assertSame([], array_values(array_diff($idTerpilihKedua, $soalMateriKedua)));
+        $this->assertSame([], array_values(array_intersect($idTerpilihPertama, $soalMateriKedua)));
+        $this->assertSame([], array_values(array_intersect($idTerpilihKedua, $soalMateriPertama)));
+    }
+
     public function test_mulai_dua_kali_melanjutkan_pengerjaan_yang_sama(): void
     {
         $this->buatPutaranAktif();
