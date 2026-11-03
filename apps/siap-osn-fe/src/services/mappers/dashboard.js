@@ -67,6 +67,8 @@ export function dashboardKosong() {
     materiTotal: 0,
     simulasiDiikuti: 0,
     rataRataNilai: 0,
+    perubahanNilaiSimulasi: null,
+    syaratSimulasi: { terpenuhi: false, alasan: null, rincian: [] },
     kompetensi: [],
     rekomendasi: [],
     riwayat: [],
@@ -82,6 +84,21 @@ export function mapDashboard(raw) {
 
   const aktif =
     daftarTingkat.find((t) => t.tingkat_id === r.tingkat_aktif_id) ?? daftarTingkat[0] ?? null
+
+  const syarat = aktif?.syarat_simulasi ?? {}
+  const syaratSimulasi = {
+    terpenuhi: Boolean(syarat.terpenuhi),
+    alasan: syarat.alasan ?? null,
+    rincian: daftar(syarat.rincian).map((item) => ({
+      materiId: item.materi_id ?? null,
+      judul: item.judul ?? '',
+      prioritas: angka(item.prioritas),
+      selesai: Boolean(item.selesai),
+      nilaiLatihan: item.nilai_latihan == null ? null : angka(item.nilai_latihan),
+      batas: angka(item.batas),
+      latihanBelumTersedia: Boolean(item.latihan_belum_tersedia),
+    })),
+  }
 
   const hasilAktif = aktif?.hasil_simulasi_terakhir ?? null
   const hasilLain = hasilAktif ?? daftarTingkat.map((t) => t.hasil_simulasi_terakhir).find(Boolean) ?? null
@@ -101,6 +118,8 @@ export function mapDashboard(raw) {
     materiTotal: 0,
     simulasiDiikuti: 0,
     rataRataNilai: 0,
+    perubahanNilaiSimulasi: null,
+    syaratSimulasi,
     kompetensi: [],
     rekomendasi: [],
     riwayat: [],
