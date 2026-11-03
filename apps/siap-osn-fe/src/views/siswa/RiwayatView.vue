@@ -258,28 +258,13 @@ async function muatRiwayat() {
       null
     selectedLevelId.value = defaultLevel?.id ?? null
 
-    const province = pretest.tingkatList.find((t) =>
-      String(t.nama).toLowerCase().includes('provinsi'),
-    )
-    if (province) {
-      const tahapSudahPretest = TAHAP_PRETEST_SELESAI.has(province.tahap)
-      const adaHasilPretest = detailPretest.some((r) => r.tingkatId === province.id)
-      const pretestTersimpan = pretest.idTersimpan()
-      const sedangMengerjakanProvinsi = Number(pretestTersimpan?.tingkatId) === province.id
-      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest || sedangMengerjakanProvinsi)
+    // Jika halaman langsung membuka riwayat Provinsi sebagai tahap aktif,
+    // periksa pre-test hanya untuk tampilan Provinsi tersebut.
+    if (defaultLevel && provinceLevel.value?.id === defaultLevel.id) {
+      showSkipModal.value = perluPretestProvinsi(defaultLevel)
     }
   } catch (err) {
     loadError.value = true
-    const province = pretest.tingkatList.find((t) =>
-      String(t.nama).toLowerCase().includes('provinsi'),
-    )
-    if (province) {
-      const tahapSudahPretest = TAHAP_PRETEST_SELESAI.has(province.tahap)
-      const adaHasilPretest = pretestResults.value.some((r) => r.tingkatId === province.id)
-      const pretestTersimpan = pretest.idTersimpan()
-      const sedangMengerjakanProvinsi = Number(pretestTersimpan?.tingkatId) === province.id
-      showSkipModal.value = !(tahapSudahPretest || adaHasilPretest || sedangMengerjakanProvinsi)
-    }
     toast.add({
       severity: 'error',
       summary: 'Gagal memuat riwayat',
@@ -289,6 +274,26 @@ async function muatRiwayat() {
   } finally {
     loading.value = false
   }
+}
+
+function perluPretestProvinsi(level = provinceLevel.value) {
+  if (!level) return false
+
+  const tahapSudahPretest = TAHAP_PRETEST_SELESAI.has(level.tahap)
+  const adaHasilPretest = pretestResults.value.some(
+    (result) => Number(result.tingkatId) === Number(level.id),
+  )
+  const pretestTersimpan = pretest.idTersimpan()
+  const sedangMengerjakanProvinsi = Number(pretestTersimpan?.tingkatId) === Number(level.id)
+
+  return !(tahapSudahPretest || adaHasilPretest || sedangMengerjakanProvinsi)
+}
+
+function pilihTingkat(level) {
+  selectedLevelId.value = level.id
+
+  // Modal hanya ditampilkan saat pengguna membuka riwayat tingkat Provinsi.
+  showSkipModal.value = level.id === provinceLevel.value?.id && perluPretestProvinsi(level)
 }
 
 function kerjakanPretestProvinsi() {
@@ -368,7 +373,7 @@ onMounted(muatRiwayat)
               type="button"
               class="rounded-xl border bg-white px-4 py-3 text-left transition hover:border-[#f0a000]"
               :class="selectedLevelId === level.id ? 'border-2 border-[#f0a000]' : 'border-[#e1e8f2]'"
-              @click="selectedLevelId = level.id"
+              @click="pilihTingkat(level)"
             >
               <span class="block text-[14px] font-bold">{{ level.nama }}</span>
               <span
