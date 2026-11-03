@@ -110,6 +110,7 @@ export function mapDashboard(raw) {
     hasilTerakhir: hasilLain
       ? {
           id: hasilLain.id ?? null,
+          tingkatId: tingkatHasil?.tingkat_id ?? null,
           judul: `Simulasi — Tingkat ${tingkatHasil?.nama_tingkat ?? ''}`.trim(),
           tanggal: hasilLain.selesai_pada ?? null,
           nilai:
