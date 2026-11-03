@@ -46,6 +46,12 @@ export const useProgressStore = defineStore('progress', () => {
     }
 
     controller?.abort()
+    if (force) {
+      materiLoading.value = false
+      pemetaanLoading.value = false
+      simulasiLoading.value = false
+      riwayatLoading.value = false
+    }
     const requestController = new AbortController()
     controller = requestController
     const { signal } = requestController
@@ -113,7 +119,8 @@ export const useProgressStore = defineStore('progress', () => {
       if (signal?.aborted) return
 
       const semuaMateri = perTingkat.flat()
-      const materiAktif = perTingkat[ids.indexOf(data.value.tingkatAktifId)] ?? []
+      const indexTingkatAktif = ids.findIndex((id) => Number(id) === Number(data.value.tingkatAktifId))
+      const materiAktif = perTingkat[indexTingkatAktif] ?? []
       const materiById = new Map(semuaMateri.map((materi) => [Number(materi.id), materi]))
 
       let kompetensi = materiAktif
