@@ -35,6 +35,8 @@ export function mapMateri(r) {
     prioritas: r.prioritas ?? null,
     progress: mapProgress(r.progress),
     nilaiTerbaik: r.nilai_latihan_terbaik == null ? null : Number(r.nilai_latihan_terbaik),
+    latihanNama: r.quiz_nama ?? '',
+    latihanJumlahSoal: r.quiz_jumlah_soal == null ? null : Number(r.quiz_jumlah_soal),
     latihanTersedia: !r.latihan_belum_tersedia,
     quizId: r.quiz_id ?? null,
   }
