@@ -135,6 +135,23 @@ class MateriBelajarApiTest extends TestCase
             ->assertJsonPath('data.isi_materi', $this->materi->isi_materi);
     }
 
+    public function test_detail_materi_mengirim_identitas_latihan_milik_materi(): void
+    {
+        $quiz = Quiz::create([
+            'materi_id' => $this->materi->id,
+            'nama_quiz' => 'Latihan '.$this->materi->judul,
+            'jumlah_soal' => 10,
+        ]);
+
+        $this->actingAs($this->siswa)
+            ->getJson('/api/materi/'.$this->materi->id)
+            ->assertOk()
+            ->assertJsonPath('data.quiz_id', $quiz->id)
+            ->assertJsonPath('data.quiz_nama', $quiz->nama_quiz)
+            ->assertJsonPath('data.quiz_jumlah_soal', 10)
+            ->assertJsonPath('data.latihan_belum_tersedia', false);
+    }
+
     public function test_tandai_selesai_mengisi_persentase_dan_tanggal(): void
     {
         $this->buatPutaranAktif();
