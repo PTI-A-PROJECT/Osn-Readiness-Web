@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { belajarService } from '@/services/belajar.js'
-import { pretestService } from '@/services/pretest.js'
 import { riwayatService } from '@/services/riwayat.js'
-import { simulasiService } from '@/services/simulasi.js'
 import { siswaService } from '@/services/siswa.js'
 import { useProgressStore } from '@/stores/progress.js'
 
