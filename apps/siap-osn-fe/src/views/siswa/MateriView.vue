@@ -78,8 +78,12 @@ async function tandaiSelesai() {
 }
 
 function mulaiLatihan(m) {
-  if (!m.quizId) return
-  router.push({ name: 'siswa.latihan', params: { quizId: m.quizId } })
+  if (!m?.id || !m?.quizId) return
+  router.push({
+    name: 'siswa.latihan',
+    params: { quizId: m.quizId },
+    query: { materiId: String(m.id) },
+  })
 }
 
 function statusLabel(m) {
@@ -164,14 +168,32 @@ function statusLabel(m) {
             >
               {{ menandai ? 'Menyimpan…' : 'Tandai Selesai' }}
             </button>
-            <button
+            <div
               v-if="detail.latihanTersedia && detail.quizId"
-              type="button"
-              class="rounded-full border border-[#0f2a5c] px-5 py-2 text-[13px] font-semibold text-[#0f2a5c]"
-              @click="mulaiLatihan(detail)"
+              class="flex w-full flex-col gap-3 rounded-2xl border border-[#dbe5f4] bg-[#f7f9fd] p-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              Mulai Latihan →
-            </button>
+              <div>
+                <p class="text-[11px] font-bold uppercase tracking-wide text-[#64748b]">
+                  Latihan khusus materi ini
+                </p>
+                <p class="mt-1 text-sm font-bold text-[#0f2a5c]">
+                  {{ detail.latihanNama || ('Latihan ' + detail.judul) }}
+                </p>
+                <p v-if="detail.latihanJumlahSoal" class="mt-1 text-xs text-[#6b778c]">
+                  {{ detail.latihanJumlahSoal }} soal yang terkait dengan materi ini
+                </p>
+              </div>
+              <button
+                type="button"
+                class="w-fit shrink-0 rounded-full border border-[#0f2a5c] px-5 py-2 text-[13px] font-semibold text-[#0f2a5c]"
+                @click="mulaiLatihan(detail)"
+              >
+                Mulai Latihan Materi Ini →
+              </button>
+            </div>
+            <p v-else class="text-xs text-[#8a94a6]">
+              Latihan untuk materi ini belum tersedia.
+            </p>
           </div>
         </template>
       </section>
