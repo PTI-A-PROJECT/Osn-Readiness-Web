@@ -137,7 +137,7 @@ describe('progress store', () => {
     await vi.waitFor(() => expect(progress.data.materiTotal).toBe(2))
     expect(progress.data.materiSelesai).toBe(1)
     expect(progress.data.kompetensi).toEqual([{ nama: 'A', skor: 80, target: null }])
-    expect(progress.data.rekomendasi).toEqual([{ materiId: 1, judul: 'A', sub: 'Belum dikuasai', badge: 'Pelajari' }])
+    expect(progress.data.rekomendasi).toEqual([{ materiId: 1, judul: 'A', sub: 'Sudah dikuasai', badge: 'Ulangi' }])
   })
 
   it('belum pre-test tidak menghitung materi sebagai progres', async () => {
