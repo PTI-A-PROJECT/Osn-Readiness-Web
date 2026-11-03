@@ -194,6 +194,10 @@ class BelajarService implements BelajarServiceInterface
         ?float $nilaiTerbaik,
         bool $isi = false,
     ): array {
+        // Include the quiz that belongs to this exact material so the
+        // frontend never has to guess which practice should be opened.
+        $quiz = $materi->quiz;
+
         $baris = [
             'id' => (int) $materi->id,
             'tingkat_id' => (int) $materi->tingkat_id,
@@ -209,8 +213,10 @@ class BelajarService implements BelajarServiceInterface
                 'tanggal_selesai' => $progress->tanggal_selesai?->toISOString(),
             ],
             'nilai_latihan_terbaik' => $nilaiTerbaik,
-            'quiz_id' => $materi->quiz === null ? null : (int) $materi->quiz->id,
-            'latihan_belum_tersedia' => $materi->quiz === null,
+            'quiz_id' => $quiz === null ? null : (int) $quiz->id,
+            'quiz_nama' => $quiz?->nama_quiz,
+            'quiz_jumlah_soal' => $quiz === null ? null : (int) $quiz->jumlah_soal,
+            'latihan_belum_tersedia' => $quiz === null,
         ];
 
         if ($isi) {
