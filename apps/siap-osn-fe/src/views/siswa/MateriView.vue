@@ -1316,7 +1316,14 @@ onMounted(muatKatalog)
   overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin; padding: 0 12px 0 0;
 }
 .detail-view .lesson-reader:focus-visible { outline: 2px solid #bfdbfe; outline-offset: 2px; }
-.detail-view .lesson-sidebar { min-width: 0; width: 100%; display: block; }
+.detail-view .lesson-sidebar {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+  min-width: 0;
+  width: 100%;
+  display: block;
+}
 .detail-view .lesson-toc { position: static; top: auto; width: 100%; margin: 0; padding: 24px 18px; box-sizing: border-box; }
 .detail-view .lesson-toc-practice { margin-top: 12px; padding-top: 14px; border-top: 1px solid #e8edf4; border-radius: 0 0 9px 9px; }
 .detail-view .lesson-toc-practice.is-active { border-radius: 9px; }
@@ -1333,7 +1340,7 @@ onMounted(muatKatalog)
 .detail-view .final-practice-note { margin: 18px 0 0; color: #b9c9e4; font-size: 11px; }
 @media (max-width: 760px) {
   .detail-view .lesson-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }
-  .detail-view .lesson-sidebar { grid-row: 1; }
+  .detail-view .lesson-sidebar { position: static; top: auto; grid-row: 1; }
   .detail-view .lesson-toc-list { display: flex; gap: 7px; overflow-x: auto; }
   .detail-view .lesson-toc-item { width: max-content; min-width: 150px; flex: 0 0 auto; }
   .detail-view .lesson-toc-practice { margin-top: 0; padding-top: 8px; border-top: 0; }
