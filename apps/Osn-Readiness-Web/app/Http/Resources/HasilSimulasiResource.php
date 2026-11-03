@@ -23,6 +23,7 @@ class HasilSimulasiResource extends JsonResource
             'id' => (int) $hasil->id,
             'simulasi_id' => (int) $hasil->simulasi_id,
             'pretest_id' => (int) $hasil->pretest_id,
+            'mulai_pada' => $hasil->mulai_pada?->toISOString(),
             'nilai' => $hasil->nilai === null ? null : (float) $hasil->nilai,
             'jumlah_benar' => $hasil->jumlah_benar === null ? null : (int) $hasil->jumlah_benar,
             'jumlah_salah' => $hasil->jumlah_salah === null ? null : (int) $hasil->jumlah_salah,
