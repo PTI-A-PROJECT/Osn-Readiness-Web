@@ -23,6 +23,8 @@ const BARIS = {
   progress: { status: 'belajar', persentase: 0, tanggal_selesai: null },
   nilai_latihan_terbaik: 80,
   quiz_id: 9,
+  quiz_nama: 'Latihan Struktur Data',
+  quiz_jumlah_soal: 10,
   latihan_belum_tersedia: false,
 }
 
@@ -38,6 +40,8 @@ describe('belajarService', () => {
       prioritas: 1,
       progress: { status: 'belajar', persentase: 0, tanggalSelesai: null },
       nilaiTerbaik: 80,
+      latihanNama: 'Latihan Struktur Data',
+      latihanJumlahSoal: 10,
       latihanTersedia: true,
       quizId: 9,
     })
