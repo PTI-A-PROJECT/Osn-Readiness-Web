@@ -90,6 +90,22 @@ onMounted(async () => {
       return
     }
   }
+  // Quiz adalah identitas latihan di backend; materiId dari halaman materi
+  // menjadi pagar tambahan agar tautan yang tertukar tidak membuka soal materi lain.
+  const materiIdQuery = route.query.materiId
+  const expectedMateriId = materiIdQuery == null ? null : Number(materiIdQuery)
+  const identitasTidakSesuai =
+    latihan.quizId !== quizId ||
+    (expectedMateriId !== null &&
+      (!Number.isInteger(expectedMateriId) || expectedMateriId <= 0 || latihan.materiId !== expectedMateriId))
+
+  if (identitasTidakSesuai) {
+    latihan.$reset()
+    galatAwal.value = 'Latihan yang terbuka tidak sesuai dengan materi yang dipilih. Kembali ke daftar materi, lalu buka latihan dari materi tersebut.'
+    memuatAwal.value = false
+    return
+  }
+
   if (latihan.status === STATUS_LATIHAN.SELESAI) {
     await hasilMuncul()
     memuatAwal.value = false
