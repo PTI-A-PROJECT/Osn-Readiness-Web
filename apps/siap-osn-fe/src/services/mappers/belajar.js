@@ -37,6 +37,9 @@ export function mapMateri(r) {
     nilaiTerbaik: r.nilai_latihan_terbaik == null ? null : Number(r.nilai_latihan_terbaik),
     latihanTersedia: !r.latihan_belum_tersedia,
     quizId: r.quiz_id ?? null,
+    quizNama: r.quiz_nama ?? null,
+    quizDeskripsi: r.quiz_deskripsi ?? null,
+    jumlahSoalLatihan: r.quiz_jumlah_soal == null ? null : Number(r.quiz_jumlah_soal),
   }
 }
 
