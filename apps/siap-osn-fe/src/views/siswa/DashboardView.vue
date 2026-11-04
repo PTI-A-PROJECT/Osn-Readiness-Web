@@ -73,33 +73,25 @@ const tingkatBerikutnya = computed(() =>
     : 'Provinsi',
 )
 
-const banner = computed(() => {
-  if (d.value.perluPretestUlang) {
-    return {
-      judul: 'Kuota Simulasi Putaran Ini Habis',
-      isi: 'Ambil pre-test ulang untuk memulai putaran baru dan mendapatkan peta materi yang diperbarui.',
-    }
-  }
+const bannerImage = computed(() => {
+  if (!sudahPreTest.value) return '/dashboard-banner-awal.webp'
 
+  const tingkat = String(d.value.tingkat || 'Kabupaten').toLowerCase()
+  return tingkat.includes('provinsi')
+    ? '/dashboard-banner-provinsi.webp'
+    : '/dashboard-banner-kabupaten.webp'
+})
+
+const bannerAlt = computed(() => {
   if (!sudahPreTest.value) {
-    return {
-      judul: 'Mulai Perjalanan OSN Informatika-mu!',
-      isi: 'Kamu belum mengikuti tes pemetaan awal. Silakan ambil pre-test terlebih dahulu agar sistem dapat mendeteksi kekuatanmu dan membuka kurikulum belajar yang tepat sasaran.',
-    }
+    return 'Mulai Perjalanan OSN Informatika-mu. Ikuti pre-test untuk memulai persiapan.'
   }
 
-  const tingkat = String(d.value.tingkat || 'Kabupaten')
-  const judul = tingkat.toLowerCase().includes('provinsi')
-    ? 'Kamu makin dekat ke Provinsi!'
-    : 'Kamu makin dekat ke Olimpiade Kabupaten!'
-  const jumlah = jumlahPrioritasTersisa.value
-  const kebutuhan = jumlah > 0
-    ? `Selesaikan ${jumlah} materi prioritas`
-    : 'Materi prioritasmu sudah tuntas'
-  return {
-    judul,
-    isi: `${kebutuhan} & raih nilai simulasi ≥ 80 untuk buka Tingkat ${tingkatBerikutnya.value}.`,
+  if (String(d.value.tingkat || '').toLowerCase().includes('provinsi')) {
+    return 'Kamu makin dekat ke Provinsi. Selesaikan materi prioritas dan raih nilai simulasi minimal 80 untuk membuka Tingkat Nasional.'
   }
+
+  return 'Kamu makin dekat ke Olimpiade Kabupaten. Selesaikan materi prioritas dan raih nilai simulasi minimal 80 untuk membuka Tingkat Provinsi.'
 })
 
 const catatanRataRata = computed(() => {
@@ -262,82 +254,26 @@ function ikonRiwayat(jenis) {
         </button>
       </div>
 
-      <!-- Banner utama -->
-      <section class="relative flex min-h-[146px] items-center overflow-hidden rounded-[22px] bg-gradient-to-r from-[#0b2143] via-[#123b70] to-[#20599a] px-6 py-6 text-white sm:px-7 lg:px-8">
-        <div class="relative z-10 max-w-[68%] sm:max-w-[62%]">
-          <h2 class="text-[19px] font-bold leading-tight sm:text-[21px]">{{ banner.judul }}</h2>
-          <p class="mt-2 max-w-[620px] text-[12px] leading-relaxed text-white/80 sm:text-[13px]">
-            {{ banner.isi }}
-          </p>
+      <!-- Banner utama: gambar menyesuaikan status pre-test dan tingkat -->
+      <section class="space-y-2">
+        <div class="overflow-hidden rounded-[22px]">
+          <img
+            :src="bannerImage"
+            :alt="bannerAlt"
+            class="block h-auto w-full"
+            fetchpriority="high"
+            loading="eager"
+          />
+        </div>
+        <div v-if="d.perluPretestUlang" class="flex justify-end">
           <button
-            v-if="d.perluPretestUlang"
             type="button"
-            class="mt-3 rounded-lg bg-white px-4 py-2 text-[12px] font-bold text-[#102b52] transition hover:bg-[#edf4ff]"
+            class="rounded-lg bg-[#203f91] px-4 py-2 text-[12px] font-bold text-white transition hover:bg-[#183579]"
             @click="mulaiPretest"
           >
             Ambil Pre-Test Ulang →
           </button>
         </div>
-
-        <!-- Ilustrasi dekoratif agar banner tetap hidup tanpa aset eksternal -->
-        <svg
-          viewBox="0 0 360 180"
-          class="absolute bottom-0 right-0 h-[150px] w-[310px] max-w-[45%] sm:h-[170px] sm:w-[360px]"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle cx="258" cy="91" r="88" fill="#082A55" opacity=".58" />
-          <path d="M26 146L335 146L360 180H0L26 146Z" fill="#0878E8" />
-          <path d="M45 146H322L339 161H31L45 146Z" fill="#0098FF" />
-          <path d="M58 107H105V146H58V107Z" fill="#071B39" />
-          <path d="M114 94H168V146H114V94Z" fill="#071B39" />
-          <path d="M184 108H235V146H184V108Z" fill="#071B39" />
-          <path d="M64 112H99V135H64V112Z" fill="#0B5EA8" />
-          <path d="M121 100H160V134H121V100Z" fill="#0B5EA8" />
-          <path d="M191 114H228V136H191V114Z" fill="#0B5EA8" />
-          <path d="M75 120H90V122H75V120Z" fill="#45C5FF" />
-          <path d="M134 111H150V113H134V111Z" fill="#45C5FF" />
-          <path d="M202 123H217V125H202V123Z" fill="#45C5FF" />
-          <!-- podium -->
-          <path d="M104 129H155V164H104V129Z" fill="#0064CE" />
-          <path d="M155 115H216V164H155V115Z" fill="#0078EA" />
-          <path d="M216 132H275V164H216V132Z" fill="#0064CE" />
-          <path d="M104 129L155 129L165 139H94L104 129Z" fill="#1AA4FF" />
-          <path d="M155 115L216 115L226 126H145L155 115Z" fill="#28B5FF" />
-          <path d="M216 132L275 132L285 143H206L216 132Z" fill="#1AA4FF" />
-          <!-- student left -->
-          <circle cx="77" cy="67" r="10" fill="#F6B58D" />
-          <path d="M67 63C68 49 88 48 91 63L85 59L72 60L67 63Z" fill="#152B50" />
-          <path d="M70 79L86 78L97 110L65 110L70 79Z" fill="#F5C344" />
-          <path d="M69 85L54 67L59 63L77 79L69 85Z" fill="#F6B58D" />
-          <path d="M85 83L96 66L101 69L94 91L85 83Z" fill="#F6B58D" />
-          <path d="M69 108L65 129H76L80 109H69Z" fill="#123D82" />
-          <path d="M83 108L85 129H96L91 108H83Z" fill="#123D82" />
-          <!-- student center -->
-          <circle cx="184" cy="53" r="11" fill="#F2AE87" />
-          <path d="M173 51C174 34 195 35 197 51L190 45L178 46L173 51Z" fill="#142849" />
-          <path d="M169 69L198 68L209 115H159L169 69Z" fill="#D735B7" />
-          <path d="M173 72L157 53L162 49L180 67L173 72Z" fill="#F2AE87" />
-          <path d="M196 72L211 51L216 55L204 79L196 72Z" fill="#F2AE87" />
-          <path d="M171 112L166 132H179L183 113L171 112Z" fill="#153E83" />
-          <path d="M188 113L192 132H205L199 111L188 113Z" fill="#153E83" />
-          <!-- student right -->
-          <circle cx="267" cy="75" r="9" fill="#ECA77E" />
-          <path d="M258 71C259 57 276 58 278 71L271 66L261 68L258 71Z" fill="#112748" />
-          <path d="M256 87L276 86L289 116H249L256 87Z" fill="#08C8D4" />
-          <path d="M256 91L240 76L244 72L263 85L256 91Z" fill="#ECA77E" />
-          <path d="M276 91L287 78L292 82L284 101L276 91Z" fill="#ECA77E" />
-          <path d="M257 114L254 132H265L268 115L257 114Z" fill="#123D82" />
-          <path d="M272 114L275 132H286L281 113L272 114Z" fill="#123D82" />
-          <!-- trophy -->
-          <path d="M172 19H201L198 37C196 49 188 55 186 55C182 55 174 48 173 37L172 19Z" fill="#FFC331" />
-          <path d="M173 25H164C163 36 168 42 177 43" stroke="#FFC331" stroke-width="5" stroke-linecap="round" />
-          <path d="M200 25H210C211 36 206 42 197 43" stroke="#FFC331" stroke-width="5" stroke-linecap="round" />
-          <path d="M184 54V66M175 67H194" stroke="#FFC331" stroke-width="5" stroke-linecap="round" />
-          <path d="M181 19L185 10L190 19" stroke="#FFE58A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M153 17L155 11M149 14L157 15" stroke="#FFC331" stroke-width="2" stroke-linecap="round" />
-          <path d="M220 42L224 35M219 35L226 40" stroke="#42C7FF" stroke-width="2" stroke-linecap="round" />
-        </svg>
       </section>
 
       <!-- Statistik ringkas -->
