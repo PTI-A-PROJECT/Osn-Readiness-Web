@@ -3,6 +3,7 @@
 // deskripsi (backend menolak tambah/hapus). Aturan pemetaan 16 parameter,
 // semua wajib dikirim; store sudah memvalidasi jumlah persen level = 100.
 import { computed, onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -14,6 +15,7 @@ import { useAdminStore } from '@/stores/admin.js'
 import { adminService } from '@/services/admin.js'
 import { pesanError, pesanField } from '@/lib/errors.js'
 
+const route = useRoute()
 const admin = useAdminStore()
 const toast = useToast()
 
@@ -144,7 +146,7 @@ onMounted(async () => {
 <template>
   <div>
     <AdminPageHeader
-      judul="Tingkat & Aturan Pemetaan"
+      :judul="route.query.tab === 'aturan' ? 'Manajemen Aturan Pemetaan' : 'Manajemen Tingkat Seleksi'"
       deskripsi="Tingkat tidak bisa ditambah atau dihapus. Aturan pemetaan berlaku untuk satu tingkat."
       :memuat="admin.loading"
       :galat="galat"
@@ -163,9 +165,14 @@ onMounted(async () => {
       </template>
     </AdminPageHeader>
 
-    <section class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <p class="mb-4 rounded-xl border border-[#f3e1b5] bg-[#fff3d7] px-4 py-3 text-[12px] text-[#995f00]">
+      {{ route.query.tab === 'aturan'
+        ? 'Perubahan aturan memengaruhi pemetaan berikutnya, bukan riwayat yang sudah tersimpan.'
+        : 'Perubahan data tingkat dapat memengaruhi akses siswa. Nama dan deskripsi tingkat tetap dikelola melalui API yang sudah ada.' }}
+    </p>
+    <section class="grid grid-cols-1 gap-5">
       <!-- NAMA TINGKAT -->
-      <Card>
+      <Card v-if="route.query.tab !== 'aturan'">
         <template #content>
           <h2 class="mb-3 text-base font-bold">Data Tingkat</h2>
           <div class="space-y-3">
@@ -186,7 +193,7 @@ onMounted(async () => {
       </Card>
 
       <!-- ATURAN PEMETAAN -->
-      <Card>
+      <Card v-if="route.query.tab === 'aturan'">
         <template #content>
           <h2 class="mb-1 text-base font-bold">Aturan Pemetaan</h2>
           <p class="mb-3 text-[13px] text-[#6b778c]">
