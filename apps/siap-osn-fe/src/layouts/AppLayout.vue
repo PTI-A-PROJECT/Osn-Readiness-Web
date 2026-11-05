@@ -29,18 +29,29 @@ const menuSiswa = [
   { label: 'Riwayat Hasil', to: { name: 'siswa.riwayat' }, icon: ICON.riwayat },
 ]
 
-// Menu admin dipertahankan seperti sebelumnya.
+// Menu admin dipisah menurut desain, tetapi tetap menggunakan halaman CRUD
+// yang sudah ada. Query tab memilih modul yang sesuai tanpa duplikasi form.
 const menuAdmin = [
-  { label: 'Dashboard', to: { name: 'admin.dashboard' }, icon: ICON.dashboard },
-  { label: 'Kelola Siswa', to: { name: 'admin.siswa' }, icon: ICON.siswa },
-  { label: 'Kompetensi & Materi', to: { name: 'admin.konten' }, icon: ICON.materi },
-  { label: 'Soal & Pembahasan', to: { name: 'admin.soal' }, icon: ICON.dashboard },
-  { label: 'Latihan & Simulasi', to: { name: 'admin.ujian' }, icon: ICON.simulasi },
-  { label: 'Tingkat & Aturan', to: { name: 'admin.aturan' }, icon: ICON.aturan },
+  { kelompok: 'UTAMA', label: 'Dashboard', to: { name: 'admin.dashboard' } },
+  { kelompok: 'UTAMA', label: 'Manajemen Siswa', to: { name: 'admin.siswa' } },
+  { kelompok: 'UTAMA', label: 'Manajemen Tingkat Seleksi', to: { name: 'admin.aturan', query: { tab: 'tingkat' } } },
+  { kelompok: 'UTAMA', label: 'Manajemen Kompetensi', to: { name: 'admin.konten', query: { tab: 'kompetensi' } } },
+  { kelompok: 'UTAMA', label: 'Manajemen Materi', to: { name: 'admin.konten', query: { tab: 'materi' } } },
+  { kelompok: 'ASESMEN', label: 'Manajemen Soal', to: { name: 'admin.soal', query: { tab: 'soal' } } },
+  { kelompok: 'ASESMEN', label: 'Manajemen Simulasi', to: { name: 'admin.ujian', query: { tab: 'simulasi' } } },
+  { kelompok: 'ASESMEN', label: 'Manajemen Pembahasan', to: { name: 'admin.soal', query: { tab: 'pembahasan' } } },
+  { kelompok: 'ASESMEN', label: 'Manajemen Aturan Pemetaan', to: { name: 'admin.aturan', query: { tab: 'aturan' } } },
 ]
 
 const isAdmin = computed(() => auth.user?.role === 'super_admin')
 const menu = computed(() => (isAdmin.value ? menuAdmin : menuSiswa))
+const namaAdmin = computed(() => auth.nama || 'Super Admin')
+const inisialAdmin = computed(() => namaAdmin.value.trim().split(/\s+/).map((bagian) => bagian[0]).slice(0, 2).join('').toUpperCase())
+const kelompokAdmin = ['UTAMA', 'ASESMEN']
+function adminMenuAktif(item) {
+  return route.name === item.to.name &&
+    (!item.to.query?.tab || (route.query.tab || ({ 'admin.konten': 'kompetensi', 'admin.soal': 'soal', 'admin.ujian': 'latihan', 'admin.aturan': 'tingkat' }[route.name])) === item.to.query.tab)
+}
 
 // Sidebar ada di semua halaman siswa, jadi data progress dimuat dari sini.
 onMounted(() => {
@@ -50,86 +61,105 @@ onMounted(() => {
 
 <template>
   <div class="flex min-h-screen bg-[#f5f8fc]">
-    <!-- Sidebar -->
-    <aside
-      v-if="route.name !== 'siswa.pretest'"
-      class="sticky top-0 flex h-screen shrink-0 flex-col bg-[#0a1f3f] text-white"
-      :class="isAdmin ? 'w-[250px] px-4 py-6' : 'w-[182px] px-3 py-5'"
-    >
-      <div
-        class="mb-6 flex items-center"
-        :class="isAdmin ? 'gap-3 px-2' : 'gap-2.5 px-1.5'"
-      >
-        <img
-          src="/logo-icon.png"
-          alt="Logo SIAP OSN"
-          class="shrink-0 rounded-full object-contain"
-          :class="isAdmin ? 'h-10 w-10' : 'h-7 w-7'"
-        />
-
-        <span
-          class="font-bold tracking-tight text-white"
-          :class="isAdmin ? 'text-[15px]' : 'text-[13px]'"
-        >
-          SIAP OSN
-        </span>
+    <!-- Sidebar khusus Super Admin -->
+    <aside v-if="isAdmin" class="admin-sidebar sticky top-0 flex h-screen w-[230px] shrink-0 flex-col overflow-y-auto bg-[#0b203d] px-3.5 py-5 text-white">
+      <div class="mb-6 flex items-center gap-2 px-1">
+        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] bg-[#f2b628] text-[15px] font-extrabold text-[#122541]">S</span>
+        <strong class="whitespace-nowrap text-[13px] tracking-tight">SIAP OSN</strong>
+        <span class="ml-auto whitespace-nowrap rounded-full bg-[#26364a] px-1.5 py-1 text-[9px] font-bold text-[#f2b628]">Super Admin</span>
       </div>
 
-      <nav
-        class="flex flex-col"
-        :class="isAdmin ? 'gap-1.5' : 'gap-1'"
-        aria-label="Menu utama"
-      >
+      <nav class="flex flex-1 flex-col gap-4" aria-label="Navigasi admin">
+        <section v-for="kelompok in kelompokAdmin" :key="kelompok">
+          <h2 class="mb-2 px-2 text-[10px] font-bold uppercase tracking-wider text-[#7187a8]">{{ kelompok }}</h2>
+          <div class="space-y-1">
+            <RouterLink
+              v-for="item in menuAdmin.filter((nav) => nav.kelompok === kelompok)"
+              :key="item.label"
+              :to="item.to"
+              class="admin-nav-item block rounded-lg px-3 py-2.5 text-[12px] leading-[1.35] text-[#a8b8cf] transition-colors hover:bg-white/10 hover:text-white"
+              :class="{ 'admin-active': adminMenuAktif(item) }"
+              :aria-current="adminMenuAktif(item) ? 'page' : undefined"
+            >
+              {{ item.label }}
+            </RouterLink>
+          </div>
+        </section>
+      </nav>
+
+      <div class="mt-5 rounded-xl bg-[#192e4c] px-3 py-3">
+        <p class="text-[12px] font-bold text-white">Panel Super Admin</p>
+        <p class="mt-1 text-[10px] leading-snug text-[#93aac8]">Pengelolaan siswa, konten, dan asesmen SIAP OSN.</p>
+      </div>
+    </aside>
+
+    <!-- Sidebar siswa tidak berubah -->
+    <aside
+      v-else-if="route.name !== 'siswa.pretest'"
+      class="sticky top-0 flex h-screen w-[182px] shrink-0 flex-col bg-[#0a1f3f] px-3 py-5 text-white"
+    >
+      <div class="mb-6 flex items-center gap-2.5 px-1.5">
+        <img src="/logo-icon.png" alt="Logo SIAP OSN" class="h-7 w-7 shrink-0 rounded-full object-contain" />
+        <span class="text-[13px] font-bold tracking-tight text-white">SIAP OSN</span>
+      </div>
+      <nav class="flex flex-col gap-1" aria-label="Menu siswa">
         <RouterLink
-          v-for="item in menu"
+          v-for="item in menuSiswa"
           :key="item.label"
           :to="item.to"
           exact-active-class="is-active"
-          class="nav-link flex items-center rounded-xl transition-colors hover:bg-white/5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f0b323]"
-          :class="isAdmin
-            ? 'gap-3 px-3.5 py-3 text-sm text-white/60'
-            : 'gap-2 px-2.5 py-2.5 text-[11px] leading-tight text-[#91a0b6]'"
+          class="nav-link flex items-center gap-2 rounded-xl px-2.5 py-2.5 text-[11px] leading-tight text-[#91a0b6] transition-colors hover:bg-white/5 hover:text-white"
         >
-          <svg
-            class="shrink-0"
-            :class="isAdmin ? 'h-[18px] w-[18px]' : 'h-[14px] w-[14px]'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
+          <svg class="h-[14px] w-[14px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path :d="item.icon" />
           </svg>
           <span>{{ item.label }}</span>
         </RouterLink>
       </nav>
-
-      <!-- Kartu motivasi siswa. Tidak menampilkan angka streak palsu
-           karena backend belum menyediakan data streak. -->
-      <div
-        v-if="!isAdmin"
-        class="mt-4 rounded-xl bg-[#17477e] px-3 py-3"
-      >
-        <p class="text-[13px] font-bold leading-tight text-white">
-          Terus jaga semangat!
-        </p>
-        <p class="mt-1.5 text-[10px] leading-snug text-[#b8c9df]">
-          Belajar sedikit setiap hari untuk menjaga progres persiapan OSN-mu.
-        </p>
+      <div class="mt-4 rounded-xl bg-[#17477e] px-3 py-3">
+        <p class="text-[13px] font-bold leading-tight text-white">Terus jaga semangat!</p>
+        <p class="mt-1.5 text-[10px] leading-snug text-[#b8c9df]">Belajar sedikit setiap hari untuk menjaga progres persiapan OSN-mu.</p>
       </div>
     </aside>
 
     <!-- Konten halaman -->
-    <main class="min-w-0 flex-1">
+    <main class="min-w-0 flex-1" :class="isAdmin ? 'admin-main' : ''">
       <RouterView />
     </main>
   </div>
 </template>
 
 <style scoped>
+.admin-nav-item.admin-active {
+  background: #303b45;
+  color: #ffc01d;
+  font-weight: 750;
+}
+.admin-main {
+  min-width: 0;
+  padding: 28px 26px 44px;
+  background: #f4f7fc;
+}
+.admin-main :deep(.p-card) {
+  border: 1px solid #e0e7f2;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: none;
+}
+.admin-main :deep(.p-card-body) { padding: 21px; }
+.admin-main :deep(.p-card-content) { padding: 0; }
+.admin-main :deep(.p-button:not(.p-button-outlined):not(.p-button-text)) {
+  border-color: #f0b52a;
+  background: #f0b52a;
+  color: #14213b;
+}
+.admin-main :deep(table) { width: 100%; border-collapse: collapse; }
+.admin-main :deep(th) { color: #65758f; }
+.admin-main :deep(td), .admin-main :deep(th) { border-bottom: 1px solid #e6edf6; }
+@media (max-width: 780px) {
+  .admin-sidebar { width: 185px; }
+  .admin-main { padding: 16px 12px; }
+}
 .nav-link.is-active {
   background: rgb(240 179 35 / 0.16);
   color: #f0b323;
