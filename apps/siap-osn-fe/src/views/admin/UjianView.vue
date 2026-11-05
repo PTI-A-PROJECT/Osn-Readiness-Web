@@ -206,6 +206,7 @@ onMounted(() => muat({ force: true }))
 
     <Card v-if="tab === 'latihan'">
       <template #content>
+        <h2 class="mb-4 text-[14px] font-bold">Daftar Latihan</h2>
         <p v-if="!daftarLatihan.length" class="py-6 text-center text-sm font-bold">
           Belum ada latihan. Latihan dibuat per materi.
         </p>
@@ -238,6 +239,7 @@ onMounted(() => muat({ force: true }))
 
     <Card v-else>
       <template #content>
+        <h2 class="mb-4 text-[14px] font-bold">Daftar Simulasi</h2>
         <p v-if="!daftarSimulasi.length" class="py-6 text-center text-sm font-bold">
           Belum ada simulasi.
         </p>
