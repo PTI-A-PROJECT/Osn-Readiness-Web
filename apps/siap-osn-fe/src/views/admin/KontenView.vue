@@ -28,6 +28,14 @@ const tingkatList = ref([])
 const tingkatId = ref(null)
 
 const tab = ref(['kompetensi','materi','konteks'].includes(route.query.tab) ? route.query.tab : 'kompetensi')
+const cariKompetensi = ref('')
+const cariMateri = ref('')
+const kompetensiTersaring = computed(() => daftarKompetensi.value.filter((k) =>
+  k.nama.toLowerCase().includes(cariKompetensi.value.trim().toLowerCase()),
+))
+const materiTersaring = computed(() => daftarMateri.value.filter((m) =>
+  m.judul.toLowerCase().includes(cariMateri.value.trim().toLowerCase()),
+))
 const TAB = [
   { key: 'kompetensi', label: 'Kompetensi' },
   { key: 'materi', label: 'Materi' },
@@ -290,10 +298,12 @@ onMounted(async () => {
     <!-- KOMPETENSI -->
     <Card v-if="tab === 'kompetensi'">
       <template #content>
-        <div class="mb-3 flex justify-end">
-          <Button size="small" label="Tambah kompetensi" @click="bukaKompetensi(null)" />
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="text-[14px] font-bold">Daftar Kompetensi</h2>
+          <Button size="small" label="+ Tambah Kompetensi" @click="bukaKompetensi(null)" />
         </div>
-        <p v-if="!daftarKompetensi.length" class="py-6 text-center text-sm font-bold">
+        <input v-model="cariKompetensi" type="search" placeholder="Cari kompetensi..." class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
+        <p v-if="!kompetensiTersaring.length" class="py-6 text-center text-sm font-bold">
           Belum ada kompetensi di tingkat ini.
         </p>
         <table v-else class="w-full text-left text-[13px]">
@@ -305,7 +315,7 @@ onMounted(async () => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="k in daftarKompetensi" :key="k.id" class="border-b border-[#f5f7fa]">
+            <tr v-for="k in kompetensiTersaring" :key="k.id" class="border-b border-[#f5f7fa]">
               <td class="py-2.5 font-medium">{{ k.nama }}</td>
               <td class="py-2.5 text-[#4a5568]">{{ k.deskripsi || '—' }}</td>
               <td class="py-2.5">
@@ -324,6 +334,8 @@ onMounted(async () => {
     <!-- MATERI -->
     <Card v-else-if="tab === 'materi'">
       <template #content>
+        <h2 class="mb-4 text-[14px] font-bold">Daftar Materi</h2>
+        <input v-model="cariMateri" type="search" placeholder="Cari judul materi..." class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p class="text-[13px] text-[#6b778c]">
             Kompetensi:
@@ -336,7 +348,7 @@ onMounted(async () => {
             @click="bukaMateri(null)"
           />
         </div>
-        <p v-if="!daftarMateri.length" class="py-6 text-center text-sm font-bold">
+        <p v-if="!materiTersaring.length" class="py-6 text-center text-sm font-bold">
           Belum ada materi di kompetensi ini.
         </p>
         <table v-else class="w-full text-left text-[13px]">
@@ -349,7 +361,7 @@ onMounted(async () => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="m in daftarMateri" :key="m.id" class="border-b border-[#f5f7fa]">
+            <tr v-for="m in materiTersaring" :key="m.id" class="border-b border-[#f5f7fa]">
               <td class="py-2.5">{{ m.urutan }}</td>
               <td class="py-2.5 font-medium">{{ m.judul }}</td>
               <td class="py-2.5">
