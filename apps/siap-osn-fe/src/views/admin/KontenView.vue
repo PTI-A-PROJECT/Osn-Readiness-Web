@@ -30,11 +30,15 @@ const tingkatId = ref(null)
 const tab = ref(['kompetensi','materi','konteks'].includes(route.query.tab) ? route.query.tab : 'kompetensi')
 const cariKompetensi = ref('')
 const cariMateri = ref('')
+const cariKonteks = ref('')
 const kompetensiTersaring = computed(() => daftarKompetensi.value.filter((k) =>
   k.nama.toLowerCase().includes(cariKompetensi.value.trim().toLowerCase()),
 ))
-const materiTersaring = computed(() => daftarMateri.value.filter((m) =>
-  m.judul.toLowerCase().includes(cariMateri.value.trim().toLowerCase()),
+const materiTersaring = computed(() => kompetensiTerpilih.value ? daftarMateri.value.filter((m) =>
+  m.kompetensiId === kompetensiTerpilih.value.id && m.judul.toLowerCase().includes(cariMateri.value.trim().toLowerCase()),
+) : [])
+const konteksTersaring = computed(() => daftarKonteks.value.filter((k) =>
+  [k.judul, k.isi].some((value) => String(value ?? '').toLowerCase().includes(cariKonteks.value.trim().toLowerCase())),
 ))
 const TAB = [
   { key: 'kompetensi', label: 'Kompetensi' },
@@ -80,11 +84,13 @@ async function muat({ force = false } = {}) {
     await Promise.all([
       admin.muatDaftar(MODUL.KOMPETENSI, { tingkatId: tingkatId.value, force }),
       admin.muatDaftar(MODUL.KONTEKS, { force }),
-      admin.muatDaftar(MODUL.MATERI, {
-        kompetensiId: kompetensiTerpilih.value?.id ?? null,
-        force,
-      }),
+
     ])
+    const masihAda = daftarKompetensi.value.find((k) => k.id === kompetensiTerpilih.value?.id)
+    kompetensiTerpilih.value = masihAda ?? (tab.value === 'materi' ? daftarKompetensi.value[0] ?? null : null)
+    if (kompetensiTerpilih.value) {
+      await admin.muatDaftar(MODUL.MATERI, { kompetensiId: kompetensiTerpilih.value.id, force })
+    }
   } catch (err) {
     galat.value = pesanError(err, 'Gagal memuat data konten.')
   }
@@ -304,7 +310,7 @@ onMounted(async () => {
         </div>
         <input v-model="cariKompetensi" type="search" placeholder="Cari kompetensi..." class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
         <p v-if="!kompetensiTersaring.length" class="py-6 text-center text-sm font-bold">
-          Belum ada kompetensi di tingkat ini.
+          {{ cariKompetensi ? 'Tidak ada kompetensi yang sesuai pencarian.' : 'Belum ada kompetensi di tingkat ini.' }}
         </p>
         <table v-else class="w-full text-left text-[13px]">
           <thead>
@@ -335,6 +341,11 @@ onMounted(async () => {
     <Card v-else-if="tab === 'materi'">
       <template #content>
         <h2 class="mb-4 text-[14px] font-bold">Daftar Materi</h2>
+        <label for="pilih-kompetensi-materi" class="mb-1 block text-[12px] font-semibold text-[#53627b]">Pilih kompetensi</label>
+        <select id="pilih-kompetensi-materi" class="mb-3 w-full rounded-lg border border-[#dfe6f1] bg-white px-3 py-2 text-[12px]" :value="kompetensiTerpilih?.id ?? ''" @change="pilihKompetensi(daftarKompetensi.find((k) => String(k.id) === $event.target.value) ?? null)">
+          <option value="" disabled>— Pilih kompetensi —</option>
+          <option v-for="k in daftarKompetensi" :key="k.id" :value="k.id">{{ k.nama }}</option>
+        </select>
         <input v-model="cariMateri" type="search" placeholder="Cari judul materi..." class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p class="text-[13px] text-[#6b778c]">
@@ -349,7 +360,7 @@ onMounted(async () => {
           />
         </div>
         <p v-if="!materiTersaring.length" class="py-6 text-center text-sm font-bold">
-          Belum ada materi di kompetensi ini.
+          {{ !kompetensiTerpilih ? 'Belum ada kompetensi pada tingkat ini.' : cariMateri ? 'Tidak ada materi yang sesuai pencarian.' : 'Belum ada materi di kompetensi ini.' }}
         </p>
         <table v-else class="w-full text-left text-[13px]">
           <thead>
@@ -391,12 +402,13 @@ onMounted(async () => {
         <div class="mb-3 flex justify-end">
           <Button size="small" label="Tambah cerita soal" @click="bukaKonteks(null)" />
         </div>
-        <p v-if="!daftarKonteks.length" class="py-6 text-center text-sm font-bold">
+        <input v-model="cariKonteks" type="search" placeholder="Cari cerita soal..." aria-label="Cari cerita soal" class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
+        <p v-if="!konteksTersaring.length" class="py-6 text-center text-sm font-bold">
           Belum ada cerita soal.
         </p>
         <ul v-else class="space-y-2">
           <li
-            v-for="k in daftarKonteks"
+            v-for="k in konteksTersaring"
             :key="k.id"
             class="flex items-start justify-between gap-4 rounded-xl border border-[#eef1f6] px-4 py-3"
           >
