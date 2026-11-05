@@ -51,6 +51,20 @@ class BelajarController
         ]);
     }
 
+    public function tandaiSubmateriSelesai(Request $request, Materi $materi, string $submateri): JsonResponse
+    {
+        $data = $this->belajarService->tandaiSubmateriSelesai(
+            $request->user(),
+            (int) $materi->id,
+            $submateri,
+        );
+
+        return response()->json([
+            'message' => 'Progress submateri tersimpan',
+            'data' => $data,
+        ]);
+    }
+
     private function tingkatId(Request $request): int
     {
         /** @var User $user */

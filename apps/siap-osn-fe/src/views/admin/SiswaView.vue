@@ -24,8 +24,54 @@ const formGalat = ref('')
 const tingkatList = ref([])
 
 const daftar = computed(() => admin.daftarModul(MOD))
+const pencarian = ref('')
+const filterTingkat = ref('semua')
+const filterStatus = ref('semua')
+const daftarTersaring = computed(() => daftar.value.filter((s) => {
+  const kata = pencarian.value.trim().toLowerCase()
+  const cocokTeks = !kata || [s.nama, s.email].some((value) => String(value ?? '').toLowerCase().includes(kata))
+  const cocokTingkat = filterTingkat.value === 'semua' || String(s.tingkatAktifId) === filterTingkat.value
+  const cocokStatus = filterStatus.value === 'semua' || (filterStatus.value === 'aktif' ? s.aktif : !s.aktif)
+  return cocokTeks && cocokTingkat && cocokStatus
+}))
 const meta = computed(() => admin.metaModul(MOD))
+function eksporCSV() {
+  const baris = [['Nama', 'Email', 'Tingkat', 'Status'],
+    ...daftarTersaring.value.map((s) => [
+      s.nama,
+      s.email,
+      tingkatList.value.find((t) => t.id === s.tingkatAktifId)?.nama ?? '',
+      s.aktif ? 'Aktif' : 'Nonaktif',
+    ]),
+  ]
+  const csv = '\uFEFF' + baris.map((kolom) => kolom.map((v) =>
+    '"' + String(v ?? '').replaceAll('"', '""') + '"',
+  ).join(',')).join('\r\n')
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'siswa-halaman-ini.csv'
+  link.click()
+  URL.revokeObjectURL(url)
+}
 
+const modalDetail = ref(false)
+const detailSiswa = ref(null)
+const memuatDetail = ref(false)
+const galatDetail = ref('')
+async function bukaDetail(siswa) {
+  modalDetail.value = true
+  detailSiswa.value = siswa
+  galatDetail.value = ''
+  memuatDetail.value = true
+  try {
+    detailSiswa.value = await adminService.siswa({ id: siswa.id })
+  } catch (err) {
+    galatDetail.value = pesanError(err, 'Gagal memuat detail siswa.')
+  } finally {
+    memuatDetail.value = false
+  }
+}
 const modalUbah = ref(false)
 const form = reactive({ id: null, nama: '', email: '', tingkatAktifId: null, aktif: true })
 const konfirmasi = reactive({ terbuka: false, mode: null, target: null })
@@ -108,8 +154,8 @@ onMounted(async () => {
 <template>
   <div>
     <AdminPageHeader
-      judul="Kelola Siswa"
-      deskripsi="Ubah data siswa, tingkat aktif, dan status akun."
+      judul="Manajemen Siswa"
+      deskripsi="Kelola data, status, dan progres seluruh siswa terdaftar."
       :memuat="admin.loading"
       :galat="galat"
       @coba-lagi="muat({ force: true })"
@@ -121,10 +167,29 @@ onMounted(async () => {
 
     <Card>
       <template #content>
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-[14px] font-bold">Daftar Siswa</h2>
+          <button type="button" class="rounded-lg border border-[#dce4f0] bg-white px-3 py-2 text-[11px] font-semibold text-[#193961]" @click="eksporCSV">
+            Ekspor CSV (halaman ini)
+          </button>
+        </div>
+        <div class="mb-4 flex flex-wrap gap-2">
+          <input v-model="pencarian" type="search" placeholder="Cari nama atau email..." class="min-w-[220px] flex-1 rounded-lg border border-[#dce4f0] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
+          <select v-model="filterTingkat" class="rounded-lg border border-[#dce4f0] bg-white px-3 py-2 text-[12px]">
+            <option value="semua">Tingkat: Semua</option>
+            <option v-for="t in tingkatList" :key="t.id" :value="String(t.id)">{{ t.nama }}</option>
+          </select>
+          <select v-model="filterStatus" class="rounded-lg border border-[#dce4f0] bg-white px-3 py-2 text-[12px]">
+            <option value="semua">Status: Semua</option>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+        </div>
         <p v-if="admin.loading && !daftar.length" class="text-sm text-[#6b778c]">Memuat siswa…</p>
         <p v-else-if="!daftar.length" class="py-6 text-center text-sm font-bold">Belum ada siswa.</p>
 
-        <table v-else class="w-full text-left text-[13px]">
+        <p v-else-if="!daftarTersaring.length" class="py-6 text-center text-[12px] text-[#71809a]">Tidak ada siswa sesuai filter pada halaman ini.</p>
+        <div v-else class="overflow-x-auto"><table class="w-full min-w-[650px] text-left text-[13px]">
           <thead>
             <tr class="border-b border-[#eef1f6] text-[12px] uppercase text-[#6b778c]">
               <th class="py-2">Nama</th>
@@ -135,7 +200,7 @@ onMounted(async () => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="s in daftar" :key="s.id" class="border-b border-[#f5f7fa]">
+            <tr v-for="s in daftarTersaring" :key="s.id" class="border-b border-[#f5f7fa]">
               <td class="py-2.5 font-medium">{{ s.nama || '—' }}</td>
               <td class="py-2.5 text-[#4a5568]">{{ s.email }}</td>
               <td class="py-2.5 text-[#4a5568]">
@@ -151,6 +216,7 @@ onMounted(async () => {
               </td>
               <td class="py-2.5">
                 <div class="flex justify-end gap-1.5">
+                  <Button size="small" severity="secondary" outlined label="Detail" @click="bukaDetail(s)" />
                   <Button size="small" severity="secondary" outlined label="Ubah" @click="bukaUbah(s)" />
                   <Button
                     v-if="s.aktif"
@@ -165,11 +231,36 @@ onMounted(async () => {
               </td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
 
         <AdminPaginasi :meta="meta" :memuat="admin.loading" @ganti="(h) => admin.keHalaman(MOD, h)" />
       </template>
     </Card>
+
+    <!-- Detail siswa: hanya menampilkan data yang benar-benar tersedia di API -->
+    <Dialog v-model:visible="modalDetail" modal header="Detail Siswa" :style="{ width: '36rem', maxWidth: '95vw' }">
+      <p v-if="memuatDetail" class="py-4 text-[12px] text-[#71809a]">Memuat detail siswa…</p>
+      <p v-if="galatDetail" class="rounded-lg bg-[#fff2f0] p-3 text-[12px] text-[#a33333]">{{ galatDetail }}</p>
+      <div v-if="detailSiswa" class="space-y-3 text-[13px]">
+        <div class="flex items-center gap-3 border-b border-[#e5ebf3] pb-4">
+          <div class="grid h-12 w-12 place-items-center rounded-full bg-[#153969] font-bold text-white">
+            {{ (detailSiswa.nama || 'S').slice(0, 2).toUpperCase() }}
+          </div>
+          <div class="min-w-0">
+            <p class="font-bold text-[#16233a]">{{ detailSiswa.nama }}</p>
+            <p class="break-all text-[12px] text-[#71809a]">{{ detailSiswa.email }}</p>
+          </div>
+        </div>
+        <dl class="space-y-2">
+          <div class="flex justify-between gap-4 border-b border-[#e5ebf3] py-2"><dt class="text-[#71809a]">Tingkat aktif</dt><dd class="font-semibold">{{ tingkatList.find((t) => t.id === detailSiswa.tingkatAktifId)?.nama || 'Belum ditentukan' }}</dd></div>
+          <div class="flex justify-between gap-4 border-b border-[#e5ebf3] py-2"><dt class="text-[#71809a]">Status akun</dt><dd class="font-semibold">{{ detailSiswa.aktif ? 'Aktif' : 'Nonaktif' }}</dd></div>
+          <div class="flex justify-between gap-4 border-b border-[#e5ebf3] py-2"><dt class="text-[#71809a]">Terdaftar sejak</dt><dd class="font-semibold">{{ detailSiswa.dibuatPada ? new Date(detailSiswa.dibuatPada).toLocaleDateString('id-ID') : '—' }}</dd></div>
+        </dl>
+        <p class="text-[11px] leading-relaxed text-[#71809a]">
+          Riwayat pre-test, latihan, dan simulasi per siswa belum tersedia melalui endpoint detail Admin saat ini.
+        </p>
+      </div>
+    </Dialog>
 
     <!-- Modal ubah -->
     <Dialog v-model:visible="modalUbah" modal header="Ubah Data Siswa" :style="{ width: '30rem' }">

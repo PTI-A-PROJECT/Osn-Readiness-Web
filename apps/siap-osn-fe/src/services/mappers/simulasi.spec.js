@@ -89,13 +89,14 @@ describe('paketSimulasi', () => {
 describe('mapHasilSimulasi', () => {
   it('mengurutkan jawaban per urutan dan menjaga null belum dinilai', () => {
     const hasil = mapHasilSimulasi({
-      id: 11, simulasi_id: 2, pretest_id: 5, nilai: null, jumlah_benar: null,
-      jumlah_salah: null, lulus: null, jawaban: [
+      id: 11, simulasi_id: 2, pretest_id: 5, mulai_pada: '2026-10-06T02:00:00Z',
+      nilai: null, jumlah_benar: null, jumlah_salah: null, lulus: null, jawaban: [
         { soal_id: 9, urutan: 3, bobot: 5, jawaban_user: 'A', status_benar: false },
         { soal_id: 7, urutan: 1, bobot: 5, jawaban_user: 'C', status_benar: true },
       ],
     })
     expect(hasil.nilai).toBeNull()
+    expect(hasil.mulaiPada).toBe('2026-10-06T02:00:00Z')
     expect(hasil.lulus).toBeNull()
     expect(hasil.jawaban.map((j) => j.urutan)).toEqual([1, 3])
     expect(hasil.jawaban[0]).toMatchObject({ soalId: 7, jawabanUser: 'C', benar: true })

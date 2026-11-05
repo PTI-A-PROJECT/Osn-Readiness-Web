@@ -23,6 +23,7 @@ export const ENDPOINTS = {
     materi: '/materi',
     materiDetail: (id) => `/materi/${id}`,
     materiProgress: (id) => `/materi/${id}/progress`,
+    materiSubmateriSelesai: (id, submateriId) => `/materi/${id}/submateri/${submateriId}/selesai`,
     quizMulai: (quizId) => `/quiz/${quizId}/mulai`,
     pengerjaan: (id) => `/quiz-pengerjaan/${id}`,
     pengerjaanJawaban: (id) => `/quiz-pengerjaan/${id}/jawaban`,

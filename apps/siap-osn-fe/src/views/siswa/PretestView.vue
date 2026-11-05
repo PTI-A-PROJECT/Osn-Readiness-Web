@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useProgressStore } from '@/stores/progress.js'
 import { usePretestStore, STATUS } from '@/stores/pretest.js'
@@ -21,6 +21,7 @@ const props = defineProps({
   statusAwal: { type: String, default: 'online' },
 })
 
+const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const progress = useProgressStore()
@@ -100,11 +101,25 @@ function seedJawaban() {
 }
 
 function pilihDefaultTingkat() {
-  const aktifId = progress.data.tingkatAktifId
   const daftar = pretest.tingkatList
+  const targetId = Number(route.query.tingkatId)
+  const target = daftar.find((t) => t.id === targetId)
+  if (target) {
+    tingkatDipilih.value = target.id
+    return
+  }
+
+  const aktifId = progress.data.tingkatAktifId
   const cocok = daftar.find((t) => t.id === aktifId && t.terbuka) ?? daftar.find((t) => t.terbuka) ?? null
   tingkatDipilih.value = cocok?.id ?? null
 }
+
+const tingkatDipilihData = computed(() =>
+  pretest.tingkatList.find((t) => t.id === tingkatDipilih.value) ?? null,
+)
+const tingkatDipilihTerkunci = computed(() =>
+  Boolean(tingkatDipilihData.value && !tingkatDipilihData.value.terbuka),
+)
 
 async function siapkanAwal() {
   memuatAwal.value = true
@@ -159,7 +174,7 @@ function cobaLagi() {
 }
 
 async function mulaiDipilih() {
-  if (!tingkatDipilih.value || pretest.loading) return
+  if (!tingkatDipilih.value || tingkatDipilihTerkunci.value || pretest.loading) return
   try {
     await pretest.mulai({ tingkatId: tingkatDipilih.value })
     seedJawaban()
@@ -408,9 +423,15 @@ onBeforeUnmount(() => {
               <span>{{ t.terbuka ? 'Terbuka' : 'Terkunci' }}</span>
             </button>
           </div>
+          <p
+            v-if="tingkatDipilihTerkunci"
+            class="mt-3 rounded-lg border border-[#f3d69b] bg-[#fff8e8] px-4 py-3 text-xs leading-relaxed text-[#8a5a00]"
+          >
+            Tingkat {{ tingkatDipilihData?.nama }} masih terkunci. Selesaikan tahap sebelumnya terlebih dahulu.
+          </p>
           <button
             class="btn btn-mulai"
-            :disabled="!tingkatDipilih || pretest.loading"
+            :disabled="!tingkatDipilih || tingkatDipilihTerkunci || pretest.loading"
             @click="mulaiDipilih"
           >
             {{ pretest.loading ? 'Memulai…' : 'Mulai Pre-Test' }}

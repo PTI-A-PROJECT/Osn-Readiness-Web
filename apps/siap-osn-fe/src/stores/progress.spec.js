@@ -13,6 +13,14 @@ vi.mock('@/services/riwayat.js', () => ({
   riwayatService: { daftar: vi.fn(async () => ({ items: [], total: 0 })) },
 }))
 
+vi.mock('@/services/pretest.js', () => ({
+  pretestService: { lihat: vi.fn() },
+}))
+
+vi.mock('@/services/simulasi.js', () => ({
+  simulasiService: { lihat: vi.fn() },
+}))
+
 vi.mock('@/services/belajar.js', () => ({
   belajarService: { daftar: vi.fn(async () => []), detail: vi.fn(), tandaiSelesai: vi.fn() },
 }))
@@ -119,7 +127,7 @@ describe('progress store', () => {
   })
 
   it('fetchDashboard mengisi statistik materi dari tingkat terbuka', async () => {
-    siswaService.dashboard.mockResolvedValue(hasil)
+    siswaService.dashboard.mockResolvedValue({ ...hasil, preTestSelesai: true, tingkatAktifId: 1, tingkat: 'Kabupaten' })
     belajarService.daftar.mockResolvedValue([
       { id: 1, judul: 'A', wajib: true, prioritas: 1, progress: { status: 'selesai' }, nilaiTerbaik: 80 },
       { id: 2, judul: 'B', wajib: false, prioritas: null, progress: null, nilaiTerbaik: null },
@@ -129,7 +137,17 @@ describe('progress store', () => {
     await vi.waitFor(() => expect(progress.data.materiTotal).toBe(2))
     expect(progress.data.materiSelesai).toBe(1)
     expect(progress.data.kompetensi).toEqual([{ nama: 'A', skor: 80, target: null }])
-    expect(progress.data.rekomendasi).toEqual([{ judul: 'A', sub: 'Prioritas 1', badge: 'Wajib' }])
+    expect(progress.data.rekomendasi).toEqual([{ materiId: 1, judul: 'A', sub: 'Sudah dikuasai', badge: 'Ulangi' }])
+  })
+
+  it('belum pre-test tidak menghitung materi sebagai progres', async () => {
+    siswaService.dashboard.mockResolvedValue({ ...hasil, tingkatAktifId: 1 })
+    const progress = useProgressStore()
+    await progress.fetchDashboard()
+    await vi.waitFor(() => expect(progress.materiLoading).toBe(false))
+    expect(progress.data.materiTotal).toBe(0)
+    expect(progress.data.materiSelesai).toBe(0)
+    expect(belajarService.daftar).not.toHaveBeenCalled()
   })
 
   it('$reset mengosongkan state', async () => {

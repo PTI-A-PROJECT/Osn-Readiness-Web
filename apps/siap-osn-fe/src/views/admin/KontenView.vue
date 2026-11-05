@@ -3,6 +3,7 @@
 // karena(always) FrozenErrorcompetensi → materi → soalalways berkait: materi
 // milik satu kompetensi, soal milik satu materi.
 import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -16,6 +17,8 @@ import { MODUL, useAdminStore } from '@/stores/admin.js'
 import { adminService } from '@/services/admin.js'
 import { pesanError, pesanField } from '@/lib/errors.js'
 
+const route = useRoute()
+const router = useRouter()
 const admin = useAdminStore()
 const toast = useToast()
 
@@ -24,7 +27,19 @@ const galat = ref('')
 const tingkatList = ref([])
 const tingkatId = ref(null)
 
-const tab = ref('kompetensi')
+const tab = ref(['kompetensi','materi','konteks'].includes(route.query.tab) ? route.query.tab : 'kompetensi')
+const cariKompetensi = ref('')
+const cariMateri = ref('')
+const cariKonteks = ref('')
+const kompetensiTersaring = computed(() => daftarKompetensi.value.filter((k) =>
+  k.nama.toLowerCase().includes(cariKompetensi.value.trim().toLowerCase()),
+))
+const materiTersaring = computed(() => kompetensiTerpilih.value ? daftarMateri.value.filter((m) =>
+  m.kompetensiId === kompetensiTerpilih.value.id && m.judul.toLowerCase().includes(cariMateri.value.trim().toLowerCase()),
+) : [])
+const konteksTersaring = computed(() => daftarKonteks.value.filter((k) =>
+  [k.judul, k.isi].some((value) => String(value ?? '').toLowerCase().includes(cariKonteks.value.trim().toLowerCase())),
+))
 const TAB = [
   { key: 'kompetensi', label: 'Kompetensi' },
   { key: 'materi', label: 'Materi' },
@@ -69,11 +84,13 @@ async function muat({ force = false } = {}) {
     await Promise.all([
       admin.muatDaftar(MODUL.KOMPETENSI, { tingkatId: tingkatId.value, force }),
       admin.muatDaftar(MODUL.KONTEKS, { force }),
-      admin.muatDaftar(MODUL.MATERI, {
-        kompetensiId: kompetensiTerpilih.value?.id ?? null,
-        force,
-      }),
+
     ])
+    const masihAda = daftarKompetensi.value.find((k) => k.id === kompetensiTerpilih.value?.id)
+    kompetensiTerpilih.value = masihAda ?? (tab.value === 'materi' ? daftarKompetensi.value[0] ?? null : null)
+    if (kompetensiTerpilih.value) {
+      await admin.muatDaftar(MODUL.MATERI, { kompetensiId: kompetensiTerpilih.value.id, force })
+    }
   } catch (err) {
     galat.value = pesanError(err, 'Gagal memuat data konten.')
   }
@@ -229,7 +246,12 @@ async function jalankanKonfirmasi() {
   toast.add({ severity: 'success', summary: 'Data dihapus', life: 4000 })
 }
 
+watch(() => route.query.tab, (next) => {
+  if (['kompetensi', 'materi', 'konteks'].includes(next)) tab.value = next
+})
 watch(tab, (t) => {
+  if (route.query.tab !== t) router.replace({ query: { ...route.query, tab: t } })
+
   if (t === 'materi' && !kompetensiTerpilih.value && daftarKompetensi.value.length) {
     pilihKompetensi(daftarKompetensi.value[0])
   }
@@ -238,13 +260,16 @@ watch(tab, (t) => {
 onMounted(async () => {
   tingkatList.value = await adminService.daftarTingkatAdmin().catch(() => [])
   await muat({ force: true })
+  if (tab.value === 'materi' && !kompetensiTerpilih.value && daftarKompetensi.value.length) {
+    pilihKompetensi(daftarKompetensi.value[0])
+  }
 })
 </script>
 
 <template>
   <div>
     <AdminPageHeader
-      judul="Kompetensi & Materi"
+       :judul="tab === 'materi' ? 'Manajemen Materi' : tab === 'konteks' ? 'Manajemen Konteks Soal' : 'Manajemen Kompetensi'"
       deskripsi="Struktur konten: kompetensi → materi → soal. Cerita soal dipakai beberapa soal sekaligus."
       :memuat="admin.loading"
       :galat="galat"
@@ -279,11 +304,13 @@ onMounted(async () => {
     <!-- KOMPETENSI -->
     <Card v-if="tab === 'kompetensi'">
       <template #content>
-        <div class="mb-3 flex justify-end">
-          <Button size="small" label="Tambah kompetensi" @click="bukaKompetensi(null)" />
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="text-[14px] font-bold">Daftar Kompetensi</h2>
+          <Button size="small" label="+ Tambah Kompetensi" @click="bukaKompetensi(null)" />
         </div>
-        <p v-if="!daftarKompetensi.length" class="py-6 text-center text-sm font-bold">
-          Belum ada kompetensi di tingkat ini.
+        <input v-model="cariKompetensi" type="search" placeholder="Cari kompetensi..." class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
+        <p v-if="!kompetensiTersaring.length" class="py-6 text-center text-sm font-bold">
+          {{ cariKompetensi ? 'Tidak ada kompetensi yang sesuai pencarian.' : 'Belum ada kompetensi di tingkat ini.' }}
         </p>
         <table v-else class="w-full text-left text-[13px]">
           <thead>
@@ -294,7 +321,7 @@ onMounted(async () => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="k in daftarKompetensi" :key="k.id" class="border-b border-[#f5f7fa]">
+            <tr v-for="k in kompetensiTersaring" :key="k.id" class="border-b border-[#f5f7fa]">
               <td class="py-2.5 font-medium">{{ k.nama }}</td>
               <td class="py-2.5 text-[#4a5568]">{{ k.deskripsi || '—' }}</td>
               <td class="py-2.5">
@@ -313,6 +340,13 @@ onMounted(async () => {
     <!-- MATERI -->
     <Card v-else-if="tab === 'materi'">
       <template #content>
+        <h2 class="mb-4 text-[14px] font-bold">Daftar Materi</h2>
+        <label for="pilih-kompetensi-materi" class="mb-1 block text-[12px] font-semibold text-[#53627b]">Pilih kompetensi</label>
+        <select id="pilih-kompetensi-materi" class="mb-3 w-full rounded-lg border border-[#dfe6f1] bg-white px-3 py-2 text-[12px]" :value="kompetensiTerpilih?.id ?? ''" @change="pilihKompetensi(daftarKompetensi.find((k) => String(k.id) === $event.target.value) ?? null)">
+          <option value="" disabled>— Pilih kompetensi —</option>
+          <option v-for="k in daftarKompetensi" :key="k.id" :value="k.id">{{ k.nama }}</option>
+        </select>
+        <input v-model="cariMateri" type="search" placeholder="Cari judul materi..." class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p class="text-[13px] text-[#6b778c]">
             Kompetensi:
@@ -325,8 +359,8 @@ onMounted(async () => {
             @click="bukaMateri(null)"
           />
         </div>
-        <p v-if="!daftarMateri.length" class="py-6 text-center text-sm font-bold">
-          Belum ada materi di kompetensi ini.
+        <p v-if="!materiTersaring.length" class="py-6 text-center text-sm font-bold">
+          {{ !kompetensiTerpilih ? 'Belum ada kompetensi pada tingkat ini.' : cariMateri ? 'Tidak ada materi yang sesuai pencarian.' : 'Belum ada materi di kompetensi ini.' }}
         </p>
         <table v-else class="w-full text-left text-[13px]">
           <thead>
@@ -338,7 +372,7 @@ onMounted(async () => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="m in daftarMateri" :key="m.id" class="border-b border-[#f5f7fa]">
+            <tr v-for="m in materiTersaring" :key="m.id" class="border-b border-[#f5f7fa]">
               <td class="py-2.5">{{ m.urutan }}</td>
               <td class="py-2.5 font-medium">{{ m.judul }}</td>
               <td class="py-2.5">
@@ -368,12 +402,13 @@ onMounted(async () => {
         <div class="mb-3 flex justify-end">
           <Button size="small" label="Tambah cerita soal" @click="bukaKonteks(null)" />
         </div>
-        <p v-if="!daftarKonteks.length" class="py-6 text-center text-sm font-bold">
+        <input v-model="cariKonteks" type="search" placeholder="Cari cerita soal..." aria-label="Cari cerita soal" class="mb-4 w-full rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
+        <p v-if="!konteksTersaring.length" class="py-6 text-center text-sm font-bold">
           Belum ada cerita soal.
         </p>
         <ul v-else class="space-y-2">
           <li
-            v-for="k in daftarKonteks"
+            v-for="k in konteksTersaring"
             :key="k.id"
             class="flex items-start justify-between gap-4 rounded-xl border border-[#eef1f6] px-4 py-3"
           >

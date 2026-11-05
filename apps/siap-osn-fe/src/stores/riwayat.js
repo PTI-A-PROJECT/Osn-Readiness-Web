@@ -91,11 +91,12 @@ export const useRiwayatStore = defineStore('riwayat', () => {
   // Cuplikan untuk dashboard: 5 terbaru tanpa filter.
   // (Dashboard memanggil ini; filter/pagination view tidak terganggu
   // karena hasilnya langsung dikembalikan, bukan disimpan.)
-  async function terbaris({ jumlah = 5 } = {}) {
+  async function terbaris({ jumlah = 5, signal } = {}) {
     const hasil = await riwayatService.daftar({
       perPage: jumlah,
       page: 1,
       namaTingkatById: lookupTingkat(),
+      signal,
     })
     return hasil.items
   }

@@ -63,6 +63,7 @@ describe('siswaService', () => {
       { nama: 'Provinsi', terbuka: false },
     ])
     expect(hasil.hasilTerakhir).toMatchObject({
+      tingkatId: 1,
       judul: 'Simulasi — Tingkat Kabupaten',
       nilai: 86,
       lulus: true,

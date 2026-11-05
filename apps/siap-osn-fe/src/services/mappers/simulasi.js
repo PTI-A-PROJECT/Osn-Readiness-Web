@@ -62,6 +62,7 @@ export function mapHasilSimulasi(r) {
     id: r.id,
     simulasiId: r.simulasi_id ?? null,
     pretestId: r.pretest_id ?? null,
+    mulaiPada: r.mulai_pada ?? null,
     nilai: nilaiAtauNull(r.nilai),
     jumlahBenar: r.jumlah_benar == null ? null : angka(r.jumlah_benar),
     jumlahSalah: r.jumlah_salah == null ? null : angka(r.jumlah_salah),
