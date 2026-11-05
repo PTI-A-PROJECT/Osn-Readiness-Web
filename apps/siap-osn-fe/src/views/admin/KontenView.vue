@@ -3,6 +3,7 @@
 // karena(always) FrozenErrorcompetensi → materi → soalalways berkait: materi
 // milik satu kompetensi, soal milik satu materi.
 import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -16,6 +17,8 @@ import { MODUL, useAdminStore } from '@/stores/admin.js'
 import { adminService } from '@/services/admin.js'
 import { pesanError, pesanField } from '@/lib/errors.js'
 
+const route = useRoute()
+const router = useRouter()
 const admin = useAdminStore()
 const toast = useToast()
 
@@ -24,7 +27,7 @@ const galat = ref('')
 const tingkatList = ref([])
 const tingkatId = ref(null)
 
-const tab = ref('kompetensi')
+const tab = ref(['kompetensi','materi','konteks'].includes(route.query.tab) ? route.query.tab : 'kompetensi')
 const TAB = [
   { key: 'kompetensi', label: 'Kompetensi' },
   { key: 'materi', label: 'Materi' },
@@ -229,7 +232,12 @@ async function jalankanKonfirmasi() {
   toast.add({ severity: 'success', summary: 'Data dihapus', life: 4000 })
 }
 
+watch(() => route.query.tab, (next) => {
+  if (['kompetensi', 'materi', 'konteks'].includes(next)) tab.value = next
+})
 watch(tab, (t) => {
+  if (route.query.tab !== t) router.replace({ query: { ...route.query, tab: t } })
+
   if (t === 'materi' && !kompetensiTerpilih.value && daftarKompetensi.value.length) {
     pilihKompetensi(daftarKompetensi.value[0])
   }
@@ -244,7 +252,7 @@ onMounted(async () => {
 <template>
   <div>
     <AdminPageHeader
-      judul="Kompetensi & Materi"
+       :judul="tab === 'materi' ? 'Manajemen Materi' : tab === 'konteks' ? 'Manajemen Konteks Soal' : 'Manajemen Kompetensi'"
       deskripsi="Struktur konten: kompetensi → materi → soal. Cerita soal dipakai beberapa soal sekaligus."
       :memuat="admin.loading"
       :galat="galat"
