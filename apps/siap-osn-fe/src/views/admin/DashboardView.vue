@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useToast } from 'primevue/usetoast'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 import AdminPageHeader from '@/components/admin/AdminPageHeader.vue'
@@ -15,7 +14,6 @@ import { pesanError } from '@/lib/errors.js'
 
 const auth = useAuthStore()
 const router = useRouter()
-const toast = useToast()
 const admin = useAdminStore()
 
 const tingkatId = ref(null)
@@ -59,17 +57,6 @@ function gantiTingkat(id) {
     })
 }
 
-// Bukti role-guard backend bekerja dari browser: hanya super_admin yang
-// bisa lolos RequireRole di GET /admin/dashboard.
-async function tesAksesAdmin() {
-  try {
-    await adminService.dashboard()
-    toast.add({ severity: 'success', summary: 'Akses admin OK', life: 4000 })
-  } catch (err) {
-    toast.add({ severity: 'error', summary: 'Akses admin ditolak', detail: pesanError(err), life: 4000 })
-  }
-}
-
 async function keluar() {
   await auth.logout()
   router.push({ name: 'login' })
@@ -91,7 +78,6 @@ onMounted(muatSemuanya)
       @coba-lagi="muatSemuanya"
     >
       <template #aksi-extra>
-        <Button label="Tes akses" size="small" severity="secondary" outlined :disabled="admin.loading" @click="tesAksesAdmin" />
         <Button label="Keluar" size="small" severity="secondary" outlined @click="keluar" />
       </template>
     </AdminPageHeader>
