@@ -1,7 +1,8 @@
 <script setup>
 // A5 · Latihan & simulasi. Dua modul berbagi halaman karena keduanya
 // menentukan materi soal yang boleh dipakai siswa.
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -18,6 +19,8 @@ import { MODUL, useAdminStore } from '@/stores/admin.js'
 import { adminService } from '@/services/admin.js'
 import { pesanError, pesanField } from '@/lib/errors.js'
 
+const route = useRoute()
+const router = useRouter()
 const admin = useAdminStore()
 const toast = useToast()
 
@@ -26,7 +29,11 @@ const tingkatList = ref([])
 const tingkatId = ref(null)
 const daftarMateri = ref([])
 
-const tab = ref('latihan')
+const tab = ref(route.query.tab === 'simulasi' ? 'simulasi' : 'latihan')
+watch(() => route.query.tab, (next) => { tab.value = next === 'simulasi' ? 'simulasi' : 'latihan' })
+watch(tab, (next) => {
+  if (route.query.tab !== next) router.replace({ query: { ...route.query, tab: next } })
+})
 const daftarLatihan = computed(() => admin.daftarModul(MODUL.LATIHAN))
 const metaLatihan = computed(() => admin.metaModul(MODUL.LATIHAN))
 const daftarSimulasi = computed(() => admin.daftarModul(MODUL.SIMULASI))
@@ -159,7 +166,7 @@ onMounted(() => muat({ force: true }))
 <template>
   <div>
     <AdminPageHeader
-      judul="Latihan & Simulasi"
+       :judul="tab === 'simulasi' ? 'Manajemen Simulasi' : 'Manajemen Latihan'"
       deskripsi="Satu latihan per materi; simulasi berlaku per tingkat."
       :memuat="admin.loading"
       :galat="galat"
