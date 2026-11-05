@@ -3,6 +3,7 @@
 // (admin berhak melihatnya), tambah/ubah/delete soal, dan kelola
 // pembahasan per soal.
 import { computed, onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -19,7 +20,11 @@ import { adminService } from '@/services/admin.js'
 import { labelLevel, labelPeruntukan } from '@/services/mappers/admin.js'
 import { pesanError, pesanField } from '@/lib/errors.js'
 
+const route = useRoute()
 const admin = useAdminStore()
+const modePembahasan = computed(() => route.query.tab === 'pembahasan')
+const pencarian = ref('')
+const statusPembahasan = ref('semua')
 const toast = useToast()
 
 const MOD = MODUL.SOAL
@@ -32,6 +37,14 @@ const daftarKonteks = ref([])
 
 const daftar = computed(() => admin.daftarModul(MOD))
 const meta = computed(() => admin.metaModul(MOD))
+const soalTersaring = computed(() => daftar.value.filter((soal) => {
+  const query = pencarian.value.trim().toLowerCase()
+  const matchesText = !query || String(soal.pertanyaan ?? '').toLowerCase().includes(query)
+  const matchesStatus = !modePembahasan.value || statusPembahasan.value === 'semua'
+    || (statusPembahasan.value === 'ada' && Boolean(soal.pembahasan))
+    || (statusPembahasan.value === 'belum' && !soal.pembahasan)
+  return matchesText && matchesStatus
+}))
 
 /* ---------- Form soal ---------- */
 const dialogSoal = ref(false)
@@ -210,11 +223,11 @@ onMounted(() => muat({ force: true }))
 <template>
   <div>
     <AdminPageHeader
-      judul="Soal & Pembahasan"
+      :judul="modePembahasan ? 'Manajemen Pembahasan' : 'Manajemen Soal'"
       deskripsi="Bank soal per tingkat. Admin melihat kunci jawaban; siswa tidak."
       :memuat="admin.loading"
       :galat="galat"
-      aksi-teks="Tambah soal"
+      :aksi-teks="modePembahasan ? '' : '+ Tambah Soal'"
       @aksi="bukaSoal(null)"
       @coba-lagi="muat({ force: true })"
     >
@@ -233,12 +246,23 @@ onMounted(() => muat({ force: true }))
 
     <Card>
       <template #content>
+        <div class="mb-4 flex flex-wrap gap-3">
+          <input v-model="pencarian" type="search" placeholder="Cari soal..."
+            class="min-w-[200px] flex-1 rounded-lg border border-[#dfe6f1] bg-[#f5f8fc] px-3 py-2 text-[12px]" />
+          <select v-if="modePembahasan" v-model="statusPembahasan"
+            class="rounded-lg border border-[#dfe6f1] bg-white px-3 py-2 text-[12px]">
+            <option value="semua">Status: Semua</option>
+            <option value="ada">Sudah ada pembahasan</option>
+            <option value="belum">Belum ada pembahasan</option>
+          </select>
+        </div>
         <p v-if="admin.loading && !daftar.length" class="text-sm text-[#6b778c]">Memuat soal…</p>
         <p v-else-if="!daftar.length" class="py-6 text-center text-sm font-bold">Belum ada soal.</p>
 
+        <p v-else-if="!soalTersaring.length" class="py-6 text-center text-[12px] text-[#71809a]">Tidak ada soal yang sesuai filter pada halaman ini.</p>
         <ul v-else class="space-y-2">
           <li
-            v-for="s in daftar"
+            v-for="s in soalTersaring"
             :key="s.id"
             class="rounded-xl border border-[#eef1f6] px-4 py-3"
           >
@@ -258,9 +282,9 @@ onMounted(() => muat({ force: true }))
                 </p>
               </div>
               <div class="flex shrink-0 gap-1.5">
-                <Button size="small" label="Pembahasan" severity="secondary" outlined @click="bukaPembahasan(s)" />
-                <Button size="small" label="Ubah" severity="secondary" outlined @click="bukaSoal(s)" />
-                <Button size="small" label="Hapus" severity="danger" outlined @click="ask(s)" />
+                <Button size="small" :label="modePembahasan ? (s.pembahasan ? 'Ubah' : 'Tambah') : 'Pembahasan'" severity="secondary" outlined @click="bukaPembahasan(s)" />
+                <Button v-if="!modePembahasan" size="small" label="Ubah" severity="secondary" outlined @click="bukaSoal(s)" />
+                <Button v-if="!modePembahasan" size="small" label="Hapus" severity="danger" outlined @click="ask(s)" />
               </div>
             </div>
           </li>
