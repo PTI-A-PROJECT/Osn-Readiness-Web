@@ -264,12 +264,12 @@ onMounted(() => muat({ force: true }))
           <li
             v-for="s in soalTersaring"
             :key="s.id"
-            class="rounded-xl border border-[#eef1f6] px-4 py-3"
+            class="rounded-xl border border-[#eef1f6] bg-white px-4 py-3"
           >
-            <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="flex flex-wrap items-center justify-between gap-3">
               <div class="min-w-0 flex-1">
-                <p class="text-sm font-medium" v-html="soalHtml(s.pertanyaan)"></p>
-                <p class="mt-1 flex flex-wrap items-center gap-2 text-[12px] text-[#6b778c]">
+                <div class="admin-soal-teks text-[13px] font-medium leading-relaxed text-[#17253f]" v-html="soalHtml(s.pertanyaan)"></div>
+                <div class="mt-2 flex flex-wrap items-center gap-2 text-[12px] text-[#6b778c]">
                   <span class="rounded bg-[#f3f5f9] px-1.5 py-0.5">#{{ meta.halaman }}·{{ s.id }}</span>
                   <span class="rounded bg-[#e8f0fe] px-1.5 py-0.5 text-[#1d4ed8]">{{ labelLevel(s.level) }}</span>
                   <span class="rounded bg-[#fdf1d3] px-1.5 py-0.5 text-[#92400e]">{{ labelPeruntukan(s.peruntukan) }}</span>
@@ -436,3 +436,10 @@ onMounted(() => muat({ force: true }))
     />
   </div>
 </template>
+
+<style scoped>
+.admin-soal-teks :deep(p) { margin: 0; }
+.admin-soal-teks :deep(* + p) { margin-top: .35rem; }
+.admin-soal-teks :deep(pre) { max-height: 150px; overflow: auto; }
+.admin-soal-teks :deep(img) { max-height: 100px; max-width: 100%; object-fit: contain; }
+</style>
