@@ -55,6 +55,23 @@ function eksporCSV() {
   URL.revokeObjectURL(url)
 }
 
+const modalDetail = ref(false)
+const detailSiswa = ref(null)
+const memuatDetail = ref(false)
+const galatDetail = ref('')
+async function bukaDetail(siswa) {
+  modalDetail.value = true
+  detailSiswa.value = siswa
+  galatDetail.value = ''
+  memuatDetail.value = true
+  try {
+    detailSiswa.value = await adminService.siswa({ id: siswa.id })
+  } catch (err) {
+    galatDetail.value = pesanError(err, 'Gagal memuat detail siswa.')
+  } finally {
+    memuatDetail.value = false
+  }
+}
 const modalUbah = ref(false)
 const form = reactive({ id: null, nama: '', email: '', tingkatAktifId: null, aktif: true })
 const konfirmasi = reactive({ terbuka: false, mode: null, target: null })
@@ -199,6 +216,7 @@ onMounted(async () => {
               </td>
               <td class="py-2.5">
                 <div class="flex justify-end gap-1.5">
+                  <Button size="small" severity="secondary" outlined label="Detail" @click="bukaDetail(s)" />
                   <Button size="small" severity="secondary" outlined label="Ubah" @click="bukaUbah(s)" />
                   <Button
                     v-if="s.aktif"
@@ -218,6 +236,31 @@ onMounted(async () => {
         <AdminPaginasi :meta="meta" :memuat="admin.loading" @ganti="(h) => admin.keHalaman(MOD, h)" />
       </template>
     </Card>
+
+    <!-- Detail siswa: hanya menampilkan data yang benar-benar tersedia di API -->
+    <Dialog v-model:visible="modalDetail" modal header="Detail Siswa" :style="{ width: '36rem', maxWidth: '95vw' }">
+      <p v-if="memuatDetail" class="py-4 text-[12px] text-[#71809a]">Memuat detail siswa…</p>
+      <p v-if="galatDetail" class="rounded-lg bg-[#fff2f0] p-3 text-[12px] text-[#a33333]">{{ galatDetail }}</p>
+      <div v-if="detailSiswa" class="space-y-3 text-[13px]">
+        <div class="flex items-center gap-3 border-b border-[#e5ebf3] pb-4">
+          <div class="grid h-12 w-12 place-items-center rounded-full bg-[#153969] font-bold text-white">
+            {{ (detailSiswa.nama || 'S').slice(0, 2).toUpperCase() }}
+          </div>
+          <div class="min-w-0">
+            <p class="font-bold text-[#16233a]">{{ detailSiswa.nama }}</p>
+            <p class="break-all text-[12px] text-[#71809a]">{{ detailSiswa.email }}</p>
+          </div>
+        </div>
+        <dl class="space-y-2">
+          <div class="flex justify-between gap-4 border-b border-[#e5ebf3] py-2"><dt class="text-[#71809a]">Tingkat aktif</dt><dd class="font-semibold">{{ tingkatList.find((t) => t.id === detailSiswa.tingkatAktifId)?.nama || 'Belum ditentukan' }}</dd></div>
+          <div class="flex justify-between gap-4 border-b border-[#e5ebf3] py-2"><dt class="text-[#71809a]">Status akun</dt><dd class="font-semibold">{{ detailSiswa.aktif ? 'Aktif' : 'Nonaktif' }}</dd></div>
+          <div class="flex justify-between gap-4 border-b border-[#e5ebf3] py-2"><dt class="text-[#71809a]">Terdaftar sejak</dt><dd class="font-semibold">{{ detailSiswa.dibuatPada ? new Date(detailSiswa.dibuatPada).toLocaleDateString('id-ID') : '—' }}</dd></div>
+        </dl>
+        <p class="text-[11px] leading-relaxed text-[#71809a]">
+          Riwayat pre-test, latihan, dan simulasi per siswa belum tersedia melalui endpoint detail Admin saat ini.
+        </p>
+      </div>
+    </Dialog>
 
     <!-- Modal ubah -->
     <Dialog v-model:visible="modalUbah" modal header="Ubah Data Siswa" :style="{ width: '30rem' }">
