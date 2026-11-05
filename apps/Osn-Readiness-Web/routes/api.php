@@ -89,6 +89,10 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('dashboard', [App\Http\Controllers\Api\DashboardController::class, 'show']);
     Route::get('riwayat', [RiwayatController::class, 'index']);
 
+    // Leaderboard (siswa): peringkat per tingkat dari nilai latihan.
+    Route::get('leaderboard', [App\Http\Controllers\Api\LeaderboardController::class, 'index']);
+    Route::get('leaderboard/me', [App\Http\Controllers\Api\LeaderboardController::class, 'me']);
+
     // [B1-D + B1-E] Admin. Satu grup, satu lapisan: middleware role
     // Super Admin, lalu policy per endpoint di controller masing-masing.
     Route::prefix('admin')->middleware('role:Super Admin')->group(function (): void {
