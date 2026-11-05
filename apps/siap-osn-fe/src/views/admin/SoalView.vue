@@ -279,9 +279,9 @@ onMounted(() => muat({ force: true }))
                     v-if="s.pembahasan"
                     class="rounded bg-[#f3fcf6] px-1.5 py-0.5 text-[#15803d]"
                   >punya pembahasan</span>
-                </p>
+                </div>
               </div>
-              <div class="flex shrink-0 gap-1.5">
+              <div class="flex shrink-0 flex-wrap gap-1.5">
                 <Button size="small" :label="modePembahasan ? (s.pembahasan ? 'Ubah' : 'Tambah') : 'Pembahasan'" severity="secondary" outlined @click="bukaPembahasan(s)" />
                 <Button v-if="!modePembahasan" size="small" label="Ubah" severity="secondary" outlined @click="bukaSoal(s)" />
                 <Button v-if="!modePembahasan" size="small" label="Hapus" severity="danger" outlined @click="ask(s)" />
