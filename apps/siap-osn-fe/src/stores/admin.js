@@ -49,12 +49,26 @@ export const useAdminStore = defineStore('admin', () => {
   const error = ref(false)
   const menyimpan = ref(false)
 
-  let controller = null
+  // Setiap modul memiliki permintaan sendiri. Membuka kompetensi, materi,
+  // dan konteks bersamaan tidak boleh membuat satu permintaan membatalkan lainnya.
+  const controllers = new Map()
+  let permintaanAktif = 0
 
-  function sinyalBaru() {
-    controller?.abort()
-    controller = new AbortController()
+  function sinyalBaru(key = 'default') {
+    controllers.get(key)?.abort()
+    const controller = new AbortController()
+    controllers.set(key, controller)
     return controller.signal
+  }
+
+  function mulaiMuat() {
+    permintaanAktif += 1
+    loading.value = true
+  }
+
+  function selesaiMuat() {
+    permintaanAktif = Math.max(0, permintaanAktif - 1)
+    loading.value = permintaanAktif > 0
   }
 
   // Waktu muat terakhir per modul, untuk cache 30 detik di muatDaftar.
@@ -65,8 +79,8 @@ export const useAdminStore = defineStore('admin', () => {
 
   /* ---------- Dashboard ---------- */
   async function muatRingkasan() {
-    const signal = sinyalBaru()
-    loading.value = true
+    const signal = sinyalBaru('dashboard')
+    mulaiMuat()
     error.value = false
     try {
       ringkasan.value = await adminService.dashboard({ signal })
@@ -74,7 +88,7 @@ export const useAdminStore = defineStore('admin', () => {
       if (!signal.aborted) error.value = true
       throw err
     } finally {
-      if (!signal.aborted) loading.value = false
+      selesaiMuat()
     }
   }
 
@@ -82,9 +96,9 @@ export const useAdminStore = defineStore('admin', () => {
   // dan tombol "cek lagi" tahu sedang查看 tingkat yang mana.
   async function muatKecukupan({ tingkatId, force = false } = {}) {
     if (!force && kecukupan.value && kecukupan.value.tingkatId === tingkatId) return
-    const signal = sinyalBaru()
+    const signal = sinyalBaru('kecukupan')
     tingkatKecukupanId.value = tingkatId
-    loading.value = true
+    mulaiMuat()
     error.value = false
     try {
       kecukupan.value = await adminService.kecukupanBankSoal({ tingkatId, signal })
@@ -92,7 +106,7 @@ export const useAdminStore = defineStore('admin', () => {
       if (!signal.aborted) error.value = true
       throw err
     } finally {
-      if (!signal.aborted) loading.value = false
+      selesaiMuat()
     }
   }
 
@@ -127,8 +141,8 @@ export const useAdminStore = defineStore('admin', () => {
       && Date.now() - (dimuatPada[modul] ?? 0) < 30_000 && daftarModul(modul).length) {
       return
     }
-    const signal = sinyalBaru()
-    loading.value = true
+    const signal = sinyalBaru(`daftar:${modul}`)
+    mulaiMuat()
     error.value = false
     try {
       const hasil = await ambil(modul, { halaman, perHalaman, signal, filter })
@@ -147,7 +161,7 @@ export const useAdminStore = defineStore('admin', () => {
       if (!signal.aborted) error.value = true
       throw err
     } finally {
-      if (!signal.aborted) loading.value = false
+      selesaiMuat()
     }
   }
 
@@ -196,8 +210,8 @@ export const useAdminStore = defineStore('admin', () => {
 
   /* ---------- Soal & pembahasan ---------- */
   async function muatSoal({ id, signal: s } = {}) {
-    const signal = s ?? sinyalBaru()
-    loading.value = true
+    const signal = s ?? sinyalBaru('detail')
+    mulaiMuat()
     try {
       detail.value = await adminService.soal({ id, signal })
       return detail.value
@@ -205,7 +219,7 @@ export const useAdminStore = defineStore('admin', () => {
       detail.value = null
       throw err
     } finally {
-      if (!signal.aborted) loading.value = false
+      selesaiMuat()
     }
   }
 
@@ -222,8 +236,8 @@ export const useAdminStore = defineStore('admin', () => {
   /* ---------- Aturan pemetaan ---------- */
   async function muatAturan({ tingkatId, force = false } = {}) {
     if (!force && aturan.value?.tingkatId === tingkatId) return aturan.value
-    const signal = sinyalBaru()
-    loading.value = true
+    const signal = sinyalBaru('aturan')
+    mulaiMuat()
     error.value = false
     try {
       aturan.value = await adminService.aturanPemetaan({ tingkatId, signal })
@@ -232,7 +246,7 @@ export const useAdminStore = defineStore('admin', () => {
       if (!signal.aborted) error.value = true
       throw err
     } finally {
-      if (!signal.aborted) loading.value = false
+      selesaiMuat()
     }
   }
 
@@ -284,8 +298,9 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   function $reset() {
-    controller?.abort()
-    controller = null
+    for (const controller of controllers.values()) controller.abort()
+    controllers.clear()
+    permintaanAktif = 0
     ringkasan.value = null
     kecukupan.value = null
     tingkatKecukupanId.value = null
