@@ -139,7 +139,51 @@ onMounted(() => {
   min-width: 0;
   padding: 28px 26px 44px;
   background: #f4f7fc;
+  color: #17253f;
+  font-family: Inter, sans-serif;
 }
+.admin-main :deep(h1),
+.admin-main :deep(h2),
+.admin-main :deep(h3),
+.admin-main :deep(strong) { color: #14233f; }
+.admin-main :deep(input:not([type='checkbox']):not([type='radio']):not([type='file'])),
+.admin-main :deep(select),
+.admin-main :deep(textarea),
+.admin-main :deep(.p-inputtext),
+.admin-main :deep(.p-inputnumber-input),
+.admin-main :deep(.p-select) {
+  color: #182945;
+  background: #fff;
+  border: 1px solid #d9e3f1;
+  border-radius: 9px;
+  min-height: 38px;
+  opacity: 1;
+}
+.admin-main :deep(input::placeholder),
+.admin-main :deep(textarea::placeholder) { color: #75859b; opacity: 1; }
+.admin-main :deep(input:focus),
+.admin-main :deep(select:focus),
+.admin-main :deep(textarea:focus) {
+  outline: 2px solid #a4bde8;
+  outline-offset: 1px;
+}
+.admin-main :deep(.p-button.p-button-outlined) {
+  color: #234269;
+  border-color: #cdd8e8;
+  background: #fff;
+}
+.admin-main :deep(.p-button.p-button-outlined:disabled) { opacity: .6; }
+.admin-main :deep(.p-button) { min-height: 34px; font-weight: 600; }
+.admin-main :deep(.p-card h2),
+.admin-main :deep(.p-card h3) { color: #14233f; }
+.admin-main :deep(.p-card) { color: #17253f; }
+.admin-main :deep(.p-card table) { font-size: 13px; }
+.admin-main :deep(.p-card td) { color: #273b59; }
+.admin-main :deep(.p-card th) { font-weight: 700; }
+.admin-main :deep(.p-card td),
+.admin-main :deep(.p-card th) { padding-top: 12px; padding-bottom: 12px; }
+.admin-main :deep(.p-card .p-card-body) { overflow-x: auto; }
+
 .admin-main :deep(.p-card) {
   border: 1px solid #e0e7f2;
   border-radius: 18px;
