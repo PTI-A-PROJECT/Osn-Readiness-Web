@@ -246,6 +246,9 @@ watch(tab, (t) => {
 onMounted(async () => {
   tingkatList.value = await adminService.daftarTingkatAdmin().catch(() => [])
   await muat({ force: true })
+  if (tab.value === 'materi' && !kompetensiTerpilih.value && daftarKompetensi.value.length) {
+    pilihKompetensi(daftarKompetensi.value[0])
+  }
 })
 </script>
 
