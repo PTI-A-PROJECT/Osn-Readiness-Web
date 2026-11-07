@@ -1506,4 +1506,123 @@ onMounted(muatKatalog)
     line-height: 1.3;
   }
 }
+
+/* Finalisasi proporsi dua kolom pada detail materi: kedua panel mengikuti
+   tinggi ruang yang tersedia, sementara daftar isi dan pembaca scroll sendiri. */
+.materi-page.is-detail-open .detail-view .lesson-layout {
+  min-height: 0;
+  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 276px);
+  gap: 24px;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.materi-page.is-detail-open .detail-view .lesson-sidebar {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  align-self: stretch;
+  overflow: hidden;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  padding: 16px 13px 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-title {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+  padding-bottom: 9px;
+  font-size: 12px;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  gap: 2px;
+  padding: 0 3px 3px 0;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-item {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 5px 6px;
+  gap: 7px;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-index {
+  width: 19px;
+  height: 19px;
+  font-size: 9px;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-label {
+  min-width: 0;
+  font-size: 10.5px;
+  line-height: 1.3;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-practice {
+  flex: 0 0 auto;
+  margin-top: 5px;
+  padding-top: 7px;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-playlist,
+.materi-page.is-detail-open .detail-view .lesson-video-playlist > div {
+  width: 100%;
+  min-width: 0;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-playlist iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-view .lesson-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-sidebar {
+    height: auto;
+    max-height: 190px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc {
+    height: auto;
+    max-height: 190px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-item {
+    width: max-content;
+    max-width: 230px;
+    min-width: 140px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-reader {
+    height: auto;
+    max-height: 100%;
+  }
+}
 </style>
