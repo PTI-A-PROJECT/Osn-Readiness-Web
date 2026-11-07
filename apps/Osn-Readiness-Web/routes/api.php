@@ -100,7 +100,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         // Didaftarkan sebelum apiResource supaya "gambar" tidak dibaca
         // sebagai {materi}.
         Route::post('materi/gambar', [MateriController::class, 'uploadGambar']);
-        Route::apiResource('materi', MateriController::class);
+        Route::apiResource('materi', MateriController::class);\n        Route::get('materi/{materi}/videos', [MateriVideoController::class, 'index']);\n        Route::post('materi/{materi}/videos', [MateriVideoController::class, 'store']);\n        Route::put('materi/{materi}/videos/{video}', [MateriVideoController::class, 'update']);\n        Route::delete('materi/{materi}/videos/{video}', [MateriVideoController::class, 'destroy']);
         Route::apiResource('konteks-soal', KonteksSoalController::class);
         Route::apiResource('siswa', SiswaController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);
