@@ -93,6 +93,42 @@ function buatMarkdownIt() {
   })
 }
 
+// Renderer khusus materi: code fence Markdown menjadi blok kode dengan
+// header, label bahasa, dan konten yang tetap di-escape sebagai teks.
+function labelBahasa(kode) {
+  const bahasa = String(kode || '').toLowerCase()
+  const nama = { cpp: 'C++17', 'c++': 'C++17', cxx: 'C++17', cc: 'C++17', c: 'C', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', py: 'Python', python: 'Python', java: 'Java', php: 'PHP', sql: 'SQL', html: 'HTML', css: 'CSS', json: 'JSON', bash: 'Bash', sh: 'Shell' }
+  return nama[bahasa] ?? (bahasa ? bahasa.toUpperCase().slice(0, 16) : 'Kode')
+}
+
+let mdMateri = null
+function markdownItMateri() {
+  if (mdMateri) return mdMateri
+  mdMateri = buatMarkdownIt()
+  const bungkusKode = (kode, info = '') => {
+    const baris = String(info).trim()
+    const bahasa = baris.match(/^([^\\s{]+)/)?.[1] ?? ''
+    const judul = baris.match(/(?:^|\\s)title=(?:"([^"]+)"|'([^']+)'|([^\\s]+))/)?.slice(1).find(Boolean)
+      || 'Contoh Kode'
+    const aman = (nilai) => mdMateri.utils.escapeHtml(String(nilai))
+    return '<div class="materi-code-block"><div class="materi-code-header"><span class="materi-code-title">'
+      + aman(judul) + '</span><span class="materi-code-badge">' + aman(labelBahasa(bahasa))
+      + '</span></div><pre class="materi-code-body"><code>' + aman(kode)
+      + '</code></pre></div>\\n'
+  }
+  mdMateri.renderer.rules.fence = (tokens, i) => bungkusKode(tokens[i].content, tokens[i].info)
+  mdMateri.renderer.rules.code_block = (tokens, i) => bungkusKode(tokens[i].content)
+  return mdMateri
+}
+
+export function renderKontenMateri(teks) {
+  if (teks === null || teks === undefined) return ''
+  const asal = String(teks)
+  if (!asal.trim()) return ''
+  const { teks: tanpaMath, simpan } = cabutMatematika(asal)
+  return tanamMatematika(sanitasi(markdownItMateri().render(tanpaMath)), simpan)
+}
+
 let md = null
 function markdownIt() {
   if (!md) md = buatMarkdownIt()
