@@ -59,6 +59,10 @@ export function mapMateriDetail(r) {
     isi: r.isi_materi ?? '',
     fileUrl: urlStorage(r.file_materi),
     gambarUrl: urlStorage(r.gambar),
+    videos: Array.isArray(r.videos) ? r.videos.map((v) => ({
+      id: v.id, judul: v.judul ?? '', youtubeId: v.youtube_id ?? '',
+      tipe: v.tipe === 'playlist' ? 'playlist' : 'video', urutan: Number(v.urutan ?? 0),
+    })) : [],
     submateri: Array.isArray(r.submateri) ? r.submateri.map(mapSubmateri) : [],
   }
 }
