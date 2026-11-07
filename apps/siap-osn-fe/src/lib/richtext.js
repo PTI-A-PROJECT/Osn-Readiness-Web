@@ -107,14 +107,14 @@ function markdownItMateri() {
   mdMateri = buatMarkdownIt()
   const bungkusKode = (kode, info = '') => {
     const baris = String(info).trim()
-    const bahasa = baris.match(/^([^\\s{]+)/)?.[1] ?? ''
-    const judul = baris.match(/(?:^|\\s)title=(?:"([^"]+)"|'([^']+)'|([^\\s]+))/)?.slice(1).find(Boolean)
+    const bahasa = baris.match(/^([^\s{]+)/)?.[1] ?? ''
+    const judul = baris.match(/(?:^|\s)title=(?:"([^"]+)"|'([^']+)'|([^\s]+))/)?.slice(1).find(Boolean)
       || 'Contoh Kode'
     const aman = (nilai) => mdMateri.utils.escapeHtml(String(nilai))
     return '<div class="materi-code-block"><div class="materi-code-header"><span class="materi-code-title">'
       + aman(judul) + '</span><span class="materi-code-badge">' + aman(labelBahasa(bahasa))
       + '</span></div><pre class="materi-code-body"><code>' + aman(kode)
-      + '</code></pre></div>\\n'
+      + '</code></pre></div>\n'
   }
   mdMateri.renderer.rules.fence = (tokens, i) => bungkusKode(tokens[i].content, tokens[i].info)
   mdMateri.renderer.rules.code_block = (tokens, i) => bungkusKode(tokens[i].content)
