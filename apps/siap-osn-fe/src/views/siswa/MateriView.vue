@@ -9,7 +9,7 @@ import { useProgressStore } from '@/stores/progress.js'
 import { belajarService } from '@/services/belajar.js'
 import { riwayatService } from '@/services/riwayat.js'
 import { pesanError } from '@/lib/errors.js'
-import { renderKonten } from '@/lib/richtext.js'
+import { renderKonten, renderKontenMateri } from '@/lib/richtext.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -385,7 +385,7 @@ onMounted(muatKatalog)
                   <div
                     v-if="bagian.konten"
                     class="konten-richtext lesson-content-body"
-                    v-html="renderKonten(bagian.konten)"
+                    v-html="renderKontenMateri(bagian.konten)"
                   ></div>
                   <p v-else class="submateri-empty">Belum ada isi pada bagian ini.</p>
 
@@ -1822,5 +1822,61 @@ onMounted(muatKatalog)
   .materi-page.is-detail-open .detail-view .lesson-final-practice {
     padding: 18px 16px;
   }
+}
+
+/* Blok kode materi mengikuti tampilan referensi: header abu gelap + editor gelap. */
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-block) {
+  max-width: 100%;
+  margin: 14px 0 18px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #263449;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-title) {
+  min-width: 0;
+  font: 600 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #cbd5e1;
+  overflow-wrap: anywhere;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-badge) {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font: 700 11px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-body) {
+  display: block;
+  margin: 0;
+  padding: 18px 19px;
+  overflow-x: auto;
+  background: #0f172a;
+  color: #e2e8f0;
+  font: 13px/1.8 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+  tab-size: 4;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-body code) {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  white-space: inherit;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .lesson-content-body :deep(.materi-code-header) { padding: 9px 12px; }
+  .materi-page.is-detail-open .lesson-content-body :deep(.materi-code-body) { padding: 12px; font-size: 12px; }
 }
 </style>
