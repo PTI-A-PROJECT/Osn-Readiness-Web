@@ -44,6 +44,11 @@ const videoEmbedUrl = (video) => video?.tipe === 'playlist'
 
 const detail = computed(() => materi.detail)
 const submateri = computed(() => detail.value?.submateri ?? [])
+
+// Nomor urutan ditampilkan terpisah; hilangkan hanya awalan angka dari judul bawaan.
+function judulTanpaNomor(judul) {
+  return String(judul ?? '').replace(/^\s*\d+[.)]\s*/, '').trim()
+}
 const jumlahSubmateriSelesai = computed(() => submateri.value.filter((bagian) => bagian.selesai).length)
 const semuaSubmateriSelesai = computed(() => submateri.value.length > 0 && submateri.value.every((bagian) => bagian.selesai))
 const persentaseDetail = computed(() => submateri.value.length
@@ -368,7 +373,7 @@ onMounted(muatKatalog)
                     <div class="lesson-section-title">
                       <span class="lesson-section-number">{{ index + 1 }}.</span>
                       <div class="lesson-section-heading-copy">
-                        <h3>{{ bagian.judul }}</h3>
+                        <h3>{{ judulTanpaNomor(bagian.judul) }}</h3>
                       </div>
                     </div>
                     <span class="lesson-status" :class="{ 'is-complete': bagian.selesai }">
@@ -439,7 +444,7 @@ onMounted(muatKatalog)
                       @click="lompatKeSubmateri(bagian.id)"
                     >
                       <span class="lesson-toc-index" :class="{ 'is-complete': bagian.selesai }">{{ bagian.selesai ? '✓' : index + 1 }}</span>
-                      <span class="lesson-toc-label">{{ bagian.judul }}</span>
+                      <span class="lesson-toc-label">{{ judulTanpaNomor(bagian.judul) }}</span>
                     </button>
                     <button type="button" class="lesson-toc-item lesson-toc-practice"
                       :class="{ 'is-active': submateriAktifId === 'latihan' }"
