@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\\Seeders;
+namespace Database\Seeders;
 
-use App\\Models\\Materi;
-use App\\Models\\MateriVideo;
-use App\\Models\\TingkatSeleksi;
-use Illuminate\\Database\\Seeder;
+use App\Models\Materi;
+use App\Models\MateriVideo;
+use App\Models\TingkatSeleksi;
+use Illuminate\Database\Seeder;
 
 class MateriVideoSeeder extends Seeder
 {
