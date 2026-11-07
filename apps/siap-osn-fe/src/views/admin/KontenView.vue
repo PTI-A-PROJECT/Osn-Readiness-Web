@@ -63,6 +63,9 @@ const formMateri = reactive({
   judul: '', deskripsi: '', isiMateri: '', fileMateri: null, gambar: null,
 })
 const galatMateri = ref('')
+const videoMateri = ref([])
+const formVideo = reactive({ judul: '', youtube_url: '', tipe: 'video' })
+const galatVideo = ref('')
 const mengunggah = ref(false)
 const inputGambar = ref(null)
 
@@ -151,7 +154,12 @@ function bukaMateri(m) {
         kompetensiId: kompetensiTerpilih.value?.id ?? null,
         urutan: 1, judul: '', deskripsi: '', isiMateri: '', fileMateri: null, gambar: null,
       })
+  videoMateri.value = []
+  formVideo.judul = ''
+  formVideo.youtube_url = ''
+  formVideo.tipe = 'video'
   dialogMateri.value = true
+  if (m?.id) adminService.daftarVideoMateri({ materiId: m.id }).then((items) => { videoMateri.value = Array.isArray(items) ? items : [] }).catch((err) => { galatVideo.value = pesanError(err, 'Gagal memuat playlist.') })
 }
 
 async function simpanMateri() {
@@ -171,8 +179,7 @@ async function simpanMateri() {
         : adminService.tambahMateri({ payload })),
       muatUlang: () => muat({ force: true }),
     })
-    dialogMateri.value = false
-    toast.add({ severity: 'success', summary: 'Materi disimpan', life: 4000 })
+    if (!formMateri.id) {\n      const tersimpan = daftarMateri.value.find((m) => m.judul === formMateri.judul)\n      if (tersimpan) formMateri.id = tersimpan.id\n    }\n    dialogMateri.value = false\n    toast.add({ severity: 'success', summary: 'Materi disimpan', life: 4000 })
   } catch (err) {
     galatMateri.value = pesanField(err, 'judul') ?? pesanError(err)
   }
@@ -195,6 +202,35 @@ async function pilihGambar(event) {
   } finally {
     mengunggah.value = false
     if (inputGambar.value) inputGambar.value.value = ''
+  }
+}
+
+async function tambahVideoMateri() {
+  galatVideo.value = ''
+  if (!formMateri.id) {
+    galatVideo.value = 'Simpan materi terlebih dahulu sebelum menambahkan video.'
+    return
+  }
+  try {
+    const hasil = await adminService.tambahVideoMateri({
+      materiId: formMateri.id,
+      payload: { judul: formVideo.judul, youtube_url: formVideo.youtube_url, tipe: formVideo.tipe, urutan: videoMateri.value.length + 1 },
+    })
+    videoMateri.value.push(hasil)
+    formVideo.judul = ''
+    formVideo.youtube_url = ''
+    formVideo.tipe = 'video'
+  } catch (err) {
+    galatVideo.value = pesanError(err, 'Gagal menambahkan video.')
+  }
+}
+
+async function hapusVideoMateri(video) {
+  try {
+    await adminService.hapusVideoMateri({ materiId: formMateri.id, videoId: video.id })
+    videoMateri.value = videoMateri.value.filter((item) => item.id !== video.id)
+  } catch (err) {
+    galatVideo.value = pesanError(err, 'Gagal menghapus video.')
   }
 }
 
@@ -486,6 +522,23 @@ onMounted(async () => {
             class="mt-2 h-20 rounded-lg object-cover"
           />
         </div>
+        <section class="rounded-xl border border-[#dfe6f1] p-3">
+          <div class="mb-3 flex items-center justify-between"><h3 class="text-[13px] font-bold">Playlist Video Pembelajaran</h3><span class="text-xs text-[#6b778c]">{{ videoMateri.length }} video</span></div>
+          <p v-if="!formMateri.id" class="mb-3 text-xs text-[#6b778c]">Simpan materi terlebih dahulu, lalu buka kembali untuk mengelola videonya.</p>
+          <ul v-if="videoMateri.length" class="mb-3 space-y-2">
+            <li v-for="(v, i) in videoMateri" :key="v.id" class="flex items-center justify-between gap-2 rounded-lg bg-[#f5f8fc] px-3 py-2">
+              <div class="min-w-0"><p class="truncate text-xs font-semibold">{{ i + 1 }}. {{ v.judul }}</p><p class="truncate text-[11px] text-[#6b778c]">{{ v.tipe }} · {{ v.youtube_url }}</p></div>
+              <Button size="small" icon="pi pi-trash" severity="danger" text @click="hapusVideoMateri(v)" />
+            </li>
+          </ul>
+          <div class="grid gap-2">
+            <InputText v-model="formVideo.judul" placeholder="Judul video" class="w-full" />
+            <InputText v-model="formVideo.youtube_url" placeholder="Link YouTube" class="w-full" />
+            <Select v-model="formVideo.tipe" :options="[{label:'Video',value:'video'},{label:'Playlist',value:'playlist'}]" option-label="label" option-value="value" class="w-full" />
+            <Button size="small" label="Tambah ke playlist" icon="pi pi-plus" :disabled="!formMateri.id || !formVideo.judul.trim() || !formVideo.youtube_url.trim()" @click="tambahVideoMateri" />
+          </div>
+          <p v-if="galatVideo" class="mt-2 text-xs text-red-600">{{ galatVideo }}</p>
+        </section>
         <p v-if="galatMateri" class="rounded-xl bg-[#fdf0f0] px-3 py-2 text-[13px] text-[#a33333]">{{ galatMateri }}</p>
       </div>
       <template #footer>
