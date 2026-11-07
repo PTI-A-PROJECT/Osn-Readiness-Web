@@ -346,7 +346,7 @@ onMounted(muatKatalog)
             <div v-if="submateri.length" class="lesson-layout">
               <div ref="pembacaRef" class="lesson-reader" tabindex="0" aria-label="Konten pembelajaran" @scroll.passive="perbaruiSubmateriAktif">
                 <section v-if="detail.videos?.length" class="lesson-section lesson-video-playlist" aria-label="Video pembelajaran">
-                  <header class="lesson-section-header"><div class="lesson-section-title"><div class="lesson-section-heading-copy"><h3>Video Pembelajaran</h3><p class="mt-1 text-sm text-slate-500">{{ detail.videos.length }} video dalam playlist materi ini</p></div></div></header>
+                  <header class="lesson-section-header"><div class="lesson-section-title"><div class="lesson-section-heading-copy"><h3>Video Pembelajaran</h3><p class="mt-1 text-sm text-slate-500">{{ detail.videos.length }} video dalam playlist materi ini</p><p class="lesson-scroll-hint">↓ Gulir area ini untuk melihat daftar video dan melanjutkan materi</p></div></div></header>
                   <div class="lesson-video-frame mt-4 overflow-hidden rounded-xl bg-slate-950">
                     <iframe v-if="videoAktif" :src="videoEmbedUrl(videoAktif)" :title="videoAktif.judul" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                   </div>
@@ -1727,6 +1727,64 @@ onMounted(muatKatalog)
   .materi-page.is-detail-open .detail-overview {
     margin-bottom: 16px;
     gap: 12px;
+  }
+}
+
+/* Penyempurnaan kenyamanan detail materi tanpa mengganti layout dua kolom. */
+.materi-page.is-detail-open .detail-panel {
+  padding-top: 16px;
+  padding-bottom: 14px;
+}
+.materi-page.is-detail-open .detail-overview {
+  margin-bottom: 14px;
+}
+.materi-page.is-detail-open .detail-badges {
+  margin-bottom: 7px;
+}
+.materi-page.is-detail-open .detail-overview-copy > p {
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
+  width: 100%;
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+  aspect-ratio: 16 / 9;
+}
+.materi-page.is-detail-open .lesson-scroll-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #64748b;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader {
+  scrollbar-width: auto;
+  scrollbar-color: #8fa4bd #e9eff6;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader::-webkit-scrollbar {
+  width: 9px;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader::-webkit-scrollbar-thumb {
+  background: #8fa4bd;
+  border: 2px solid #e9eff6;
+  border-radius: 999px;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader::-webkit-scrollbar-track {
+  background: #e9eff6;
+  border-radius: 999px;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-panel {
+    padding-top: 14px;
+    padding-bottom: 12px;
+  }
+  .materi-page.is-detail-open .detail-overview {
+    margin-bottom: 12px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
+    max-width: 100%;
   }
 }
 </style>
