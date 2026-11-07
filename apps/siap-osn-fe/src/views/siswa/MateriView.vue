@@ -422,6 +422,7 @@ onMounted(muatKatalog)
                   <div class="final-practice-stats">
                     <div class="final-stat"><strong>{{ detail.jumlahSoalLatihan ?? '—' }}</strong><span>Soal</span></div>
                     <div class="final-stat"><strong>Tanpa batas</strong><span>Waktu pengerjaan</span></div>
+                    <div class="final-stat"><strong>≥ 70</strong><span>Target nilai</span></div>
                     <div v-if="detail.nilaiTerbaik != null" class="final-stat"><strong>{{ Math.round(detail.nilaiTerbaik) }}</strong><span>Nilai terbaik</span></div>
                   </div>
                   <button type="button" class="btn final-practice-button" :disabled="!detail.quizId || !detail.latihanTersedia" @click="mulaiLatihan(detail)">
@@ -1412,7 +1413,7 @@ onMounted(muatKatalog)
 .detail-view .lesson-toc-practice.is-active { border-radius: 9px; }
 .detail-view .lesson-toc-practice .lesson-toc-label { font-weight: 750; }
 .detail-view .lesson-toc-star { display: inline-grid; place-items: center; flex: none; width: 23px; height: 23px; border-radius: 50%; background: #fbbf24; color: #102f55; font-size: 12px; }
-.detail-view .lesson-final-practice { min-height: 380px; margin-top: 27px; padding: 30px 28px; border-radius: 15px; background: linear-gradient(120deg, #10214b 0%, #15396f 55%, #2455aa 100%); color: #fff; }
+.detail-view .lesson-final-practice { min-height: 0; margin-top: 18px; padding: 24px 25px 22px; border-radius: 15px; background: linear-gradient(120deg, #10214b 0%, #15396f 55%, #2455aa 100%); color: #fff; }
 .detail-view .lesson-final-practice h2 { margin: 0 0 14px; color: #fff; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 23px; font-weight: 750; }
 .detail-view .final-practice-description { max-width: 650px; margin: 0 0 18px; color: #dae5f5; font-size: 13px; line-height: 1.65; }
 .detail-view .final-practice-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
@@ -1428,7 +1429,7 @@ onMounted(muatKatalog)
   .detail-view .lesson-toc-item { width: max-content; min-width: 150px; flex: 0 0 auto; }
   .detail-view .lesson-toc-practice { margin-top: 0; padding-top: 8px; border-top: 0; }
   .detail-view .lesson-reader { height: min(70vh, 650px); min-height: 360px; }
-  .detail-view .lesson-final-practice { min-height: 320px; padding: 24px 19px; }
+  .detail-view .lesson-final-practice { min-height: 0; padding: 20px 18px; }
 }
 
 
@@ -1791,6 +1792,35 @@ onMounted(muatKatalog)
   }
   .materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
     max-width: 480px;
+  }
+}
+
+/* Kartu latihan mengikuti jumlah konten; tidak lagi memaksakan area kosong. */
+.materi-page.is-detail-open .detail-view .lesson-final-practice {
+  min-height: 0;
+  height: auto;
+  padding: 23px 24px 20px;
+}
+.materi-page.is-detail-open .detail-view .lesson-final-practice h2 {
+  margin-bottom: 8px;
+}
+.materi-page.is-detail-open .detail-view .final-practice-description {
+  margin-bottom: 14px;
+}
+.materi-page.is-detail-open .detail-view .final-practice-stats {
+  gap: 9px;
+  margin-bottom: 15px;
+}
+.materi-page.is-detail-open .detail-view .final-stat {
+  min-width: 102px;
+  padding: 10px 13px;
+}
+.materi-page.is-detail-open .detail-view .final-practice-note {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-view .lesson-final-practice {
+    padding: 18px 16px;
   }
 }
 </style>
