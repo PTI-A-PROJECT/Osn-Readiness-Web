@@ -84,6 +84,35 @@ class MateriVideoSeeder extends Seeder
         $updated = 0;
         $skipped = [];
 
+        // Remove only the five Kabupaten/Kota videos that were mistakenly
+        // attached to the Province Logika & Bitwise and Graf & Tree materials.
+        // The same YouTube IDs in any other material are left untouched.
+        $removedMisplaced = 0;
+        $province = TingkatSeleksi::query()
+            ->where('nama_tingkat', 'Provinsi')
+            ->first();
+
+        if ($province) {
+            $misplacedByOrder = [
+                2 => ['IW5U-SBUnwo', '0oc3gL0V-N4'],
+                9 => ['7OgJ6lJ8cMk', 'lcHdtwUl5_A', 'A1EVg6s0NDg'],
+            ];
+
+            foreach ($misplacedByOrder as $order => $youtubeIds) {
+                $wrongMaterial = Materi::query()
+                    ->where('tingkat_id', $province->id)
+                    ->where('urutan', $order)
+                    ->first();
+
+                if ($wrongMaterial) {
+                    $removedMisplaced += MateriVideo::query()
+                        ->where('materi_id', $wrongMaterial->id)
+                        ->whereIn('youtube_id', $youtubeIds)
+                        ->delete();
+                }
+            }
+        }
+
         foreach ($data as $levelName => $materials) {
             $level = TingkatSeleksi::query()
                 ->where('nama_tingkat', $levelName)
@@ -131,6 +160,7 @@ class MateriVideoSeeder extends Seeder
         }
 
         $this->command?->info("Playlist video selesai: {$inserted} ditambahkan, {$updated} diperbarui.");
+        $this->command?->info("Video salah penempatan yang dihapus: {$removedMisplaced}.");
         foreach ($skipped as $message) {
             $this->command?->warn($message);
         }
