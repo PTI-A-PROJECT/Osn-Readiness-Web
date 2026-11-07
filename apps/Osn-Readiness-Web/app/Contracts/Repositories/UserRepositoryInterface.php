@@ -16,11 +16,11 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
     public function findByGoogleSub(string $sub): ?User;
 
     /**
-     * Apakah `sub` ini melekat pada akun yang sudah dihapus. Index unik
-     * google_sub tetap memegangnya, jadi akun baru dengan `sub` yang sama
-     * tidak bisa dibuat.
+     * Lepaskan `sub` ini dari akun yang sudah dihapus dan kembalikan jumlah
+     * baris yang diubah. Index unik google_sub tetap memegang akun terhapus,
+     * jadi pemilik Google yang sama baru bisa mendaftar lagi setelah ini.
      */
-    public function googleSubDipakaiAkunTerhapus(string $sub): bool;
+    public function lepasGoogleDariAkunTerhapus(string $sub): int;
 
     /**
      * Pemilik satu kode referal. Akun yang sudah dihapus dianggap tidak

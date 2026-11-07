@@ -74,14 +74,6 @@ class GoogleOAuthService implements GoogleOAuthServiceInterface
             return $this->alihkanKeSukses($tertaut);
         }
 
-        // 1b. Google ini pernah melekat pada akun yang sudah dihapus. Index
-        //     unik google_sub masih memegangnya, jadi membuat akun baru
-        //     gagal di database dan berakhir HTTP 500. Akun terhapus tidak
-        //     masuk otomatis lewat Google.
-        if ($this->userRepository->googleSubDipakaiAkunTerhapus($sub)) {
-            return $this->alihkanKeGagal('google_dihapus');
-        }
-
         // 2. Email sudah dipakai akun lokal: jangan gabung diam-diam.
         //    Pemilik akun login biasa lalu menautkan Google dari profil.
         $konflikEmail = $this->userRepository->findByEmail($email);
@@ -127,6 +119,13 @@ class GoogleOAuthService implements GoogleOAuthServiceInterface
         $verified = (bool) ($identitas->user['email_verified'] ?? false);
 
         return DB::transaction(function () use ($sub, $email, $identitas, $verified): User {
+            // Google ini bisa masih melekat pada akun lama yang sudah dihapus
+            // (soft delete). Index unik google_sub tetap memegangnya, jadi
+            // tanpa dilepas lebih dulu, pendaftaran ulang berakhir HTTP 500.
+            // Akun lama tetap terhapus dan tidak ikut masuk; hanya tautan
+            // Google-nya dilepas supaya pemiliknya bisa mendaftar lagi.
+            $this->userRepository->lepasGoogleDariAkunTerhapus($sub);
+
             $user = $this->userRepository->create([
                 // Nama akar untuk nama email dipakai bila Google tidak
                 // mengirim nama profil sama sekali.
