@@ -1648,4 +1648,85 @@ onMounted(muatKatalog)
   max-width: 100%;
   border: 0;
 }
+
+/* Detail materi lebih padat: kurangi whitespace teks tanpa mengubah layout
+   dua kolom, navigasi daftar isi, maupun rasio pemutar YouTube. */
+.materi-page.is-detail-open .detail-panel {
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+.materi-page.is-detail-open .detail-overview {
+  margin-bottom: 22px;
+  gap: 20px;
+}
+.materi-page.is-detail-open .detail-badges {
+  margin-bottom: 9px;
+}
+.materi-page.is-detail-open .detail-overview-copy > p {
+  margin-top: 6px;
+  line-height: 1.45;
+}
+.materi-page.is-detail-open .lesson-section {
+  padding-bottom: 18px;
+}
+.materi-page.is-detail-open .lesson-section + .lesson-section {
+  padding-top: 18px;
+}
+.materi-page.is-detail-open .lesson-content-body {
+  margin-top: 11px;
+  line-height: 1.6;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(p) {
+  margin: 0 0 9px;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(p:last-child),
+.materi-page.is-detail-open .lesson-content-body :deep(ul:last-child),
+.materi-page.is-detail-open .lesson-content-body :deep(ol:last-child) {
+  margin-bottom: 0;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(h1),
+.materi-page.is-detail-open .lesson-content-body :deep(h2),
+.materi-page.is-detail-open .lesson-content-body :deep(h3),
+.materi-page.is-detail-open .lesson-content-body :deep(h4) {
+  margin: 16px 0 7px;
+  line-height: 1.35;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(h1:first-child),
+.materi-page.is-detail-open .lesson-content-body :deep(h2:first-child),
+.materi-page.is-detail-open .lesson-content-body :deep(h3:first-child),
+.materi-page.is-detail-open .lesson-content-body :deep(h4:first-child) {
+  margin-top: 0;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(ul),
+.materi-page.is-detail-open .lesson-content-body :deep(ol) {
+  margin: 5px 0 10px;
+  padding-left: 22px;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(li) {
+  margin: 2px 0;
+  line-height: 1.55;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(li > p) {
+  margin: 0 0 5px;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(pre),
+.materi-page.is-detail-open .lesson-content-body :deep(blockquote),
+.materi-page.is-detail-open .lesson-content-body :deep(table) {
+  margin-top: 9px;
+  margin-bottom: 12px;
+}
+.materi-page.is-detail-open .lesson-completion {
+  margin-top: 18px;
+  padding-top: 12px;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-panel {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .materi-page.is-detail-open .detail-overview {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+}
 </style>
