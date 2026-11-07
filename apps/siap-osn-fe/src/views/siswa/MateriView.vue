@@ -347,8 +347,8 @@ onMounted(muatKatalog)
               <div ref="pembacaRef" class="lesson-reader" tabindex="0" aria-label="Konten pembelajaran" @scroll.passive="perbaruiSubmateriAktif">
                 <section v-if="detail.videos?.length" class="lesson-section lesson-video-playlist" aria-label="Video pembelajaran">
                   <header class="lesson-section-header"><div class="lesson-section-title"><div class="lesson-section-heading-copy"><h3>Video Pembelajaran</h3><p class="mt-1 text-sm text-slate-500">{{ detail.videos.length }} video dalam playlist materi ini</p></div></div></header>
-                  <div class="mt-4 overflow-hidden rounded-xl bg-slate-950">
-                    <div class="aspect-video"><iframe v-if="videoAktif" :src="videoEmbedUrl(videoAktif)" :title="videoAktif.judul" class="h-full w-full" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+                  <div class="lesson-video-frame mt-4 overflow-hidden rounded-xl bg-slate-950">
+                    <iframe v-if="videoAktif" :src="videoEmbedUrl(videoAktif)" :title="videoAktif.judul" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                   </div>
                   <div class="mt-3 grid gap-2">
                     <button v-for="(video, index) in detail.videos" :key="video.id" type="button" class="flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition" :class="videoAktifIndex === index ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white hover:bg-slate-50'" @click="videoAktifIndex = index">
@@ -1624,5 +1624,28 @@ onMounted(muatKatalog)
     height: auto;
     max-height: 100%;
   }
+}
+
+/* Paksa rasio player YouTube 16:9; jangan bergantung pada utility aspect-video. */
+.materi-page.is-detail-open .detail-view .lesson-video-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #020617;
+  box-sizing: border-box;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0;
+  max-width: 100%;
+  border: 0;
 }
 </style>
