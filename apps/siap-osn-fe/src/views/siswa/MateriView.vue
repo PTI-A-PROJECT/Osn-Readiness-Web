@@ -291,7 +291,7 @@ onMounted(muatKatalog)
 </script>
 
 <template>
-  <div class="materi-page">
+  <div class="materi-page" :class="{ 'is-detail-open': Boolean(dibukaId) }">
     <header class="page-header">
       <div class="header-copy">
         <h1>{{ route.meta.title || 'Materi' }}</h1>
@@ -1327,6 +1327,64 @@ onMounted(muatKatalog)
   .completion-button { width: 100%; }
 }
 
+
+
+/* Hanya mode detail materi yang mengunci halaman; katalog materi tetap memakai scroll normal. */
+.materi-page.is-detail-open {
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.materi-page.is-detail-open .page-header { flex: 0 0 auto; }
+.materi-page.is-detail-open .materi-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+.materi-page.is-detail-open .detail-view {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.materi-page.is-detail-open .detail-breadcrumb { flex: 0 0 auto; }
+.materi-page.is-detail-open .detail-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.materi-page.is-detail-open .detail-overview,
+.materi-page.is-detail-open .detail-image { flex: 0 0 auto; }
+.materi-page.is-detail-open .lesson-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
+}
+.materi-page.is-detail-open .lesson-reader {
+  height: auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.materi-page.is-detail-open .lesson-sidebar {
+  min-height: 0;
+  align-self: start;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .materi-main { padding: 16px 14px; }
+  .materi-page.is-detail-open .detail-panel { padding: 16px 14px; }
+  .materi-page.is-detail-open .lesson-layout { overflow: hidden; }
+  .materi-page.is-detail-open .lesson-reader { height: auto; min-height: 0; }
+}
 
 /* Detail materi: scroll konten kiri, daftar isi kanan tetap diam. */
 .detail-view .lesson-layout { grid-template-columns: minmax(0, 1fr) 276px; gap: 28px; align-items: start; }
