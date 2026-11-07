@@ -14,6 +14,7 @@ const props = defineProps({
   timerLabel: { type: String, default: 'Sisa waktu' },
   waktuTampil: { type: String, default: '00:00:00' },
   timerAktif: { type: Boolean, default: true },
+  tampilkanTimer: { type: Boolean, default: true },
   mepet: { type: Boolean, default: false },
   simpanError: { type: Boolean, default: false },
   petunjuk: { type: Object, default: null },
@@ -519,9 +520,10 @@ async function salinKode() {
       </div>
 
       <div class="header-right">
-        <span class="timer-label">{{ timerLabel }}</span>
+        <span v-if="tampilkanTimer" class="timer-label">{{ timerLabel }}</span>
 
         <span
+          v-if="tampilkanTimer"
           class="timer"
           :class="{ 'timer-mepet': timerAktif && mepet }"
         >
