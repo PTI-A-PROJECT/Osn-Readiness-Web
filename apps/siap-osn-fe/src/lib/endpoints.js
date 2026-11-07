@@ -47,6 +47,8 @@ export const ENDPOINTS = {
     materi: '/admin/materi',
     materiDetail: (id) => `/admin/materi/${id}`,
     materiGambar: '/admin/materi/gambar',
+    materiVideos: (id) => `/admin/materi/${id}/videos`,
+    materiVideo: (id, videoId) => `/admin/materi/${id}/videos/${videoId}`,
     konteksSoal: '/admin/konteks-soal',
     konteksSoalDetail: (id) => `/admin/konteks-soal/${id}`,
     soal: '/admin/soal',

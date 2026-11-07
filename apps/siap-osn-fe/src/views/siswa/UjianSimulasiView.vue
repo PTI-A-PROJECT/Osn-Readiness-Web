@@ -72,6 +72,16 @@ function toggleRagu() {
 // Batas waktu dihitung dari `batas_pada`, bukan dari hitungan lokal, sehingga
 // reload di tengah ujian melanjutkan dari sisa waktu yang sama di server.
 const sisaDetik = ref(0)
+const waktuTampil = computed(() => {
+  const total = Math.max(0, sisaDetik.value)
+  const jam = Math.floor(total / 3600)
+  const menit = Math.floor((total % 3600) / 60)
+  const detik = total % 60
+
+  return [jam, menit, detik]
+    .map((nilai) => String(nilai).padStart(2, '0'))
+    .join(':')
+})
 
 let timerJam = null
 function hitungSisa() {
@@ -247,7 +257,9 @@ onBeforeUnmount(() => {
       :jawaban="jawaban"
       :ragu="ragu"
       :aktif="aktif"
-      :sisa-detik="sisaDetik"
+      :waktu-tampil="waktuTampil"
+      :mepet="sisaDetik <= 300"
+      :timer-aktif="bolehMengerjakan"
       :simpan-error="simulasi.simpanError"
       :tombol-selesai="tombolSelesai"
       :petunjuk="petunjuk"

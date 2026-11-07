@@ -36,6 +36,12 @@ class Materi extends Model
         return $this->belongsTo(Kompetensi::class);
     }
 
+    /** @return HasMany<MateriVideo, $this> */
+    public function videos(): HasMany
+    {
+        return $this->hasMany(MateriVideo::class)->orderBy('urutan')->orderBy('id');
+    }
+
     /**
      * @return HasMany<Soal, $this>
      */

@@ -9,7 +9,7 @@ import { useProgressStore } from '@/stores/progress.js'
 import { belajarService } from '@/services/belajar.js'
 import { riwayatService } from '@/services/riwayat.js'
 import { pesanError } from '@/lib/errors.js'
-import { renderKonten } from '@/lib/richtext.js'
+import { renderKonten, renderKontenMateri } from '@/lib/richtext.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,9 +36,19 @@ const dibukaId = ref(null)
 const submateriMenandai = ref(null)
 const submateriAktifId = ref(null)
 const pembacaRef = ref(null)
+const videoAktifIndex = ref(0)
+const videoAktif = computed(() => detail.value?.videos?.[videoAktifIndex.value] ?? null)
+const videoEmbedUrl = (video) => video?.tipe === 'playlist'
+  ? 'https://www.youtube-nocookie.com/embed/videoseries?list=' + encodeURIComponent(video.youtubeId)
+  : 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(video?.youtubeId ?? '')
 
 const detail = computed(() => materi.detail)
 const submateri = computed(() => detail.value?.submateri ?? [])
+
+// Nomor urutan ditampilkan terpisah; hilangkan hanya awalan angka dari judul bawaan.
+function judulTanpaNomor(judul) {
+  return String(judul ?? '').replace(/^\s*\d+[.)]\s*/, '').trim()
+}
 const jumlahSubmateriSelesai = computed(() => submateri.value.filter((bagian) => bagian.selesai).length)
 const semuaSubmateriSelesai = computed(() => submateri.value.length > 0 && submateri.value.every((bagian) => bagian.selesai))
 const persentaseDetail = computed(() => submateri.value.length
@@ -187,6 +197,7 @@ async function buka(id) {
   memuatDetail.value = true
   try {
     await materi.fetchDetail({ id })
+    videoAktifIndex.value = 0
     submateriAktifId.value = materi.detail?.submateri?.[0]?.id ?? null
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Gagal membuka materi', detail: pesanError(err), life: 4000 })
@@ -285,7 +296,7 @@ onMounted(muatKatalog)
 </script>
 
 <template>
-  <div class="materi-page">
+  <div class="materi-page" :class="{ 'is-detail-open': Boolean(dibukaId) }">
     <header class="page-header">
       <div class="header-copy">
         <h1>{{ route.meta.title || 'Materi' }}</h1>
@@ -339,6 +350,19 @@ onMounted(muatKatalog)
 
             <div v-if="submateri.length" class="lesson-layout">
               <div ref="pembacaRef" class="lesson-reader" tabindex="0" aria-label="Konten pembelajaran" @scroll.passive="perbaruiSubmateriAktif">
+                <section v-if="detail.videos?.length" class="lesson-section lesson-video-playlist" aria-label="Video pembelajaran">
+                  <header class="lesson-section-header"><div class="lesson-section-title"><div class="lesson-section-heading-copy"><h3>Video Pembelajaran</h3><p class="mt-1 text-sm text-slate-500">{{ detail.videos.length }} video dalam playlist materi ini</p><p class="lesson-scroll-hint">↓ Gulir area ini untuk melihat daftar video dan melanjutkan materi</p></div></div></header>
+                  <div class="lesson-video-frame mt-4 overflow-hidden rounded-xl bg-slate-950">
+                    <iframe v-if="videoAktif" :src="videoEmbedUrl(videoAktif)" :title="videoAktif.judul" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  </div>
+                  <div class="mt-3 grid gap-2">
+                    <button v-for="(video, index) in detail.videos" :key="video.id" type="button" class="flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition" :class="videoAktifIndex === index ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white hover:bg-slate-50'" @click="videoAktifIndex = index">
+                      <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">{{ index + 1 }}</span>
+                      <span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold text-slate-800">{{ video.judul }}</span><span class="text-xs text-slate-500">{{ video.tipe === 'playlist' ? 'Playlist YouTube' : 'Video YouTube' }}</span></span>
+                      <span v-if="videoAktifIndex === index" class="text-xs font-semibold text-blue-700">Diputar</span>
+                    </button>
+                  </div>
+                </section>
                 <article
                   v-for="(bagian, index) in submateri"
                   :id="'submateri-' + bagian.id"
@@ -349,7 +373,7 @@ onMounted(muatKatalog)
                     <div class="lesson-section-title">
                       <span class="lesson-section-number">{{ index + 1 }}.</span>
                       <div class="lesson-section-heading-copy">
-                        <h3>{{ bagian.judul }}</h3>
+                        <h3>{{ judulTanpaNomor(bagian.judul) }}</h3>
                       </div>
                     </div>
                     <span class="lesson-status" :class="{ 'is-complete': bagian.selesai }">
@@ -361,7 +385,7 @@ onMounted(muatKatalog)
                   <div
                     v-if="bagian.konten"
                     class="konten-richtext lesson-content-body"
-                    v-html="renderKonten(bagian.konten)"
+                    v-html="renderKontenMateri(bagian.konten)"
                   ></div>
                   <p v-else class="submateri-empty">Belum ada isi pada bagian ini.</p>
 
@@ -398,6 +422,7 @@ onMounted(muatKatalog)
                   <div class="final-practice-stats">
                     <div class="final-stat"><strong>{{ detail.jumlahSoalLatihan ?? '—' }}</strong><span>Soal</span></div>
                     <div class="final-stat"><strong>Tanpa batas</strong><span>Waktu pengerjaan</span></div>
+                    <div class="final-stat"><strong>≥ 70</strong><span>Target nilai</span></div>
                     <div v-if="detail.nilaiTerbaik != null" class="final-stat"><strong>{{ Math.round(detail.nilaiTerbaik) }}</strong><span>Nilai terbaik</span></div>
                   </div>
                   <button type="button" class="btn final-practice-button" :disabled="!detail.quizId || !detail.latihanTersedia" @click="mulaiLatihan(detail)">
@@ -420,7 +445,7 @@ onMounted(muatKatalog)
                       @click="lompatKeSubmateri(bagian.id)"
                     >
                       <span class="lesson-toc-index" :class="{ 'is-complete': bagian.selesai }">{{ bagian.selesai ? '✓' : index + 1 }}</span>
-                      <span class="lesson-toc-label">{{ bagian.judul }}</span>
+                      <span class="lesson-toc-label">{{ judulTanpaNomor(bagian.judul) }}</span>
                     </button>
                     <button type="button" class="lesson-toc-item lesson-toc-practice"
                       :class="{ 'is-active': submateriAktifId === 'latihan' }"
@@ -1309,6 +1334,65 @@ onMounted(muatKatalog)
 }
 
 
+
+/* Hanya mode detail materi yang mengunci halaman; katalog materi tetap memakai scroll normal. */
+.materi-page.is-detail-open {
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.materi-page.is-detail-open .page-header { flex: 0 0 auto; }
+.materi-page.is-detail-open .materi-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 12px;
+  padding-bottom: 6px;
+}
+.materi-page.is-detail-open .detail-view {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.materi-page.is-detail-open .detail-breadcrumb { flex: 0 0 auto; margin-bottom: 8px; }
+.materi-page.is-detail-open .detail-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.materi-page.is-detail-open .detail-overview,
+.materi-page.is-detail-open .detail-image { flex: 0 0 auto; }
+.materi-page.is-detail-open .lesson-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
+}
+.materi-page.is-detail-open .lesson-reader {
+  height: auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.materi-page.is-detail-open .lesson-sidebar {
+  min-height: 0;
+  align-self: start;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .materi-main { padding: 16px 14px; }
+  .materi-page.is-detail-open .detail-panel { padding: 16px 14px; }
+  .materi-page.is-detail-open .lesson-layout { overflow: hidden; }
+  .materi-page.is-detail-open .lesson-reader { height: auto; min-height: 0; }
+}
+
 /* Detail materi: scroll konten kiri, daftar isi kanan tetap diam. */
 .detail-view .lesson-layout { grid-template-columns: minmax(0, 1fr) 276px; gap: 28px; align-items: start; }
 .detail-view .lesson-reader {
@@ -1329,7 +1413,7 @@ onMounted(muatKatalog)
 .detail-view .lesson-toc-practice.is-active { border-radius: 9px; }
 .detail-view .lesson-toc-practice .lesson-toc-label { font-weight: 750; }
 .detail-view .lesson-toc-star { display: inline-grid; place-items: center; flex: none; width: 23px; height: 23px; border-radius: 50%; background: #fbbf24; color: #102f55; font-size: 12px; }
-.detail-view .lesson-final-practice { min-height: 380px; margin-top: 27px; padding: 30px 28px; border-radius: 15px; background: linear-gradient(120deg, #10214b 0%, #15396f 55%, #2455aa 100%); color: #fff; }
+.detail-view .lesson-final-practice { min-height: 0; margin-top: 18px; padding: 24px 25px 22px; border-radius: 15px; background: linear-gradient(120deg, #10214b 0%, #15396f 55%, #2455aa 100%); color: #fff; }
 .detail-view .lesson-final-practice h2 { margin: 0 0 14px; color: #fff; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 23px; font-weight: 750; }
 .detail-view .final-practice-description { max-width: 650px; margin: 0 0 18px; color: #dae5f5; font-size: 13px; line-height: 1.65; }
 .detail-view .final-practice-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
@@ -1345,7 +1429,454 @@ onMounted(muatKatalog)
   .detail-view .lesson-toc-item { width: max-content; min-width: 150px; flex: 0 0 auto; }
   .detail-view .lesson-toc-practice { margin-top: 0; padding-top: 8px; border-top: 0; }
   .detail-view .lesson-reader { height: min(70vh, 650px); min-height: 360px; }
-  .detail-view .lesson-final-practice { min-height: 320px; padding: 24px 19px; }
+  .detail-view .lesson-final-practice { min-height: 0; padding: 20px 18px; }
 }
 
+
+/* Daftar isi detail materi dibatasi ke tinggi viewport agar seluruh item dapat diakses
+   melalui scroll internal tanpa menggerakkan halaman. */
+@media (min-width: 761px) {
+  .materi-page.is-detail-open .detail-view .lesson-sidebar {
+    min-height: 0;
+    max-height: calc(100dvh - 190px);
+    align-self: start;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100dvh - 190px);
+    overflow: hidden;
+    padding: 18px 14px 14px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-title {
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    font-size: 13px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    gap: 2px;
+    padding: 0 2px 2px 0;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-item {
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 6px 7px;
+    gap: 7px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-label {
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-practice {
+    flex: 0 0 auto;
+    margin-top: 7px;
+    padding-top: 9px;
+  }
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-view .lesson-toc {
+    max-height: 190px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-title {
+    flex: 0 0 auto;
+    font-size: 12px;
+    padding-bottom: 8px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-item {
+    min-height: 34px;
+    padding: 6px 7px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-label {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+}
+
+/* Finalisasi proporsi dua kolom pada detail materi: kedua panel mengikuti
+   tinggi ruang yang tersedia, sementara daftar isi dan pembaca scroll sendiri. */
+.materi-page.is-detail-open .detail-view .lesson-layout {
+  min-height: 0;
+  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 276px);
+  gap: 24px;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.materi-page.is-detail-open .detail-view .lesson-sidebar {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  align-self: stretch;
+  overflow: hidden;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  padding: 16px 13px 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-title {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+  padding-bottom: 9px;
+  font-size: 12px;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  gap: 2px;
+  padding: 0 3px 3px 0;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-item {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 5px 6px;
+  gap: 7px;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-index {
+  width: 19px;
+  height: 19px;
+  font-size: 9px;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-label {
+  min-width: 0;
+  font-size: 10.5px;
+  line-height: 1.3;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.materi-page.is-detail-open .detail-view .lesson-toc-practice {
+  flex: 0 0 auto;
+  margin-top: 5px;
+  padding-top: 7px;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-playlist,
+.materi-page.is-detail-open .detail-view .lesson-video-playlist > div {
+  width: 100%;
+  min-width: 0;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-playlist iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-view .lesson-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-sidebar {
+    height: auto;
+    max-height: 190px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc {
+    height: auto;
+    max-height: 190px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-item {
+    width: max-content;
+    max-width: 230px;
+    min-width: 140px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-reader {
+    height: auto;
+    max-height: 100%;
+  }
+}
+
+/* Paksa rasio player YouTube 16:9; jangan bergantung pada utility aspect-video. */
+.materi-page.is-detail-open .detail-view .lesson-video-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #020617;
+  box-sizing: border-box;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0;
+  max-width: 100%;
+  border: 0;
+}
+
+/* Detail materi lebih padat: kurangi whitespace teks tanpa mengubah layout
+   dua kolom, navigasi daftar isi, maupun rasio pemutar YouTube. */
+.materi-page.is-detail-open .detail-panel {
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+.materi-page.is-detail-open .detail-overview {
+  margin-bottom: 22px;
+  gap: 20px;
+}
+.materi-page.is-detail-open .detail-badges {
+  margin-bottom: 9px;
+}
+.materi-page.is-detail-open .detail-overview-copy > p {
+  margin-top: 6px;
+  line-height: 1.45;
+}
+.materi-page.is-detail-open .lesson-section {
+  padding-bottom: 18px;
+}
+.materi-page.is-detail-open .lesson-section + .lesson-section {
+  padding-top: 18px;
+}
+.materi-page.is-detail-open .lesson-content-body {
+  margin-top: 11px;
+  line-height: 1.6;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(p) {
+  margin: 0 0 9px;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(p:last-child),
+.materi-page.is-detail-open .lesson-content-body :deep(ul:last-child),
+.materi-page.is-detail-open .lesson-content-body :deep(ol:last-child) {
+  margin-bottom: 0;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(h1),
+.materi-page.is-detail-open .lesson-content-body :deep(h2),
+.materi-page.is-detail-open .lesson-content-body :deep(h3),
+.materi-page.is-detail-open .lesson-content-body :deep(h4) {
+  margin: 16px 0 7px;
+  line-height: 1.35;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(h1:first-child),
+.materi-page.is-detail-open .lesson-content-body :deep(h2:first-child),
+.materi-page.is-detail-open .lesson-content-body :deep(h3:first-child),
+.materi-page.is-detail-open .lesson-content-body :deep(h4:first-child) {
+  margin-top: 0;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(ul),
+.materi-page.is-detail-open .lesson-content-body :deep(ol) {
+  margin: 5px 0 10px;
+  padding-left: 22px;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(li) {
+  margin: 2px 0;
+  line-height: 1.55;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(li > p) {
+  margin: 0 0 5px;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(pre),
+.materi-page.is-detail-open .lesson-content-body :deep(blockquote),
+.materi-page.is-detail-open .lesson-content-body :deep(table) {
+  margin-top: 9px;
+  margin-bottom: 12px;
+}
+.materi-page.is-detail-open .lesson-completion {
+  margin-top: 18px;
+  padding-top: 12px;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-panel {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .materi-page.is-detail-open .detail-overview {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+}
+
+/* Penyempurnaan kenyamanan detail materi tanpa mengganti layout dua kolom. */
+.materi-page.is-detail-open .detail-panel {
+  padding-top: 16px;
+  padding-bottom: 14px;
+}
+.materi-page.is-detail-open .detail-overview {
+  margin-bottom: 14px;
+}
+.materi-page.is-detail-open .detail-badges {
+  margin-bottom: 7px;
+}
+.materi-page.is-detail-open .detail-overview-copy > p {
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
+  width: 100%;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  aspect-ratio: 16 / 9;
+}
+.materi-page.is-detail-open .lesson-scroll-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #64748b;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader {
+  scrollbar-width: auto;
+  scrollbar-color: #8fa4bd #e9eff6;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader::-webkit-scrollbar {
+  width: 9px;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader::-webkit-scrollbar-thumb {
+  background: #8fa4bd;
+  border: 2px solid #e9eff6;
+  border-radius: 999px;
+}
+.materi-page.is-detail-open .detail-view .lesson-reader::-webkit-scrollbar-track {
+  background: #e9eff6;
+  border-radius: 999px;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-panel {
+    padding-top: 14px;
+    padding-bottom: 12px;
+  }
+  .materi-page.is-detail-open .detail-overview {
+    margin-bottom: 12px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
+    max-width: 480px;
+  }
+}
+
+/* Kartu latihan mengikuti jumlah konten; tidak lagi memaksakan area kosong. */
+.materi-page.is-detail-open .detail-view .lesson-final-practice {
+  min-height: 0;
+  height: auto;
+  padding: 23px 24px 20px;
+}
+.materi-page.is-detail-open .detail-view .lesson-final-practice h2 {
+  margin-bottom: 8px;
+}
+.materi-page.is-detail-open .detail-view .final-practice-description {
+  margin-bottom: 14px;
+}
+.materi-page.is-detail-open .detail-view .final-practice-stats {
+  gap: 9px;
+  margin-bottom: 15px;
+}
+.materi-page.is-detail-open .detail-view .final-stat {
+  min-width: 102px;
+  padding: 10px 13px;
+}
+.materi-page.is-detail-open .detail-view .final-practice-note {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-view .lesson-final-practice {
+    padding: 18px 16px;
+  }
+}
+
+/* Blok kode materi mengikuti tampilan referensi: header abu gelap + editor gelap. */
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-block) {
+  max-width: 100%;
+  margin: 14px 0 18px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #263449;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 18px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-title) {
+  min-width: 0;
+  font: 600 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #cbd5e1;
+  overflow-wrap: anywhere;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-badge) {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font: 700 11px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-body) {
+  display: block;
+  margin: 0;
+  padding: 18px 19px;
+  overflow-x: auto;
+  background: #0f172a;
+  color: #e2e8f0;
+  font: 13px/1.8 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+  tab-size: 4;
+}
+.materi-page.is-detail-open .lesson-content-body :deep(.materi-code-body code) {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  white-space: inherit;
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .lesson-content-body :deep(.materi-code-header) { padding: 9px 12px; }
+  .materi-page.is-detail-open .lesson-content-body :deep(.materi-code-body) { padding: 12px; font-size: 12px; }
+}
 </style>

@@ -437,6 +437,15 @@ class BelajarService implements BelajarServiceInterface
             $baris['isi_materi'] = $materi->isi_materi;
             $baris['file_materi'] = $materi->file_materi;
             $baris['gambar'] = $materi->gambar;
+            $baris['videos'] = $materi->videos()
+                ->get(['id', 'judul', 'youtube_id', 'tipe', 'urutan'])
+                ->map(fn ($video): array => [
+                    'id' => (int) $video->id,
+                    'judul' => $video->judul,
+                    'youtube_id' => $video->youtube_id,
+                    'tipe' => $video->tipe,
+                    'urutan' => (int) $video->urutan,
+                ])->all();
             $baris['submateri'] = $this->daftarSubmateri($materi, $progress);
         }
 
