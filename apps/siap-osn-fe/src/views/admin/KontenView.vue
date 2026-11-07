@@ -179,7 +179,12 @@ async function simpanMateri() {
         : adminService.tambahMateri({ payload })),
       muatUlang: () => muat({ force: true }),
     })
-    if (!formMateri.id) {\n      const tersimpan = daftarMateri.value.find((m) => m.judul === formMateri.judul)\n      if (tersimpan) formMateri.id = tersimpan.id\n    }\n    dialogMateri.value = false\n    toast.add({ severity: 'success', summary: 'Materi disimpan', life: 4000 })
+    if (!formMateri.id) {
+      const tersimpan = daftarMateri.value.find((m) => m.judul === formMateri.judul)
+      if (tersimpan) formMateri.id = tersimpan.id
+    }
+    dialogMateri.value = false
+    toast.add({ severity: 'success', summary: 'Materi disimpan', life: 4000 })
   } catch (err) {
     galatMateri.value = pesanField(err, 'judul') ?? pesanError(err)
   }
