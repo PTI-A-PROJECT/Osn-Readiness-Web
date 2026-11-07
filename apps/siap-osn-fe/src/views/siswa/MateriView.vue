@@ -1631,7 +1631,7 @@ onMounted(muatKatalog)
   position: relative;
   display: block;
   width: 100%;
-  max-width: 100%;
+  max-width: 480px;
   height: auto !important;
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -1747,7 +1747,7 @@ onMounted(muatKatalog)
 }
 .materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
   width: 100%;
-  max-width: 820px;
+  max-width: 480px;
   margin-left: auto;
   margin-right: auto;
   aspect-ratio: 16 / 9;
@@ -1784,7 +1784,7 @@ onMounted(muatKatalog)
     margin-bottom: 12px;
   }
   .materi-page.is-detail-open .detail-view .lesson-video-playlist > .lesson-video-frame {
-    max-width: 100%;
+    max-width: 480px;
   }
 }
 </style>
