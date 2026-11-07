@@ -69,11 +69,14 @@ class MateriVideoController
         $host = strtolower($parts['host'] ?? '');
         $path = trim($parts['path'] ?? '', '/');
         parse_str($parts['query'] ?? '', $query);
-        if (in_array($host, ['youtu.be'], true) && $path !== '') return [$path, 'video'];
+        // YouTube parameter names are normalized case-insensitively because
+        // links copied from documents may contain WATCH?V= instead of watch?v=.
+        $query = array_change_key_case($query, CASE_LOWER);
+        if (in_array($host, ['youtu.be'], true) && $path !== '') return [explode('/', $path)[0], 'video'];
         if (in_array($host, ['youtube.com', 'www.youtube.com', 'm.youtube.com'], true)) {
             if (($query['v'] ?? '') !== '') return [$query['v'], 'video'];
             if (($query['list'] ?? '') !== '') return [$query['list'], 'playlist'];
-            if (str_starts_with($path, 'embed/')) return [substr($path, 6), 'video'];
+            if (preg_match('#^(?:embed|shorts)/([^/]+)$#', $path, $matches)) return [$matches[1], 'video'];
         }
         throw ValidationException::withMessages(['youtube_url' => ['Gunakan tautan video atau playlist YouTube yang valid.']]);
     }
