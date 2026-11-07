@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\KompetensiController;
 use App\Http\Controllers\Api\Admin\KonteksSoalController;
 use App\Http\Controllers\Api\Admin\LatihanController;
 use App\Http\Controllers\Api\Admin\MateriController;
+use App\Http\Controllers\Api\Admin\MateriVideoController;
 use App\Http\Controllers\Api\Admin\PembahasanController;
 use App\Http\Controllers\Api\Admin\SimulasiController;
 use App\Http\Controllers\Api\Admin\SiswaController;
