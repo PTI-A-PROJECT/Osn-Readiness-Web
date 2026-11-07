@@ -20,6 +20,7 @@ export const PESAN_GOOGLE_GAGAL = {
   google_taut: 'Email Google ini sudah terpakai akun lain. Masuk dengan kata sandi, lalu tautkan Google di profil.',
   google_admin: 'Akun admin tidak dapat masuk melalui Google.',
   google_nonaktif: 'Akun ini dinonaktifkan. Hubungi pengelola SIAP OSN.',
+  google_dihapus: 'Akun Google ini pernah terdaftar dan sudah dihapus. Hubungi pengelola SIAP OSN.',
   google_email_verifikasi: 'Email Google belum diverifikasi oleh Google.',
   google_exchange: 'Kode login tidak sah atau sudah kedaluwarsa. Mulai lagi dari tombol Google.',
   lain: 'Login Google gagal. Masuk dengan email dan kata sandi, atau coba tombol Google lagi.',

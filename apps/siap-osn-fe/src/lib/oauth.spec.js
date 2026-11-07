@@ -20,6 +20,7 @@ describe('lib/oauth', () => {
       'google_taut',
       'google_admin',
       'google_nonaktif',
+      'google_dihapus',
       'google_email_verifikasi',
     ]
     for (const kode of kodeBackend) {

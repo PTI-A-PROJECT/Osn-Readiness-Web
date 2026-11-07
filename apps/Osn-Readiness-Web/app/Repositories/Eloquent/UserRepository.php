@@ -27,6 +27,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model->newQuery()->where('google_sub', $sub)->first();
     }
 
+    public function googleSubDipakaiAkunTerhapus(string $sub): bool
+    {
+        return $this->model->newQuery()->onlyTrashed()->where('google_sub', $sub)->exists();
+    }
+
     public function findByKodeReferal(string $kode): ?User
     {
         // Kode tersimpan uppercase (KodeReferal::normalisasi); akun terhapus

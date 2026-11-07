@@ -74,6 +74,14 @@ class GoogleOAuthService implements GoogleOAuthServiceInterface
             return $this->alihkanKeSukses($tertaut);
         }
 
+        // 1b. Google ini pernah melekat pada akun yang sudah dihapus. Index
+        //     unik google_sub masih memegangnya, jadi membuat akun baru
+        //     gagal di database dan berakhir HTTP 500. Akun terhapus tidak
+        //     masuk otomatis lewat Google.
+        if ($this->userRepository->googleSubDipakaiAkunTerhapus($sub)) {
+            return $this->alihkanKeGagal('google_dihapus');
+        }
+
         // 2. Email sudah dipakai akun lokal: jangan gabung diam-diam.
         //    Pemilik akun login biasa lalu menautkan Google dari profil.
         $konflikEmail = $this->userRepository->findByEmail($email);
