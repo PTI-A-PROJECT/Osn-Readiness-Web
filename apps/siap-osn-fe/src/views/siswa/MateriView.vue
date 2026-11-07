@@ -1344,7 +1344,8 @@ onMounted(muatKatalog)
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding-bottom: 20px;
+  padding-top: 12px;
+  padding-bottom: 6px;
 }
 .materi-page.is-detail-open .detail-view {
   flex: 1 1 auto;
@@ -1352,7 +1353,7 @@ onMounted(muatKatalog)
   display: flex;
   flex-direction: column;
 }
-.materi-page.is-detail-open .detail-breadcrumb { flex: 0 0 auto; }
+.materi-page.is-detail-open .detail-breadcrumb { flex: 0 0 auto; margin-bottom: 8px; }
 .materi-page.is-detail-open .detail-panel {
   flex: 1 1 auto;
   min-height: 0;
