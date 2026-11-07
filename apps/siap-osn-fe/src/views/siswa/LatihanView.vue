@@ -254,7 +254,7 @@ function formatNilai(nilai) {
       :aktif="aktif"
       :tombol-selesai="tombolSelesai"
       :petunjuk="petunjuk"
-      :sisa-detik="null"
+      :tampilkan-timer="false"
       :mengirim="mengirim"
       modal-judul="Yakin ingin mengumpulkan latihan?"
       modal-peringatan="Setelah latihan dikumpulkan, jawaban tidak dapat diubah kembali."
