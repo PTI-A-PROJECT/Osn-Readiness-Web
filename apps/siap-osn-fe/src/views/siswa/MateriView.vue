@@ -36,6 +36,11 @@ const dibukaId = ref(null)
 const submateriMenandai = ref(null)
 const submateriAktifId = ref(null)
 const pembacaRef = ref(null)
+const videoAktifIndex = ref(0)
+const videoAktif = computed(() => detail.value?.videos?.[videoAktifIndex.value] ?? null)
+const videoEmbedUrl = (video) => video?.tipe === 'playlist'
+  ? 'https://www.youtube-nocookie.com/embed/videoseries?list=' + encodeURIComponent(video.youtubeId)
+  : 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(video?.youtubeId ?? '')
 
 const detail = computed(() => materi.detail)
 const submateri = computed(() => detail.value?.submateri ?? [])
@@ -187,6 +192,7 @@ async function buka(id) {
   memuatDetail.value = true
   try {
     await materi.fetchDetail({ id })
+    videoAktifIndex.value = 0
     submateriAktifId.value = materi.detail?.submateri?.[0]?.id ?? null
   } catch (err) {
     toast.add({ severity: 'error', summary: 'Gagal membuka materi', detail: pesanError(err), life: 4000 })
@@ -339,6 +345,19 @@ onMounted(muatKatalog)
 
             <div v-if="submateri.length" class="lesson-layout">
               <div ref="pembacaRef" class="lesson-reader" tabindex="0" aria-label="Konten pembelajaran" @scroll.passive="perbaruiSubmateriAktif">
+                <section v-if="detail.videos?.length" class="lesson-section lesson-video-playlist" aria-label="Video pembelajaran">
+                  <header class="lesson-section-header"><div class="lesson-section-title"><div class="lesson-section-heading-copy"><h3>Video Pembelajaran</h3><p class="mt-1 text-sm text-slate-500">{{ detail.videos.length }} video dalam playlist materi ini</p></div></div></header>
+                  <div class="mt-4 overflow-hidden rounded-xl bg-slate-950">
+                    <div class="aspect-video"><iframe v-if="videoAktif" :src="videoEmbedUrl(videoAktif)" :title="videoAktif.judul" class="h-full w-full" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+                  </div>
+                  <div class="mt-3 grid gap-2">
+                    <button v-for="(video, index) in detail.videos" :key="video.id" type="button" class="flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition" :class="videoAktifIndex === index ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white hover:bg-slate-50'" @click="videoAktifIndex = index">
+                      <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">{{ index + 1 }}</span>
+                      <span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold text-slate-800">{{ video.judul }}</span><span class="text-xs text-slate-500">{{ video.tipe === 'playlist' ? 'Playlist YouTube' : 'Video YouTube' }}</span></span>
+                      <span v-if="videoAktifIndex === index" class="text-xs font-semibold text-blue-700">Diputar</span>
+                    </button>
+                  </div>
+                </section>
                 <article
                   v-for="(bagian, index) in submateri"
                   :id="'submateri-' + bagian.id"
