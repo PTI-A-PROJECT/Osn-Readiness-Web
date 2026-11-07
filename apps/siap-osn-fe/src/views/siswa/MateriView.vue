@@ -1425,4 +1425,85 @@ onMounted(muatKatalog)
   .detail-view .lesson-final-practice { min-height: 320px; padding: 24px 19px; }
 }
 
+
+/* Daftar isi detail materi dibatasi ke tinggi viewport agar seluruh item dapat diakses
+   melalui scroll internal tanpa menggerakkan halaman. */
+@media (min-width: 761px) {
+  .materi-page.is-detail-open .detail-view .lesson-sidebar {
+    min-height: 0;
+    max-height: calc(100dvh - 190px);
+    align-self: start;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100dvh - 190px);
+    overflow: hidden;
+    padding: 18px 14px 14px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-title {
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    font-size: 13px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    gap: 2px;
+    padding: 0 2px 2px 0;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-item {
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 6px 7px;
+    gap: 7px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-label {
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-practice {
+    flex: 0 0 auto;
+    margin-top: 7px;
+    padding-top: 9px;
+  }
+}
+@media (max-width: 760px) {
+  .materi-page.is-detail-open .detail-view .lesson-toc {
+    max-height: 190px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-title {
+    flex: 0 0 auto;
+    font-size: 12px;
+    padding-bottom: 8px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-item {
+    min-height: 34px;
+    padding: 6px 7px;
+  }
+  .materi-page.is-detail-open .detail-view .lesson-toc-label {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+}
 </style>
