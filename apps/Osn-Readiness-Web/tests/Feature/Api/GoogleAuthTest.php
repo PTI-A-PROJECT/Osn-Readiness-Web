@@ -171,6 +171,27 @@ class GoogleAuthTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'baru@example.com']);
     }
 
+    public function test_callback_akun_terhapus_dengan_google_sama_dialihkan_bukan_error_server(): void
+    {
+        // Index unik users_google_sub_unique tetap mencakup akun terhapus,
+        // sedangkan pencarian akun mengabaikannya. Tanpa penanganan khusus,
+        // membuat akun baru untuk Google yang sama menabrak index dan
+        // berakhir sebagai HTTP 500.
+        $dihapus = User::factory()->create([
+            'email' => 'budi@example.com',
+            'google_sub' => 'sub-google-dihapus',
+        ]);
+        $dihapus->delete();
+
+        Socialite::fake('google', $this->googleUser('sub-google-dihapus', 'budi@example.com'));
+
+        $response = $this->get('/auth/google/callback');
+
+        $response->assertRedirect('https://fe.example.com/oauth/google/selesai#error=google_dihapus');
+        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseCount('google_login_codes', 0);
+    }
+
     public function test_callback_gagal_layanan_google_dialihkan(): void
     {
         $provider = \Mockery::mock(Provider::class);

@@ -159,8 +159,8 @@ Pint**. Semuanya menunggu push + deploy bersama perubahan Task 2.
       identitas tidak lengkap; semua berakhir dengan pengalihan ke frontend
       bernama `/oauth/google/selesai#error=<kode>` (kode: `google_batal`,
       `google_state`, `google_gagal`, `google_taut`, `google_admin`,
-      `google_nonaktif`, `google_email_verifikasi`). Tujuan frontend hanya
-      dibaca dari `FRONTEND_URL`, bukan kueri pengguna.
+      `google_nonaktif`, `google_dihapus`, `google_email_verifikasi`).
+      Tujuan frontend hanya dibaca dari `FRONTEND_URL`, bukan kueri pengguna.
 - [x] Callback memvalidasi identitas: cari akun berdasarkan `google_sub`
       (login ulang), tolak Super Admin dan akun nonaktif; email sudah dipakai
       akun lokal tanpa tautan dibalas `google_taut` supaya pemiliknya login
