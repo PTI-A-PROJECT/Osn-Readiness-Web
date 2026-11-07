@@ -118,6 +118,22 @@ export const adminService = {
     await api.delete(ENDPOINTS.admin.materiDetail(id), { signal })
   },
 
+  async daftarVideoMateri({ materiId, signal } = {}) {
+    return unwrap(await api.get(ENDPOINTS.admin.materiVideos(materiId), { signal }))
+  },
+
+  async tambahVideoMateri({ materiId, payload, signal } = {}) {
+    return unwrap(await api.post(ENDPOINTS.admin.materiVideos(materiId), payload, { signal }))
+  },
+
+  async ubahVideoMateri({ materiId, videoId, payload, signal } = {}) {
+    return unwrap(await api.put(ENDPOINTS.admin.materiVideo(materiId, videoId), payload, { signal }))
+  },
+
+  async hapusVideoMateri({ materiId, videoId, signal } = {}) {
+    await api.delete(ENDPOINTS.admin.materiVideo(materiId, videoId), { signal })
+  },
+
   // POST /admin/materi/gambar -> multipart. Membalas { path } tanpa domain;
   // URL penuh dibangun FE (lihat mappers/belajar.js urlStorage).
   async unggahGambarMateri({ file, signal } = {}) {
