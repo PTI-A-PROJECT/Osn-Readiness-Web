@@ -38,11 +38,12 @@ export const authService = {
     return { user: mapUser(user), token, perluKodeReferal: perlu_kode_referal === true }
   },
 
-  // POST /auth/referal {kode_referal} -> { message, data: user }
+  // POST /auth/referal {kode_referal} -> { message, data: { user } }
   // Kosong/null = lewati. Hanya berhasil sekali per akun.
   async simpanReferal(kodeReferal) {
     const kode = typeof kodeReferal === 'string' ? kodeReferal.trim() : ''
-    return mapUser(unwrap(await api.post(ENDPOINTS.auth.referal, { kode_referal: kode || null })))
+    const { user } = unwrap(await api.post(ENDPOINTS.auth.referal, { kode_referal: kode || null }))
+    return mapUser(user)
   },
 
   // Laravel wajib password_confirmation; FE memakai nama field `konfirmasi`.

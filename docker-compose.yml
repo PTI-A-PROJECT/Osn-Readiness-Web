@@ -54,6 +54,7 @@ services:
       dockerfile: Dockerfile
     container_name: osn-backend
     restart: unless-stopped
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--no-reload"]
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     environment: *backend-env
