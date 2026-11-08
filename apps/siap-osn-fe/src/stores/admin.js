@@ -18,6 +18,7 @@ import { statusError } from '@/lib/errors.js'
 
 export const MODUL = {
   SISWA: 'siswa',
+  ANGGOTA: 'anggota',
   KOMPETENSI: 'kompetensi',
   MATERI: 'materi',
   KONTEKS: 'konteks',
@@ -28,7 +29,7 @@ export const MODUL = {
 }
 
 // Daftar modul yang dipaginasi (yang lain bukan paginasi Resource).
-const BERPAGINASI = new Set([MODUL.SISWA, MODUL.SOAL, MODUL.LATIHAN, MODUL.SIMULASI])
+const BERPAGINASI = new Set([MODUL.SISWA, MODUL.ANGGOTA, MODUL.SOAL, MODUL.LATIHAN, MODUL.SIMULASI])
 
 const metaKosong = () => ({ halaman: 1, perHalaman: 15, halamanTerakhir: 1, total: 0 })
 
@@ -171,6 +172,8 @@ export const useAdminStore = defineStore('admin', () => {
     switch (modul) {
       case MODUL.SISWA:
         return adminService.daftarSiswa({ halaman, perPage: perHalaman, signal })
+      case MODUL.ANGGOTA:
+        return adminService.daftarAnggota({ halaman, perPage: perHalaman, signal })
       case MODUL.SOAL:
         return adminService.daftarSoal({ halaman, perPage: perHalaman, signal })
       case MODUL.LATIHAN:

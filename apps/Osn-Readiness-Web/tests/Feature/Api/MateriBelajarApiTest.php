@@ -358,6 +358,7 @@ class MateriBelajarApiTest extends TestCase
     public function test_daftar_materi_tidak_menambah_query_per_materi(): void
     {
         $this->buatPutaranAktif();
+        $this->siswa->load('roles');
 
         $hitung = function (): int {
             DB::flushQueryLog();

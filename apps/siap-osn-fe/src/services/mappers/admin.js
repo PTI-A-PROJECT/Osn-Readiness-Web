@@ -197,6 +197,17 @@ export function mapSoalAdmin(r) {
   }
 }
 
+export function mapAnggota(r) {
+  return {
+    id: r.id,
+    nama: r.name ?? '',
+    nim: r.nim ?? '',
+    kodeReferal: r.kode_referal ?? null,
+    jumlahUndang: Number.isFinite(Number(r.jumlah_diundang)) ? Number(r.jumlah_diundang) : 0,
+    aktif: Boolean(r.is_active),
+  }
+}
+
 /* ---------- Latihan ---------- */
 export function mapLatihan(r) {
   return {

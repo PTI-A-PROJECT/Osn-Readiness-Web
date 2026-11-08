@@ -12,8 +12,14 @@ const userLaravel = {
 }
 
 describe('mapRole', () => {
-  it('Super Admin menjadi super_admin', () => {
+  it('Super Admin precedes anggota', () => {
     expect(mapRole(['Super Admin'])).toBe('super_admin')
+    expect(mapRole(['Super Admin', 'anggota'])).toBe('super_admin')
+  })
+
+  it('anggota takes priority over siswa', () => {
+    expect(mapRole(['anggota'])).toBe('anggota')
+    expect(mapRole(['anggota', 'siswa'])).toBe('anggota')
   })
 
   it('siswa tetap siswa', () => {

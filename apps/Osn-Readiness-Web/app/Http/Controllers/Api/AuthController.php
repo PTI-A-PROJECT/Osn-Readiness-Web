@@ -31,16 +31,16 @@ class AuthController
 
     public function login(ApiLoginRequest $request): JsonResponse
     {
-        $result = $this->authService->login(
-            $request->validated('email'),
-            $request->validated('password'),
-        );
+        $nim = $request->validated('nim');
+        $hasil = $nim !== null
+            ? $this->authService->loginDenganNim($nim, $request->validated('password'))
+            : $this->authService->login($request->validated('email'), $request->validated('password'));
 
         return response()->json([
             'message' => 'Login berhasil',
             'data' => [
-                'user' => new UserResource($result['user']->load('roles')->loadCount('diundang')),
-                'token' => $result['token'],
+                'user' => new UserResource($hasil['user']->load('roles')->loadCount('diundang')),
+                'token' => $hasil['token'],
             ],
         ]);
     }

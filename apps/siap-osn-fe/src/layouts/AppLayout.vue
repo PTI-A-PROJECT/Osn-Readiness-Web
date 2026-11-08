@@ -34,6 +34,7 @@ const menuSiswa = [
 const menuAdmin = [
   { kelompok: 'UTAMA', label: 'Dashboard', to: { name: 'admin.dashboard' } },
   { kelompok: 'UTAMA', label: 'Manajemen Siswa', to: { name: 'admin.siswa' } },
+  { kelompok: 'UTAMA', label: 'Manajemen Anggota', to: { name: 'admin.anggota' } },
   { kelompok: 'UTAMA', label: 'Manajemen Tingkat Seleksi', to: { name: 'admin.aturan', query: { tab: 'tingkat' } } },
   { kelompok: 'UTAMA', label: 'Manajemen Kompetensi', to: { name: 'admin.konten', query: { tab: 'kompetensi' } } },
   { kelompok: 'UTAMA', label: 'Manajemen Materi', to: { name: 'admin.konten', query: { tab: 'materi' } } },
@@ -44,9 +45,6 @@ const menuAdmin = [
 ]
 
 const isAdmin = computed(() => auth.user?.role === 'super_admin')
-const menu = computed(() => (isAdmin.value ? menuAdmin : menuSiswa))
-const namaAdmin = computed(() => auth.nama || 'Super Admin')
-const inisialAdmin = computed(() => namaAdmin.value.trim().split(/\s+/).map((bagian) => bagian[0]).slice(0, 2).join('').toUpperCase())
 const kelompokAdmin = ['UTAMA', 'ASESMEN']
 function adminMenuAktif(item) {
   return route.name === item.to.name &&

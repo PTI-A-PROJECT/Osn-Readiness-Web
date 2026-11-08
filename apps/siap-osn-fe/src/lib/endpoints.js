@@ -36,8 +36,13 @@ export const ENDPOINTS = {
     hasilSimulasiSubmit: (id) => `/hasil-simulasi/${id}/submit`,
     hasilSimulasiReview: (id) => `/hasil-simulasi/${id}/review`,
   },
+  anggota: {
+    ringkasan: '/anggota/ringkasan',
+    kodeReferal: '/anggota/kode-referal',
+  },
   admin: {
     dashboard: '/admin/dashboard',
+    anggota: '/admin/anggota',
     bankSoalKecukupan: '/admin/bank-soal/kecukupan',
     siswa: '/admin/siswa',
     siswaDetail: (id) => `/admin/siswa/${id}`,

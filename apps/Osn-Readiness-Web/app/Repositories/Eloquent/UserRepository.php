@@ -6,6 +6,7 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Models\User;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -52,5 +53,39 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function cariSiswa(int $id): ?User
     {
         return $this->model->newQuery()->role('siswa')->find($id);
+    }
+
+    public function findByNim(string $nim): ?User
+    {
+        // Akun terhapus tidak ikut karena scope SoftDeletes.
+        return $this->model->newQuery()->where('nim', $nim)->first();
+    }
+
+    public function paginasiAnggota(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->model->newQuery()
+            ->whereHas('roles', fn ($q) => $q->where('name', 'anggota'))
+            ->with('roles')
+            ->withCount('diundang')
+            ->orderBy('name')
+            ->paginate($perPage);
+    }
+
+    public function kodeReferalDipakai(string $kode, int $kecualiUserId): bool
+    {
+        return $this->model->newQuery()
+            ->withTrashed()
+            ->where('kode_referal', $kode)
+            ->where('id', '!=', $kecualiUserId)
+            ->exists();
+    }
+
+    public function hitunganReferalAnggota(): Collection
+    {
+        return $this->model->newQuery()
+            ->whereHas('roles', fn ($q) => $q->where('name', 'anggota'))
+            ->withCount('diundang')
+            ->get()
+            ->mapWithKeys(fn (User $user): array => [$user->id => (int) $user->diundang_count]);
     }
 }

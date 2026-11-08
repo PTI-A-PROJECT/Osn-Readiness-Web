@@ -6,6 +6,7 @@
 export function mapRole(roles) {
   const list = Array.isArray(roles) ? roles : []
   if (list.includes('Super Admin')) return 'super_admin'
+  if (list.includes('anggota')) return 'anggota'
   if (list.includes('siswa')) return 'siswa'
   return null
 }

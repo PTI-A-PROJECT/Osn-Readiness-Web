@@ -22,12 +22,13 @@ export const authService = {
     return mapUser(unwrap(await api.get(ENDPOINTS.auth.me)))
   },
 
-  // POST /auth/login {email, password} -> { message, data: {user, token} }
+  // POST /auth/login {email, password} atau {nim, password} -> { message, data: {user, token} }
   async login({ email, password }) {
-    const { user, token } = unwrap(await api.post(ENDPOINTS.auth.login, { email, password }))
+    const id = String(email ?? '').trim()
+    const body = /^\d{8,20}$/.test(id) ? { nim: id, password } : { email, password }
+    const { user, token } = unwrap(await api.post(ENDPOINTS.auth.login, body))
     return { user: mapUser(user), token }
   },
-
   // POST /auth/google/exchange {kode} -> { message, data: {user, token} }
   // Kode sekali pakai dari fragmen callback; dikirim lewat body supaya
   // tidak pernah masuk URL yang muncul di log.
