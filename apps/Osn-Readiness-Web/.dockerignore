@@ -1,12 +1,21 @@
-.git/
-vendor/
-node_modules/
+# Jangan bawa artefak lokal ke image produksi.
+# - .env* : rahasia dev; env produksi diinjeksi compose saat start.
+# - bootstrap/cache/*.php : manifest paket dev (mis. Laravel Boost) yang
+#   providernya tidak ada setelah `composer install --no-dev`, dan membuat
+#   `php artisan package:discover` gagal saat build.
+# - vendor/node_modules : diinstall di dalam image.
+# - tests/storage logs : tidak dipakai runtime.
 .env
 .env.*
-!.env.example
-storage/*.key
-storage/logs/*.log
+.git
+.github
+vendor
+node_modules
+bootstrap/cache/*.php
+storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
-/public/storage
+tests
+.phpunit.cache
+.phpunit.result.cache

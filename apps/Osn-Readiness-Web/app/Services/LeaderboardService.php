@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -13,9 +14,18 @@ use Illuminate\Support\Facades\DB;
  *
  * Latihan = tabel quiz_pengerjaan. Tingkat sebuah quiz diambil dari materi.tingkat_id.
  * Durasi = waktu submit dikurangi created_at pengerjaan (detik).
+ *
+ * Hasil per tingkat di-cache 30 detik: satu CTE penuh dipakai bersama oleh
+ * daftar top dan posisi saya, sehingga halaman leaderboard tidak menghitung
+ * ulang peringkat untuk setiap pemanggilan. Naikkan VERSI_CACHE bila bentuk
+ * data cache berubah.
  */
 class LeaderboardService
 {
+    private const VERSI_CACHE = 'v1';
+
+    private const TTL_CACHE_DETIK = 30;
+
     public function tingkatId(string $tingkat): int
     {
         $kata = mb_strtolower((string) config("leaderboard.nama_tingkat.{$tingkat}"));
@@ -32,28 +42,13 @@ class LeaderboardService
     public function top(string $tingkat, ?int $limit = null): array
     {
         $limit = max(1, (int) ($limit ?? config('leaderboard.limit')));
-        $tingkatId = $this->tingkatId($tingkat);
-        $bindings = $this->bindings($tingkat, $tingkatId);
-
-        $rows = DB::select(
-            $this->cte().' SELECT * FROM ranked ORDER BY peringkat, nama LIMIT '.$limit,
-            $bindings
-        );
-
-        $totalLatihan = $this->totalLatihan($tingkatId);
+        $data = $this->data($tingkat);
 
         return [
             'tingkat' => $tingkat,
-            'batas_pretest' => $this->batas($tingkat),
-            'total_peserta' => $this->hitungPeserta($bindings),
-            'peringkat' => array_map(fn ($r) => [
-                'peringkat' => (int) $r->peringkat,
-                'nama' => $this->singkat($r->nama),
-                'skor' => $this->angka($r->skor),
-                'latihan_selesai' => (int) $r->latihan_selesai,
-                'total_latihan' => $totalLatihan,
-                'total_durasi_detik' => (int) round($r->total_durasi),
-            ], $rows),
+            'batas_pretest' => $data['batas_pretest'],
+            'total_peserta' => $data['total_peserta'],
+            'peringkat' => array_slice($data['peringkat'], 0, $limit),
         ];
     }
 
@@ -86,14 +81,10 @@ class LeaderboardService
             ];
         }
 
-        $bindings = $this->bindings($tingkat, $tingkatId);
+        $data = $this->data($tingkat, $tingkatId);
+        $baris = $data['per_pengguna'][$userId] ?? null;
 
-        $baris = DB::selectOne(
-            $this->cte().' SELECT * FROM ranked WHERE user_id = :uid',
-            $bindings + ['uid' => $userId]
-        );
-
-        if (! $baris) {
+        if ($baris === null) {
             return [
                 'layak' => true,
                 'peringkat' => null,
@@ -103,17 +94,65 @@ class LeaderboardService
 
         return [
             'layak' => true,
-            'peringkat' => (int) $baris->peringkat,
-            'total_peserta' => $this->hitungPeserta($bindings),
-            'skor' => $this->angka($baris->skor),
-            'latihan_selesai' => (int) $baris->latihan_selesai,
-            'total_latihan' => $this->totalLatihan($tingkatId),
+            'peringkat' => $baris['peringkat'],
+            'total_peserta' => $data['total_peserta'],
+            'skor' => $baris['skor'],
+            'latihan_selesai' => $baris['latihan_selesai'],
+            'total_latihan' => $baris['total_latihan'],
         ];
     }
 
-    private function hitungPeserta(array $bindings): int
+    /**
+     * Satu hitungan penuh per tingkat per 30 detik.
+     *
+     * @return array<string, mixed>
+     */
+    private function data(string $tingkat, ?int $tingkatId = null): array
     {
-        return (int) DB::selectOne($this->cte().' SELECT COUNT(*) AS n FROM agregat', $bindings)->n;
+        $tingkatId ??= $this->tingkatId($tingkat);
+
+        return Cache::remember(
+            'leaderboard:'.self::VERSI_CACHE.':'.$tingkatId.':'.$tingkat,
+            now()->addSeconds(self::TTL_CACHE_DETIK),
+            fn (): array => $this->bangun($tingkat, $tingkatId),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function bangun(string $tingkat, int $tingkatId): array
+    {
+        $rows = DB::select(
+            $this->cte().' SELECT * FROM ranked ORDER BY peringkat, nama',
+            $this->bindings($tingkat, $tingkatId)
+        );
+
+        $totalLatihan = $this->totalLatihan($tingkatId);
+        $peringkat = [];
+        $perPengguna = [];
+
+        foreach ($rows as $r) {
+            $baris = [
+                'peringkat' => (int) $r->peringkat,
+                'nama' => $this->singkat($r->nama),
+                'skor' => $this->angka($r->skor),
+                'latihan_selesai' => (int) $r->latihan_selesai,
+                'total_latihan' => $totalLatihan,
+                'total_durasi_detik' => (int) round($r->total_durasi),
+            ];
+
+            $peringkat[] = $baris;
+            $perPengguna[(int) $r->user_id] = $baris;
+        }
+
+        return [
+            'batas_pretest' => $this->batas($tingkat),
+            'total_peserta' => count($peringkat),
+            'total_latihan' => $totalLatihan,
+            'peringkat' => $peringkat,
+            'per_pengguna' => $perPengguna,
+        ];
     }
 
     private function totalLatihan(int $tingkatId): int
@@ -135,7 +174,7 @@ class LeaderboardService
         ];
     }
 
-    /** CTE bersama (PostgreSQL). Diikuti SELECT dari: ranked atau agregat. */
+    /** CTE bersama (PostgreSQL); SELECT selalu membaca ranked. */
     private function cte(): string
     {
         return <<<'SQL'

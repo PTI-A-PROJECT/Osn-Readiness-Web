@@ -240,12 +240,6 @@ function pindah(i) {
 /* ---------- Timer Pre-Test ---------- */
 const sisaDetik = ref(DURASI_PRETEST_DETIK)
 
-console.log('Durasi awal:', DURASI_PRETEST_DETIK)
-
-watch(sisaDetik, (nilai) => {
-  console.log('Sisa waktu:', nilai)
-})
-
 const waktuTampil = computed(() => {
   const menit = Math.floor(sisaDetik.value / 60)
   const detik = sisaDetik.value % 60

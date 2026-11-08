@@ -62,15 +62,16 @@ return [
     | Dipanggil lewat PerhitunganClientInterface. Header X-Internal-Token
     | diambil dari token di sini. Timeout dan retry sengaja pendek karena
     | pemanggilan berjalan di dalam request web; jeda panjang untuk recovering
-    | ulang ada di NilaiUlangJob.
+    | ulang ada di NilaiUlangJob. Timeout 3 detik x 2 percobaan (retry 1)
+    | membatasi worker tertahan saat layanan hitung lambat.
     |
     */
 
     'perhitungan' => [
         'url' => env('PERHITUNGAN_URL', 'http://localhost:8001'),
         'token' => env('PERHITUNGAN_TOKEN'),
-        'timeout' => (int) env('PERHITUNGAN_TIMEOUT', 5),
-        'retry' => (int) env('PERHITUNGAN_RETRY', 2),
+        'timeout' => (int) env('PERHITUNGAN_TIMEOUT', 3),
+        'retry' => (int) env('PERHITUNGAN_RETRY', 1),
     ],
 
 ];

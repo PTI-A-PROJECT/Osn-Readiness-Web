@@ -57,6 +57,21 @@ export const useAuthStore = defineStore('auth', () => {
     return meInflight
   }
 
+  // Jeda sebelum percobaan ulang /auth/me (300 ms lalu 900 ms).
+  const JEDA_RETRY_ME = [300, 900]
+
+  // Hanya kegagalan sementara yang layak dicoba ulang: jaringan/timeout
+  // (tanpa respons) dan 5xx. 401/403/4xx berarti sesi memang tidak sah.
+  function errorSementara(err) {
+    const status = err?.response?.status
+    if (status) return status >= 500
+    return err?.code !== 'ERR_CANCELED'
+  }
+
+  function tunggu(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
   async function muatUser() {
     if (!token.value) {
       user.value = null
@@ -64,7 +79,18 @@ export const useAuthStore = defineStore('auth', () => {
       return
     }
     try {
-      user.value = await authService.me()
+      for (let percobaan = 0; ; percobaan++) {
+        try {
+          user.value = await authService.me()
+          return
+        } catch (err) {
+          // Server lambat tidak boleh langsung menghapus sesi siswa.
+          // Setelah percobaan habis, token tetap dibersihkan agar guard
+          // tidak terjebak loop redirect.
+          if (percobaan >= JEDA_RETRY_ME.length || !errorSementara(err)) throw err
+          await tunggu(JEDA_RETRY_ME[percobaan])
+        }
+      }
     } catch {
       user.value = null
       saveToken(null)

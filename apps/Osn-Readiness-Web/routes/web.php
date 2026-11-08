@@ -1,12 +1,11 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleOAuthController;
+use App\Http\Controllers\HalamanStatisController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HalamanStatisController::class, 'welcome']);
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +21,8 @@ Route::get('/auth/google/redirect', [GoogleOAuthController::class, 'redirect'])
 Route::get('/auth/google/callback', [GoogleOAuthController::class, 'callback'])
     ->name('google.callback');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HalamanStatisController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

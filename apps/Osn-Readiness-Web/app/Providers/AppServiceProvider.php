@@ -36,5 +36,18 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($identitas.'|'.$request->ip());
         });
+
+        // Endpoint terautentikasi dibatasi per user, bukan per IP: satu jaringan
+        // kampus berbagi IP sehingga batas per IP akan saling menghalangi.
+        // 180/menit cukup untuk polling nilai tiap 5 detik (12/menit) ditambah
+        // autosave 20 soal, tetapi FE yang rusak tidak bisa membanjiri server.
+        RateLimiter::for('api', function (Request $request): Limit {
+            return Limit::perMinute(180)->by($request->user()?->getAuthIdentifier() ?: $request->ip());
+        });
+
+        // Registrasi menjalankan bcrypt yang mahal di CPU, jadi dibatasi per IP.
+        RateLimiter::for('register', function (Request $request): Limit {
+            return Limit::perMinute(5)->by($request->ip());
+        });
     }
 }

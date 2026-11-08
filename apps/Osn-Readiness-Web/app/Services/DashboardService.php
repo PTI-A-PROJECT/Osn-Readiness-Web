@@ -45,7 +45,11 @@ class DashboardService implements DashboardServiceInterface
     private function perTingkat(User $user, TingkatSeleksi $tingkat): array
     {
         $status = $this->putaranService->status($user, $tingkat);
-        $syarat = $this->syaratService->periksa($user, $tingkat);
+
+        // status() sudah menjalankan periksa() saat tahap ditentukan dari
+        // materi wajib; hanya panggil ulang bila status tidak membawanya
+        // (mis. sudah lulus atau simulasi sedang berjalan).
+        $syarat = $status->syaratSimulasi ?? $this->syaratService->periksa($user, $tingkat);
 
         $terakhir = $status->putaranAktifId === null
             ? null

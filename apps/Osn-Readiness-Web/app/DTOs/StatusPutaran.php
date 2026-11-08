@@ -16,6 +16,10 @@ use App\Enums\TahapSiswa;
  *
  * Id disimpan, bukan hanya boolean, supaya pemanggil tidak perlu query ulang
  * untuk membuka pre-test atau simulasi yang sedang berjalan.
+ *
+ * syaratSimulasi diisi hanya bila tahap ditentukan dari materi wajib (tahap
+ * Belajar/SiapSimulasi). Pemanggil seperti dashboard boleh memakainya ulang
+ * alih-alih memanggil SyaratSimulasiService::periksa() untuk kedua kalinya.
  */
 final class StatusPutaran
 {
@@ -31,6 +35,7 @@ final class StatusPutaran
         public readonly bool $bolehPretestBaru,
         public readonly TahapSiswa $tahap,
         public readonly int $sisaKuotaSimulasi = 0,
+        public readonly ?SyaratSimulasi $syaratSimulasi = null,
     ) {}
 
     public function pretestBerjalan(): bool
