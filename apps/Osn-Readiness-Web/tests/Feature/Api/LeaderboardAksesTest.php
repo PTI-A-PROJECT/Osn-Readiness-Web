@@ -2,10 +2,16 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\Kompetensi;
+use App\Models\Materi;
+use App\Models\Pretest;
+use App\Models\Quiz;
+use App\Models\QuizPengerjaan;
 use App\Models\TingkatSeleksi;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class LeaderboardAksesTest extends TestCase
@@ -15,6 +21,9 @@ class LeaderboardAksesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // Leaderboard di-cache 30 detik; bersihkan supaya data yang dibuat
+        // di satu tes tidak tertukar dengan tes lain.
+        Cache::flush();
         $this->seed(RolesAndPermissionsSeeder::class);
         TingkatSeleksi::factory()->kabupaten()->create();
     }
@@ -45,5 +54,46 @@ class LeaderboardAksesTest extends TestCase
     public function test_leaderboard_tanpa_login_ditolak(): void
     {
         $this->getJson('/api/leaderboard?tingkat=kabupaten')->assertUnauthorized();
+    }
+
+    public function test_peringkat_dan_posisi_saya_memakai_data_yang_sama(): void
+    {
+        $tingkat = TingkatSeleksi::query()->firstOrFail();
+        $siswa = User::factory()->siswa()->create();
+
+        Pretest::factory()->selesai(80)->create([
+            'user_id' => $siswa->id,
+            'tingkat_id' => $tingkat->id,
+        ]);
+
+        $kompetensi = Kompetensi::factory()->create(['tingkat_id' => $tingkat->id]);
+        $materi = Materi::factory()->create([
+            'tingkat_id' => $tingkat->id,
+            'kompetensi_id' => $kompetensi->id,
+        ]);
+        $quiz = Quiz::factory()->create(['materi_id' => $materi->id]);
+
+        QuizPengerjaan::factory()->selesai(90)->create([
+            'user_id' => $siswa->id,
+            'quiz_id' => $quiz->id,
+        ]);
+
+        Cache::flush();
+
+        $top = $this->actingAs($siswa)
+            ->getJson('/api/leaderboard?tingkat=kabupaten')
+            ->assertOk()
+            ->json('data');
+
+        $me = $this->actingAs($siswa)
+            ->getJson('/api/leaderboard/me?tingkat=kabupaten')
+            ->assertOk()
+            ->json('data');
+
+        $this->assertSame(1, $top['total_peserta']);
+        $this->assertSame($top['total_peserta'], $me['total_peserta']);
+        $this->assertSame($top['peringkat'][0]['peringkat'], $me['peringkat']);
+        $this->assertSame((float) $top['peringkat'][0]['skor'], (float) $me['skor']);
+        $this->assertSame(90.0, (float) $me['skor']);
     }
 }

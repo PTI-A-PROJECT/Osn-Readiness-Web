@@ -10,6 +10,7 @@ use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SyaratSimulasiServiceInterface;
 use App\DTOs\StatusPutaran;
+use App\DTOs\SyaratSimulasi;
 use App\Enums\TahapSiswa;
 use App\Models\Pretest;
 use App\Models\TingkatSeleksi;
@@ -53,7 +54,7 @@ class PutaranService implements PutaranServiceInterface
             && $pretestBerjalan === null
             && ($putaranAktif === null || $putaranHabis);
 
-        $tahap = $this->tentukanTahap(
+        [$tahap, $syarat] = $this->tentukanTahap(
             user: $user,
             tingkat: $tingkat,
             sudahLulus: $sudahLulus,
@@ -77,6 +78,7 @@ class PutaranService implements PutaranServiceInterface
             bolehPretestBaru: $bolehPretestBaru,
             tahap: $tahap,
             sisaKuotaSimulasi: max(0, (int) $aturan->simulasiMaksPercobaan - $percobaanTerpakai),
+            syaratSimulasi: $syarat,
         );
     }
 
@@ -93,6 +95,9 @@ class PutaranService implements PutaranServiceInterface
             && $this->kenaikanRepository->adaLulus($user->id, $sebelumnya->id);
     }
 
+    /**
+     * @return array{0: TahapSiswa, 1: ?SyaratSimulasi}
+     */
     private function tentukanTahap(
         User $user,
         TingkatSeleksi $tingkat,
@@ -103,33 +108,33 @@ class PutaranService implements PutaranServiceInterface
         bool $putaranHabis,
         int $percobaanTerpakai,
         int $maksPercobaan,
-    ): TahapSiswa {
+    ): array {
         if ($sudahLulus) {
-            return TahapSiswa::Lulus;
+            return [TahapSiswa::Lulus, null];
         }
 
         if ($pretestBerjalan) {
-            return TahapSiswa::PretestBerjalan;
+            return [TahapSiswa::PretestBerjalan, null];
         }
 
         if ($simulasiBerjalan) {
-            return TahapSiswa::SimulasiBerjalan;
+            return [TahapSiswa::SimulasiBerjalan, null];
         }
 
         if (! $putaranAktif) {
-            return TahapSiswa::BelumPretest;
+            return [TahapSiswa::BelumPretest, null];
         }
 
         if ($putaranHabis) {
-            return TahapSiswa::PutaranHabis;
+            return [TahapSiswa::PutaranHabis, null];
         }
 
         $syarat = $this->syaratSimulasiService->periksa($user, $tingkat);
 
         if ($syarat->terpenuhi && $percobaanTerpakai < $maksPercobaan) {
-            return TahapSiswa::SiapSimulasi;
+            return [TahapSiswa::SiapSimulasi, $syarat];
         }
 
-        return TahapSiswa::Belajar;
+        return [TahapSiswa::Belajar, $syarat];
     }
 }

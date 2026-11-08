@@ -24,7 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/apache-production.conf /etc/apache2/sites-available/000-default.conf
+# Batasi worker prefork (RAM ±2 GB) dan tuning KeepAlive global.
+COPY docker/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+COPY docker/apache-tuning.conf /etc/apache2/conf-available/zz-production-tuning.conf
+RUN a2enmod mpm_prefork && a2enconf zz-production-tuning
 COPY docker/php-production.ini /usr/local/etc/php/conf.d/zz-production.ini
+COPY --chmod=0755 docker/entrypoint-production.sh /usr/local/bin/entrypoint-production
 
 WORKDIR /var/www/html
 
@@ -47,4 +52,5 @@ RUN composer dump-autoload --no-dev --optimize --no-scripts \
 
 EXPOSE 80
 
+ENTRYPOINT ["entrypoint-production"]
 CMD ["apache2-foreground"]

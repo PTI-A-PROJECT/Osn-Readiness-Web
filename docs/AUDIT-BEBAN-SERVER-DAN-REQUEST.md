@@ -354,3 +354,27 @@ Audit ini perkiraan. Sebelum uji coba besar, ukur:
 - `docker stats` dan `SELECT count(*) FROM pg_stat_activity` selama uji.
 - Uji skenario gagal: matikan `analytics-api` saat submit untuk melihat perilaku
   timeout (BE-3, FE-3).
+
+## Status perbaikan (diperbarui)
+
+Dikerjakan dan diukur:
+
+| Butir | Perubahan | Bukti |
+|---|---|---|
+| INF-1 | `cors.max_age` 7200 | baris OPTIONS di Network hilang; sesi FE 150 → 49 baris |
+| INF-3 | `php artisan config:cache/event:cache/view:cache/route:cache` di entrypoint container (bukan build) | log container: 4 cache berhasil, `/up` 200 |
+| INF-2 | MPM prefork 48 worker, `MaxConnectionsPerChild` 500, KeepAlive 2 dtk, `memory_limit` 256M | `apache2 -t` OK, `memory_limit=256M`, `MaxRequestWorkers 48` |
+| INF-2 | compose: `mem_limit`/`cpus` per service, Postgres `max_connections=120`/`shared_buffers=256MB`/`work_mem=8MB`, log Docker dibatasi 10m×5, healthcheck frontend | `docker compose config` valid |
+| INF-4 | gzip aset + `Cache-Control: no-cache` untuk `index.html` | image FE: index `no-cache`, aset `immutable` + `Content-Encoding: gzip`, SPA fallback 200 |
+| INF-4 | analytics timeout 3 dtk, retry 1 | `config/services.php`, `.env.example` |
+| BE-1 | syarat simulasi tidak dihitung dua kali di `/dashboard` | query `/api/dashboard` **21 → 15** (diukur dengan `DB::listen`, fixture 1 tingkat + 1 materi wajib) |
+| BE-2 | leaderboard di-cache 30 dtk per tingkat, satu CTE untuk daftar + posisi | dua kali buka `/leaderboard` + `/leaderboard/me`: CTE **6 → 0**, query **14 → 6**; permintaan pertama 3 → 1 CTE |
+| BE-4 | `throttle:api` 180/menit per user, registrasi 5/menit per IP | `ThrottleApiTest` |
+| BE-5 | `loadMissing('roles')` di middleware anggota | suite lulus |
+| BE-6 | index `quiz_pengerjaan(quiz_id,user_id)`, `pretest(tingkat_id,user_id)`, `hasil_simulasi(simulasi_id)`, `hasil_simulasi(pretest_id)` | migrasi `2026_11_08_000002` terpasang, index muncul di `pg_indexes` |
+| FE-2 | `/auth/me` dicoba ulang 300 ms/900 ms untuk 5xx/timeout sebelum token dihapus | tes baru di `auth.spec.js` |
+| FE lain | `console.log` timer dihapus; `.dockerignore` mencegah `.env` dan manifest dev ikut ke image | build image produksi berhasil dari working tree kotor |
+
+Pengujian: backend 515 lulus (7 gagal = tes view Breeze `Vite manifest not found`, baseline lama), frontend 257 lulus.
+
+Belum dikerjakan: agregat dashboard dalam satu respons (FE), ringkasan benar/total di `/riwayat`, polling nilai lewat GET + backoff, autosave batch/retry, submit asinkron penuh, Redis/PgBouncer.

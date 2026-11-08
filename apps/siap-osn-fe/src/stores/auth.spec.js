@@ -69,6 +69,34 @@ describe('auth store', () => {
     expect(authService.simpanToken).toHaveBeenCalledWith(null)
   })
 
+  it('fetchMe 401 tidak mencoba ulang dan langsung menghapus token', async () => {
+    authService.tokenTersimpan.mockReturnValue('tok-basi')
+    authService.me.mockRejectedValue({ response: { status: 401 } })
+    const auth = useAuthStore()
+    await auth.fetchMe()
+    expect(authService.me).toHaveBeenCalledTimes(1)
+    expect(authService.simpanToken).toHaveBeenCalledWith(null)
+  })
+
+  it('fetchMe mencoba ulang saat server 5xx lalu mempertahankan sesi', async () => {
+    vi.useFakeTimers()
+    try {
+      authService.tokenTersimpan.mockReturnValue('tok123')
+      authService.me
+        .mockRejectedValueOnce({ response: { status: 502 } })
+        .mockResolvedValueOnce(userSiswa)
+      const auth = useAuthStore()
+      const janji = auth.fetchMe()
+      await vi.advanceTimersByTimeAsync(300)
+      await janji
+      expect(authService.me).toHaveBeenCalledTimes(2)
+      expect(auth.user).toEqual(userSiswa)
+      expect(authService.simpanToken).not.toHaveBeenCalled()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('login menyimpan token dan user dari service', async () => {
     authService.login.mockResolvedValue({ user: userSiswa, token: 'tok123' })
     const auth = useAuthStore()

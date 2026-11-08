@@ -32,12 +32,13 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Rute publik
 |--------------------------------------------------------------------------
-| Registrasi dan login tidak butuh token. Login dibatasi lima kali per menit
-| per identitas (NIM atau email) + IP lewat named limiter "login".
+| Registrasi dan login tidak butuh token. Registrasi dibatasi lima kali per
+| menit per IP lewat limiter "register" (bcrypt mahal). Login dibatasi lima
+| kali per menit per identitas (NIM atau email) + IP lewat limiter "login".
 */
 
 Route::prefix('auth')->group(function (): void {
-    Route::post('register', [AuthController::class, 'register']);
+    Route::post('register', [AuthController::class, 'register'])->middleware('throttle:register');
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
     Route::post('google/exchange', [GoogleAuthController::class, 'exchange'])->middleware('throttle:5,1');
 });
@@ -47,13 +48,14 @@ Route::prefix('auth')->group(function (): void {
 | Rute siswa
 |--------------------------------------------------------------------------
 | Semua rute di sini berada di balik auth:sanctum + active, sehingga akun yang
-| dinonaktifkan di tengah sesi langsung tertolak.
+| dinonaktifkan di tengah sesi langsung tertolak. throttle:api membatasi per
+| user (180/menit) supaya FE yang rusak tidak membanjiri server.
 |
 | Blok per paket; hanya isi blok milik paket yang sedang dikerjakan supaya
 | konflik merge antar orang tetap kecil.
 */
 
-Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
+Route::middleware(['auth:sanctum', 'active', 'throttle:api'])->group(function (): void {
     Route::prefix('auth')->group(function (): void {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);

@@ -10,7 +10,9 @@ class TolakAnggota
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()?->roles->contains('name', 'anggota')) {
+        // loadMissing: kalau relasi sudah dimuat (mis. oleh controller), tidak
+        // ada query ulang dan pemuatan sebelumnya tidak tertimpa.
+        if ($request->user()?->loadMissing('roles')->roles->contains('name', 'anggota')) {
             return response()->json(['message' => 'Akun anggota tidak dapat memakai fitur belajar.'], 403);
         }
 
