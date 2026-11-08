@@ -45,7 +45,7 @@
     "pembahasan": "Karena disyaratkan x < y < z (terurut pasti), kita hanya menghitung kombinasi bilangan bulat positif yang memenuhi:\n1. 1 + 2 + 8 = 11\n2. 1 + 3 + 7 = 11\n3. 1 + 4 + 6 = 11\n4. 2 + 3 + 6 = 11\n5. 2 + 4 + 5 = 11\nTotalnya ada 5 solusi."
   },
   {
-    "soal": "Berapa banyak kemungkinan solusi untuk x + y + z = 11, jika x, y, z adalah bilangan-bilangan bulat positif dan memenuhi hubungan x y z ?",
+    "soal": "Berapa banyak kemungkinan solusi untuk x + y + z = 11, jika x, y, z adalah bilangan-bilangan bulat positif dan memenuhi hubungan x ≤ y ≤ z?",
     "pilihan": {
       "a": "5",
       "b": "10",
@@ -54,8 +54,8 @@
       "e": "21"
     },
     "kode": null,
-    "gambar_url": "http://latex.codecogs.com/gif.latex?%5Cdpi%7B80%7D%20%5Csmall%20%5Cleq",
-    "gambar_lokal": "soal_4.png",
+    "gambar_url": null,
+    "gambar_lokal": null,
     "jawaban_benar": "b",
     "pembahasan": "Hubungan yang dimaksud adalah x <= y <= z. Selain 5 kombinasi unik di mana ketiganya berbeda (1,2,8; 1,3,7; 1,4,6; 2,3,6; 2,4,5), kita sertakan kombinasi yang memiliki elemen sama:\n6. 1 + 1 + 9 = 11 (1 <= 1 <= 9)\n7. 1 + 5 + 5 = 11 (1 <= 5 <= 5)\n8. 2 + 2 + 7 = 11 (2 <= 2 <= 7)\n9. 3 + 3 + 5 = 11 (3 <= 3 <= 5)\n10. 3 + 4 + 4 = 11 (3 <= 4 <= 4)\nTotal kemungkinan solusi ada 10."
   },

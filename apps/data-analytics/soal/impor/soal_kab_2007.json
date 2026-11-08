@@ -57,6 +57,25 @@
     "gambar": null
   },
   {
+    "id_sumber": "kab_soal4_2007",
+    "tingkat": "kabupaten",
+    "materi": "kab-kombinatorika",
+    "tingkat_kesulitan": "sedang",
+    "peruntukan": "pretest",
+    "deskripsi_soal": null,
+    "soal": "Berapa banyak kemungkinan solusi untuk x + y + z = 11, jika x, y, z adalah bilangan-bilangan bulat positif dan memenuhi hubungan x ≤ y ≤ z?",
+    "pilihan": {
+      "a": "5",
+      "b": "10",
+      "c": "30",
+      "d": "45",
+      "e": "21"
+    },
+    "jawaban_benar": "b",
+    "pembahasan": "Hubungan yang dimaksud adalah x <= y <= z. Selain 5 kombinasi unik di mana ketiganya berbeda (1,2,8; 1,3,7; 1,4,6; 2,3,6; 2,4,5), kita sertakan kombinasi yang memiliki elemen sama:\n6. 1 + 1 + 9 = 11 (1 <= 1 <= 9)\n7. 1 + 5 + 5 = 11 (1 <= 5 <= 5)\n8. 2 + 2 + 7 = 11 (2 <= 2 <= 7)\n9. 3 + 3 + 5 = 11 (3 <= 3 <= 5)\n10. 3 + 4 + 4 = 11 (3 <= 4 <= 4)\nTotal kemungkinan solusi ada 10.",
+    "gambar": null
+  },
+  {
     "id_sumber": "kab_soal5_2007",
     "tingkat": "kabupaten",
     "materi": "kab-kombinatorika",

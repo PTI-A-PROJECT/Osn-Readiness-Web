@@ -3,18 +3,13 @@
   "materi": "Materi/ (branch integrasi)",
   "kebijakan_peruntukan": "<=2012 pretest, <=2019 latihan, selebihnya simulasi",
   "baris_sumber": 1816,
-  "siap_impor": 1736,
-  "dilewati": 80,
+  "siap_impor": 1737,
+  "dilewati": 79,
   "alasan": {
-    "gambar hilang": 32,
+    "gambar hilang": 31,
     "jawaban program belum didukung": 48
   },
   "rinci": [
-    {
-      "id_sumber": "kab_soal4_2007",
-      "alasan": "gambar hilang",
-      "rinci": "soal_4.png"
-    },
     {
       "id_sumber": "kab_soal2_2008",
       "alasan": "gambar hilang",
