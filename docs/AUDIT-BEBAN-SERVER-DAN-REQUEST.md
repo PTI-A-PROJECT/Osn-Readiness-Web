@@ -377,4 +377,6 @@ Dikerjakan dan diukur:
 
 Pengujian: backend 515 lulus (7 gagal = tes view Breeze `Vite manifest not found`, baseline lama), frontend 257 lulus.
 
+Langkah deploy dan verifikasi di VPS: [PANDUAN-CEK-SETELAH-DEPLOY-OPTIMASI.md](PANDUAN-CEK-SETELAH-DEPLOY-OPTIMASI.md).
+
 Belum dikerjakan: agregat dashboard dalam satu respons (FE), ringkasan benar/total di `/riwayat`, polling nilai lewat GET + backoff, autosave batch/retry, submit asinkron penuh, Redis/PgBouncer.
