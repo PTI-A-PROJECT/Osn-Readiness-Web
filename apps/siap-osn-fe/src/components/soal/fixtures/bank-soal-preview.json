@@ -1,0 +1,24 @@
+[
+  {
+    "id_sumber": "kab_soal36_2024",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\n\nint panas(int X) {\n  if (X == 0)\n    return 0;\n  else\n    return (X % 10) + panas(X / 10);\n}\n\nint dingin(int X, int Y) {\n  int air = 0;\n  while (panas(air) != X) air = air + Y;\n  return air;\n}",
+    "kode": null,
+    "soal": "Berapakah kembalian dari pemanggilan dingin(2,35)?",
+    "pilihan": {},
+    "tingkat_kesulitan": "sedang"
+  },
+  {
+    "id_sumber": "kab_soal36_2013",
+    "deskripsi_soal": null,
+    "kode": "[[PROGRAM:1]]\npop();\nfor x := 1 to 3 do writeln( pop() );\npop();\n[[PROGRAM:2]]\nfor x := 1 to 3 do\n if (pop() <> -1) then writeln( pop() );",
+    "soal": "Jika potongan Program 1 diganti dengan Program 2, berapakah output yang dihasilkan sekarang?",
+    "pilihan": {
+      "a": "3 7 1",
+      "b": "3 1 ­1",
+      "c": "3 5 7",
+      "d": "3 7 ­1",
+      "e": "­1 ­1 ­1"
+    },
+    "tingkat_kesulitan": "sedang"
+  }
+]

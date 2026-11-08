@@ -1,21 +1,17 @@
 // @vitest-environment jsdom
-import { readFileSync } from 'node:fs'
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import PengerjaanSoal from './PengerjaanSoal.vue'
 import { mapSoal } from '@/services/mappers/pretest.js'
+import contohSoal from './fixtures/bank-soal-preview.json'
 
 vi.mock('@/components/UserMenu.vue', () => ({ default: { template: '<div />' } }))
 
-// Fixture dari JSON siap impor yang sama dengan data Laravel.
+// Fixture snapshot dari dua entri JSON impor Kabupaten 2013/2024.
+// Disimpan di frontend agar tersedia dalam container Docker /app.
 // Tidak mengakses API, membuat sesi, atau menulis ke database.
 function ambilDariImpor(tahun, idSumber) {
-  const lokasi = new URL(
-    '../../../../data-analytics/soal/impor/soal_kab_' + tahun + '.json',
-    import.meta.url,
-  )
-  const data = JSON.parse(readFileSync(lokasi, 'utf8'))
-  const baris = data.find((butir) => butir.id_sumber === idSumber)
+  const baris = contohSoal.find((butir) => butir.id_sumber === idSumber)
   if (!baris) throw new Error('Soal tidak ditemukan: ' + idSumber)
 
   return mapSoal({
