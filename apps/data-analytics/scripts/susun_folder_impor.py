@@ -230,9 +230,17 @@ def normalisasi_butir(
     )
     if nama_gambar and gambar_impor is None:
         return None
-    # Kontrak Laravel tidak memiliki kolom kode; letakkan di konteks agar
-    # potongan kode tidak hilang ketika soal diimpor.
-    konteks_lengkap = gabungkan_konteks(konteks, nilai(butir, "kode", "kode_soal"))
+    # Pertahankan multi-code sebagai string di kolom kode Laravel.
+    # Soal lama tanpa penanda tetap memakai jalur konteks sebelumnya.
+    kode_sumber = nilai(butir, "kode", "kode_soal")
+    kode_multi = (
+        kode_sumber
+        if isinstance(kode_sumber, str)
+        and kode_sumber.startswith("[[PROGRAM:1]]\\n")
+        and "\\n[[PROGRAM:2]]\\n" in kode_sumber
+        else None
+    )
+    konteks_lengkap = gabungkan_konteks(konteks, None if kode_multi else kode_sumber)
     return {
         "id_sumber": id_sumber,
         "tingkat": tingkat,
@@ -245,6 +253,7 @@ def normalisasi_butir(
         "jawaban_benar": jawaban,
         "pembahasan": str(nilai(butir, "pembahasan") or ""),
         "gambar": gambar_impor,
+        **({"kode": kode_multi} if kode_multi else {}),
     }
 
 
