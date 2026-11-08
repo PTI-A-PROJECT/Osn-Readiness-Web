@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ENDPOINTS } from '@/lib/endpoints.js'
+import { invalidasi } from '@/lib/cache.js'
 
 // Kunci penyimpanan Bearer token Sanctum. Ditaruh di sini (bukan di
 // stores/auth) agar tidak circular: api <- stores/auth <- router.
@@ -36,7 +37,11 @@ const TANPA_REDIRECT_401 = [
 let sedangRedirect = false
 
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    // Mutasi sukses mengubah data yang mungkin sudah di-cache (lib/cache.js).
+    if (res.config?.method && res.config.method.toLowerCase() !== 'get') invalidasi()
+    return res
+  },
   async (err) => {
     const url = err.config?.url ?? ''
     const sesiHabis =

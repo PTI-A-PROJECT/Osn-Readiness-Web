@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { api } from '@/lib/api.js'
+import { kosongkan } from '@/lib/cache.js'
 import { riwayatService } from '@/services/riwayat.js'
 
 vi.mock('@/lib/api.js', () => ({
@@ -9,6 +10,7 @@ vi.mock('@/lib/api.js', () => ({
 
 beforeEach(() => {
   vi.resetAllMocks()
+  kosongkan()
 })
 
 describe('riwayatService', () => {

@@ -14,12 +14,13 @@ export const useMateriStore = defineStore('materi', () => {
   const error = ref(false)
 
   let inflight = null
+  let inflightTingkatId = null
   let controller = null
   let cacheTingkatId = null
   let dimuatPada = 0
 
   function fetchDaftar({ tingkatId: tid, force = false } = {}) {
-    if (inflight && !force) return inflight
+    if (inflight && !force && tid === inflightTingkatId) return inflight
     if (!force && tid === cacheTingkatId && daftar.value.length && Date.now() - dimuatPada < SEGAR_MS) {
       return Promise.resolve()
     }
@@ -29,6 +30,7 @@ export const useMateriStore = defineStore('materi', () => {
     loading.value = true
     error.value = false
 
+    inflightTingkatId = tid
     inflight = belajarService
       .daftar({ tingkatId: tid, signal })
       .then((list) => {

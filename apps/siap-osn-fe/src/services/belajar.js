@@ -1,4 +1,5 @@
 import { api } from '@/lib/api.js'
+import { ambil } from '@/lib/cache.js'
 import { ENDPOINTS } from '@/lib/endpoints.js'
 import { mapMateri, mapMateriDetail, mapProgressTersimpan, mapProgressSubmateriTersimpan } from '@/services/mappers/belajar.js'
 import { unwrap } from '@/services/envelope.js'
@@ -8,16 +9,18 @@ import { unwrap } from '@/services/envelope.js'
 // hanya `data`.
 export const belajarService = {
   // GET /materi?tingkat_id= -> daftar terurut server (wajib dulu).
-  async daftar({ tingkatId = null, signal } = {}) {
+  async daftar({ tingkatId = null } = {}) {
     const params = {}
     if (tingkatId) params.tingkat_id = tingkatId
-    const list = unwrap(await api.get(ENDPOINTS.siswa.materi, { params, signal }))
+    const res = await ambil(`materi:${tingkatId ?? ''}`, () => api.get(ENDPOINTS.siswa.materi, { params }), { ttl: 5 * 60_000 })
+    const list = unwrap(res)
     return (Array.isArray(list) ? list : []).map(mapMateri)
   },
 
   // GET /materi/{id} -> detail + isi/file/gambar.
-  async detail({ id, signal } = {}) {
-    return mapMateriDetail(unwrap(await api.get(ENDPOINTS.siswa.materiDetail(id), { signal })))
+  async detail({ id } = {}) {
+    const res = await ambil(`materi-detail:${id}`, () => api.get(ENDPOINTS.siswa.materiDetail(id)), { ttl: 2 * 60_000 })
+    return mapMateriDetail(unwrap(res))
   },
 
   // PUT /materi/{id}/progress {status: 'selesai'}.

@@ -1,4 +1,5 @@
 import { api } from '@/lib/api.js'
+import { ambil } from '@/lib/cache.js'
 import { ENDPOINTS } from '@/lib/endpoints.js'
 import { mapHasilPretest, mapTingkat, paketPretest } from '@/services/mappers/pretest.js'
 import { unwrap } from '@/services/envelope.js'
@@ -7,8 +8,9 @@ import { unwrap } from '@/services/envelope.js'
 // konversi Laravel di services/mappers/pretest.js.
 export const pretestService = {
   // GET /tingkat -> daftar level + tahap (untuk pemilih tingkat manual).
-  async tingkat({ signal } = {}) {
-    const list = unwrap(await api.get(ENDPOINTS.siswa.tingkat, { signal }))
+  async tingkat() {
+    const res = await ambil('tingkat', () => api.get(ENDPOINTS.siswa.tingkat), { ttl: 5 * 60_000 })
+    const list = unwrap(res)
     return (Array.isArray(list) ? list : []).map(mapTingkat)
   },
 
@@ -21,8 +23,13 @@ if (paket.jenis === 'hasil') throw new Error('Respons mulai pre-test tidak beris
   },
 
   // GET /pretest/{id} -> paket pengerjaan (resume) atau paket hasil.
-  async lihat({ id, signal } = {}) {
-    return paketPretest(unwrap(await api.get(ENDPOINTS.siswa.pretest(id), { signal })))
+  async lihat({ id } = {}) {
+    // Hanya hasil final yang di-cache: pengerjaan/menunggu harus selalu segar.
+    const res = await ambil(`pretest:${id}`, () => api.get(ENDPOINTS.siswa.pretest(id)), {
+      ttl: 0,
+      permanen: (r) => paketPretest(unwrap(r)).jenis === 'hasil',
+    })
+    return paketPretest(unwrap(res))
   },
 
   // PUT /pretest/{id}/jawaban {soal_id, jawaban_user} -> { message } tanpa data.

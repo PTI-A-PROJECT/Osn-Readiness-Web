@@ -32,7 +32,9 @@ return [
 
     'exposed_headers' => [],
 
-    'max_age' => 0,
+    // Browser menyimpan hasil preflight; 0 membuat tiap request API jadi dua.
+    // Chrome membatasi nilainya ke 7200 detik.
+    'max_age' => 7200,
 
     'supports_credentials' => true,
 

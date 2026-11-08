@@ -1,4 +1,5 @@
 import { api } from '@/lib/api.js'
+import { ambil } from '@/lib/cache.js'
 import { ENDPOINTS } from '@/lib/endpoints.js'
 import { mapHasilSimulasi, mapReview, mapSyarat, mapSimulasi, paketSimulasi } from '@/services/mappers/simulasi.js'
 import { unwrap } from '@/services/envelope.js'
@@ -8,19 +9,19 @@ import { unwrap } from '@/services/envelope.js'
 // ({ data }) tanpa message, dan unwrap tetap aman untuk itu.
 export const simulasiService = {
   // GET /simulasi/syarat?tingkat_id= -> { terpenuhi, alasan, rincian }
-  async syarat({ tingkatId, signal } = {}) {
-    return mapSyarat(unwrap(await api.get(ENDPOINTS.siswa.simulasiSyarat, {
+  async syarat({ tingkatId } = {}) {
+    const res = await ambil(`simulasi-syarat:${tingkatId}`, () => api.get(ENDPOINTS.siswa.simulasiSyarat, {
       params: { tingkat_id: tingkatId },
-      signal,
-    })))
+    }), { ttl: 2 * 60_000 })
+    return mapSyarat(unwrap(res))
   },
 
   // GET /simulasi?tingkat_id= -> daftar simulasi + sisa kuota per putaran.
-  async daftar({ tingkatId, signal } = {}) {
-    const list = unwrap(await api.get(ENDPOINTS.siswa.simulasi, {
+  async daftar({ tingkatId } = {}) {
+    const res = await ambil(`simulasi:${tingkatId}`, () => api.get(ENDPOINTS.siswa.simulasi, {
       params: { tingkat_id: tingkatId },
-      signal,
-    }))
+    }), { ttl: 2 * 60_000 })
+    const list = unwrap(res)
     return (Array.isArray(list) ? list : []).map(mapSimulasi)
   },
 
@@ -36,8 +37,13 @@ export const simulasiService = {
   },
 
   // GET /hasil-simulasi/{id} -> paket pengerjaan/menunggu atau paket hasil.
-  async lihat({ id, signal } = {}) {
-    return paketSimulasi(unwrap(await api.get(ENDPOINTS.siswa.hasilSimulasi(id), { signal })))
+  async lihat({ id } = {}) {
+    // Hanya hasil final yang di-cache: pengerjaan/menunggu harus selalu segar.
+    const res = await ambil(`hasil-simulasi:${id}`, () => api.get(ENDPOINTS.siswa.hasilSimulasi(id)), {
+      ttl: 0,
+      permanen: (r) => paketSimulasi(unwrap(r)).jenis === 'hasil',
+    })
+    return paketSimulasi(unwrap(res))
   },
 
   // PUT .../jawaban {soal_id, jawaban_user} -> { message } tanpa data.
