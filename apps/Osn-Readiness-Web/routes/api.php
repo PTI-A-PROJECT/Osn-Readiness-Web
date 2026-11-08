@@ -58,6 +58,12 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         Route::post('referal', [ReferalController::class, 'simpan']);
     });
 
+    // Preview soal hanya untuk development lokal, tetap di balik autentikasi.
+    // Di production route ini tidak didaftarkan (404).
+    if (app()->environment('local')) {
+        Route::get('dev/soal/{soal}', [App\\Http\\Controllers\\Api\\Dev\\PreviewSoalController::class, 'show']);
+    }
+
     // [B1-A] Akses tingkat dan status putaran.
     Route::get('tingkat', [TingkatController::class, 'index']);
 

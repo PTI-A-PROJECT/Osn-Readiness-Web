@@ -122,6 +122,13 @@ export const routes = [
         component: MateriView,
         meta: { requiresAuth: true, role: 'siswa', title: 'Materi' },
       },
+      // Route preview tidak ikut bundle production.
+      ...(import.meta.env.DEV ? [{
+        path: 'siswa/dev/preview-soal/:soalId',
+        name: 'siswa.dev.preview-soal',
+        component: () => import('@/views/siswa/DevPreviewSoalView.vue'),
+        meta: { requiresAuth: true, role: 'siswa', title: 'Preview Soal' },
+      }] : []),
       {
         path: 'siswa/latihan/:quizId',
         name: 'siswa.latihan',
