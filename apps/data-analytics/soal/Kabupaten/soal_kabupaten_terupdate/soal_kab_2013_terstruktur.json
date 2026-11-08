@@ -673,7 +673,7 @@
     "soal_id": "kab_soal36_2013",
     "tipe": "tunggal",
     "materi_id": "kab-algoritma",
-    "soal": "Diberikan potongan program berikut: pop();\nfor x := 1 to 3 do writeln( pop() );\npop(); jika potongan program tersebut diganti dengan for x := 1 to 3 do\n if (pop() <> -1) then writeln( pop() ); berapakah outputnya sekarang?",
+    "soal": "Jika potongan Program 1 diganti dengan Program 2, berapakah output yang dihasilkan sekarang?",
     "pilihan": {
       "a": "3 7 1",
       "b": "3 1 ­1",
@@ -681,7 +681,7 @@
       "d": "3 7 ­1",
       "e": "­1 ­1 ­1"
     },
-    "kode": "pop();\nfor x := 1 to 3 do writeln( pop() );\npop();",
+    "kode": "[[PROGRAM:1]]\npop();\nfor x := 1 to 3 do writeln( pop() );\npop();\n[[PROGRAM:2]]\nfor x := 1 to 3 do\n if (pop() <> -1) then writeln( pop() );",
     "gambar_url": null,
     "gambar_lokal": null,
     "kunci": "d",

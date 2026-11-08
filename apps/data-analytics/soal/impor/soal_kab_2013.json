@@ -670,8 +670,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "pop();\nfor x := 1 to 3 do writeln( pop() );\npop();",
-    "soal": "Diberikan potongan program berikut: pop();\nfor x := 1 to 3 do writeln( pop() );\npop(); jika potongan program tersebut diganti dengan for x := 1 to 3 do\n if (pop() <> -1) then writeln( pop() ); berapakah outputnya sekarang?",
+    "deskripsi_soal": "[[PROGRAM:1]]\npop();\nfor x := 1 to 3 do writeln( pop() );\npop();\n[[PROGRAM:2]]\nfor x := 1 to 3 do\n if (pop() <> -1) then writeln( pop() );",
+    "soal": "Jika potongan Program 1 diganti dengan Program 2, berapakah output yang dihasilkan sekarang?",
     "pilihan": {
       "a": "3 7 1",
       "b": "3 1 ­1",
