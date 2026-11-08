@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import UserMenu from '@/components/UserMenu.vue'
 import { renderKonten } from '@/lib/richtext.js'
+import { pisahkanProgram } from '@/lib/multiCode.js'
 
 const props = defineProps({
   judul: { type: String, default: 'Pengerjaan Soal' },
@@ -43,7 +44,7 @@ const emit = defineEmits([
 
 const petunjukTerbuka = ref(true)
 const modalSelesai = ref(false)
-const salinBerhasil = ref(false)
+const salinBerhasil = ref(null)
 
 const soalAktif = computed(() => props.soal[props.aktif] ?? null)
 const totalSoal = computed(() => props.total || props.soal.length)
@@ -51,7 +52,7 @@ const opsiSoal = computed(() => soalAktif.value?.opsi ?? [])
 
 watch(soalAktif, () => {
   modalSelesai.value = false
-  salinBerhasil.value = false
+  salinBerhasil.value = null
 })
 
 function ambilNilai(data, indeks, fallback = '') {
@@ -224,11 +225,15 @@ function kodeLamaDariKonteks(teks) {
 const kodeProgram = computed(
   () =>
     kodeEksplisit.value ||
+    // Saat impor, kode dapat digabung ke dalam konteks soal.
+    konteksMentah.value.match(/\[\[PROGRAM:\d+\]\][\s\S]*$/m)?.[0] ||
     konteksFence.value?.kode ||
     pertanyaanFence.value?.kode ||
     kodeLamaDariKonteks(konteksMentah.value) ||
     '',
 )
+
+const blokProgram = computed(() => pisahkanProgram(kodeProgram.value))
 
 const bahasaProgram = computed(() => {
   const k = kodeProgram.value
@@ -276,9 +281,6 @@ const namaFileKode = computed(
     })[bahasaProgram.value] ?? 'program.txt',
 )
 
-const barisKode = computed(() =>
-  kodeProgram.value ? kodeProgram.value.split('\n') : [],
-)
 
 // ======================================================
 // PERBAIKAN UTAMA: HAPUS KODE YANG MUNCUL DUA KALI
@@ -420,9 +422,9 @@ const pertanyaanFinal = computed(() => {
 
   // Untuk soal lama yang menyimpan kode sebagai teks biasa,
   // hapus kode dari pertanyaan tetapi pertahankan narasinya.
-  return tanpaKodeGanda(
+  return blokProgram.value.reduce(
+    (teks, blok) => tanpaKodeGanda(teks, blok.kode),
     pertanyaan,
-    kodeProgram.value,
   )
 })
 
@@ -501,10 +503,10 @@ const tampilKonteks = computed(() =>
 // SALIN KODE PROGRAM
 // ======================================================
 
-async function salinKode() {
+async function salinKode(blok, indeks) {
   try {
-    await navigator.clipboard.writeText(kodeProgram.value)
-    salinBerhasil.value = true
+    await navigator.clipboard.writeText(blok.kode)
+    salinBerhasil.value = indeks
   } catch (error) {
     console.error('Tidak dapat menyalin kode:', error)
   }
@@ -646,7 +648,11 @@ async function salinKode() {
           ></div>
 
           <!-- EDITOR KODE PROGRAM -->
-          <div v-if="kodeProgram" class="program-editor">
+          <div
+            v-for="(blok, indeksBlok) in blokProgram"
+            :key="indeksBlok"
+            class="program-editor"
+          >
             <div class="program-header">
               <div class="program-header-left">
                 <span class="program-dot"></span>
@@ -654,7 +660,7 @@ async function salinKode() {
                 <span class="program-dot"></span>
 
                 <span class="program-filename">
-                  {{ namaFileKode }}
+                  {{ blokProgram.length > 1 ? blok.judul : namaFileKode }}
                 </span>
               </div>
 
@@ -664,9 +670,9 @@ async function salinKode() {
                 <button
                   type="button"
                   class="program-copy"
-                  @click="salinKode"
+                  @click="salinKode(blok, indeksBlok)"
                 >
-                  {{ salinBerhasil ? '✓ Disalin' : '▢ Salin' }}
+                  {{ salinBerhasil === indeksBlok ? '✓ Disalin' : '▢ Salin' }}
                 </button>
               </div>
             </div>
@@ -674,11 +680,11 @@ async function salinKode() {
             <div
               class="program-body"
               role="region"
-              aria-label="Potongan kode program"
+              :aria-label="blokProgram.length > 1 ? blok.judul : 'Potongan kode program'"
               tabindex="0"
             >
               <div
-                v-for="(baris, index) in barisKode"
+                v-for="(baris, index) in blok.kode.split('\n')"
                 :key="index"
                 class="program-line"
               >
