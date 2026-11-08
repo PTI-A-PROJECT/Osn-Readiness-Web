@@ -1,4 +1,5 @@
 import { api } from '@/lib/api.js'
+import { ambil } from '@/lib/cache.js'
 import { ENDPOINTS } from '@/lib/endpoints.js'
 import { mapRiwayat } from '@/services/mappers/riwayat.js'
 
@@ -7,11 +8,11 @@ import { mapRiwayat } from '@/services/mappers/riwayat.js'
 export const riwayatService = {
   // GET /riwayat. Semua filter opsional; tingkatId 0/None dikirim null
   // mengikuti controller (tingkat_id==0 -> null).
-  async daftar({ jenis = null, tingkatId = null, perPage = 15, page = 1, namaTingkatById = {}, signal } = {}) {
+  async daftar({ jenis = null, tingkatId = null, perPage = 15, page = 1, namaTingkatById = {} } = {}) {
     const params = { per_page: perPage, page }
     if (jenis) params.jenis = jenis
     if (tingkatId) params.tingkat_id = tingkatId
-    const res = await api.get(ENDPOINTS.siswa.riwayat, { params, signal })
+    const res = await ambil(`riwayat:${perPage}:${page}:${jenis ?? ''}:${tingkatId ?? ''}`, () => api.get(ENDPOINTS.siswa.riwayat, { params }), { ttl: 30_000 })
     const body = res?.data ?? {}
     const items = Array.isArray(body.data) ? body.data : []
     const meta = body.meta ?? {}

@@ -313,9 +313,9 @@ function lihatPembahasan(hasilId) {
 }
 
 onMounted(async () => {
-  await progress.fetchDashboard({ force: true }).catch(() => {})
+  await progress.fetchDashboard().catch(() => {})
   try {
-    await pretest.muatTingkat({ force: true })
+    await pretest.muatTingkat()
   } catch (error) {
     toast.add({
       severity: 'error',

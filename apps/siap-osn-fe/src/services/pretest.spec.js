@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { api } from '@/lib/api.js'
+import { kosongkan } from '@/lib/cache.js'
 import { pretestService } from '@/services/pretest.js'
 
 vi.mock('@/lib/api.js', () => ({
@@ -9,6 +10,7 @@ vi.mock('@/lib/api.js', () => ({
 
 beforeEach(() => {
   vi.resetAllMocks()
+  kosongkan()
 })
 
 const SOAL_BE = {
@@ -34,7 +36,7 @@ describe('pretestService', () => {
       },
     })
     const hasil = await pretestService.tingkat({})
-    expect(api.get).toHaveBeenCalledWith('/tingkat', { signal: undefined })
+    expect(api.get).toHaveBeenCalledWith('/tingkat')
     expect(hasil).toEqual([
       { id: 1, nama: 'Kabupaten', deskripsi: 'Dasar', urutan: 1, terbuka: true, tahap: 'BELUM_PRETEST' },
     ])
@@ -81,6 +83,24 @@ describe('pretestService', () => {
     expect(paket.hasil.nilai).toBe(82.5)
     expect(paket.hasil.pemetaan[0]).toMatchObject({ materiId: 5, jumlahBenar: 4, persentase: 66.67 })
     expect(paket.hasil.materiWajib).toEqual([{ materiId: 7, prioritas: 1 }])
+  })
+
+  it('lihat menyimpan hasil final tetapi selalu mengambil ulang paket pengerjaan', async () => {
+    api.get.mockResolvedValue({ data: { message: 'OK', data: { id: 12, soal: [] } } })
+    await pretestService.lihat({ id: 12 })
+    await pretestService.lihat({ id: 12 })
+    expect(api.get).toHaveBeenCalledTimes(2)
+
+    kosongkan()
+    api.get.mockClear()
+    api.get.mockResolvedValue({
+      data: { message: 'OK', data: { id: 13, tingkat_id: 1, nilai: 80, pemetaan: [], materi_wajib: [] } },
+    })
+    const pertama = await pretestService.lihat({ id: 13 })
+    const kedua = await pretestService.lihat({ id: 13 })
+    expect(api.get).toHaveBeenCalledTimes(1)
+    expect(kedua).toEqual(pertama)
+    expect(kedua).not.toBe(pertama)
   })
 
   it('lihat mengenali paket menunggu saat disubmit tapi belum dinilai', async () => {

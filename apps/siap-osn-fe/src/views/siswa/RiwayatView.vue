@@ -207,7 +207,7 @@ async function muatRiwayat() {
   loadError.value = false
   try {
     await Promise.all([
-      pretest.muatTingkat({ force: true }),
+      pretest.muatTingkat(),
       progress.fetchDashboard(),
     ])
 

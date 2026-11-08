@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { kosongkan } from '@/lib/cache.js'
 import { authService } from '@/services/auth.js'
 import { useLatihanStore } from '@/stores/latihan.js'
 import { useMateriStore } from '@/stores/materi.js'
@@ -14,6 +15,7 @@ import { useSimulasiStore } from '@/stores/simulasi.js'
 // Tidak cukup hanya progress — pretest/latihan/materi/riwayat/simulasi
 // menyimpan soal, jawaban, dan id percobaan milik akun sebelumnya.
 function resetDataAkun() {
+  kosongkan() // cache GET milik akun sebelumnya
   useProgressStore().$reset()
   usePretestStore().$reset()
   useLatihanStore().$reset()

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { api } from '@/lib/api.js'
+import { kosongkan } from '@/lib/cache.js'
 import { belajarService } from '@/services/belajar.js'
 
 vi.mock('@/lib/api.js', () => ({
@@ -9,6 +10,7 @@ vi.mock('@/lib/api.js', () => ({
 
 beforeEach(() => {
   vi.resetAllMocks()
+  kosongkan()
 })
 
 const BARIS = {
@@ -55,7 +57,7 @@ describe('belajarService', () => {
       data: { data: { ...BARIS, isi_materi: '<p>Halo</p>', file_materi: 'x.pdf', gambar: null } },
     })
     const hasil = await belajarService.detail({ id: 3 })
-    expect(api.get).toHaveBeenCalledWith('/materi/3', { signal: undefined })
+    expect(api.get).toHaveBeenCalledWith('/materi/3')
     expect(hasil.isi).toBe('<p>Halo</p>')
     expect(hasil.fileUrl).toMatch(/\/storage\/x\.pdf$/)
     expect(hasil.gambarUrl).toBeNull()
