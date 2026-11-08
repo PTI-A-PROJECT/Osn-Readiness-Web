@@ -1,0 +1,75 @@
+LAPORAN HASIL PENGUJIAN OTOMASI & VERIFIKASI FITUR BARU
+SISTEM PERSIAPAN OSN (SIAP OSN - https://mrcln0305.xyz/)
+
+Tanggal Pengujian : 08 November 2026
+Akun Pengujian    : testqa6@gmail.com
+Kata Sandi        : test_12345678
+File Spesifikasi  : tests/full-flow-new-account.spec.ts
+Status Hasil Uji  : 100% PASSED (Berhasil Sempurna)
+
+================================================================================
+1. RINGKASAN EKSEKUSI PENGUJIAN
+================================================================================
+Pengujian otomasi end-to-end telah berhasil dijalankan terhadap seluruh fitur baru pada platform SIAP OSN (https://mrcln0305.xyz/). Alur menguji siklus lengkap perjalanan siswa baru dari registrasi hingga evaluasi simulasi ujian nasional.
+
+Hasil Eksekusi Tahapan:
+1. Registrasi Akun Baru & Autentikasi:
+   - Form pendaftaran diisi dengan nama 'testqa6', email 'testqa6@gmail.com', password 'test_12345678'.
+   - Sistem berhasil memproses akun dan login ke dashboard siswa (/siswa).
+   - Bukti: test-results/01-dashboard-siswa.png
+
+2. Pre-Test pada Menu Pemetaan Kompetensi:
+   - Masuk ke menu Pemetaan Kompetensi (/siswa/pemetaan).
+   - Klik 'Ikuti Pre-Test ->' lalu memulai Pre-Test Tingkat Kabupaten/Kota.
+   - 30 butir soal berhasil dijawab dan dikumpulkan ke server.
+   - Hasil pemetaan kompetensi 5 bidang berhasil terbit.
+   - Bukti: test-results/02-hasil-pemetaan-kompetensi.png
+
+3. Membaca Seluruh Materi & Tandai sebagai Selesai:
+   - Membuka menu Materi (/siswa/materi) yang memuat 5 modul pembelajaran:
+     a. Simulasi, Optimisasi, Logika & Berpikir Komputasional (6 submateri)
+     b. Aljabar Boolean & Teori Himpunan (5 submateri)
+     c. Membaca Algoritma & Pemrograman (9 submateri)
+     d. Graf & Geometri (2 submateri)
+     e. Kombinatorika, Model Matematis & Deret (8 submateri)
+   - Seluruh submateri berhasil diklik '✓ Tandai sebagai Selesai'.
+
+4. Pengerjaan Latihan Soal Seluruh Materi:
+   - 10 butir soal latihan untuk masing-masing modul (total 50 soal latihan) dikerjakan menggunakan pencocokan kunci jawaban database (coba1/keys.psv).
+   - Nilai seluruh latihan berhasil melampaui batas kelulusan (>= 50).
+   - Bukti: test-results/03-materi-1-selesai.png s.d. 03-materi-5-selesai.png
+
+5. Pengecekan Menu Riwayat Hasil:
+   - Navigasi ke menu Riwayat Hasil (/siswa/riwayat).
+   - Histori pengerjaan pre-test dan seluruh latihan tersimpan dan tampil lengkap.
+   - Bukti: test-results/04-riwayat-hasil.png
+
+6. Pengerjaan Simulasi Seleksi OSN Tingkat Kabupaten/Kota:
+   - Membuka menu Simulasi Seleksi (/siswa/simulasi).
+   - Status prasyarat berhasil diverifikasi: 'Terpenuhi' dan tombol 'Mulai Simulasi' aktif.
+   - Pengerjaan 30 butir soal simulasi dengan batas waktu 120 menit berhasil diselesaikan dan dikumpulkan.
+   - Halaman hasil penilaian kelulusan (/siswa/simulasi/hasil) berhasil diterbitkan.
+   - Bukti: test-results/05-simulasi-kabupaten-selesai.png
+
+================================================================================
+2. ANALISIS BUG & TEMUAN KUALITAS SISTEM
+================================================================================
+Berdasarkan serangkaian uji fungsional dan edge cases, berikut adalah temuan bug dan evaluasi kualitas sistem:
+
+1. [BUG-01] Validasi State Route pada Halaman Simulasi (Medium)
+   - Deskripsi: Jika pengguna mengakses langsung URL https://mrcln0305.xyz/siswa/simulasi tanpa melalui menu sidebar, data tingkat seleksi terkadang belum terinisialisasi.
+   - Solusi: Pastikan store Vue menginisialisasi pengambilan data tingkat pada hook onMounted().
+
+2. [BUG-02] Umpan Balik Teks Validasi Registrasi (Medium/UX)
+   - Deskripsi: Pada formulir registrasi, saat password tidak memenuhi syarat, hanya border yang memerah (aria-invalid=true) tanpa teks pesan error penjelasan di bawah input.
+   - Solusi: Tambahkan elemen teks error visual di bawah field input.
+
+3. [BUG-03] Kelengkapan Atribut HTML 'name' pada Formulir (Low)
+   - Deskripsi: Input formulir login dan registrasi memiliki atribut name="" (string kosong), yang membatasi autofill browser bawaan.
+   - Solusi: Sematkan atribut name="email" dan name="password" secara semantik.
+
+================================================================================
+3. PANDUAN EKSEKUSI
+================================================================================
+Jalankan perintah berikut di terminal proyek untuk melihat eksekusi dengan antarmuka Chrome:
+> npx playwright test tests/full-flow-new-account.spec.ts --project=chromium --headed

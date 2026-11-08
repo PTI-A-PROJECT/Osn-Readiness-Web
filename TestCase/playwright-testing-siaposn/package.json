@@ -4,12 +4,15 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:materi": "playwright test tests/materi-simulasi.spec.ts --project=chromium",
-    "test:register": "playwright test tests/register.spec.ts --project=chromium",
-    "test:e2e": "playwright test tests/end-to-end-flow.spec.ts --project=chromium",
-    "test:bugs": "playwright test tests/bug-detection.spec.ts --project=chromium --workers=1",
+    "test:functional": "playwright test tests/functional --project=chromium",
+    "test:bugs": "playwright test tests/bug-testing --project=chromium --workers=1",
+    "test:bugs:qa6": "playwright test tests/bug-testing/bug-detection-testqa6.spec.ts --project=chromium --workers=1",
+    "test:materi": "playwright test tests/functional/materi-simulasi.spec.ts --project=chromium",
+    "test:register": "playwright test tests/functional/register.spec.ts --project=chromium",
+    "test:e2e": "playwright test tests/functional/end-to-end-flow.spec.ts --project=chromium",
     "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "report:show": "playwright show-report reports/html-report"
   },
   "keywords": [],
   "author": "",
