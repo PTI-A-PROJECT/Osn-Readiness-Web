@@ -218,6 +218,20 @@ function kodeLamaDariKonteks(teks) {
   return pascal || cpp || python ? teks : ''
 }
 
+// Kode C++ lama bisa berupa konteks naratif diikuti satu atau lebih fungsi.
+// Ambil dari deklarasi fungsi pertama, tanpa menganggap teks pengantar sebagai kode.
+function kodeCppDariKonteks(teks) {
+  if (!teks || teks.includes(String.fromCharCode(96).repeat(3))) return ''
+
+  const cocok = teks.match(/^(?:int|bool|void|float|double|long|char|string)\s+\w+\s*\([^)]*\)\s*\{/m)
+  if (!cocok) return ''
+
+  const kandidat = teks.slice(cocok.index).trim()
+  return /\breturn\b/.test(kandidat) && kandidat.includes('}')
+    ? kandidat
+    : ''
+}
+
 // ======================================================
 // MENENTUKAN KODE PROGRAM
 // ======================================================
@@ -230,6 +244,7 @@ const kodeProgram = computed(
     konteksFence.value?.kode ||
     pertanyaanFence.value?.kode ||
     kodeLamaDariKonteks(konteksMentah.value) ||
+    kodeCppDariKonteks(konteksMentah.value) ||
     '',
 )
 
