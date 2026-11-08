@@ -15,6 +15,10 @@ const LupaKataSandiView = () => import('@/views/LupaKataSandiView.vue')
 const ResetPasswordView = () => import('@/views/ResetPasswordView.vue')
 const GoogleSelesaiView = () => import('@/views/GoogleSelesaiView.vue')
 const GoogleReferalView = () => import('@/views/GoogleReferalView.vue')
+const AnggotaLayout = () => import('@/layouts/AnggotaLayout.vue')
+const AnggotaDashboardView = () => import('@/views/anggota/DashboardView.vue')
+const AnggotaKodeView = () => import('@/views/anggota/KodeView.vue')
+const AdminAnggotaView = () => import('@/views/admin/AnggotaView.vue')
 const SiswaDashboardView = () => import('@/views/siswa/DashboardView.vue')
 const SiswaProfileView = () => import('@/views/siswa/ProfileView.vue')
 const SiswaPretestView = () => import('@/views/siswa/PretestView.vue')
@@ -39,7 +43,9 @@ const NotFoundView = () => import('@/views/NotFoundView.vue')
 // Satu-satunya tempat yang tahu pemetaan role -> dashboard.
 // Dipakai guard di bawah dan LoginView setelah login sukses.
 export function dashboardFor(role) {
-  return role === 'super_admin' ? { name: 'admin.dashboard' } : { name: 'siswa.dashboard' }
+  if (role === 'super_admin') return { name: 'admin.dashboard' }
+  if (role === 'anggota') return { name: 'anggota.dashboard' }
+  return { name: 'siswa.dashboard' }
 }
 
 // Diekspor agar guard.spec.js bisa membuat router sendiri
@@ -54,6 +60,14 @@ export const routes = [
   { path: '/oauth/google/selesai', name: 'oauth.google.selesai', component: GoogleSelesaiView },
   // Hanya bisa dibuka setelah login Google akun baru (lihat GoogleReferalView).
   { path: '/oauth/google/referal', name: 'oauth.google.referal', component: GoogleReferalView, meta: { requiresAuth: true } },
+  {
+    path: '/anggota',
+    component: AnggotaLayout,
+    children: [
+      { path: '', name: 'anggota.dashboard', component: AnggotaDashboardView, meta: { requiresAuth: true, role: 'anggota', title: 'Dashboard Anggota' } },
+      { path: 'kode', name: 'anggota.kode', component: AnggotaKodeView, meta: { requiresAuth: true, role: 'anggota', title: 'Kode Referal' } },
+    ],
+  },
 
   {
     path: '/',
@@ -175,6 +189,12 @@ export const routes = [
         name: 'admin.siswa',
         component: AdminSiswaView,
         meta: { requiresAuth: true, role: 'super_admin', title: 'Kelola Siswa' },
+      },
+      {
+        path: 'admin/anggota',
+        name: 'admin.anggota',
+        component: AdminAnggotaView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Kelola Anggota' },
       },
       {
         path: 'admin/konten',

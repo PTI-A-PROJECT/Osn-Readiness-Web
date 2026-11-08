@@ -29,9 +29,9 @@ function validasi() {
   email.value = email.value.trim()
 
   if (!email.value) {
-    emailError.value = 'Email wajib diisi'
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-    emailError.value = 'Format email tidak valid'
+    emailError.value = 'Email atau NIM wajib diisi'
+  } else if (!/^\d{8,20}$/.test(email.value) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    emailError.value = 'Format email atau NIM tidak valid'
   }
 
   if (!password.value) {
@@ -109,10 +109,10 @@ function masukGoogle() {
       </div>
 
       <form class="grid gap-[13px]" @submit.prevent="masuk">
-        <!-- Email -->
+        <!-- Email or NIM -->
         <div class="grid gap-1.5">
           <label for="email" class="text-[#182238] font-['Inter'] text-xs font-[750]">
-            Email Aktif
+            Email atau NIM
             <span class="text-[#c54c45]">*</span>
           </label>
 
@@ -120,9 +120,9 @@ function masukGoogle() {
             id="email"
             name="email"
             v-model="email"
-            autocomplete="email"
-            type="email"
-            placeholder="nama@sekolah.sch.id"
+            autocomplete="username"
+            type="text"
+            placeholder="nama@sekolah.sch.id atau NIM"
             :aria-invalid="Boolean(emailError)"
             :aria-describedby="emailError ? 'email-error' : undefined"
             class="w-full min-h-[42px] px-3 border border-[#d6e0eb] rounded-md outline-none bg-white text-[#17233b] font-inherit text-[13px] placeholder:text-[#95a5aa] focus:border-[#0759a5] focus:shadow-[0_0_0_3px_rgb(11_104_189/11%)] aria-invalid:border-[#c54c45]"

@@ -8,8 +8,8 @@ vi.mock('@/views/LandingPage.vue', () => ({ default: { name: 'LandingPage' } }))
 vi.mock('@/views/LoginView.vue', () => ({ default: { name: 'LoginView' } }))
 
 const siswa = { id: '1', nama: 'Budi', email: 'budi@example.com', role: 'siswa' }
+const anggota = { id: '3', nama: 'Ani', email: 'ani@example.com', role: 'anggota' }
 const admin = { id: '2', nama: 'Admin', email: 'admin@example.com', role: 'super_admin' }
-
 async function pushAs(path, user) {
   setActivePinia(createPinia())
   const auth = useAuthStore()
@@ -40,6 +40,28 @@ describe('router guard', () => {
   it('user login buka /login dilempar ke dashboard sesuai role', async () => {
     expect(await pushAs('/login', siswa)).toBe('siswa.dashboard')
     expect(await pushAs('/login', admin)).toBe('admin.dashboard')
+  })
+  it('anggota membuka dashboard dan kode referal', async () => {
+    expect(await pushAs('/anggota', anggota)).toBe('anggota.dashboard')
+    expect(await pushAs('/anggota/kode', anggota)).toBe('anggota.kode')
+  })
+
+  it('anggota tidak dapat membuka halaman siswa atau admin', async () => {
+    expect(await pushAs('/siswa', anggota)).toBe('forbidden')
+    expect(await pushAs('/admin', anggota)).toBe('forbidden')
+  })
+
+  it('siswa tidak dapat membuka halaman anggota', async () => {
+    expect(await pushAs('/anggota', siswa)).toBe('forbidden')
+    expect(await pushAs('/anggota/kode', siswa)).toBe('forbidden')
+  })
+
+  it('anggota login menuju dashboard anggota', async () => {
+    expect(await pushAs('/login', anggota)).toBe('anggota.dashboard')
+  })
+
+  it('admin dapat membuka manajemen anggota', async () => {
+    expect(await pushAs('/admin/anggota', admin)).toBe('admin.anggota')
   })
 
   it('tamu buka /login tetap di login', async () => {

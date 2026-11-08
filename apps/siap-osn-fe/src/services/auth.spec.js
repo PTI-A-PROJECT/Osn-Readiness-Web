@@ -48,6 +48,16 @@ describe('authService', () => {
     })
     expect(res).toEqual({ user: expect.objectContaining({ nama: 'Budi' }), token: 'tok123' })
   })
+  it('login NIM mengirim field nim', async () => {
+    api.post.mockResolvedValue({
+      data: { message: 'OK', data: { user: { ...userLaravel, roles: ['anggota'] }, token: 'tok-nim' } },
+    })
+    await authService.login({ email: '230533610158', password: '230533610158' })
+    expect(api.post).toHaveBeenCalledWith('/auth/login', {
+      nim: '230533610158',
+      password: '230533610158',
+    })
+  })
 
   it('register memetakan ke field Laravel', async () => {
     api.post.mockResolvedValue({

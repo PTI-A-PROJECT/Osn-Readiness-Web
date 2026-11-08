@@ -310,7 +310,7 @@ function daftarGoogle() {
             name="kode_referal"
             v-model="referal"
             type="text"
-            maxlength="4"
+            maxlength="40"
             placeholder="Kode teman yang mengundangmu"
             :aria-invalid="Boolean(referalError)"
             :aria-describedby="referalError ? 'referal-error' : 'referal-hint'"

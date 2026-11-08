@@ -48,6 +48,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create roles
         $superAdmin = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
         Role::firstOrCreate(['name' => 'siswa', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'anggota', 'guard_name' => 'web']);
 
         // Super Admin memakai bypass Policy::before(), jadi tetap dapat semua permission
         $superAdmin->syncPermissions($permissions);

@@ -201,3 +201,20 @@ describe('adminService · A6 tingkat & aturan pemetaan', () => {
     expect(hasil.passing_grade).toBe(60)
   })
 })
+describe('adminService · anggota', () => {
+  it('daftarAnggota memetakan item dan meneruskan paginasi', async () => {
+    api.get.mockResolvedValue({
+      data: {
+        data: [{ id: 2, name: 'Ani', nim: '230533610158', kode_referal: 'OSNANI', jumlah_diundang: 4, is_active: true }],
+        meta: { current_page: 2, per_page: 5, last_page: 3, total: 12 },
+      },
+    })
+    const hasil = await adminService.daftarAnggota({ halaman: 2, perPage: 5 })
+    expect(api.get).toHaveBeenCalledWith('/admin/anggota', {
+      params: { page: 2, per_page: 5 },
+      signal: undefined,
+    })
+    expect(hasil.items[0]).toMatchObject({ nim: '230533610158', nama: 'Ani', jumlahUndang: 4 })
+    expect(hasil).toMatchObject({ halaman: 2, perHalaman: 5, halamanTerakhir: 3, total: 12 })
+  })
+})

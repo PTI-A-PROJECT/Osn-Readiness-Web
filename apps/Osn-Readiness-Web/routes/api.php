@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AnggotaController;
 use App\Http\Controllers\Api\Admin\AturanPemetaanController;
 use App\Http\Controllers\Api\Admin\BankSoalController;
 use App\Http\Controllers\Api\Admin\DashboardController;
@@ -12,10 +13,12 @@ use App\Http\Controllers\Api\Admin\PembahasanController;
 use App\Http\Controllers\Api\Admin\SimulasiController;
 use App\Http\Controllers\Api\Admin\SiswaController;
 use App\Http\Controllers\Api\Admin\SoalController;
+use App\Http\Controllers\Api\AnggotaPanelController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BelajarController;
 use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\HasilSimulasiController;
+use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\PretestController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\QuizPengerjaanController;
@@ -30,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 | Rute publik
 |--------------------------------------------------------------------------
 | Registrasi dan login tidak butuh token. Login dibatasi lima kali per menit
-| per email + IP lewat named limiter "login" (lihat AppServiceProvider).
+| per identitas (NIM atau email) + IP lewat named limiter "login".
 */
 
 Route::prefix('auth')->group(function (): void {
@@ -58,41 +61,49 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         Route::post('referal', [ReferalController::class, 'simpan']);
     });
 
-    // [B1-A] Akses tingkat dan status putaran.
-    Route::get('tingkat', [TingkatController::class, 'index']);
+    Route::middleware('role:anggota')->prefix('anggota')->group(function (): void {
+        Route::get('ringkasan', [AnggotaPanelController::class, 'ringkasan']);
+        Route::put('kode-referal', [AnggotaPanelController::class, 'ubahKode']);
+    });
 
-    // [B2-A] Pre-test dan pemetaan.
-    Route::post('pretest', [PretestController::class, 'store']);
-    Route::get('pretest/{pretest}', [PretestController::class, 'show']);
-    Route::put('pretest/{pretest}/jawaban', [PretestController::class, 'simpanJawaban']);
-    Route::post('pretest/{pretest}/submit', [PretestController::class, 'submit']);
+    Route::middleware('bukan.anggota')->group(function (): void {
+        // [B1-A] Akses tingkat dan status putaran.
+        Route::get('tingkat', [TingkatController::class, 'index']);
 
-    // [B2-B] Materi, progress, latihan, dan syarat simulasi.
-    Route::get('materi', [BelajarController::class, 'index']);
-    Route::get('materi/{materi}', [BelajarController::class, 'show']);
-    Route::put('materi/{materi}/progress', [BelajarController::class, 'perbaruiProgress']);
-    Route::put('materi/{materi}/submateri/{submateri}/selesai', [BelajarController::class, 'tandaiSubmateriSelesai']);
-    Route::post('quiz/{quiz}/mulai', [QuizController::class, 'mulai']);
-    Route::get('quiz-pengerjaan/{pengerjaan}', [QuizPengerjaanController::class, 'show']);
-    Route::put('quiz-pengerjaan/{pengerjaan}/jawaban', [QuizPengerjaanController::class, 'simpanJawaban']);
-    Route::post('quiz-pengerjaan/{pengerjaan}/submit', [QuizPengerjaanController::class, 'submit']);
-    Route::get('simulasi/syarat', [SyaratSimulasiController::class, 'show']);
+        // [B2-A] Pre-test dan pemetaan.
+        Route::post('pretest', [PretestController::class, 'store']);
+        Route::get('pretest/{pretest}', [PretestController::class, 'show']);
+        Route::put('pretest/{pretest}/jawaban', [PretestController::class, 'simpanJawaban']);
+        Route::post('pretest/{pretest}/submit', [PretestController::class, 'submit']);
 
-    // [B3-A] Simulasi, kelulusan, dan review.
-    Route::get('simulasi', [App\Http\Controllers\Api\SimulasiController::class, 'index']);
-    Route::post('simulasi/{simulasi}/mulai', [App\Http\Controllers\Api\SimulasiController::class, 'mulai']);
-    Route::get('hasil-simulasi/{hasil}', [HasilSimulasiController::class, 'show']);
-    Route::put('hasil-simulasi/{hasil}/jawaban', [HasilSimulasiController::class, 'simpanJawaban']);
-    Route::post('hasil-simulasi/{hasil}/submit', [HasilSimulasiController::class, 'submit']);
-    Route::get('hasil-simulasi/{hasil}/review', [HasilSimulasiController::class, 'review']);
+        // [B2-B] Materi, progress, latihan, dan syarat simulasi.
+        Route::get('materi', [BelajarController::class, 'index']);
+        Route::get('materi/{materi}', [BelajarController::class, 'show']);
+        Route::put('materi/{materi}/progress', [BelajarController::class, 'perbaruiProgress']);
+        Route::put('materi/{materi}/submateri/{submateri}/selesai', [BelajarController::class, 'tandaiSubmateriSelesai']);
+        Route::post('quiz/{quiz}/mulai', [QuizController::class, 'mulai']);
+        Route::get('quiz-pengerjaan/{pengerjaan}', [QuizPengerjaanController::class, 'show']);
+        Route::put('quiz-pengerjaan/{pengerjaan}/jawaban', [QuizPengerjaanController::class, 'simpanJawaban']);
+        Route::post('quiz-pengerjaan/{pengerjaan}/submit', [QuizPengerjaanController::class, 'submit']);
+        Route::get('simulasi/syarat', [SyaratSimulasiController::class, 'show']);
 
-    // [B3-B] Dashboard dan riwayat.
-    Route::get('dashboard', [App\Http\Controllers\Api\DashboardController::class, 'show']);
-    Route::get('riwayat', [RiwayatController::class, 'index']);
+        // [B3-A] Simulasi, kelulusan, dan review.
+        Route::get('simulasi', [App\Http\Controllers\Api\SimulasiController::class, 'index']);
+        Route::post('simulasi/{simulasi}/mulai', [App\Http\Controllers\Api\SimulasiController::class, 'mulai']);
+        Route::get('hasil-simulasi/{hasil}', [HasilSimulasiController::class, 'show']);
+        Route::put('hasil-simulasi/{hasil}/jawaban', [HasilSimulasiController::class, 'simpanJawaban']);
+        Route::post('hasil-simulasi/{hasil}/submit', [HasilSimulasiController::class, 'submit']);
+        Route::get('hasil-simulasi/{hasil}/review', [HasilSimulasiController::class, 'review']);
 
-    // Leaderboard (siswa): peringkat per tingkat dari nilai latihan.
-    Route::get('leaderboard', [App\Http\Controllers\Api\LeaderboardController::class, 'index']);
-    Route::get('leaderboard/me', [App\Http\Controllers\Api\LeaderboardController::class, 'me']);
+        // [B3-B] Dashboard dan riwayat.
+        Route::get('dashboard', [App\Http\Controllers\Api\DashboardController::class, 'show']);
+        Route::get('riwayat', [RiwayatController::class, 'index']);
+    });
+
+    // Leaderboard: peringkat per tingkat dari nilai latihan. Terbuka untuk semua
+    // akun yang login (siswa, anggota, admin), jadi di luar blok bukan.anggota.
+    Route::get('leaderboard', [LeaderboardController::class, 'index']);
+    Route::get('leaderboard/me', [LeaderboardController::class, 'me']);
 
     // [B1-D + B1-E] Admin. Satu grup, satu lapisan: middleware role
     // Super Admin, lalu policy per endpoint di controller masing-masing.
@@ -113,6 +124,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
         Route::apiResource('konteks-soal', KonteksSoalController::class);
         Route::apiResource('siswa', SiswaController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::post('siswa/{siswa}/deactivate', [SiswaController::class, 'deactivate']);
+        Route::get('anggota', [AnggotaController::class, 'index']);
 
         // [B1-E] Soal, pembahasan, latihan, simulasi, aturan pemetaan
         Route::apiResource('soal', SoalController::class);

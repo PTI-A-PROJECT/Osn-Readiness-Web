@@ -20,6 +20,11 @@ interface AuthServiceInterface
     public function login(string $email, string $password, ?string $device = null): array;
 
     /**
+     * @return array{user: User, token: string}
+     */
+    public function loginDenganNim(string $nim, string $password, ?string $device = null): array;
+
+    /**
      * Hapus token yang sedang dipakai saja, bukan semua token user.
      */
     public function logout(User $user): bool;

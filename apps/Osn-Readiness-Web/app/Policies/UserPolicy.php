@@ -15,6 +15,11 @@ class UserPolicy
         return null;
     }
 
+    public function lihatAnggota(User $user): bool
+    {
+        return false;
+    }
+
     public function viewAny(User $user): bool
     {
         return $user->hasPermissionTo('siswa.viewAny');

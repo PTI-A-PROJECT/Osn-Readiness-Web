@@ -72,10 +72,18 @@ class AuthService implements AuthServiceInterface
 
     public function login(string $email, string $password, ?string $device = null): array
     {
-        $user = $this->userRepository->findByEmail($email);
+        return $this->masuk($this->userRepository->findByEmail($email), $password, $device);
+    }
 
-        // Pesan sengaja sama untuk email tidak dikenal dan password salah,
-        // supaya tidak membocorkan email mana yang terdaftar.
+    public function loginDenganNim(string $nim, string $password, ?string $device = null): array
+    {
+        return $this->masuk($this->userRepository->findByNim($nim), $password, $device);
+    }
+
+    private function masuk(?User $user, string $password, ?string $device): array
+    {
+        // Pesan sengaja sama untuk email/NIM tidak dikenal dan password salah,
+        // supaya tidak membocorkan akun mana yang terdaftar.
         if (! $user || ! Hash::check($password, $user->password)) {
             throw new KredensialTidakValidException;
         }

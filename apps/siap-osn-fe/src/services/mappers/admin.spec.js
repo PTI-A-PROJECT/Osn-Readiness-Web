@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   ATURAN_FIELDS,
   mapAdminDashboard,
+  mapAnggota,
   mapAturanPemetaan,
   mapKecukupanBankSoal,
   mapKompetensi,
@@ -173,5 +174,22 @@ describe('mapAturanPemetaan', () => {
   it('field yang hilang jadi 0, bukan undefined', () => {
     const hasil = mapAturanPemetaan({ tingkat_id: 1 })
     expect(ATURAN_FIELDS.every((f) => typeof hasil[f] === 'number')).toBe(true)
+  })
+})
+describe('mapAnggota', () => {
+  it('memetakan akun anggota', () => {
+    expect(mapAnggota({ id: 2, name: 'Ani', nim: '230533610158', kode_referal: 'OSNANI', jumlah_diundang: '4', is_active: true })).toEqual({
+      id: 2,
+      nama: 'Ani',
+      nim: '230533610158',
+      kodeReferal: 'OSNANI',
+      jumlahUndang: 4,
+      aktif: true,
+    })
+  })
+
+  it('jumlah undangan hilang atau bukan angka menjadi nol', () => {
+    expect(mapAnggota({}).jumlahUndang).toBe(0)
+    expect(mapAnggota({ jumlah_diundang: 'bukan angka' }).jumlahUndang).toBe(0)
   })
 })

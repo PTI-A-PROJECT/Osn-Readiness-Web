@@ -2,6 +2,7 @@
 
 use App\Exceptions\BisnisException;
 use App\Http\Middleware\CheckUserStatus;
+use App\Http\Middleware\TolakAnggota;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'active' => CheckUserStatus::class,
+            'bukan.anggota' => TolakAnggota::class,
             'role' => RoleMiddleware::class,
         ]);
 

@@ -24,6 +24,7 @@ use App\Contracts\Repositories\SimulasiRepositoryInterface;
 use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Contracts\Services\AnggotaServiceInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
 use App\Contracts\Services\BankSoalServiceInterface;
@@ -78,6 +79,7 @@ use App\Services\Admin\SimulasiAdminService;
 use App\Services\Admin\SiswaService;
 use App\Services\Admin\SoalAdminService;
 use App\Services\Admin\TingkatService as AdminTingkatService;
+use App\Services\AnggotaService;
 use App\Services\AturanService;
 use App\Services\AuthService;
 use App\Services\BankSoalService;
@@ -119,6 +121,7 @@ class RepositoryServiceProvider extends ServiceProvider
         // Service bindings
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(AnggotaServiceInterface::class, AnggotaService::class);
         $this->app->bind(GoogleOAuthServiceInterface::class, GoogleOAuthService::class);
         $this->app->bind(TingkatServiceInterface::class, TingkatService::class);
 

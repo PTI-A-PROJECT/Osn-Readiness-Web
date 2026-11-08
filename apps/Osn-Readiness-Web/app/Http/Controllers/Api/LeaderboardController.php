@@ -26,9 +26,17 @@ class LeaderboardController extends Controller
     // User diambil dari login, frontend tidak mengirim user_id.
     public function me(Request $request): JsonResponse
     {
+        $tingkat = $this->tingkat($request);
+
+        // Anggota tidak mengerjakan pre-test, jadi pesan "kerjakan pre-test dulu"
+        // dari service akan menyesatkan.
+        $data = $request->user()->roles->contains('name', 'anggota')
+            ? ['layak' => false, 'alasan' => 'Akun anggota tidak ikut peringkat latihan.']
+            : $this->service->posisiSaya($tingkat, $request->user()->id);
+
         return response()->json([
             'success' => true,
-            'data' => $this->service->posisiSaya($this->tingkat($request), $request->user()->id),
+            'data' => $data,
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface UserRepositoryInterface extends BaseRepositoryInterface
 {
@@ -38,4 +39,18 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
      * Satu akun ber-role siswa; akun lain dianggap tidak ada.
      */
     public function cariSiswa(int $id): ?User;
+
+    public function findByNim(string $nim): ?User;
+
+    /**
+     * Akun ber-role anggota, aktif maupun nonaktif, terbaru dulu.
+     */
+    public function paginasiAnggota(int $perPage = 15): LengthAwarePaginator;
+
+    public function kodeReferalDipakai(string $kode, int $kecualiUserId): bool;
+
+    /**
+     * @return Collection<int, int>
+     */
+    public function hitunganReferalAnggota(): Collection;
 }

@@ -14,10 +14,14 @@ class ApiLoginRequest extends FormRequest
 
     /**
      * Email disamakan huruf kecilnya supaya A@x.com dan a@x.com tidak
-     * menjadi dua akun.
+     * menjadi dua akun. NIM dipangkas spasi tepinya.
      */
     protected function prepareForValidation(): void
     {
+        if (is_string($this->input('nim'))) {
+            $this->merge(['nim' => trim($this->input('nim'))]);
+        }
+
         if (is_string($this->input('email'))) {
             $this->merge(['email' => strtolower(trim($this->input('email')))]);
         }
@@ -29,7 +33,8 @@ class ApiLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'email' => ['required_without:nim', 'nullable', 'email'],
+            'nim' => ['required_without:email', 'nullable', 'string', 'regex:/^\d{8,20}$/'],
             'password' => ['required', 'string'],
         ];
     }
