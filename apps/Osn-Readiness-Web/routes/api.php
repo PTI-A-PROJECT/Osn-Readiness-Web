@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function (): void {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
-    Route::post('google/exchange', [GoogleAuthController::class, 'exchange'])->middleware('throttle:5,1');
+    Route::post('google/exchange', [GoogleAuthController::class, 'exchange'])->middleware('throttle:5,1');\n    Route::post('forgot-password', [PasswordResetController::class, 'sendLink'])->middleware('throttle:5,1');\n    Route::post('reset-password', [PasswordResetController::class, 'reset'])->middleware('throttle:5,1');
 });
 
 /*
