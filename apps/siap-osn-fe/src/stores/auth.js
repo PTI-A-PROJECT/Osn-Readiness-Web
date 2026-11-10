@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { kosongkan } from '@/lib/cache.js'
+import { KUNCI_POPUP_PRETEST_LOGIN } from '@/lib/pretest.js'
 import { authService } from '@/services/auth.js'
 import { useLatihanStore } from '@/stores/latihan.js'
 import { useMateriStore } from '@/stores/materi.js'
@@ -45,6 +46,27 @@ export const useAuthStore = defineStore('auth', () => {
   function saveToken(t) {
     token.value = t
     authService.simpanToken(t)
+  }
+
+  // Tandai bahwa popup pretest harus tampil sekali setelah login/daftar.
+  // Nilai yang disimpan adalah id user supaya tidak bocor ke akun lain.
+  function tandaiPopupPretest() {
+    try {
+      // Hanya siswa yang punya alur pretest.
+      if (user.value?.id != null && user.value?.role === 'siswa') {
+        sessionStorage.setItem(KUNCI_POPUP_PRETEST_LOGIN, String(user.value.id))
+      }
+    } catch {
+      // sessionStorage bisa diblokir; popup cukup tidak tampil.
+    }
+  }
+
+  function hapusPenandaPopupPretest() {
+    try {
+      sessionStorage.removeItem(KUNCI_POPUP_PRETEST_LOGIN)
+    } catch {
+      // abaikan
+    }
   }
 
   let meInflight = null // navigasi beruntun saat boot tidak memanggil /auth/me dua kali
@@ -104,6 +126,7 @@ export const useAuthStore = defineStore('auth', () => {
     resetDataAkun() // pastikan tidak ada sisa data akun sebelumnya
     saveToken(res.token)
     user.value = res.user
+    tandaiPopupPretest()
     return user.value
   }
 
@@ -113,6 +136,7 @@ export const useAuthStore = defineStore('auth', () => {
     resetDataAkun()
     saveToken(res.token)
     user.value = res.user
+    tandaiPopupPretest()
     return user.value
   }
 
@@ -124,6 +148,7 @@ export const useAuthStore = defineStore('auth', () => {
     saveToken(res.token)
     user.value = res.user
     perluKodeReferal.value = res.perluKodeReferal
+    tandaiPopupPretest()
     return user.value
   }
 
@@ -160,6 +185,7 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       user.value = null
       saveToken(null)
+      hapusPenandaPopupPretest()
       resetDataAkun()
     }
   }
@@ -169,6 +195,7 @@ export const useAuthStore = defineStore('auth', () => {
     initialized.value = false
     saveToken(null)
     perluKodeReferal.value = false
+    hapusPenandaPopupPretest()
     resetDataAkun()
   }
 

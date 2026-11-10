@@ -9,3 +9,8 @@ export const DURASI_PRETEST_MENIT = 60
 export const DURASI_PRETEST_DETIK = DURASI_PRETEST_MENIT * 60
 export const JUMLAH_SOAL_PRETEST = 20
 export const TIPE_SOAL_PRETEST = 3
+
+// Penanda sekali-pakai setelah login/daftar: dashboard menampilkan popup
+// pretest satu kali, lalu penanda dihapus. Refresh/navigasi tidak
+// memunculkannya lagi, tetapi login berikutnya memunculkannya kembali.
+export const KUNCI_POPUP_PRETEST_LOGIN = 'pretest-popup-setelah-login'

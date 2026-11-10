@@ -1,7 +1,7 @@
 <script setup>
 import { JUMLAH_SOAL_PRETEST, DURASI_PRETEST_MENIT, TIPE_SOAL_PRETEST } from '@/lib/pretest.js'
 
-const emit = defineEmits(['mulai'])
+const emit = defineEmits(['mulai', 'tutup'])
 
 function mulaiPretest() {
   emit('mulai')
@@ -17,6 +17,15 @@ function mulaiPretest() {
     <div
       class="relative w-[436px] rounded-[21px] bg-white px-[29px] pb-[33px] pt-[22px] shadow-[0_20px_50px_rgba(0,0,0,0.18)]"
     >
+      <!-- Tombol tutup -->
+      <button
+        type="button"
+        class="absolute right-[16px] top-[16px] grid h-7 w-7 place-items-center rounded-full text-[#94a3b8] transition-colors hover:bg-[#eef2f7] hover:text-[#334155]"
+        aria-label="Tutup"
+        @click="emit('tutup')"
+      >
+        <span aria-hidden="true" class="text-[17px] leading-none">×</span>
+      </button>
       <!-- Label -->
       <div class="flex items-center">
         <span
