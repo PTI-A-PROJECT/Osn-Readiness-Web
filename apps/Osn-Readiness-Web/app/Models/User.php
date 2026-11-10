@@ -22,7 +22,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
-    protected static function booted(): void
+    public function sendPasswordResetNotification($token): void\n    {\n        $this->notify(new ResetPasswordNotification($token));\n    }\n\n    protected static function booted(): void
     {
         // Setiap akun baru langsung punya kode referal sendiri tanpa perlu
         // diisi pendaftar. Kode milik pengundang tidak ikut tersalin karena
