@@ -19,6 +19,9 @@ const userLaravel = {
 beforeEach(() => {
   vi.resetAllMocks()
   localStorage.clear()
+})
+
+describe('authService', () => {
 
   it('forgotPassword mengirim email ke endpoint pemulihan', async () => {
     api.post.mockResolvedValue({ data: { message: 'Jika email terdaftar, tautan dikirim.' } })
@@ -43,9 +46,6 @@ beforeEach(() => {
     })
   })
 
-})
-
-describe('authService', () => {
   it('me mengembalikan user bentuk FE', async () => {
     api.get.mockResolvedValue({ data: { message: 'OK', data: userLaravel } })
     const user = await authService.me()
