@@ -1,11 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
+import { authService } from '@/services/auth.js'
 
-const router = useRouter()
 const toast = useToast()
-
 const email = ref('')
 const emailError = ref('')
 const loading = ref(false)
@@ -13,48 +12,34 @@ const sudahDikirim = ref(false)
 
 function validasi() {
   emailError.value = ''
-
-  if (!email.value.trim()) {
-    emailError.value = 'Alamat email wajib diisi.'
-    return false
-  }
-
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-  if (!emailPattern.test(email.value.trim())) {
+  const nilai = email.value.trim()
+  if (!nilai) emailError.value = 'Alamat email wajib diisi.'
+  else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(nilai)) {
     emailError.value = 'Masukkan alamat email yang valid.'
-    return false
   }
-
-  return true
+  return !emailError.value
 }
 
 async function kirimTautan() {
   if (!validasi()) return
-
   loading.value = true
-
   try {
-    // Sementara untuk slicing UI.
-    // Nanti diganti dengan auth.forgotPassword(...)
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
+    const response = await authService.forgotPassword(email.value)
     sudahDikirim.value = true
-
     toast.add({
       severity: 'success',
-      summary: 'Tautan berhasil dikirim',
-      detail: 'Tautan pengaturan ulang kata sandi telah dikirim ke email Anda.',
-      life: 4000,
+      summary: 'Permintaan diproses',
+      detail: response.message || 'Jika email terdaftar, tautan reset akan dikirim.',
+      life: 5000,
     })
-
-    router.push({
-      name: 'reset-password',
-      query: {
-        email: email.value.trim(),
-        token: 'preview-token',
-      },
+  } catch (error) {
+    const errors = error.response?.data?.errors
+    emailError.value = errors?.email?.[0] || ''
+    toast.add({
+      severity: 'error',
+      summary: 'Gagal mengirim tautan',
+      detail: error.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.',
+      life: 4000,
     })
   } finally {
     loading.value = false
