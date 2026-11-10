@@ -2,76 +2,58 @@
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
+import { authService } from '@/services/auth.js'
 
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
-
 const password = ref('')
 const konfirmasiPassword = ref('')
 const passwordError = ref('')
 const konfirmasiError = ref('')
 const loading = ref(false)
 const resetBerhasil = ref(false)
-
-const email = computed(() => {
-  return typeof route.query.email === 'string' ? route.query.email : ''
-})
+const email = computed(() => typeof route.query.email === 'string' ? route.query.email : '')
+const token = computed(() => typeof route.query.token === 'string' ? route.query.token : '')
 
 function validasi() {
   passwordError.value = ''
   konfirmasiError.value = ''
-
-  if (!password.value) {
-    passwordError.value = 'Kata sandi baru wajib diisi.'
-  } else if (password.value.length < 8) {
-    passwordError.value = 'Kata sandi minimal 8 karakter.'
+  if (!token.value || !email.value) {
+    toast.add({ severity: 'error', summary: 'Tautan tidak valid', detail: 'Buka tautan reset dari email Anda atau minta tautan baru.', life: 5000 })
+    return false
   }
-
-  if (!konfirmasiPassword.value) {
-    konfirmasiError.value = 'Konfirmasi kata sandi wajib diisi.'
-  } else if (konfirmasiPassword.value !== password.value) {
-    konfirmasiError.value = 'Konfirmasi kata sandi tidak sama.'
-  }
-
+  if (!password.value) passwordError.value = 'Kata sandi baru wajib diisi.'
+  else if (password.value.length < 8) passwordError.value = 'Kata sandi minimal 8 karakter.'
+  if (!konfirmasiPassword.value) konfirmasiError.value = 'Konfirmasi kata sandi wajib diisi.'
+  else if (konfirmasiPassword.value !== password.value) konfirmasiError.value = 'Konfirmasi kata sandi tidak sama.'
   return !passwordError.value && !konfirmasiError.value
 }
 
 async function selesai() {
   if (!validasi()) return
-
   loading.value = true
-  resetBerhasil.value = false
-
   try {
-    /*
-     * Sementara untuk slicing UI.
-     * Nanti diganti dengan auth.resetPassword(...)
-     * setelah endpoint backend tersedia.
-     */
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    resetBerhasil.value = true
-
-    toast.add({
-      severity: 'success',
-      summary: 'Kata sandi berhasil diubah',
-      detail: 'Anda akan dialihkan ke halaman masuk.',
-      life: 4000,
+    const response = await authService.resetPassword({
+      email: email.value,
+      token: token.value,
+      password: password.value,
+      konfirmasi: konfirmasiPassword.value,
     })
-
-    setTimeout(() => {
-      router.push('/login')
-    }, 1200)
-  } catch {
+    resetBerhasil.value = true
+    toast.add({ severity: 'success', summary: 'Kata sandi berhasil diubah', detail: response.message || 'Silakan masuk menggunakan kata sandi baru.', life: 4000 })
+    setTimeout(() => router.push('/login'), 1200)
+  } catch (error) {
+    const errors = error.response?.data?.errors
+    passwordError.value = errors?.password?.[0] || errors?.email?.[0] || ''
+    konfirmasiError.value = errors?.password_confirmation?.[0] || ''
     toast.add({
       severity: 'error',
       summary: 'Gagal mengubah kata sandi',
-      detail: 'Terjadi kesalahan. Silakan coba lagi.',
-      life: 4000,
+      detail: error.response?.data?.message || 'Tautan reset tidak valid atau sudah kedaluwarsa. Silakan minta tautan baru.',
+      life: 5000,
     })
-
+  } finally {
     loading.value = false
   }
 }
