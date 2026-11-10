@@ -42,10 +42,11 @@ const menuAdmin = [
   { kelompok: 'ASESMEN', label: 'Manajemen Simulasi', to: { name: 'admin.ujian', query: { tab: 'simulasi' } } },
   { kelompok: 'ASESMEN', label: 'Manajemen Pembahasan', to: { name: 'admin.soal', query: { tab: 'pembahasan' } } },
   { kelompok: 'ASESMEN', label: 'Manajemen Aturan Pemetaan', to: { name: 'admin.aturan', query: { tab: 'aturan' } } },
+  { kelompok: 'AUDIT', label: 'Log Aktivitas', to: { name: 'admin.aktivitas' } },
 ]
 
 const isAdmin = computed(() => auth.user?.role === 'super_admin')
-const kelompokAdmin = ['UTAMA', 'ASESMEN']
+const kelompokAdmin = ['UTAMA', 'ASESMEN', 'AUDIT']
 function adminMenuAktif(item) {
   return route.name === item.to.name &&
     (!item.to.query?.tab || (route.query.tab || ({ 'admin.konten': 'kompetensi', 'admin.soal': 'soal', 'admin.ujian': 'latihan', 'admin.aturan': 'tingkat' }[route.name])) === item.to.query.tab)

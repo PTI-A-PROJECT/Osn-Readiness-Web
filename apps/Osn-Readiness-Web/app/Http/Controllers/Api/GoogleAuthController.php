@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\Services\AktivitasServiceInterface;
 use App\Contracts\Services\GoogleOAuthServiceInterface;
 use App\Http\Requests\Auth\GoogleExchangeRequest;
 use App\Http\Resources\UserResource;
@@ -11,6 +12,7 @@ class GoogleAuthController
 {
     public function __construct(
         private readonly GoogleOAuthServiceInterface $googleService,
+        private readonly AktivitasServiceInterface $aktivitas,
     ) {}
 
     /**
@@ -24,6 +26,8 @@ class GoogleAuthController
             $request->validated('kode'),
             $request->input('device'),
         );
+
+        $this->aktivitas->catat($result['user'], 'akun.masuk_google', 'akun');
 
         return response()->json([
             'message' => 'Login berhasil',

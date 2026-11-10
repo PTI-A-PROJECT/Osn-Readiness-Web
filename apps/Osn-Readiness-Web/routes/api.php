@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AktivitasController;
 use App\Http\Controllers\Api\Admin\AnggotaController;
 use App\Http\Controllers\Api\Admin\AturanPemetaanController;
 use App\Http\Controllers\Api\Admin\BankSoalController;
@@ -142,5 +143,9 @@ Route::middleware(['auth:sanctum', 'active', 'throttle:api'])->group(function ()
         // [B2-C] Kecukupan bank soal dan dashboard admin
         Route::get('bank-soal/kecukupan', [BankSoalController::class, 'kecukupan']);
         Route::get('dashboard', [DashboardController::class, 'ringkasan']);
+
+        // [B3-D] Log aktivitas user. Hanya Super Admin; siswa tidak punya akses.
+        Route::get('aktivitas', [AktivitasController::class, 'index']);
+        Route::get('aktivitas/detail', [AktivitasController::class, 'detail']);
     });
 });

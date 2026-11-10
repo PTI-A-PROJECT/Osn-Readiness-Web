@@ -66,5 +66,7 @@ export const ENDPOINTS = {
     tingkat: '/admin/tingkat',
     tingkatDetail: (id) => `/admin/tingkat/${id}`,
     aturanPemetaan: (id) => `/admin/tingkat/${id}/aturan-pemetaan`,
+    aktivitas: '/admin/aktivitas',
+    aktivitasDetail: '/admin/aktivitas/detail',
   },
 }
