@@ -2,7 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\AturanPemetaan;
+use App\Models\Kompetensi;
+use App\Models\KonteksSoal;
+use App\Models\Materi;
+use App\Models\MateriVideo;
+use App\Models\Pembahasan;
+use App\Models\Quiz;
+use App\Models\Simulasi;
+use App\Models\Soal;
 use App\Models\TingkatSeleksi;
+use App\Observers\AktivitasObserver;
 use App\Observers\TingkatSeleksiObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -26,6 +36,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         TingkatSeleksi::observe(TingkatSeleksiObserver::class);
+
+        // Semua perubahan konten oleh admin dicatat ke log_aktivitas selama
+        // ada user terautentikasi (seeder/artisan tidak ikut tercatat).
+        foreach ([
+            TingkatSeleksi::class,
+            Kompetensi::class,
+            Materi::class,
+            MateriVideo::class,
+            KonteksSoal::class,
+            Soal::class,
+            Pembahasan::class,
+            Quiz::class,
+            Simulasi::class,
+            AturanPemetaan::class,
+        ] as $model) {
+            $model::observe(AktivitasObserver::class);
+        }
 
         // Login dibatasi per identitas (NIM atau email) + IP, supaya satu akun
         // tidak bisa dibombardir dan satu IP tidak bisa mencoba banyak akun

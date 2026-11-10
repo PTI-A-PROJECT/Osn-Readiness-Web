@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Contracts\Services\AktivitasServiceInterface;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Support\KodeReferal;
@@ -15,6 +16,7 @@ class ReferalController
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
+        private readonly AktivitasServiceInterface $aktivitas,
     ) {}
 
     /**
@@ -69,6 +71,11 @@ class ReferalController
 
             return $terkunci;
         });
+
+        $this->aktivitas->catat($diperbarui, 'akun.referal_diisi', 'akun', [
+            'kode' => $kode,
+            'dipakai' => $diperbarui->direferensikan_oleh !== null,
+        ]);
 
         return response()->json([
             'message' => $diperbarui->direferensikan_oleh

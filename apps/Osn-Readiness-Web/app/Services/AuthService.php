@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Contracts\Services\AktivitasServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
 use App\Exceptions\AkunTidakAktifException;
 use App\Exceptions\KredensialTidakValidException;
@@ -18,6 +19,7 @@ class AuthService implements AuthServiceInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
+        private readonly AktivitasServiceInterface $aktivitas,
     ) {}
 
     public function register(array $data, ?string $device = null): array
@@ -57,6 +59,10 @@ class AuthService implements AuthServiceInterface
 
                 $user->assignRole('siswa');
 
+                $this->aktivitas->catat($user, 'akun.daftar', 'akun', [
+                    'kode_referal' => $kodePemberi,
+                ]);
+
                 return [
                     'user' => $user,
                     'token' => $this->buatToken($user, $device),
@@ -72,15 +78,15 @@ class AuthService implements AuthServiceInterface
 
     public function login(string $email, string $password, ?string $device = null): array
     {
-        return $this->masuk($this->userRepository->findByEmail($email), $password, $device);
+        return $this->masuk($this->userRepository->findByEmail($email), $password, $device, 'email');
     }
 
     public function loginDenganNim(string $nim, string $password, ?string $device = null): array
     {
-        return $this->masuk($this->userRepository->findByNim($nim), $password, $device);
+        return $this->masuk($this->userRepository->findByNim($nim), $password, $device, 'nim');
     }
 
-    private function masuk(?User $user, string $password, ?string $device): array
+    private function masuk(?User $user, string $password, ?string $device, string $metode): array
     {
         // Pesan sengaja sama untuk email/NIM tidak dikenal dan password salah,
         // supaya tidak membocorkan akun mana yang terdaftar.
@@ -91,6 +97,8 @@ class AuthService implements AuthServiceInterface
         if (! $user->is_active) {
             throw new AkunTidakAktifException;
         }
+
+        $this->aktivitas->catat($user, 'akun.masuk', 'akun', ['metode' => $metode]);
 
         return [
             'user' => $user,
@@ -107,6 +115,8 @@ class AuthService implements AuthServiceInterface
             $token->delete();
         }
 
+        $this->aktivitas->catat($user, 'akun.keluar');
+
         return true;
     }
 
@@ -114,11 +124,27 @@ class AuthService implements AuthServiceInterface
     {
         try {
             return DB::transaction(function () use ($user, $data): User {
+                $berubah = [];
+
+                if ($user->name !== $data['name']) {
+                    $berubah[] = 'nama';
+                }
+
+                if ($user->email !== $data['email']) {
+                    $berubah[] = 'email';
+                }
+
                 /** @var User $updated */
                 $updated = $this->userRepository->update($user, [
                     'name' => $data['name'],
                     'email' => $data['email'],
                 ]);
+
+                if ($berubah !== []) {
+                    $this->aktivitas->catat($updated, 'akun.profil_diubah', 'akun', [
+                        'field' => $berubah,
+                    ]);
+                }
 
                 return $updated;
             });

@@ -31,3 +31,6 @@ Schedule::command('simulasi:tutup-kedaluwarsa')->everyMinute()->withoutOverlappi
 // Token yang sudah lewat masa berlakunya (7 hari) ditolak Sanctum, tetapi
 // barisnya tetap ada. Dibersihkan harian supaya tabel tidak terus membesar.
 Schedule::command('sanctum:prune-expired --hours=24')->daily();
+
+// Log aktivitas disimpan 90 hari; sisanya dibuang supaya tabel tetap ringan.
+Schedule::command('aktivitas:prune --hari=90')->dailyAt('03:30')->withoutOverlapping();

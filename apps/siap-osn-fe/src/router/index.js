@@ -37,6 +37,7 @@ const AdminKontenView = () => import('@/views/admin/KontenView.vue')
 const AdminSoalView = () => import('@/views/admin/SoalView.vue')
 const AdminUjianView = () => import('@/views/admin/UjianView.vue')
 const AdminAturanView = () => import('@/views/admin/AturanView.vue')
+const AdminAktivitasView = () => import('@/views/admin/AktivitasView.vue')
 const ForbiddenView = () => import('@/views/ForbiddenView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 
@@ -59,13 +60,28 @@ export const routes = [
   // tetap berjalan (sesi diganti dengan akun Google yang ditukarkan).
   { path: '/oauth/google/selesai', name: 'oauth.google.selesai', component: GoogleSelesaiView },
   // Hanya bisa dibuka setelah login Google akun baru (lihat GoogleReferalView).
-  { path: '/oauth/google/referal', name: 'oauth.google.referal', component: GoogleReferalView, meta: { requiresAuth: true } },
+  {
+    path: '/oauth/google/referal',
+    name: 'oauth.google.referal',
+    component: GoogleReferalView,
+    meta: { requiresAuth: true },
+  },
   {
     path: '/anggota',
     component: AnggotaLayout,
     children: [
-      { path: '', name: 'anggota.dashboard', component: AnggotaDashboardView, meta: { requiresAuth: true, role: 'anggota', title: 'Dashboard Anggota' } },
-      { path: 'kode', name: 'anggota.kode', component: AnggotaKodeView, meta: { requiresAuth: true, role: 'anggota', title: 'Kode Referal' } },
+      {
+        path: '',
+        name: 'anggota.dashboard',
+        component: AnggotaDashboardView,
+        meta: { requiresAuth: true, role: 'anggota', title: 'Dashboard Anggota' },
+      },
+      {
+        path: 'kode',
+        name: 'anggota.kode',
+        component: AnggotaKodeView,
+        meta: { requiresAuth: true, role: 'anggota', title: 'Kode Referal' },
+      },
     ],
   },
 
@@ -219,6 +235,12 @@ export const routes = [
         name: 'admin.aturan',
         component: AdminAturanView,
         meta: { requiresAuth: true, role: 'super_admin', title: 'Tingkat & Aturan Pemetaan' },
+      },
+      {
+        path: 'admin/aktivitas',
+        name: 'admin.aktivitas',
+        component: AdminAktivitasView,
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Log Aktivitas' },
       },
     ],
   },

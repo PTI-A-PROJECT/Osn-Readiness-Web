@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\Services\AktivitasServiceInterface;
 use App\Contracts\Services\AnggotaServiceInterface;
 use App\Http\Requests\Auth\UbahKodeReferalRequest;
 use App\Http\Resources\UserResource;
@@ -12,6 +13,7 @@ class AnggotaPanelController
 {
     public function __construct(
         private readonly AnggotaServiceInterface $anggotaService,
+        private readonly AktivitasServiceInterface $aktivitas,
     ) {}
 
     public function ringkasan(Request $request): JsonResponse
@@ -24,7 +26,13 @@ class AnggotaPanelController
 
     public function ubahKode(UbahKodeReferalRequest $request): JsonResponse
     {
+        $kodeLama = $request->user()->kode_referal;
         $user = $this->anggotaService->ubahNamaKode($request->user(), $request->validated('nama'));
+
+        $this->aktivitas->catat($user, 'akun.referal_diubah', 'akun', [
+            'dari' => $kodeLama,
+            'ke' => $user->kode_referal,
+        ]);
 
         return response()->json([
             'message' => 'Kode referal diperbarui',

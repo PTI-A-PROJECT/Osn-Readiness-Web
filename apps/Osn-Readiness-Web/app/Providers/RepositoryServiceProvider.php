@@ -24,6 +24,7 @@ use App\Contracts\Repositories\SimulasiRepositoryInterface;
 use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Contracts\Services\AktivitasServiceInterface;
 use App\Contracts\Services\AnggotaServiceInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\AuthServiceInterface;
@@ -79,6 +80,7 @@ use App\Services\Admin\SimulasiAdminService;
 use App\Services\Admin\SiswaService;
 use App\Services\Admin\SoalAdminService;
 use App\Services\Admin\TingkatService as AdminTingkatService;
+use App\Services\AktivitasService;
 use App\Services\AnggotaService;
 use App\Services\AturanService;
 use App\Services\AuthService;
@@ -119,6 +121,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(MateriRepositoryInterface::class, MateriRepository::class);
 
         // Service bindings
+        $this->app->bind(AktivitasServiceInterface::class, AktivitasService::class);
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
         $this->app->bind(AnggotaServiceInterface::class, AnggotaService::class);

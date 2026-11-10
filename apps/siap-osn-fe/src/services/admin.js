@@ -46,10 +46,12 @@ export const adminService = {
   // GET /admin/bank-soal/kecukupan?tingkat_id= -> lima bagian laporan.
   async kecukupanBankSoal({ tingkatId, signal } = {}) {
     return mapKecukupanBankSoal(
-      unwrap(await api.get(ENDPOINTS.admin.bankSoalKecukupan, {
-        params: { tingkat_id: tingkatId },
-        signal,
-      })),
+      unwrap(
+        await api.get(ENDPOINTS.admin.bankSoalKecukupan, {
+          params: { tingkat_id: tingkatId },
+          signal,
+        }),
+      ),
     )
   },
 
@@ -64,7 +66,10 @@ export const adminService = {
     return { items: items.map(mapSiswa), ...paginasi }
   },
   async daftarAnggota({ halaman = 1, perPage = 15, signal } = {}) {
-    const res = await api.get(ENDPOINTS.admin.anggota, { params: { page: halaman, per_page: perPage }, signal })
+    const res = await api.get(ENDPOINTS.admin.anggota, {
+      params: { page: halaman, per_page: perPage },
+      signal,
+    })
     const { items, ...paginasi } = halamanPaginasi(res, perPage, halaman)
     return { items: items.map(mapAnggota), ...paginasi }
   },
@@ -99,7 +104,9 @@ export const adminService = {
   },
 
   async ubahKompetensi({ id, payload, signal } = {}) {
-    return mapKompetensi(unwrap(await api.put(ENDPOINTS.admin.kompetensiDetail(id), payload, { signal })))
+    return mapKompetensi(
+      unwrap(await api.put(ENDPOINTS.admin.kompetensiDetail(id), payload, { signal })),
+    )
   },
 
   async hapusKompetensi({ id, signal } = {}) {
@@ -117,7 +124,9 @@ export const adminService = {
   },
 
   async ubahMateri({ id, payload, signal } = {}) {
-    return mapMateriAdmin(unwrap(await api.put(ENDPOINTS.admin.materiDetail(id), payload, { signal })))
+    return mapMateriAdmin(
+      unwrap(await api.put(ENDPOINTS.admin.materiDetail(id), payload, { signal })),
+    )
   },
 
   async hapusMateri({ id, signal } = {}) {
@@ -133,7 +142,9 @@ export const adminService = {
   },
 
   async ubahVideoMateri({ materiId, videoId, payload, signal } = {}) {
-    return unwrap(await api.put(ENDPOINTS.admin.materiVideo(materiId, videoId), payload, { signal }))
+    return unwrap(
+      await api.put(ENDPOINTS.admin.materiVideo(materiId, videoId), payload, { signal }),
+    )
   },
 
   async hapusVideoMateri({ materiId, videoId, signal } = {}) {
@@ -145,10 +156,12 @@ export const adminService = {
   async unggahGambarMateri({ file, signal } = {}) {
     const form = new FormData()
     form.append('gambar', file)
-    return unwrap(await api.post(ENDPOINTS.admin.materiGambar, form, {
-      signal,
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }))
+    return unwrap(
+      await api.post(ENDPOINTS.admin.materiGambar, form, {
+        signal,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    )
   },
 
   /* ---------- A4 · Cerita soal, soal, pembahasan ---------- */
@@ -162,7 +175,9 @@ export const adminService = {
   },
 
   async ubahKonteksSoal({ id, payload, signal } = {}) {
-    return mapKonteksSoal(unwrap(await api.put(ENDPOINTS.admin.konteksSoalDetail(id), payload, { signal })))
+    return mapKonteksSoal(
+      unwrap(await api.put(ENDPOINTS.admin.konteksSoalDetail(id), payload, { signal })),
+    )
   },
 
   async hapusKonteksSoal({ id, signal } = {}) {
@@ -203,9 +218,15 @@ export const adminService = {
   },
 
   async simpanPembahasan({ id, isiPembahasan, signal } = {}) {
-    return unwrap(await api.post(ENDPOINTS.admin.soalPembahasan(id), {
-      isi_pembahasan: isiPembahasan,
-    }, { signal }))
+    return unwrap(
+      await api.post(
+        ENDPOINTS.admin.soalPembahasan(id),
+        {
+          isi_pembahasan: isiPembahasan,
+        },
+        { signal },
+      ),
+    )
   },
 
   async hapusPembahasan({ id, signal } = {}) {
@@ -248,7 +269,9 @@ export const adminService = {
   },
 
   async ubahSimulasi({ id, payload, signal } = {}) {
-    return mapSimulasiAdmin(unwrap(await api.put(ENDPOINTS.admin.simulasiDetail(id), payload, { signal })))
+    return mapSimulasiAdmin(
+      unwrap(await api.put(ENDPOINTS.admin.simulasiDetail(id), payload, { signal })),
+    )
   },
 
   async hapusSimulasi({ id, signal } = {}) {
@@ -267,7 +290,9 @@ export const adminService = {
 
   // Tingkat hanya boleh diubah nama + deskripsi (tidak bisa tambah/hapus).
   async ubahTingkat({ id, payload, signal } = {}) {
-    return mapTingkatAdmin(unwrap(await api.put(ENDPOINTS.admin.tingkatDetail(id), payload, { signal })))
+    return mapTingkatAdmin(
+      unwrap(await api.put(ENDPOINTS.admin.tingkatDetail(id), payload, { signal })),
+    )
   },
 
   async aturanPemetaan({ tingkatId, signal } = {}) {
@@ -281,5 +306,30 @@ export const adminService = {
     return mapAturanPemetaan(
       unwrap(await api.put(ENDPOINTS.admin.aturanPemetaan(tingkatId), payload, { signal })),
     )
+  },
+
+  /* ---------- A6 · Log aktivitas ---------- */
+  // GET /admin/aktivitas?user_id=&dari=&sampai=&kategori= -> timeline per tanggal.
+  // Tanpa user_id, backend mengembalikan aktivitas semua user.
+  async aktivitasSiswa({
+    userId = null,
+    dari = null,
+    sampai = null,
+    kategori = null,
+    signal,
+  } = {}) {
+    const params = {}
+    if (userId != null) params.user_id = userId
+    if (dari) params.dari = dari
+    if (sampai) params.sampai = sampai
+    if (kategori) params.kategori = kategori
+    return unwrap(await api.get(ENDPOINTS.admin.aktivitas, { params, signal }))
+  },
+
+  // GET /admin/aktivitas/detail?user_id=&aksi=&tanggal= -> rincian mentah.
+  async detailAktivitas({ userId = null, aksi, tanggal, signal } = {}) {
+    const params = { aksi, tanggal }
+    if (userId != null) params.user_id = userId
+    return unwrap(await api.get(ENDPOINTS.admin.aktivitasDetail, { params, signal }))
   },
 }
