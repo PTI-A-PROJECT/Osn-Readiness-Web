@@ -26,7 +26,9 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
-    }\n\n    protected static function booted(): void
+    }
+
+    protected static function booted(): void
     {
         // Setiap akun baru langsung punya kode referal sendiri tanpa perlu
         // diisi pendaftar. Kode milik pengundang tidak ikut tersalin karena
