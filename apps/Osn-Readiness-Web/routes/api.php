@@ -60,6 +60,7 @@ Route::middleware(['auth:sanctum', 'active', 'throttle:api'])->group(function ()
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
         Route::match(['put', 'patch'], 'profile', [AuthController::class, 'updateProfile']);
+        Route::put('password', [AuthController::class, 'ubahSandi']);
         Route::post('referal', [ReferalController::class, 'simpan']);
     });
 

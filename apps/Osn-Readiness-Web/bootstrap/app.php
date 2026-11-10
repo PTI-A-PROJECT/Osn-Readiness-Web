@@ -3,12 +3,14 @@
 use App\Exceptions\BisnisException;
 use App\Http\Middleware\CheckUserStatus;
 use App\Http\Middleware\TolakAnggota;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Middleware\RoleMiddleware;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -34,6 +36,25 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Route model binding pada ID yang tidak ada melempar
+        // ModelNotFoundException. Laravel mengubahnya menjadi
+        // NotFoundHttpException yang pesannya memuat nama model internal
+        // ("No query results for model [App\Models\X] 9999"). Kembalikan
+        // pesan generik agar namespace/model tidak bocor ke klien.
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            if (! ($request->is('api/*') || $request->expectsJson())) {
+                return null;
+            }
+
+            if (! $e->getPrevious() instanceof ModelNotFoundException) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => 'Data yang diminta tidak ditemukan.',
+            ], 404);
+        });
 
         // Kesalahan bisnis adalah jawaban yang sah untuk klien (401, 403, 409),
         // bukan kerusakan, jadi tidak dicatat sebagai ERROR beserta stack

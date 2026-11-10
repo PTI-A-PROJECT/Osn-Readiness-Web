@@ -68,6 +68,17 @@ export const authService = {
     return mapUser(unwrap(await api.put(ENDPOINTS.auth.profile, { name: nama, email })))
   },
 
+  // PUT /auth/password {current_password, password, password_confirmation}
+  async ubahSandi({ current, baru, konfirmasi }) {
+    return unwrap(
+      await api.put(ENDPOINTS.auth.password, {
+        current_password: current,
+        password: baru,
+        password_confirmation: konfirmasi,
+      }),
+    )
+  },
+
   async logout() {
     await api.post(ENDPOINTS.auth.logout)
   },

@@ -147,6 +147,11 @@ export const useAuthStore = defineStore('auth', () => {
     return user.value
   }
 
+  // Ubah kata sandi sendiri; sandi lama diverifikasi di backend.
+  async function ubahSandi({ current, baru, konfirmasi }) {
+    return authService.ubahSandi({ current, baru, konfirmasi })
+  }
+
   async function logout() {
     try {
       await authService.logout()
@@ -180,6 +185,7 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     masukDenganGoogle,
     updateProfile,
+    ubahSandi,
     logout,
     perluKodeReferal,
     simpanReferal,

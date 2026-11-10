@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\Services\AuthServiceInterface;
 use App\Http\Requests\Auth\ApiLoginRequest;
 use App\Http\Requests\Auth\ApiRegisterRequest;
+use App\Http\Requests\Auth\UbahSandiRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -69,6 +70,19 @@ class AuthController
         return response()->json([
             'message' => 'Profil berhasil diperbarui',
             'data' => new UserResource($user->load('roles')),
+        ]);
+    }
+
+    public function ubahSandi(UbahSandiRequest $request): JsonResponse
+    {
+        $this->authService->ubahSandi(
+            $request->user(),
+            $request->validated('current_password'),
+            $request->validated('password'),
+        );
+
+        return response()->json([
+            'message' => 'Kata sandi berhasil diperbarui',
         ]);
     }
 }
