@@ -19,6 +19,30 @@ const userLaravel = {
 beforeEach(() => {
   vi.resetAllMocks()
   localStorage.clear()
+
+  it('forgotPassword mengirim email ke endpoint pemulihan', async () => {
+    api.post.mockResolvedValue({ data: { message: 'Jika email terdaftar, tautan dikirim.' } })
+    const result = await authService.forgotPassword(' siswa@example.com ')
+    expect(api.post).toHaveBeenCalledWith('/auth/forgot-password', { email: 'siswa@example.com' })
+    expect(result.message).toContain('Jika email')
+  })
+
+  it('resetPassword mengirim token dan konfirmasi dengan nama field Laravel', async () => {
+    api.post.mockResolvedValue({ data: { message: 'Kata sandi berhasil diubah.' } })
+    await authService.resetPassword({
+      email: 'siswa@example.com',
+      token: 'token-reset',
+      password: 'password-baru',
+      konfirmasi: 'password-baru',
+    })
+    expect(api.post).toHaveBeenCalledWith('/auth/reset-password', {
+      email: 'siswa@example.com',
+      token: 'token-reset',
+      password: 'password-baru',
+      password_confirmation: 'password-baru',
+    })
+  })
+
 })
 
 describe('authService', () => {
