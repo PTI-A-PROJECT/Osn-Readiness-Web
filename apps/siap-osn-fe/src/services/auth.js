@@ -67,6 +67,19 @@ export const authService = {
     return mapUser(unwrap(await api.put(ENDPOINTS.auth.profile, { name: nama, email })))
   },
 
+  async forgotPassword(email) {
+    return unwrap(await api.post(ENDPOINTS.auth.forgotPassword, { email: email.trim() }))
+  },
+
+  async resetPassword({ email, token, password, konfirmasi }) {
+    return unwrap(await api.post(ENDPOINTS.auth.resetPassword, {
+      email,
+      token,
+      password,
+      password_confirmation: konfirmasi,
+    }))
+  },
+
   async logout() {
     await api.post(ENDPOINTS.auth.logout)
   },
