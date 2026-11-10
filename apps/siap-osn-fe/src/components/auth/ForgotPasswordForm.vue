@@ -14,7 +14,7 @@ function validasi() {
   emailError.value = ''
   const nilai = email.value.trim()
   if (!nilai) emailError.value = 'Alamat email wajib diisi.'
-  else if (!/^[^\s@]+@[^\s@]+\\.[^\s@]+$/.test(nilai)) {
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nilai)) {
     emailError.value = 'Masukkan alamat email yang valid.'
   }
   return !emailError.value
