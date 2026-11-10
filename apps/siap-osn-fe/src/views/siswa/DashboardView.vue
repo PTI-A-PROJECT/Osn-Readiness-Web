@@ -1,21 +1,49 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
 import { useProgressStore } from '@/stores/progress.js'
 import UserMenu from '@/components/UserMenu.vue'
+import { KUNCI_POPUP_PRETEST_LOGIN } from '@/lib/pretest.js'
+import PretestPopup from './PretestPopup.vue'
 
 const auth = useAuthStore()
 const progress = useProgressStore()
 const router = useRouter()
 
+// Popup tampil sekali setiap login/daftar: penanda dipasang oleh auth store,
+// dipakai (dan dihapus) di sini. Refresh atau pindah halaman tidak
+// memunculkannya lagi sampai login berikutnya.
+const bolehTampilPopup = ref(false)
+
 onMounted(() => {
+  try {
+    const penanda = sessionStorage.getItem(KUNCI_POPUP_PRETEST_LOGIN)
+    bolehTampilPopup.value = penanda !== null && String(auth.user?.id) === penanda
+
+    if (bolehTampilPopup.value) {
+      sessionStorage.removeItem(KUNCI_POPUP_PRETEST_LOGIN)
+    }
+  } catch {
+    bolehTampilPopup.value = false
+  }
+
   void progress.fetchDashboard()
 })
 
 const d = computed(() => progress.data)
 const nama = computed(() => auth.nama || 'Siswa')
 const sudahPreTest = computed(() => d.value.preTestSelesai)
+
+// Popup hanya muncul setelah dashboard selesai dimuat, supaya tidak berkedip
+// untuk siswa yang sebenarnya sudah mengerjakan pre-test.
+const tampilkanPopupPretest = computed(
+  () => progress.loaded && !d.value.preTestSelesai && bolehTampilPopup.value,
+)
+
+function tutupPopupPretest() {
+  bolehTampilPopup.value = false
+}
 
 function mulaiPretest() {
   router.push({ name: 'siswa.pretest' })
@@ -636,5 +664,11 @@ function ikonRiwayat(jenis) {
         </div>
       </section>
     </main>
+
+    <PretestPopup
+      v-if="tampilkanPopupPretest"
+      @mulai="mulaiPretest"
+      @tutup="tutupPopupPretest"
+    />
   </div>
 </template>
