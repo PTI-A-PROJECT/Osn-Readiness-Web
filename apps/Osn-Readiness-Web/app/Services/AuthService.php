@@ -130,6 +130,18 @@ class AuthService implements AuthServiceInterface
         }
     }
 
+    public function ubahSandi(User $user, string $sandiSaatIni, string $sandiBaru): void
+    {
+        if (! Hash::check($sandiSaatIni, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['Kata sandi saat ini tidak sesuai.'],
+            ]);
+        }
+
+        // Model User memakai cast 'hashed', jadi kirim teks aslinya.
+        $user->update(['password' => $sandiBaru]);
+    }
+
     private function buatToken(User $user, ?string $device): string
     {
         return $user->createToken($device ?? 'auth-token')->plainTextToken;

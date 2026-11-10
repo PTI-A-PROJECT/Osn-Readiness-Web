@@ -2,7 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.js'
-import { pesanError } from '@/lib/errors.js'
+import { pesanError, pesanField } from '@/lib/errors.js'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -97,6 +97,7 @@ async function saveProfile() {
 /* ---------- Ubah kata sandi ---------- */
 const password = reactive({ current: '', next: '', confirm: '' })
 const editingPassword = ref(false)
+const savingPassword = ref(false)
 const passwordNotice = ref({ type: '', text: '' })
 
 const strength = computed(() => {
@@ -141,7 +142,13 @@ async function salinKode() {
   }
 }
 
-function updatePassword() {
+async function updatePassword() {
+  passwordNotice.value = { type: '', text: '' }
+
+  if (!password.current) {
+    passwordNotice.value = { type: 'error', text: 'Kata sandi saat ini wajib diisi.' }
+    return
+  }
   if (password.next.length < 8) {
     passwordNotice.value = { type: 'error', text: 'Kata sandi minimal 8 karakter.' }
     return
@@ -150,12 +157,27 @@ function updatePassword() {
     passwordNotice.value = { type: 'error', text: 'Konfirmasi kata sandi tidak sama.' }
     return
   }
-  // TODO: panggil API ubah kata sandi
-  passwordNotice.value = {
-    type: 'success',
-    text: 'Kata sandi baru memenuhi syarat. Penyimpanan ke server belum aktif.',
+
+  savingPassword.value = true
+  try {
+    await auth.ubahSandi({
+      current: password.current,
+      baru: password.next,
+      konfirmasi: password.confirm,
+    })
+    passwordNotice.value = { type: 'success', text: 'Kata sandi berhasil diperbarui.' }
+    resetPassword()
+    editingPassword.value = false
+  } catch (err) {
+    passwordNotice.value = {
+      type: 'error',
+      text: pesanField(err, 'current_password')
+        ?? pesanField(err, 'password')
+        ?? pesanError(err, 'Kata sandi belum tersimpan. Coba lagi.'),
+    }
+  } finally {
+    savingPassword.value = false
   }
-  resetPassword()
 }
 
 /* ---------- Logout ---------- */
@@ -279,7 +301,7 @@ async function logout() {
           <template v-if="editingPassword">
             <div class="field">
               <label for="pw-now">Kata Sandi Saat Ini</label>
-              <input id="pw-now" v-model="password.current" type="password" autocomplete="current-password" />
+              <input id="pw-now" v-model="password.current" type="password" autocomplete="current-password" :disabled="savingPassword" />
             </div>
 
             <div class="field">
@@ -290,6 +312,7 @@ async function logout() {
                 type="password"
                 placeholder="Kombinasi minimal 8 karakter"
                 autocomplete="new-password"
+                :disabled="savingPassword"
               />
               <div class="strength">
                 <div
@@ -309,12 +332,15 @@ async function logout() {
                 type="password"
                 placeholder="Ulangi kata sandi baru"
                 autocomplete="new-password"
+                :disabled="savingPassword"
               />
             </div>
 
             <div class="actions">
-              <button type="button" class="btn btn--ghost" @click="cancelEditPassword">Batalkan</button>
-              <button type="submit" class="btn btn--primary">Simpan</button>
+              <button type="button" class="btn btn--ghost" :disabled="savingPassword" @click="cancelEditPassword">Batalkan</button>
+              <button type="submit" class="btn btn--primary" :disabled="savingPassword">
+                {{ savingPassword ? 'Menyimpan…' : 'Simpan' }}
+              </button>
             </div>
           </template>
 

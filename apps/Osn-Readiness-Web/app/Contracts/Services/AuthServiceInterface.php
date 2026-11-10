@@ -36,4 +36,11 @@ interface AuthServiceInterface
      * @param  array<string, mixed>  $data
      */
     public function updateProfile(User $user, array $data): User;
+
+    /**
+     * Ubah kata sandi sendiri setelah memverifikasi sandi saat ini.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function ubahSandi(User $user, string $sandiSaatIni, string $sandiBaru): void;
 }
