@@ -61,14 +61,24 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model->newQuery()->where('nim', $nim)->first();
     }
 
-    public function paginasiAnggota(int $perPage = 15): LengthAwarePaginator
+    /**
+     * @param  ?string  $urut  terbanyak | tersedikit (minimal 1 referal) | tanpa (belum ada referal) | null (nama)
+     */
+    public function paginasiAnggota(int $perPage = 15, ?string $urut = null): LengthAwarePaginator
     {
-        return $this->model->newQuery()
+        $query = $this->model->newQuery()
             ->whereHas('roles', fn ($q) => $q->where('name', 'anggota'))
             ->with('roles')
-            ->withCount('diundang')
-            ->orderBy('name')
-            ->paginate($perPage);
+            ->withCount('diundang');
+
+        $terurut = match ($urut) {
+            'terbanyak' => $query->orderByDesc('diundang_count')->orderBy('name'),
+            'tersedikit' => $query->has('diundang')->orderBy('diundang_count')->orderBy('name'),
+            'tanpa' => $query->doesntHave('diundang')->orderBy('name'),
+            default => $query->orderBy('name'),
+        };
+
+        return $terurut->paginate($perPage);
     }
 
     public function kodeReferalDipakai(string $kode, int $kecualiUserId): bool
