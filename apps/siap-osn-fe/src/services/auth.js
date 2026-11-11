@@ -79,6 +79,18 @@ export const authService = {
     )
   },
 
+  async forgotPassword(email) {
+    const { data } = await api.post(ENDPOINTS.auth.forgotPassword, { email: email.trim() })
+    return data
+  },
+
+  async resetPassword({ email, token, password, konfirmasi }) {
+    const { data } = await api.post(ENDPOINTS.auth.resetPassword, {
+      email, token, password, password_confirmation: konfirmasi,
+    })
+    return data
+  },
+
   async logout() {
     await api.post(ENDPOINTS.auth.logout)
   },

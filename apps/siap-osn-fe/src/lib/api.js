@@ -31,6 +31,8 @@ const TANPA_REDIRECT_401 = [
   ENDPOINTS.auth.login,
   ENDPOINTS.auth.logout,
   ENDPOINTS.auth.googleExchange,
+  ENDPOINTS.auth.forgotPassword,
+  ENDPOINTS.auth.resetPassword,
 ]
 
 // Beberapa request paralel bisa 401 bersamaan; cukup satu yang redirect.
