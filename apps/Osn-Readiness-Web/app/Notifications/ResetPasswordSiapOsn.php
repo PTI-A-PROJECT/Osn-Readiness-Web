@@ -25,11 +25,10 @@ class ResetPasswordSiapOsn extends Notification
         ]);
 
         return (new MailMessage)
-            ->subject('Atur Ulang Kata Sandi SIAP OSN')
-            ->greeting('Halo!')
-            ->line('Kami menerima permintaan untuk mengatur ulang kata sandi SIAP OSN.')
-            ->action('Buat Kata Sandi Baru', $link)
-            ->line('Tautan berlaku selama '.config('auth.passwords.users.expire').' menit.')
-            ->line('Jika bukan Anda yang meminta, abaikan email ini.');
+            ->subject('Atur Ulang Kata Sandi | SIAP OSN')
+            ->view('emails.password-reset', [
+                'resetUrl' => $link,
+                'expireMinutes' => config('auth.passwords.users.expire'),
+            ]);
     }
 }
