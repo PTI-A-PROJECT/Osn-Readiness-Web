@@ -5,68 +5,68 @@ const stats = [
   { value: '100%', label: 'Materi dipersonalisasi' },
 ]
 
-// Kartu hero hanya menjelaskan alur, bukan hasil siswa: nama kompetensi tampil
-// tanpa angka dan bar-nya kosong. Jangan diisi nilai contoh — di landing page
-// angka percentage dibaca sebagai nilai user yang sungguhan.
-const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dynamic Programming']
+// Ilustrasi statis untuk memperlihatkan contoh hasil pemetaan kompetensi.
+const competencies = [
+  { name: 'Struktur Data', score: 82, tone: 'blue' },
+  { name: 'Algoritma Greedy', score: 54, tone: 'blue' },
+  { name: 'Graf & Pohon', score: 38, tone: 'yellow' },
+  { name: 'Dynamic Programming', score: 29, tone: 'yellow' },
+]
 </script>
 
 <template>
-<section class="hero">
-      <div class="container hero__grid">
-        <div class="hero__copy">
-          <span class="pill">Persiapan OSN Bidang Informatika</span>
-          <h1>Sistem Interaktif<br />Adaptif<br />Persiapan OSN</h1>
-          <p class="hero__lead">
-            Persiapkan dirimu menghadapi seleksi OSN Bidang Informatika secara adaptif — dari
-            tingkat Kabupaten hingga Nasional — dengan pemetaan kompetensi otomatis dan materi yang
-            dipersonalisasi.
-          </p>
-          <div class="hero__cta">
-            <a href="/register" class="btn btn--light">Mulai Pre-Test Gratis</a>
-            <a href="#cara-kerja" class="btn btn--outline">Lihat Cara Kerja</a>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <span class="pill">Persiapan OSN Bidang Informatika</span>
+        <h1>Sistem Interaktif<br />Adaptif<br />Persiapan OSN</h1>
+        <p class="hero__lead">
+          Persiapkan dirimu menghadapi seleksi OSN Bidang Informatika secara adaptif — dari
+          tingkat Kabupaten hingga Nasional — dengan pemetaan kompetensi otomatis dan materi yang
+          dipersonalisasi.
+        </p>
+        <div class="hero__cta">
+          <a href="/register" class="btn btn--light">Mulai Pre-Test Gratis</a>
+          <a href="#cara-kerja" class="btn btn--outline">Lihat Cara Kerja</a>
+        </div>
+        <dl class="stats">
+          <div v-for="s in stats" :key="s.label">
+            <dt>{{ s.value }}</dt>
+            <dd>{{ s.label }}</dd>
           </div>
-          <dl class="stats">
-            <div v-for="s in stats" :key="s.label">
-              <dt>{{ s.value }}</dt>
-              <dd>{{ s.label }}</dd>
-            </div>
-          </dl>
+        </dl>
+      </div>
+
+      <div class="map-card" aria-label="Contoh pemetaan kompetensi siswa">
+        <div class="map-card__head">
+          <strong>Pemetaan Kompetensi</strong>
+          <span class="pill pill--muted">Tingkat Provinsi</span>
         </div>
 
-        <div
-          class="map-card"
-          role="img"
-          aria-label="Ilustrasi tampilan pemetaan kompetensi; angka muncul setelah kamu selesai pre-test"
-        >
-          <div class="map-card__head">
-            <strong>Pemetaan Kompetensi</strong>
-            <span class="pill pill--muted">Contoh Tampilan</span>
+        <ul class="bars">
+          <li v-for="item in competencies" :key="item.name">
+            <span class="bars__name">{{ item.name }}</span>
+            <span class="bars__track">
+              <span
+                class="bars__fill"
+                :class="`bars__fill--${item.tone}`"
+                :style="{ width: `${item.score}%` }"
+              ></span>
+            </span>
+            <span class="bars__value">{{ item.score }}%</span>
+          </li>
+        </ul>
+
+        <div class="map-card__foot">
+          <div>
+            <small>Rekomendasi berikutnya</small>
+            <strong>Latihan Dynamic Programming Dasar</strong>
           </div>
-
-          <ul class="bars">
-            <li v-for="c in competencies" :key="c">
-              <span class="bars__name">{{ c }}</span>
-              <span class="bars__track"></span>
-              <span class="bars__value">—</span>
-            </li>
-          </ul>
-
-          <p class="map-card__note">
-            Bar dan persentase terisi otomatis setelah kamu menyelesaikan pre-test. Di halaman ini
-            sengaja dikosongkan karena bukan data siswamu.
-          </p>
-
-          <div class="map-card__foot">
-            <div>
-              <small>Langkah berikutnya</small>
-              <strong>Selesaikan pre-test</strong>
-            </div>
-            <a href="/register" class="btn btn--light btn--xs">Mulai</a>
-          </div>
+          <a href="/register" class="btn btn--light btn--xs">Belajar</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 </template>
 
 <style scoped src="./shared.css"></style>
@@ -134,8 +134,9 @@ const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dyna
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   font-size: 0.88rem;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .bars {
@@ -143,12 +144,12 @@ const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dyna
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .bars li {
   display: grid;
-  grid-template-columns: 130px 1fr 36px;
+  grid-template-columns: 130px minmax(0, 1fr) 36px;
   align-items: center;
   gap: 12px;
   font-size: 0.78rem;
@@ -156,22 +157,31 @@ const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dyna
 }
 
 .bars__track {
+  display: block;
   height: 6px;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 99px;
   overflow: hidden;
 }
 
+.bars__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.bars__fill--blue {
+  background: #60a5fa;
+}
+
+.bars__fill--yellow {
+  background: #f5c542;
+}
+
 .bars__value {
   text-align: right;
   color: #9fb0d3;
-}
-
-.map-card__note {
-  margin-top: 20px;
-  font-size: 0.72rem;
-  line-height: 1.6;
-  color: #9fb0d3;
+  font-size: 0.7rem;
 }
 
 .map-card__foot {
@@ -179,8 +189,8 @@ const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dyna
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
+  margin-top: 26px;
+  padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -188,10 +198,12 @@ const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dyna
   display: block;
   font-size: 0.68rem;
   color: #9fb0d3;
+  margin-bottom: 4px;
 }
 
 .map-card__foot strong {
-  font-size: 0.85rem;
+  display: block;
+  font-size: 0.82rem;
 }
 
 .pill {
@@ -207,20 +219,28 @@ const competencies = ['Struktur Data', 'Algoritma Greedy', 'Graf & Pohon', 'Dyna
 .pill--muted {
   background: rgba(255, 255, 255, 0.1);
   color: #d6def0;
+  white-space: nowrap;
 }
 
 @media (max-width: 900px) {
   .hero__grid {
     grid-template-columns: 1fr;
   }
-  .bars li {
-    grid-template-columns: 110px 1fr 36px;
-  }
 }
 
 @media (max-width: 520px) {
   .stats {
     gap: 24px;
+  }
+
+  .bars li {
+    grid-template-columns: minmax(0, 1fr) 1fr 36px;
+    gap: 8px;
+    font-size: 0.7rem;
+  }
+
+  .map-card {
+    padding: 18px;
   }
 }
 </style>
