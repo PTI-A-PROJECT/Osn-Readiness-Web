@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\AnggotaPanelController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BelajarController;
 use App\Http\Controllers\Api\GoogleAuthController;
+use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\HasilSimulasiController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\PretestController;
@@ -42,6 +43,8 @@ Route::prefix('auth')->group(function (): void {
     Route::post('register', [AuthController::class, 'register'])->middleware('throttle:register');
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
     Route::post('google/exchange', [GoogleAuthController::class, 'exchange'])->middleware('throttle:5,1');
+    Route::post('forgot-password', [PasswordResetController::class, 'kirimTautan'])->middleware('throttle:5,1');
+    Route::post('reset-password', [PasswordResetController::class, 'reset'])->middleware('throttle:5,1');
 });
 
 /*
