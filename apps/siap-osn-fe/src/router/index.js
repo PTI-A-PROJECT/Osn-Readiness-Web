@@ -210,7 +210,7 @@ export const routes = [
         path: 'admin/anggota',
         name: 'admin.anggota',
         component: AdminAnggotaView,
-        meta: { requiresAuth: true, role: 'super_admin', title: 'Kelola Anggota' },
+        meta: { requiresAuth: true, role: 'super_admin', title: 'Pantau Anggota' },
       },
       {
         path: 'admin/konten',
