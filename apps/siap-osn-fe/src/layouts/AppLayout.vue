@@ -34,7 +34,7 @@ const menuSiswa = [
 const menuAdmin = [
   { kelompok: 'UTAMA', label: 'Dashboard', to: { name: 'admin.dashboard' } },
   { kelompok: 'UTAMA', label: 'Manajemen Siswa', to: { name: 'admin.siswa' } },
-  { kelompok: 'UTAMA', label: 'Manajemen Anggota', to: { name: 'admin.anggota' } },
+  { kelompok: 'UTAMA', label: 'Pantau Anggota', to: { name: 'admin.anggota' } },
   { kelompok: 'UTAMA', label: 'Manajemen Tingkat Seleksi', to: { name: 'admin.aturan', query: { tab: 'tingkat' } } },
   { kelompok: 'UTAMA', label: 'Manajemen Kompetensi', to: { name: 'admin.konten', query: { tab: 'kompetensi' } } },
   { kelompok: 'UTAMA', label: 'Manajemen Materi', to: { name: 'admin.konten', query: { tab: 'materi' } } },
