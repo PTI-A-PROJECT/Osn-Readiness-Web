@@ -12,6 +12,8 @@ export const ENDPOINTS = {
     me: '/auth/me',
     profile: '/auth/profile',
     password: '/auth/password',
+    forgotPassword: '/auth/forgot-password',
+    resetPassword: '/auth/reset-password',
   },
   siswa: {
     dashboard: '/dashboard',
