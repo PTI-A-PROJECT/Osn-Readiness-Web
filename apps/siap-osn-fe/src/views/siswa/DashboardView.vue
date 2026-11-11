@@ -6,6 +6,7 @@ import { useProgressStore } from '@/stores/progress.js'
 import UserMenu from '@/components/UserMenu.vue'
 import { KUNCI_POPUP_PRETEST_LOGIN } from '@/lib/pretest.js'
 import PretestPopup from './PretestPopup.vue'
+import { leaderboardService } from '@/services/leaderboard.js'
 
 const auth = useAuthStore()
 const progress = useProgressStore()
@@ -15,6 +16,11 @@ const router = useRouter()
 // dipakai (dan dihapus) di sini. Refresh atau pindah halaman tidak
 // memunculkannya lagi sampai login berikutnya.
 const bolehTampilPopup = ref(false)
+const leaderboardTingkat = ref('kabupaten')
+const leaderboardData = ref({ peringkat: [], total_peserta: 0 })
+const leaderboardSaya = ref(null)
+const leaderboardLoading = ref(false)
+const leaderboardError = ref(false)
 
 onMounted(() => {
   try {
@@ -29,6 +35,7 @@ onMounted(() => {
   }
 
   void progress.fetchDashboard()
+  void muatLeaderboard()
 })
 
 const d = computed(() => progress.data)
@@ -63,6 +70,25 @@ function bukaRiwayat() {
 
 function muatUlang() {
   void progress.fetchDashboard({ force: true })
+}
+
+async function muatLeaderboard(tingkat = leaderboardTingkat.value) {
+  leaderboardTingkat.value = tingkat
+  leaderboardLoading.value = true
+  leaderboardError.value = false
+
+  try {
+    const [daftar, posisi] = await Promise.all([
+      leaderboardService.daftar({ tingkat }),
+      leaderboardService.posisiSaya({ tingkat }),
+    ])
+    leaderboardData.value = daftar
+    leaderboardSaya.value = posisi
+  } catch {
+    leaderboardError.value = true
+  } finally {
+    leaderboardLoading.value = false
+  }
 }
 
 function formatTanggal(iso) {
@@ -661,6 +687,94 @@ function ikonRiwayat(jenis) {
         <div v-else class="flex min-h-[100px] flex-col items-center justify-center text-center">
           <p class="text-[13px] font-bold">Belum Ada Hasil Simulasi</p>
           <p class="mt-1 text-[11px] text-[#71809a]">Ikuti simulasi seleksi untuk melihat ringkasan hasil terakhirmu di sini.</p>
+        </div>
+      </section>
+
+      <!-- Leaderboard -->
+      <section class="rounded-2xl border border-[#e3eaf4] bg-white p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-[14px] font-bold">Leaderboard</h3>
+            <p class="mt-1 text-[10px] text-[#71809a]">Peringkat berdasarkan akumulasi nilai latihan terbaik.</p>
+          </div>
+          <div class="inline-flex rounded-xl bg-[#f1f4f9] p-1" aria-label="Pilih tingkat leaderboard">
+            <button
+              type="button"
+              class="rounded-lg px-3 py-1.5 text-[10px] font-bold transition"
+              :class="leaderboardTingkat === 'kabupaten' ? 'bg-white text-[#153b70] shadow-sm' : 'text-[#71809a] hover:text-[#153b70]'"
+              :aria-pressed="leaderboardTingkat === 'kabupaten'"
+              @click="muatLeaderboard('kabupaten')"
+            >Kabupaten</button>
+            <button
+              type="button"
+              class="rounded-lg px-3 py-1.5 text-[10px] font-bold transition"
+              :class="leaderboardTingkat === 'provinsi' ? 'bg-white text-[#153b70] shadow-sm' : 'text-[#71809a] hover:text-[#153b70]'"
+              :aria-pressed="leaderboardTingkat === 'provinsi'"
+              @click="muatLeaderboard('provinsi')"
+            >Provinsi</button>
+          </div>
+        </div>
+
+        <div v-if="leaderboardLoading" class="mt-5 space-y-3" aria-live="polite">
+          <div v-for="item in 5" :key="item" class="h-12 animate-pulse rounded-xl bg-[#f3f6fa]"></div>
+        </div>
+
+        <div v-else-if="leaderboardError" class="flex min-h-[150px] flex-col items-center justify-center text-center">
+          <p class="text-[13px] font-bold">Leaderboard Belum Dapat Dimuat</p>
+          <p class="mt-1 text-[11px] text-[#71809a]">Periksa koneksi internetmu, lalu coba lagi.</p>
+          <button type="button" class="mt-3 rounded-lg border border-[#dce4ef] px-3 py-1.5 text-[10px] font-semibold text-[#153b70] hover:bg-[#f4f7fc]" @click="muatLeaderboard()">↻ Coba Lagi</button>
+        </div>
+
+        <div v-else class="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(230px,1fr)]">
+          <div class="min-w-0">
+            <div class="mb-2 flex items-center justify-between text-[10px] text-[#71809a]">
+              <span>{{ leaderboardData.total_peserta || 0 }} peserta terdaftar</span>
+              <span>Top 5</span>
+            </div>
+            <div v-if="leaderboardData.peringkat?.length" class="divide-y divide-[#edf1f6]">
+              <div v-for="(peserta, index) in leaderboardData.peringkat.slice(0, 5)" :key="peserta.peringkat" class="flex items-center gap-3 py-3 first:pt-2 last:pb-2">
+                <span
+                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold"
+                  :class="peserta.peringkat === 1 ? 'bg-[#fff1c7] text-[#a66b00]' : peserta.peringkat === 2 ? 'bg-[#edf0f5] text-[#68758a]' : peserta.peringkat === 3 ? 'bg-[#f8e7dc] text-[#9b5a31]' : 'bg-[#f1f4f9] text-[#71809a]'"
+                >{{ peserta.peringkat }}</span>
+                <span class="min-w-0 flex-1 truncate text-[11px] font-semibold text-[#172238]">{{ peserta.nama }}</span>
+                <span class="text-right">
+                  <span class="block text-[12px] font-bold text-[#153b70]">{{ Math.round(Number(peserta.skor) || 0) }}</span>
+                  <span class="block text-[9px] text-[#71809a]">{{ peserta.latihan_selesai }} latihan</span>
+                </span>
+              </div>
+            </div>
+            <div v-else class="flex min-h-[120px] items-center justify-center rounded-xl bg-[#f7f9fc] px-4 text-center text-[11px] text-[#71809a]">
+              Belum ada peserta yang memenuhi syarat leaderboard tingkat ini.
+            </div>
+          </div>
+
+          <aside class="rounded-xl border border-[#dfe8f5] bg-[#f5f8fd] p-4">
+            <p class="text-[11px] font-bold text-[#172238]">Peringkatmu</p>
+            <template v-if="leaderboardSaya?.layak && leaderboardSaya.peringkat != null">
+              <p class="mt-3 text-[30px] font-extrabold leading-none tracking-tight text-[#153b70]">#{{ leaderboardSaya.peringkat }}</p>
+              <p class="mt-1 text-[10px] text-[#71809a]">dari {{ leaderboardSaya.total_peserta || leaderboardData.total_peserta }} peserta</p>
+              <div class="mt-4 grid grid-cols-2 gap-2">
+                <div class="rounded-lg bg-white px-2.5 py-2">
+                  <p class="text-[15px] font-bold text-[#172238]">{{ Math.round(Number(leaderboardSaya.skor) || 0) }}</p>
+                  <p class="text-[9px] text-[#71809a]">Total skor</p>
+                </div>
+                <div class="rounded-lg bg-white px-2.5 py-2">
+                  <p class="text-[15px] font-bold text-[#172238]">{{ leaderboardSaya.latihan_selesai || 0 }}</p>
+                  <p class="text-[9px] text-[#71809a]">Latihan selesai</p>
+                </div>
+              </div>
+            </template>
+            <template v-else-if="leaderboardSaya?.layak">
+              <p class="mt-3 text-[13px] font-bold text-[#153b70]">Satu langkah lagi!</p>
+              <p class="mt-1 text-[10px] leading-relaxed text-[#71809a]">{{ leaderboardSaya.alasan || 'Selesaikan minimal satu latihan untuk mendapatkan peringkat.' }}</p>
+            </template>
+            <template v-else>
+              <p class="mt-3 text-[12px] font-bold text-[#a46b00]">Belum masuk peringkat</p>
+              <p class="mt-1 text-[10px] leading-relaxed text-[#71809a]">{{ leaderboardSaya?.alasan || 'Selesaikan pre-test dan penuhi nilai minimum agar dapat masuk leaderboard.' }}</p>
+              <p v-if="leaderboardSaya?.batas_pretest" class="mt-3 rounded-lg bg-white px-3 py-2 text-[10px] text-[#60718d]">Batas nilai pre-test: <strong>{{ leaderboardSaya.batas_pretest }}</strong></p>
+            </template>
+          </aside>
         </div>
       </section>
     </main>
