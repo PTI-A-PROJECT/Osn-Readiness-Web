@@ -7,7 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface AnggotaServiceInterface
 {
-    public function getAll(int $perPage = 15): LengthAwarePaginator;
+    public function getAll(int $perPage = 15, ?string $urut = null): LengthAwarePaginator;
 
     /**
      * @param  list<array{nim: string, nama: string}>  $baris

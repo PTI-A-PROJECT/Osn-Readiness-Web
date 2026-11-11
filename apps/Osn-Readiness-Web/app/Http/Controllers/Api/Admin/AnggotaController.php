@@ -19,7 +19,8 @@ class AnggotaController
         Gate::authorize('lihatAnggota', User::class);
 
         $perPage = (int) request('per_page', 15);
+        $urut = request()->validate(['urut' => ['nullable', 'in:terbanyak,tersedikit,tanpa']])['urut'] ?? null;
 
-        return UserResource::collection($this->anggotaService->getAll($perPage));
+        return UserResource::collection($this->anggotaService->getAll($perPage, $urut));
     }
 }

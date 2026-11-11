@@ -173,7 +173,7 @@ export const useAdminStore = defineStore('admin', () => {
       case MODUL.SISWA:
         return adminService.daftarSiswa({ halaman, perPage: perHalaman, signal })
       case MODUL.ANGGOTA:
-        return adminService.daftarAnggota({ halaman, perPage: perHalaman, signal })
+        return adminService.daftarAnggota({ halaman, perPage: perHalaman, urut: filter.urut ?? null, signal })
       case MODUL.SOAL:
         return adminService.daftarSoal({ halaman, perPage: perHalaman, signal })
       case MODUL.LATIHAN:

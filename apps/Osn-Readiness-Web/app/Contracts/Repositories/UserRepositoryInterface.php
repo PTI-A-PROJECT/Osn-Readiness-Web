@@ -45,7 +45,7 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
     /**
      * Akun ber-role anggota, aktif maupun nonaktif, terbaru dulu.
      */
-    public function paginasiAnggota(int $perPage = 15): LengthAwarePaginator;
+    public function paginasiAnggota(int $perPage = 15, ?string $urut = null): LengthAwarePaginator;
 
     public function kodeReferalDipakai(string $kode, int $kecualiUserId): bool;
 

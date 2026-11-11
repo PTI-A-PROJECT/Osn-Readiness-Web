@@ -18,9 +18,9 @@ class AnggotaService implements AnggotaServiceInterface
         private readonly UserRepositoryInterface $userRepository,
     ) {}
 
-    public function getAll(int $perPage = 15): LengthAwarePaginator
+    public function getAll(int $perPage = 15, ?string $urut = null): LengthAwarePaginator
     {
-        return $this->userRepository->paginasiAnggota($perPage);
+        return $this->userRepository->paginasiAnggota($perPage, $urut);
     }
 
     /**

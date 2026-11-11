@@ -65,11 +65,9 @@ export const adminService = {
     const { items, ...paginasi } = halamanPaginasi(res, perPage, halaman)
     return { items: items.map(mapSiswa), ...paginasi }
   },
-  async daftarAnggota({ halaman = 1, perPage = 15, signal } = {}) {
-    const res = await api.get(ENDPOINTS.admin.anggota, {
-      params: { page: halaman, per_page: perPage },
-      signal,
-    })
+  async daftarAnggota({ halaman = 1, perPage = 15, urut = null, signal } = {}) {
+    const params = { page: halaman, per_page: perPage, ...(urut ? { urut } : {}) }
+    const res = await api.get(ENDPOINTS.admin.anggota, { params, signal })
     const { items, ...paginasi } = halamanPaginasi(res, perPage, halaman)
     return { items: items.map(mapAnggota), ...paginasi }
   },
