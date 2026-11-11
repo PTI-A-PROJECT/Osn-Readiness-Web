@@ -22,6 +22,20 @@ beforeEach(() => {
 })
 
 describe('authService', () => {
+  it('forgotPassword mengirim email tanpa membuat token palsu', async () => {
+    api.post.mockResolvedValue({ data: { message: 'Permintaan diterima' } })
+    expect(await authService.forgotPassword(' siswa@example.com ')).toEqual({ message: 'Permintaan diterima' })
+    expect(api.post).toHaveBeenCalledWith('/auth/forgot-password', { email: 'siswa@example.com' })
+  })
+
+  it('resetPassword mengirim token dan konfirmasi sandi ke API', async () => {
+    api.post.mockResolvedValue({ data: { message: 'Berhasil' } })
+    await authService.resetPassword({ email: 'siswa@example.com', token: 'abc', password: 'password123', konfirmasi: 'password123' })
+    expect(api.post).toHaveBeenCalledWith('/auth/reset-password', {
+      email: 'siswa@example.com', token: 'abc', password: 'password123', password_confirmation: 'password123',
+    })
+  })
+
   it('me mengembalikan user bentuk FE', async () => {
     api.get.mockResolvedValue({ data: { message: 'OK', data: userLaravel } })
     const user = await authService.me()
