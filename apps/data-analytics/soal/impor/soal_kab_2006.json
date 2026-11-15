@@ -5,7 +5,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 1 sampai dengan 2\n Deret bilangan Fibonacci didefinisikan secara rekursif sbb.\nf₁ = 1\nf₂ = 2\nfₙ = fₙ₋₁ + fₙ₋₂ untuk semua n > 2",
+    "deskripsi_soal": "Deret bilangan Fibonacci didefinisikan secara rekursif sbb.\nf₁ = 1\nf₂ = 2\nfₙ = fₙ₋₁ + fₙ₋₂ untuk semua n > 2",
     "soal": "Berapa banyak kah bilangan Fibonacci antara 10 sampai dengan 100?",
     "pilihan": {
       "a": "90",
@@ -24,7 +24,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 1 sampai dengan 2\n Deret bilangan Fibonacci didefinisikan secara rekursif sbb.\nf₁ = 1\nf₂ = 2\nfₙ = fₙ₋₁ + fₙ₋₂ untuk semua n > 2",
+    "deskripsi_soal": "Deret bilangan Fibonacci didefinisikan secara rekursif sbb.\nf₁ = 1\nf₂ = 2\nfₙ = fₙ₋₁ + fₙ₋₂ untuk semua n > 2",
     "soal": "Dengan mengambil satu harga n kemudian anda menjumlahkan bilangan-bilangan tsb mulai dari f₁ s.d. fₙ maka berapakah n terkecil agar jumlah itu > 150?",
     "pilihan": {
       "a": "9",
@@ -43,7 +43,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 3 sampai dengan 4\n Di suatu negri antah berantah alat tukar yang digunakan hanya mata uang dengan empat pecahan saja: satu Gordi, satu Gorde yang sama dengan 17 Gordi, satu Gordo yang sama dengan 57 Gordi, dan satu Goram yang sama dengan 115 Gordi.",
+    "deskripsi_soal": "Di suatu negri antah berantah alat tukar yang digunakan hanya mata uang dengan empat pecahan saja: satu Gordi, satu Gorde yang sama dengan 17 Gordi, satu Gordo yang sama dengan 57 Gordi, dan satu Goram yang sama dengan 115 Gordi.",
     "soal": "Gogolan berjualan snack dan ada seorang pembeli yang hendak membayar 3 potong snack yang dibelinya. Snack-snack tsb masing-masing berharga (dinyatakan sebagai (Gordo, Gorde, Gordi)): (4, 12, 10), (8, 21, 12), (1, 19, 11). Uang yang diserahkan adalah 20 Goram. Berapakah kembalian yang benar?",
     "pilihan": {
       "a": "11 Gordo dan 17 Gordi",
@@ -62,7 +62,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 3 sampai dengan 4\n Di suatu negri antah berantah alat tukar yang digunakan hanya mata uang dengan empat pecahan saja: satu Gordi, satu Gorde yang sama dengan 17 Gordi, satu Gordo yang sama dengan 57 Gordi, dan satu Goram yang sama dengan 115 Gordi.",
+    "deskripsi_soal": "Di suatu negri antah berantah alat tukar yang digunakan hanya mata uang dengan empat pecahan saja: satu Gordi, satu Gorde yang sama dengan 17 Gordi, satu Gordo yang sama dengan 57 Gordi, dan satu Goram yang sama dengan 115 Gordi.",
     "soal": "Seorang kolektor mata uang dari negri lain sangat menyukai Gorde tetapi membenci Gordi. Baginya setiap Gordi bernilai 2 kali negatif dari nilai Gorde (1 Gordi = -2 Gorde), sementara Gordo dan Goram dilarang untuk dibawa ke luar negeri tsb jadi tidak akan ia koleksi. Ketika ia menukarkan uang di bank, pilihlah jumlah Goram yang ia akan tukarkan untuk mendapatkan total nilai sebesar mungkin baginya.",
     "pilihan": {
       "a": "6",
@@ -81,7 +81,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 5 sampai dengan 9\n Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
+    "deskripsi_soal": "Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
     "soal": "Siapakah orang yang akan saya kirimi SMS agar dengan hanya dengan satu kali saja maka selanjutnya berita tsb akan sampai ke setiap orang?",
     "pilihan": {
       "a": "A",
@@ -100,7 +100,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 5 sampai dengan 9\n Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
+    "deskripsi_soal": "Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
     "soal": "Jika orang yang pertama saya kirimi SMS adalah G maka siapakah yang akan menerima SMS tsb paling banyak akhirnya?",
     "pilihan": {
       "a": "A",
@@ -119,7 +119,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 5 sampai dengan 9\n Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
+    "deskripsi_soal": "Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
     "soal": "Jika orang pertama yang saya kirimi SMS adalah A, maka berapa menit lagi A akan menerima SMS berikutnya?",
     "pilihan": {
       "a": "10 menit",
@@ -138,7 +138,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 5 sampai dengan 9\n Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
+    "deskripsi_soal": "Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
     "soal": "Jika orang pertama yang saya kirimi SMS adalah A maka berapa menit lagi A akan menerima SMS dari I?",
     "pilihan": {
       "a": "10 menit",
@@ -157,7 +157,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 5 sampai dengan 9\n Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
+    "deskripsi_soal": "Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
     "soal": "Jika orang pertama yang saya kirimi SMS adalah A maka siapa saja yang sudah menerima SMS tepat setelah menit ke 15?",
     "pilihan": {
       "a": "Semua",
@@ -195,7 +195,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 11 sampai dengan 13\n   TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
+    "deskripsi_soal": "TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
     "soal": "Jika diketahui O = 4, maka berapakah T x W x O ?",
     "pilihan": {
       "a": "84",
@@ -214,7 +214,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 11 sampai dengan 13\n   TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
+    "deskripsi_soal": "TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
     "soal": "Jika diketahui R = 0, maka berapakah F + O + U + T ?",
     "pilihan": {
       "a": "9",
@@ -233,7 +233,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 11 sampai dengan 13\n   TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
+    "deskripsi_soal": "TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
     "soal": "Berapakah hasil dari : ((1000 x F) + (100 x O) + (10 x U) + R) / ((100 x T) + (10 x W) + O) ?",
     "pilihan": {
       "a": "10",
@@ -480,7 +480,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "soal": "Dari mana B berasal?",
     "pilihan": {
       "a": "Sekolah E",
@@ -499,7 +499,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "soal": "Kota I merupakan",
     "pilihan": {
       "a": "Kota di mana sekolah F berada",
@@ -518,7 +518,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "soal": "Berdasarkan catatan tersebut, manakah deduksi yang mungkin berikut?\nI. A tidak berasal dari sekolah H\nII. C berasal dari sekolah yang ada di propinsi P\nIII. D tidak berasal dari sekolah E",
     "pilihan": {
       "a": "Hanya I",
@@ -537,7 +537,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "soal": "Dalam propinsi O terdapat\nI. Kota L\nII. Sekolah F",
     "pilihan": {
       "a": "Hanya I",
@@ -556,7 +556,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "soal": "Manakah yang benar mengenai Kota L?",
     "pilihan": {
       "a": "Asal sekolah C ada di kota itu",
@@ -575,7 +575,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "soal": "Apa yang tidak dapat ditentukan berdasarkan catatan tersebut?",
     "pilihan": {
       "a": "Apa propinsi dari kota K",
@@ -670,7 +670,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 36 sampai dengan 40\n(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
+    "deskripsi_soal": "(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
     "soal": "Dari urutan 5 orang berikut ini berturut-turut dari kiri ke kanan, manakah yang paling benar?",
     "pilihan": {
       "a": "U, V, O, M, T",
@@ -689,7 +689,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 36 sampai dengan 40\n(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
+    "deskripsi_soal": "(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
     "soal": "Pacar U kemungkinan adalah",
     "pilihan": {
       "a": "Hanya N atau L",
@@ -708,7 +708,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 36 sampai dengan 40\n(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
+    "deskripsi_soal": "(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
     "soal": "Yang manakah dari berikut ini yang tidak dapat ditentukan berdasarkan informasi yang diberikan di atas?\nI. Siapa yang menempati kursi terkiri\nII. Siapa yang menempati kursi terkanan\nIII. Pemudi lainnya yang mana yang terdekat ke T",
     "pilihan": {
       "a": "Hanya I",
@@ -727,7 +727,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 36 sampai dengan 40\n(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
+    "deskripsi_soal": "(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
     "soal": "Yang manakah dari berikut ini yang dapat ditentukan dengan tepat jika posisi salah satu dari L atau P (tidak keduanya) diketahui?",
     "pilihan": {
       "a": "Identitas pacarnya L",
@@ -746,7 +746,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 36 sampai dengan 40\n(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
+    "deskripsi_soal": "(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
     "soal": "Untuk dapat menentukan posisi T, berapa jumlah statemen dari ketujuh statemen di atas yang benar-benar diperlukan?",
     "pilihan": {
       "a": "3",
@@ -898,7 +898,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 48 sampai dengan 50\nEnam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
+    "deskripsi_soal": "Enam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
     "soal": "Berapa banyak orang yang lebih pendek dan sekaligus juga lebih ringan dari pada paling tidak satu orang lainnya.",
     "pilihan": {
       "a": "3",
@@ -917,7 +917,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 48 sampai dengan 50\nEnam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
+    "deskripsi_soal": "Enam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
     "soal": "Dari informasi yang diberikan, siapakah diantara mereka yang dapat dipastikan lebih tinggi sekaligus lebih berat dari Lisa?",
     "pilihan": {
       "a": "Hanya Galuh dan Maya",
@@ -936,7 +936,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 48 sampai dengan 50\nEnam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
+    "deskripsi_soal": "Enam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
     "soal": "Siapakah diantara berikut yang nilainya (urutan tinggi + urutan berat) paling tinggi?",
     "pilihan": {
       "a": "Budi",

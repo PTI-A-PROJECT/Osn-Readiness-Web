@@ -1,7 +1,7 @@
 [
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 1 dan 2\n Sakelar adalah alat untuk menghubungkan atau memutuskan aliran listrik. Bila sakelar dipasang pada sebuah lampu, maka sakelar tersebut bisa menyalakan atau mematikan lampu tersebut. Di rumah Sugeng, ada 30 lampu yang dinomori dari 1 sampai 30. Untuk menyalakannya, Sugeng memiliki sakelar khusus, yaitu sakelar yang terhubung dengan lebih dari satu lampu. Ada lima sakelar, yaitu: Sakelar A, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 2. Sakelar B, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 3. Sakelar C, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 5. Sakelar D, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 7. Sakelar E, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 11. Perlu diingat, jika lampu dalam keadaan mati, dan sakelar yang terhubung dengannya ditekan, maka lampu tersebut akan menyala. Begitu pula sebaliknya.",
+    "deskripsi_soal": "Sakelar adalah alat untuk menghubungkan atau memutuskan aliran listrik. Bila sakelar dipasang pada sebuah lampu, maka sakelar tersebut bisa menyalakan atau mematikan lampu tersebut. Di rumah Sugeng, ada 30 lampu yang dinomori dari 1 sampai 30. Untuk menyalakannya, Sugeng memiliki sakelar khusus, yaitu sakelar yang terhubung dengan lebih dari satu lampu. Ada lima sakelar, yaitu: Sakelar A, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 2. Sakelar B, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 3. Sakelar C, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 5. Sakelar D, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 7. Sakelar E, yaitu sakelar yang terhubung dengan lampu bernomor kelipatan 11. Perlu diingat, jika lampu dalam keadaan mati, dan sakelar yang terhubung dengannya ditekan, maka lampu tersebut akan menyala. Begitu pula sebaliknya.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -155,7 +155,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 9 dan 10\n Sebuah negara terdiri atas N kota. Antara setiap kota yang berbeda memiliki sebuah jalan dengan panjang tertentu yang dua arah. Terdapat N! permutasi berbeda dari urutan N kota tersebut. Misalnya, apabila N adalah 3, ada 6 permutasi berbeda: {1, 2, 3} {1, 3, 2} {2, 1, 3} {2, 3, 1} {3, 1, 2} {3, 2, 1}. Panjang rute perjalanan dari sebuah permutasi kota adalah total panjang jalan yang dilalui untuk pergi dari kota pertama ke kota kedua di permutasi, kemudian ditambah panjang kota kedua ke kota ketiga, dan seterusnya sampai panjang kota ke N­1 menuju kota ke N. {catatan: N! berarti N faktorial}",
+    "deskripsi_soal": "Sebuah negara terdiri atas N kota. Antara setiap kota yang berbeda memiliki sebuah jalan dengan panjang tertentu yang dua arah. Terdapat N! permutasi berbeda dari urutan N kota tersebut. Misalnya, apabila N adalah 3, ada 6 permutasi berbeda: {1, 2, 3} {1, 3, 2} {2, 1, 3} {2, 3, 1} {3, 1, 2} {3, 2, 1}. Panjang rute perjalanan dari sebuah permutasi kota adalah total panjang jalan yang dilalui untuk pergi dari kota pertama ke kota kedua di permutasi, kemudian ditambah panjang kota kedua ke kota ketiga, dan seterusnya sampai panjang kota ke N­1 menuju kota ke N. {catatan: N! berarti N faktorial}",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -271,7 +271,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 15 dan 17\n Sebuah tumpukan kartu tersusun dari kartu­-kartu yang bernomor 1 hingga 31 (kartu pada tumpukan paling atas bernilai 1 dan kartu paling bawah bernilai 31). Kartu­-kartu tersebut ingin diacak dengan cara sebagai berikut. Ambil N kartu terbawah lalu taruh N kartu tersebut pada tumpukan teratas (tanpa mengubah urutan)",
+    "deskripsi_soal": "Sebuah tumpukan kartu tersusun dari kartu­-kartu yang bernomor 1 hingga 31 (kartu pada tumpukan paling atas bernilai 1 dan kartu paling bawah bernilai 31). Kartu­-kartu tersebut ingin diacak dengan cara sebagai berikut. Ambil N kartu terbawah lalu taruh N kartu tersebut pada tumpukan teratas (tanpa mengubah urutan)",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -460,7 +460,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 26\n Sebuah rombongan tour sedang melakukan perjalanan dengan mobil. Satu mobil terdiri dari 7 orang peserta tur dan 1 orang supir. Posisi duduk dalam mobil tersebut dapat digambarkan sbb 1 Supir 2 3 4 5 6 7 Nama­-nama peserta rombongan tersebut adalah A, B, C, D, E, F, G. Susunan duduk peserta tour ini ditentukan oleh aturan­-aturan sebagai berikut (i) G harus duduk di samping jendela (ii) A­B merupakan sebuah pasangan di mana mereka harus duduk bersebelahan (iii) C paling suka duduk persis di belakang supir (iv) D­-A sedang bermusuhan, sehingga mereka tidak boleh duduk berdekatan dan harus ada orang di antara mereka berdua (baik secara horizontal, vertikal, maupun diagonal) (v) F mabuk darat, sehingga tidak boleh duduk di barisan paling belakang",
+    "deskripsi_soal": "Sebuah rombongan tour sedang melakukan perjalanan dengan mobil. Satu mobil terdiri dari 7 orang peserta tur dan 1 orang supir. Posisi duduk dalam mobil tersebut dapat digambarkan sbb 1 Supir 2 3 4 5 6 7 Nama­-nama peserta rombongan tersebut adalah A, B, C, D, E, F, G. Susunan duduk peserta tour ini ditentukan oleh aturan­-aturan sebagai berikut (i) G harus duduk di samping jendela (ii) A­B merupakan sebuah pasangan di mana mereka harus duduk bersebelahan (iii) C paling suka duduk persis di belakang supir (iv) D­-A sedang bermusuhan, sehingga mereka tidak boleh duduk berdekatan dan harus ada orang di antara mereka berdua (baik secara horizontal, vertikal, maupun diagonal) (v) F mabuk darat, sehingga tidak boleh duduk di barisan paling belakang",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -651,46 +651,51 @@
     "level": "sulit"
   },
   {
-    "soal_id": "kab_soal35_2013",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "var\n head, tail, x : integer;\n stek: array [1..100] of integer;\nfunction pop():integer;\nbegin\n if (head = tail) then\n pop := -1\n else\n begin\n pop := stek[head];\n head := head + 1;\n end;\nend;\n\nbegin\n stek[3] := 5;\n stek[2] := 3;\n stek[4] := 7;\n stek[1] := 1;\n stek[5] := 9;\n head := 1;\n tail := 6;\n pop();\n for x := 1 to 3 do writeln( pop() );\n pop();\nend. Jika program tersebut dijalankan, maka pada layar akan tampil:",
-    "pilihan": {
-      "a": "3 7 1",
-      "b": "5 3 7 1 9",
-      "c": "3 5 7",
-      "d": "1 3 5 7 9",
-      "e": "­1"
-    },
-    "kode": "var\n head, tail, x : integer;\n stek: array [1..100] of integer;\nfunction pop():integer;\nbegin\n if (head = tail) then\n pop := -1\n else\n begin\n pop := stek[head];\n head := head + 1;\n end;\nend;\n\nbegin\n stek[3] := 5;\n stek[2] := 3;\n stek[4] := 7;\n stek[1] := 1;\n stek[5] := 9;\n head := 1;\n tail := 6;\n pop();\n for x := 1 to 3 do writeln( pop() );\n pop();\nend.",
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "c",
-    "pembahasan": "Isi array stek: [1, 3, 5, 7, 9]. `head = 1`.\n- `pop()` membuang `stek[1]` (1), `head` jadi 2.\n- Loop `x = 1 to 3`:\n  * x=1: `pop()` mengambil `stek[2]` = 3, `head` jadi 3.\n  * x=2: `pop()` mengambil `stek[3]` = 5, `head` jadi 4.\n  * x=3: `pop()` mengambil `stek[4]` = 7, `head` jadi 5.\nKeluaran berturut-turut: 3, 5, 7.",
-    "level": "sedang"
-  },
-  {
-    "soal_id": "kab_soal36_2013",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Diberikan potongan program berikut: pop();\nfor x := 1 to 3 do writeln( pop() );\npop(); jika potongan program tersebut diganti dengan for x := 1 to 3 do\n if (pop() <> -1) then writeln( pop() ); berapakah outputnya sekarang?",
-    "pilihan": {
-      "a": "3 7 1",
-      "b": "3 1 ­1",
-      "c": "3 5 7",
-      "d": "3 7 ­1",
-      "e": "­1 ­1 ­1"
-    },
-    "kode": "pop();\nfor x := 1 to 3 do writeln( pop() );\npop();",
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "d",
-    "pembahasan": "Awalnya `head = 1`.\nLoop `x = 1 to 3`:\n- x=1: `if (pop() <> -1)` -> `pop()` membuang `stek[1]` (1) != -1. Lalu `writeln(pop())` mencetak `stek[2]` = 3. (`head` jadi 3).\n- x=2: `if (pop() <> -1)` -> `pop()` membuang `stek[3]` (5) != -1. Lalu `writeln(pop())` mencetak `stek[4]` = 7. (`head` jadi 5).\n- x=3: `if (pop() <> -1)` -> `pop()` membuang `stek[5]` (9) != -1. Lalu `writeln(pop())` memanggil `pop()` di mana `head = 6 = tail` -> mencetak -1.\nKeluaran = 3, 7, -1.",
-    "level": "sedang"
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan program berikut ini:\nvar\n head, tail, x : integer;\n stek: array [1..100] of integer;\nfunction pop():integer;\nbegin\n if (head = tail) then\n pop := -1\n else\n begin\n pop := stek[head];\n head := head + 1;\n end;\nend;\n\nbegin\n stek[3] := 5;\n stek[2] := 3;\n stek[4] := 7;\n stek[1] := 1;\n stek[5] := 9;\n head := 1;\n tail := 6;\n pop();\n for x := 1 to 3 do writeln( pop() );\n pop();\nend.",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
+      {
+        "soal_id": "kab_soal35_2013",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika program tersebut dijalankan, maka pada layar akan tampil:",
+        "pilihan": {
+          "a": "3 7 1",
+          "b": "5 3 7 1 9",
+          "c": "3 5 7",
+          "d": "1 3 5 7 9",
+          "e": "­1"
+        },
+        "kode": "var\n head, tail, x : integer;\n stek: array [1..100] of integer;\nfunction pop():integer;\nbegin\n if (head = tail) then\n pop := -1\n else\n begin\n pop := stek[head];\n head := head + 1;\n end;\nend;\n\nbegin\n stek[3] := 5;\n stek[2] := 3;\n stek[4] := 7;\n stek[1] := 1;\n stek[5] := 9;\n head := 1;\n tail := 6;\n pop();\n for x := 1 to 3 do writeln( pop() );\n pop();\nend.",
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "c",
+        "pembahasan": "Isi array stek: [1, 3, 5, 7, 9]. `head = 1`.\n- `pop()` membuang `stek[1]` (1), `head` jadi 2.\n- Loop `x = 1 to 3`:\n  * x=1: `pop()` mengambil `stek[2]` = 3, `head` jadi 3.\n  * x=2: `pop()` mengambil `stek[3]` = 5, `head` jadi 4.\n  * x=3: `pop()` mengambil `stek[4]` = 7, `head` jadi 5.\nKeluaran berturut-turut: 3, 5, 7.",
+        "level": "sedang"
+      },
+      {
+        "soal_id": "kab_soal36_2013",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika potongan program pada bagian akhir:\npop();\nfor x := 1 to 3 do writeln( pop() );\npop();\n\ndiganti dengan:\nfor x := 1 to 3 do\n  if (pop() <> -1) then writeln( pop() );\n\nberapakah outputnya sekarang?",
+        "pilihan": {
+          "a": "3 7 1",
+          "b": "3 1 ­1",
+          "c": "3 5 7",
+          "d": "3 7 ­1",
+          "e": "­1 ­1 ­1"
+        },
+        "kode": "var\n head, tail, x : integer;\n stek: array [1..100] of integer;\nfunction pop():integer;\nbegin\n if (head = tail) then\n pop := -1\n else\n begin\n pop := stek[head];\n head := head + 1;\n end;\nend;\n\nbegin\n stek[3] := 5;\n stek[2] := 3;\n stek[4] := 7;\n stek[1] := 1;\n stek[5] := 9;\n head := 1;\n tail := 6;\n pop();\n for x := 1 to 3 do writeln( pop() );\n pop();\nend.",
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "d",
+        "pembahasan": "Awalnya `head = 1`.\nLoop `x = 1 to 3`:\n- x=1: `if (pop() <> -1)` -> `pop()` membuang `stek[1]` (1) != -1. Lalu `writeln(pop())` mencetak `stek[2]` = 3. (`head` jadi 3).\n- x=2: `if (pop() <> -1)` -> `pop()` membuang `stek[3]` (5) != -1. Lalu `writeln(pop())` mencetak `stek[4]` = 7. (`head` jadi 5).\n- x=3: `if (pop() <> -1)` -> `pop()` membuang `stek[5]` (9) != -1. Lalu `writeln(pop())` memanggil `pop()` di mana `head = 6 = tail` -> mencetak -1.\nKeluaran = 3, 7, -1.",
+        "level": "sedang"
+      }
+    ]
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 38\n function Bunga(x: longint):longint;\nvar\n i, Bungai : longint;\nbegin\n if (x = 0) then Bunga := 1\n else\n begin\n Bungai := 0;\n for i := 0 to x-1 do\n Bungai := Bungai + Bunga(i);\n Bunga := Bungai;\n end;\nend;",
+    "deskripsi_soal": "function Bunga(x: longint):longint;\nvar\n i, Bungai : longint;\nbegin\n if (x = 0) then Bunga := 1\n else\n begin\n Bungai := 0;\n for i := 0 to x-1 do\n Bungai := Bungai + Bunga(i);\n Bunga := Bungai;\n end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -730,7 +735,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 41\n var\n x,y,temp,dare,num1,num2 : integer;\nbegin\n readln(x,y);\n num1:=x;\n num2:=y;\n dare:=0;\n temp:=1;\n while(num1 or num2 >0) do\n begin\n if(num1 mod 2 + num2 mod 2 = 1) then\n dare := dare + temp\n else \n dare := dare + ( (num1 mod 2 + num2 mod 2) * temp );\n num1 := num1 div 2;\n num2 := num2 div 2;\n temp := temp * 2;\n end;\n writeln(dare);\nend.",
+    "deskripsi_soal": "var\n x,y,temp,dare,num1,num2 : integer;\nbegin\n readln(x,y);\n num1:=x;\n num2:=y;\n dare:=0;\n temp:=1;\n while(num1 or num2 >0) do\n begin\n if(num1 mod 2 + num2 mod 2 = 1) then\n dare := dare + temp\n else \n dare := dare + ( (num1 mod 2 + num2 mod 2) * temp );\n num1 := num1 div 2;\n num2 := num2 div 2;\n temp := temp * 2;\n end;\n writeln(dare);\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -824,7 +829,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 45\n var\n data : array[1..10] of integer = (3,9,2,6,1,4,7,8,5,10);\nprocedure kambing(m : integer); \nbegin\n if (m<=10) then\n begin\n kambing(m*2);\n write(data[m],' ');\n kambing(m*2+1);\n end;\nend;",
+    "deskripsi_soal": "var\n data : array[1..10] of integer = (3,9,2,6,1,4,7,8,5,10);\nprocedure kambing(m : integer); \nbegin\n if (m<=10) then\n begin\n kambing(m*2);\n write(data[m],' ');\n kambing(m*2+1);\n end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -883,7 +888,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 49\n function abc(a:integer) : integer;\nbegin\n abc :=a*3-(a mod 7);\n {a}\nend;\n\nfunction ghi(x:integer;b:integer):integer;\n begin\n if (b=1) then\n ghi := x\n else\n ghi := (x* ghi(x,b-1)) mod 100;\nend;\n\nfunction def(a:integer; b:integer) : integer;\nbegin\n if (b mod 2 = 1) and (b>500) then\n def := ghi(a,b) mod 100\n {b}\n else\n def:=def(a, abc(b)) ;\nend;",
+    "deskripsi_soal": "function abc(a:integer) : integer;\nbegin\n abc :=a*3-(a mod 7);\n {a}\nend;\n\nfunction ghi(x:integer;b:integer):integer;\n begin\n if (b=1) then\n ghi := x\n else\n ghi := (x* ghi(x,b-1)) mod 100;\nend;\n\nfunction def(a:integer; b:integer) : integer;\nbegin\n if (b mod 2 = 1) and (b>500) then\n def := ghi(a,b) mod 100\n {b}\n else\n def:=def(a, abc(b)) ;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [

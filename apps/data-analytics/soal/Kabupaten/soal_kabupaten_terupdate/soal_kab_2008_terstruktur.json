@@ -286,7 +286,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 16 dan 18\n Di sebuah sekolah terdapat 90 siswa yang sedang menempuh tahap persiapan ujian. Mereka diharuskan mengikuti setidaknya satu dari pelajaran-pelajaran tambahan berikut: Fisika, Bahasa Inggris, dan Sejarah. Dari keseluruhan siswa ini, terdapat 50 yang\nmemilih Fisika, terdapat 60 yang memilih Bahasa Inggris, dan terdapat 55 yang memilih Sejarah. Tiga puluh siswa memilih Fisika dan Bahasa Inggris, sementara 10 siswa memilih Bahasa Inggris dan Sejarah tetapi tidak memilih Fisika. Dua puluh siswa\nmemilih ketiga pelajaran tersebut.",
+    "deskripsi_soal": "Di sebuah sekolah terdapat 90 siswa yang sedang menempuh tahap persiapan ujian. Mereka diharuskan mengikuti setidaknya satu dari pelajaran-pelajaran tambahan berikut: Fisika, Bahasa Inggris, dan Sejarah. Dari keseluruhan siswa ini, terdapat 50 yang\nmemilih Fisika, terdapat 60 yang memilih Bahasa Inggris, dan terdapat 55 yang memilih Sejarah. Tiga puluh siswa memilih Fisika dan Bahasa Inggris, sementara 10 siswa memilih Bahasa Inggris dan Sejarah tetapi tidak memilih Fisika. Dua puluh siswa\nmemilih ketiga pelajaran tersebut.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -342,7 +342,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 19 dan 21\n Andi senang bermain dengan angka. Ia menusun segitiga dari bilangan dengan aturan sebagai berikut. Di baris paling dasar sejumlah bilangan tertentu dituliskan. Pada baris di atasnya bilangan-bilangan diisikan namun bilangan pertama (terkiri)\nmerupakan hasil penjumlahan bilangan pertama (terkiri) dan kedua dari baris tepat di bawahnya, bilangan kedua merupakan hasil penjumlahan bilangan kedua dan ketiga dari baris tepat di bawahnya, dan seterusnya. Tentu saja jika pada baris terbawah\nterdapat n bilangan maka pada baris di atasnya terdapat n-1 bilangan. Pada baris-baris berikut di atasnya, ia melakukan hal yang sama yaitu bilangan pertama adalah hasil penjumlahan 2 bilangan di baris tepat di bawahnya hingga tersisa baris puncak yang hanya berisi satu bilangan. Contoh segitiga yang dihasilkan:",
+    "deskripsi_soal": "Andi senang bermain dengan angka. Ia menusun segitiga dari bilangan dengan aturan sebagai berikut. Di baris paling dasar sejumlah bilangan tertentu dituliskan. Pada baris di atasnya bilangan-bilangan diisikan namun bilangan pertama (terkiri)\nmerupakan hasil penjumlahan bilangan pertama (terkiri) dan kedua dari baris tepat di bawahnya, bilangan kedua merupakan hasil penjumlahan bilangan kedua dan ketiga dari baris tepat di bawahnya, dan seterusnya. Tentu saja jika pada baris terbawah\nterdapat n bilangan maka pada baris di atasnya terdapat n-1 bilangan. Pada baris-baris berikut di atasnya, ia melakukan hal yang sama yaitu bilangan pertama adalah hasil penjumlahan 2 bilangan di baris tepat di bawahnya hingga tersisa baris puncak yang hanya berisi satu bilangan. Contoh segitiga yang dihasilkan:",
     "gambar_url_deskripsi": "https://www.kujawab.com/r2/images/problems/oskkom08-19.png",
     "gambar_lokal_deskripsi": "soal_20_kab_2008.png",
     "pertanyaan": [
@@ -462,7 +462,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 29\n Delapan buah bola masing-masing bertuliskan angka berlainan mulai dari a, a+1, .. dan seterusnya hingga a+7. Bola-bola di tempatkan secara acak ke dalam 8 kotak yang masing-masing ditandai dengan huruf-huruf S, T, U V, W, X, Y dan Z. Setelah\nditempatkan, diketahui bahwa: W berisi bola dengan angka bernilai 4 lebih besar dari pada angka bola dalam Z dan bernilai 3 lebih kecil jika dibandingkan dengan angka bola dalam X Sedangkan S berisi bola dengan angka bernilai nilai lebih besar dari pada angka bola di dalam T, dan lebih kecil dari pada angka bola di dalam X U berisi bola dengan angka yang merupakan nilai rata-rata dari angka bola dalam V dan X.",
+    "deskripsi_soal": "Delapan buah bola masing-masing bertuliskan angka berlainan mulai dari a, a+1, .. dan seterusnya hingga a+7. Bola-bola di tempatkan secara acak ke dalam 8 kotak yang masing-masing ditandai dengan huruf-huruf S, T, U V, W, X, Y dan Z. Setelah\nditempatkan, diketahui bahwa: W berisi bola dengan angka bernilai 4 lebih besar dari pada angka bola dalam Z dan bernilai 3 lebih kecil jika dibandingkan dengan angka bola dalam X Sedangkan S berisi bola dengan angka bernilai nilai lebih besar dari pada angka bola di dalam T, dan lebih kecil dari pada angka bola di dalam X U berisi bola dengan angka yang merupakan nilai rata-rata dari angka bola dalam V dan X.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -534,7 +534,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 29 dan 31\n Ada 5 rumah dalam 1 baris dari timur ke barat. Tiap rumah berbeda warnanya, dihuni 5 orang yang berbeda dengan peliharaan, makanan favorit, dan minuman favorit yang berbeda. Ekas tinggal di rumah merah Sandi memelihara anjing Kopi diminum di rumah hijau Udin senang minum teh Rumah hijau berada di paling timur dan di samping rumah ungu Yang suka nasi goreng memelihara siput Yang tinggal di rumah kuning suka mie ayam Susu diminum di rumah tengah Nami tinggal di rumah paling barat Yang suka soto tinggal disamping rumah yang memelihara rubah Mie ayam dimakan di rumah yang memelihara kuda Yang makan nasi padang suka minum jus jeruk Joni suka makan tongseng Nami tinggal di sebelah rumah warna biru.",
+    "deskripsi_soal": "Ada 5 rumah dalam 1 baris dari timur ke barat. Tiap rumah berbeda warnanya, dihuni 5 orang yang berbeda dengan peliharaan, makanan favorit, dan minuman favorit yang berbeda. Ekas tinggal di rumah merah Sandi memelihara anjing Kopi diminum di rumah hijau Udin senang minum teh Rumah hijau berada di paling timur dan di samping rumah ungu Yang suka nasi goreng memelihara siput Yang tinggal di rumah kuning suka mie ayam Susu diminum di rumah tengah Nami tinggal di rumah paling barat Yang suka soto tinggal disamping rumah yang memelihara rubah Mie ayam dimakan di rumah yang memelihara kuda Yang makan nasi padang suka minum jus jeruk Joni suka makan tongseng Nami tinggal di sebelah rumah warna biru.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -590,13 +590,13 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 33\n Perhatikan potongan algoritma berikut ini j := 2;\nfor i := 0 to 10 do begin\n if j > 0 then writeln('ok');\n j := 5 - (j*2);\nend;",
+    "deskripsi_soal": "Perhatikan potongan algoritma berikut ini:\nj := 2;\nfor i := 0 to 10 do begin\n if j > 0 then writeln('ok');\n j := 5 - (j*2);\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
       {
         "soal_id": "kab_soal32_2008",
-        "soal": "Berapa kalikah pencetakan keluaran „ok? dilakukan oleh potongan program itu?",
+        "soal": "Berapa kalikah pencetakan keluaran 'ok' dilakukan oleh potongan program itu?",
         "pilihan": {
           "a": "7",
           "b": "3",
@@ -604,7 +604,7 @@
           "d": "6",
           "e": "4"
         },
-        "kode": null,
+        "kode": "j := 2;\nfor i := 0 to 10 do begin\n if j > 0 then writeln('ok');\n j := 5 - (j*2);\nend;",
         "kunci": "a",
         "pembahasan": "Tracing nilai j untuk i = 0 s.d. 10: i=0: j=2 (>0, cetak 'ok'), j=1; i=1: j=1 (>0, cetak 'ok'), j=3; i=2: j=3 (>0, cetak 'ok'), j=-1; i=3: j=-1, j=7; i=4: j=7 (>0, cetak 'ok'), j=-9; i=5: j=-9, j=23; i=6: j=23 (>0, cetak 'ok'), j=-41; i=7: j=-41, j=87; i=8: j=87 (>0, cetak 'ok'), j=-169; i=9: j=-169, j=343; i=10: j=343 (>0, cetak 'ok'), j=-681. 'ok' tercetak sebanyak 7 kali.",
         "level": "mudah",
@@ -620,7 +620,7 @@
           "d": "-702",
           "e": "-101"
         },
-        "kode": null,
+        "kode": "j := 2;\nfor i := 0 to 10 do begin\n if j > 0 then writeln('ok');\n j := 5 - (j*2);\nend;",
         "kunci": "c",
         "pembahasan": "Berdasarkan hasil tracing algoritma pada soal sebelumnya, nilai akhir variabel j setelah keluar dari iterasi for (setelah i = 10 selesai dieksekusi) adalah -681.",
         "level": "sedang",
@@ -630,7 +630,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 34 dan 35\n Perhatikan potongan algoritma berikut ini procedure Otakatik(j: integer; k: integer);\n Var i: integer;\n begin\n for i := 1 to 10 do begin\n if (j < 0)\n then\n if (k > 0)\n then j := j + k\n else k := -j + k\n else\n if (k < 0)\n then j := -j - k\n else k := j - k;\n end;\n writeln(j,' ',k);\n end;",
+    "deskripsi_soal": "Perhatikan potongan algoritma berikut ini:\nprocedure Otakatik(j: integer; k: integer);\n Var i: integer;\n begin\n for i := 1 to 10 do begin\n if (j < 0)\n then\n if (k > 0)\n then j := j + k\n else k := -j + k\n else\n if (k < 0)\n then j := -j - k\n else k := j - k;\n end;\n writeln(j,' ',k);\n end;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -644,7 +644,7 @@
           "d": "25 -25",
           "e": "5 -10"
         },
-        "kode": null,
+        "kode": "procedure Otakatik(j: integer; k: integer);\n Var i: integer;\n begin\n for i := 1 to 10 do begin\n if (j < 0)\n then\n if (k > 0)\n then j := j + k\n else k := -j + k\n else\n if (k < 0)\n then j := -j - k\n else k := j - k;\n end;\n writeln(j,' ',k);\n end;",
         "kunci": "e",
         "pembahasan": "Menjalankan simulasi Otakatik(35, -10) selama 10 langkah menghasilkan siklus nilai: pada akhir iterasi ke-10, nilai variabel j dan k berturut-turut adalah 5 dan -10.",
         "level": "sedang",
@@ -660,7 +660,7 @@
           "d": "Otakatik(-2 , 3)",
           "e": "Otakatik(-3 , -2)"
         },
-        "kode": null,
+        "kode": "procedure Otakatik(j: integer; k: integer);\n Var i: integer;\n begin\n for i := 1 to 10 do begin\n if (j < 0)\n then\n if (k > 0)\n then j := j + k\n else k := -j + k\n else\n if (k < 0)\n then j := -j - k\n else k := j - k;\n end;\n writeln(j,' ',k);\n end;",
         "kunci": "c",
         "pembahasan": "Mengevaluasi setiap pilihan parameter: pemanggilan Otakatik(2, -3) mengalami siklus perubahan nilai yang pada akhir iterasi ke-10 kembali persis ke nilai semula yaitu j = 2 dan k = -3.",
         "level": "sedang",
@@ -670,7 +670,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 36 dan 37\n Perhatikan potongan algoritma berikut. for i := 1 to n do begin\n case x of\n1: x := (x + 22) mod 6;\n2: x := x * 2;\n3: dec(x);\n4: x := 5 - x;\n5: x := x shr 1 + 1;\n else x := (x * 4) mod 5 + 1;\nend;\nwriteln(x);\nend;",
+    "deskripsi_soal": "Perhatikan potongan algoritma berikut:\nfor i := 1 to n do begin\n case x of\n1: x := (x + 22) mod 6;\n2: x := x * 2;\n3: dec(x);\n4: x := 5 - x;\n5: x := x shr 1 + 1;\n else x := (x * 4) mod 5 + 1;\nend;\nwriteln(x);\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -684,7 +684,7 @@
           "d": "4",
           "e": "5"
         },
-        "kode": null,
+        "kode": "for i := 1 to n do begin\n case x of\n1: x := (x + 22) mod 6;\n2: x := x * 2;\n3: dec(x);\n4: x := 5 - x;\n5: x := x shr 1 + 1;\n else x := (x * 4) mod 5 + 1;\nend;\nwriteln(x);\nend;",
         "kunci": "a",
         "pembahasan": "Nilai awal x = 31. Pada i=1, 31 masuk ke bagian else: (31*4) mod 5 + 1 = 5. Nilai x selanjutnya berulang dalam siklus berpanjang 5: [5, 3, 2, 4, 1]. Karena n = 1000 habis dibagi 5, nilai yang dicetak terakhir pada iterasi ke-1000 adalah elemen terakhir dari siklus, yaitu 1.",
         "level": "sedang",
@@ -700,7 +700,7 @@
           "d": "34",
           "e": "20"
         },
-        "kode": null,
+        "kode": "for i := 1 to n do begin\n case x of\n1: x := (x + 22) mod 6;\n2: x := x * 2;\n3: dec(x);\n4: x := 5 - x;\n5: x := x shr 1 + 1;\n else x := (x * 4) mod 5 + 1;\nend;\nwriteln(x);\nend;",
         "kunci": "e",
         "pembahasan": "Untuk x = 103: pada i=1, (103*4) mod 5 + 1 = 3. Barisan x membentuk siklus berpanjang 5: [3, 2, 4, 1, 5]. Dalam 100 iterasi, siklus berulang tepat 100 / 5 = 20 kali. Karena angka 5 muncul sekali dalam setiap siklus, angka 5 muncul sebanyak 20 kali.\n\n[Catatan Telaah / Cacat Naskah Asli OSN]:\nDengan n = 10 (sesuai dokumen asli) angka 5 hanya muncul 2 kali, dan tidak satu pun pilihan (11, 21, 13, 34, 20) yang mungkin karena hanya ada 10 kali pencetakan. Jawaban 20 (opsi e) baru benar bila n = 100.",
         "level": "sedang",
@@ -712,7 +712,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 38 dan 39\n Perhatikan potongan algoritma berikut. t:= 2;\n while t <= n do begin\n writeln('ok');\n t := t* 2 - 1;\n end;",
+    "deskripsi_soal": "Perhatikan potongan algoritma berikut:\nt:= 2;\n while t <= n do begin\n writeln('ok');\n t := t* 2 - 1;\n end;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -726,7 +726,7 @@
           "d": "9",
           "e": "11"
         },
-        "kode": null,
+        "kode": "t:= 2;\n while t <= n do begin\n writeln('ok');\n t := t* 2 - 1;\n end;",
         "kunci": "c",
         "pembahasan": "Nilai t mengikuti pola t_k = 2^(k-1) + 1: t = 2, 3, 5, 9, 17, 33, 65, 129. Untuk n = 100, kondisi t <= 100 dipenuhi oleh 7 nilai (2 s.d. 65). Maka kata 'ok' dicetak sebanyak 7 kali.",
         "level": "mudah",
@@ -742,7 +742,7 @@
           "d": "⌊2 log N⌋",
           "e": "⌊N/20 +2⌋"
         },
-        "kode": null,
+        "kode": "t:= 2;\n while t <= n do begin\n writeln('ok');\n t := t* 2 - 1;\n end;",
         "kunci": "d",
         "pembahasan": "Karena nilai t berlipat ganda mendekati perpangkatan dua (2^(k-1) + 1 <= N), banyaknya iterasi berbanding lurus dengan fungsi logaritma basis 2 dari N, yaitu floor(2 log N).\n\n[Catatan Telaah / Cacat Naskah Asli OSN]:\nRumus yang tepat adalah banyaknya pencetakan = floor(2-log(N-1)) + 1, yang untuk N = 100 bernilai 7 (sesuai jawaban nomor 38). Pilihan d (floor(2-log N)) bernilai 6, sehingga kurang 1.",
         "level": "sedang",
@@ -752,7 +752,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 40 dan 41\n Perhatikan potongan algoritma berikut. var\n a: array[1..8] of integer = (12, 30, 21, 8, 6, 9, 1, 7);\nprocedure zz(i: integer; j: integer);\nvar tmp: integer;\nbegin\n tmp := a[i]; a[i] := a[j]; a[j] := tmp;\nend;\nvar\n h,k,val: integer;\nbegin\n val := a[1];\n h := 1;\n for k := 2 to 8 do begin\n if (a[k] < val) then begin\n h := h + 1;\n zz(h,k);\n end;\n end;\n zz(1,h);\nend.",
+    "deskripsi_soal": "Perhatikan potongan algoritma berikut:\nvar\n a: array[1..8] of integer = (12, 30, 21, 8, 6, 9, 1, 7);\nprocedure zz(i: integer; j: integer);\nvar tmp: integer;\nbegin\n tmp := a[i]; a[i] := a[j]; a[j] := tmp;\nend;\nvar\n h,k,val: integer;\nbegin\n val := a[1];\n h := 1;\n for k := 2 to 8 do begin\n if (a[k] < val) then begin\n h := h + 1;\n zz(h,k);\n end;\n end;\n zz(1,h);\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -766,7 +766,7 @@
           "d": "6",
           "e": "8"
         },
-        "kode": null,
+        "kode": "var\n a: array[1..8] of integer = (12, 30, 21, 8, 6, 9, 1, 7);\nprocedure zz(i: integer; j: integer);\nvar tmp: integer;\nbegin\n tmp := a[i]; a[i] := a[j]; a[j] := tmp;\nend;\nvar\n h,k,val: integer;\nbegin\n val := a[1];\n h := 1;\n for k := 2 to 8 do begin\n if (a[k] < val) then begin\n h := h + 1;\n zz(h,k);\n end;\n end;\n zz(1,h);\nend.",
         "kunci": "d",
         "pembahasan": "Prosedur zz melakukan penukaran elemen (swap). Nilai pivot val = a[1] = 12. Elemen yang lebih kecil dari 12 adalah 8, 6, 9, 1, 7 (5 elemen). Setiap kali ditemukan elemen yang lebih kecil, zz(h, k) dipanggil (5 kali). Terakhir dipanggil zz(1, h) satu kali. Total zz dijalankan = 5 + 1 = 6 kali.",
         "level": "mudah",
@@ -782,7 +782,7 @@
           "d": "(1, 30, 6, 21, 7, 12, 8, 9)",
           "e": "(7, 8, 6, 9, 1, 12, 21, 30)"
         },
-        "kode": null,
+        "kode": "var\n a: array[1..8] of integer = (12, 30, 21, 8, 6, 9, 1, 7);\nprocedure zz(i: integer; j: integer);\nvar tmp: integer;\nbegin\n tmp := a[i]; a[i] := a[j]; a[j] := tmp;\nend;\nvar\n h,k,val: integer;\nbegin\n val := a[1];\n h := 1;\n for k := 2 to 8 do begin\n if (a[k] < val) then begin\n h := h + 1;\n zz(h,k);\n end;\n end;\n zz(1,h);\nend.",
         "kunci": "e",
         "pembahasan": "Setelah partisi selesai dengan pivot 12, semua elemen < 12 berada di sebelah kiri dan > 12 di sebelah kanan. Susunan akhir array a adalah (7, 8, 6, 9, 1, 12, 21, 30).",
         "level": "sedang",
@@ -792,7 +792,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n Perhatikan fungsi berikut ini. function A(i: integer; j: integer): integer;\nbegin\n if (i >= 2) and (j >= 2) then A := A(i-1, A(i, j-1)+1)\n else\n if (i >=2) and (j = 1) then A := A(i-1, 2)\n else\n if (i = 1) and (j>= 1) then A := j\n else\n A := -1;\nend;",
+    "deskripsi_soal": "Perhatikan fungsi berikut ini:\nfunction A(i: integer; j: integer): integer;\nbegin\n if (i >= 2) and (j >= 2) then A := A(i-1, A(i, j-1)+1)\n else\n if (i >=2) and (j = 1) then A := A(i-1, 2)\n else\n if (i = 1) and (j>= 1) then A := j\n else\n A := -1;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -806,7 +806,7 @@
           "d": "A(3, 2 ) dengan A(2, 3)",
           "e": "A(4,2) dengan A(2, 4)"
         },
-        "kode": null,
+        "kode": "function A(i: integer; j: integer): integer;\nbegin\n if (i >= 2) and (j >= 2) then A := A(i-1, A(i, j-1)+1)\n else\n if (i >=2) and (j = 1) then A := A(i-1, 2)\n else\n if (i = 1) and (j>= 1) then A := j\n else\n A := -1;\nend;",
         "kunci": "b",
         "pembahasan": "Menghitung nilai fungsi rekursif: baris i=2 menghasilkan deret A(2, j) = j + 1, sehingga A(2, 6) = 7. Baris i=3 menghasilkan A(3, 1) = 3, A(3, 2) = 5, A(3, 3) = 7. Pasangan yang berharga sama adalah A(3, 3) dengan A(2, 6) yang sama-sama bernilai 7.",
         "level": "sedang",
@@ -822,7 +822,7 @@
           "d": "253",
           "e": "1021"
         },
-        "kode": null,
+        "kode": "function A(i: integer; j: integer): integer;\nbegin\n if (i >= 2) and (j >= 2) then A := A(i-1, A(i, j-1)+1)\n else\n if (i >=2) and (j = 1) then A := A(i-1, 2)\n else\n if (i = 1) and (j>= 1) then A := j\n else\n A := -1;\nend;",
         "kunci": "b",
         "pembahasan": "Evaluasi baris i=4 menunjukkan pola eksponensial A(4, j) = 2^(j+2) - 3. Untuk j = 7: A(4, 7) = 2^(7+2) - 3 = 2^9 - 3 = 512 - 3 = 509.",
         "level": "sulit",
@@ -832,7 +832,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 45\n Perhatikan algoritma yang berisi sejumlah fungsi berikut ini: function a(x:integer):integer;\nbegin\n if (x>0) then\n a:=b(x+1)\n else\n if (a<100) then\n a:=b(-10)\n else\n a:=a(x-1);\nend;\nfunction b(y:integer):integer;\nbegin\n if (y<0) then\n b:=y*c(y)\n else\n b:=a(y-4);\nend;\nfunction c(z:integer):integer;\nbegin\n if (c<0) then c:=1 else c:=-1;\nend;",
+    "deskripsi_soal": "Perhatikan algoritma yang berisi sejumlah fungsi berikut ini:\nfunction a(x:integer):integer;\nbegin\n if (x>0) then\n a:=b(x+1)\n else\n if (a<100) then\n a:=b(-10)\n else\n a:=a(x-1);\nend;\nfunction b(y:integer):integer;\nbegin\n if (y<0) then\n b:=y*c(y)\n else\n b:=a(y-4);\nend;\nfunction c(z:integer):integer;\nbegin\n if (c<0) then c:=1 else c:=-1;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -846,7 +846,7 @@
           "d": "-1",
           "e": "128"
         },
-        "kode": null,
+        "kode": "function a(x:integer):integer;\nbegin\n if (x>0) then\n a:=b(x+1)\n else\n if (a<100) then\n a:=b(-10)\n else\n a:=a(x-1);\nend;\nfunction b(y:integer):integer;\nbegin\n if (y<0) then\n b:=y*c(y)\n else\n b:=a(y-4);\nend;\nfunction c(z:integer):integer;\nbegin\n if (c<0) then c:=1 else c:=-1;\nend;",
         "kunci": "a",
         "pembahasan": "Tracing fungsi a(128): setiap langkah rekursi melalui b mereduksi argumen sebesar 3 (a(x) -> b(x+1) -> a(x-3)). Karena 128 mod 3 = 2, x tereduksi hingga basis bernilai 10.\n\n[Catatan Telaah / Cacat Naskah Asli OSN]:\nKode pada dokumen asli membandingkan nama fungsi ('if (a<100)' di dalam fungsi a dan 'if (c<0)' di dalam fungsi c), sehingga bersifat ambigu. Dengan pembacaan harfiah (nilai fungsi belum terdefinisi = 0) diperoleh a(128) = 10 (opsi a). Bila 'a' dibaca sebagai x dan 'c' sebagai z, hasilnya -10 (opsi b).",
         "level": "sedang",
@@ -864,7 +864,7 @@
           "d": "86",
           "e": "27"
         },
-        "kode": null,
+        "kode": "function a(x:integer):integer;\nbegin\n if (x>0) then\n a:=b(x+1)\n else\n if (a<100) then\n a:=b(-10)\n else\n a:=a(x-1);\nend;\nfunction b(y:integer):integer;\nbegin\n if (y<0) then\n b:=y*c(y)\n else\n b:=a(y-4);\nend;\nfunction c(z:integer):integer;\nbegin\n if (c<0) then c:=1 else c:=-1;\nend;",
         "kunci": "e",
         "pembahasan": "Nilai 128, 2, -1, dan 86 semuanya berada dalam kelas residu 2 mod 3 dan menghasilkan nilai positif. Parameter x = 27 merupakan satu-satunya kelipatan 3 (27 mod 3 = 0) yang memicu jalur rekursif negatif menghasilkan nilai kembalian < 0.\n\n[Catatan Telaah / Cacat Naskah Asli OSN]:\nMengikuti pembacaan harfiah kode pada dokumen asli, seluruh nilai parameter yang diuji menghasilkan a(x) = 10 (positif), sehingga tidak ada pilihan yang menghasilkan nilai < 0. Soal ini cacat; kunci 'e' dipertahankan mengikuti kunci pembuat soal.",
         "level": "sedang",
@@ -876,13 +876,13 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 46 dan 47\n Diberikan algoritma berikut ini: procedure hitungsaja(n: integer; m: integer);\nvar k: integer;\nbegin\n if (n < m) then begin\n writeln('hello');\n k := (m+n) div 2;\n hitungsaja(n,k);\n hitungsaja(k+1,m);\n end else writeln('hello');\nend;",
+    "deskripsi_soal": "Diberikan algoritma berikut ini:\nprocedure hitungsaja(n: integer; m: integer);\nvar k: integer;\nbegin\n if (n < m) then begin\n writeln('hello');\n k := (m+n) div 2;\n hitungsaja(n,k);\n hitungsaja(k+1,m);\n end else writeln('hello');\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
       {
         "soal_id": "kab_soal46_2008",
-        "soal": "Pada pemanggilan hitungsaja(5,24) berapa baris keluaran (satu baris berisi berisi ?hello?) dicetak oleh algoritma tersebut?",
+        "soal": "Pada pemanggilan hitungsaja(5,24) berapa baris keluaran (satu baris berisi 'hello') dicetak oleh algoritma tersebut?",
         "pilihan": {
           "a": "12",
           "b": "32",
@@ -890,7 +890,7 @@
           "d": "44",
           "e": "50"
         },
-        "kode": null,
+        "kode": "procedure hitungsaja(n: integer; m: integer);\nvar k: integer;\nbegin\n if (n < m) then begin\n writeln('hello');\n k := (m+n) div 2;\n hitungsaja(n,k);\n hitungsaja(k+1,m);\n end else writeln('hello');\nend;",
         "kunci": "c",
         "pembahasan": "Eksekusi hitungsaja pada interval berukuran L membentuk pohon biner penuh dengan L daun. Jumlah total pemanggilan (simpul) pada pohon biner penuh dengan L daun adalah 2L - 1. Untuk rentang 5 sampai 24, panjang interval L = 24 - 5 + 1 = 20. Total pencetakan 'hello' = 2(20) - 1 = 39 kali.",
         "level": "sedang",
@@ -906,7 +906,7 @@
           "d": "2N + 1",
           "e": "2N - 1"
         },
-        "kode": null,
+        "kode": "procedure hitungsaja(n: integer; m: integer);\nvar k: integer;\nbegin\n if (n < m) then begin\n writeln('hello');\n k := (m+n) div 2;\n hitungsaja(n,k);\n hitungsaja(k+1,m);\n end else writeln('hello');\nend;",
         "kunci": "e",
         "pembahasan": "Untuk pemanggilan hitungsaja(1, N), panjang interval adalah L = N - 1 + 1 = N. Mengikuti sifat pohon biner rekursi pembagian interval, jumlah total baris yang dicetak adalah 2N - 1.",
         "level": "sedang",
@@ -916,7 +916,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 50\n Diberikan kode program berikut ini: var\n zzz: integer;\n junk: integer;\nfunction ab(a, b: integer):integer;\nbegin\n inc(zzz);\n if (b<a) then\n begin\n ab:=a*b\n end else\n begin\n ab:=ab(a+1, b-1);\n end;\nend;\nfunction xyz(x, y, z: integer):integer;\nvar\n t: integer;\nbegin\n inc(zzz);\n t:=ab(x, z);\n xyz:=ab(t, y);\nend;Soal Bidang Informatika Halaman 13 OSK 2008\n{ program utama }\nbegin\nwriteln(xyz(10, 20, 30));\nend.",
+    "deskripsi_soal": "Diberikan kode program berikut ini:\nvar\n  zzz: integer;\n  junk: integer;\n\nfunction ab(a, b: integer): integer;\nbegin\n  inc(zzz);\n  if (b < a) then\n  begin\n    ab := a * b\n  end else\n  begin\n    ab := ab(a + 1, b - 1);\n  end;\nend;\n\nfunction xyz(x, y, z: integer): integer;\nvar\n  t: integer;\nbegin\n  inc(zzz);\n  t := ab(x, z);\n  xyz := ab(t, y);\nend;\n\n{ program utama }\nbegin\n  writeln(xyz(10, 20, 30));\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -930,7 +930,7 @@
           "d": "4680",
           "e": "1370"
         },
-        "kode": null,
+        "kode": "var\n  zzz: integer;\n  junk: integer;\n\nfunction ab(a, b: integer): integer;\nbegin\n  inc(zzz);\n  if (b < a) then\n  begin\n    ab := a * b\n  end else\n  begin\n    ab := ab(a + 1, b - 1);\n  end;\nend;\n\nfunction xyz(x, y, z: integer): integer;\nvar\n  t: integer;\nbegin\n  inc(zzz);\n  t := ab(x, z);\n  xyz := ab(t, y);\nend;\n\n{ program utama }\nbegin\n  writeln(xyz(10, 20, 30));\nend.",
         "kunci": "a",
         "pembahasan": "Simulasi xyz(10, 20, 30): pemanggilan ab(10, 30) melakukan rekursi bertahap hingga a = 21, b = 19 menghasilkan t = 21 * 19 = 399. Selanjutnya pemanggilan ab(399, 20) langsung mengembalikan 399 * 20 = 7980.",
         "level": "sedang",
@@ -946,7 +946,7 @@
           "d": "Ada lebih dari satu jawaban benar",
           "e": "Tidak ada jawaban benar"
         },
-        "kode": null,
+        "kode": "var\n  zzz: integer;\n  junk: integer;\n\nfunction ab(a, b: integer): integer;\nbegin\n  inc(zzz);\n  if (b < a) then\n  begin\n    ab := a * b\n  end else\n  begin\n    ab := ab(a + 1, b - 1);\n  end;\nend;\n\nfunction xyz(x, y, z: integer): integer;\nvar\n  t: integer;\nbegin\n  inc(zzz);\n  t := ab(x, z);\n  xyz := ab(t, y);\nend;\n\n{ program utama }\nbegin\n  writeln(xyz(10, 20, 30));\nend.",
         "kunci": "d",
         "pembahasan": "Menguji pemanggilan fungsi: pemanggilan xyz(1, 1, 2) menghasilkan nilai 2, dan pemanggilan xyz(1, 3, 1) juga menghasilkan nilai 2. Oleh karena itu, pilihan yang benar adalah 'Ada lebih dari satu jawaban benar'.",
         "level": "mudah",
@@ -954,7 +954,7 @@
       },
       {
         "soal_id": "kab_soal50_2008",
-        "soal": "Apabila program utama diganti menjadi: begin\n zzz:=0;\n junk := xyz(10, 20, 30);\n writeln(zzz);\nend. maka, keluaran program adalah...",
+        "soal": "Apabila program utama diganti menjadi:\nbegin\n  zzz := 0;\n  junk := xyz(10, 20, 30);\n  writeln(zzz);\nend.\nmaka keluaran program adalah...",
         "pilihan": {
           "a": "15",
           "b": "12",
@@ -962,7 +962,7 @@
           "d": "16",
           "e": "14"
         },
-        "kode": "begin\n zzz:=0;\n junk := xyz(10, 20, 30);\n writeln(zzz);\nend.",
+        "kode": "var\n  zzz: integer;\n  junk: integer;\n\nfunction ab(a, b: integer): integer;\nbegin\n  inc(zzz);\n  if (b < a) then\n  begin\n    ab := a * b\n  end else\n  begin\n    ab := ab(a + 1, b - 1);\n  end;\nend;\n\nfunction xyz(x, y, z: integer): integer;\nvar\n  t: integer;\nbegin\n  inc(zzz);\n  t := ab(x, z);\n  xyz := ab(t, y);\nend;\n\n{ program utama }\nbegin\n  writeln(xyz(10, 20, 30));\nend.",
         "kunci": "e",
         "pembahasan": "Variabel zzz bertambah 1 setiap kali ab dan xyz dipanggil. Pemanggilan xyz memicu 1 kali inc, ab(10, 30) memicu 11 kali pemanggilan rekursif ab, dan ab(399, 20) memicu 1 kali pemanggilan ab. Total nilai akhir zzz = 1 + 12 + 1 = 14.",
         "level": "sedang",

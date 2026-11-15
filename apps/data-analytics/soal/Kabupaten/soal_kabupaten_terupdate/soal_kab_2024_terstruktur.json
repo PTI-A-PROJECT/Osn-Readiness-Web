@@ -150,7 +150,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 11 sampai 13.\nDalam sebuah pertandingan sepak bola, terdapat beberapa tim yang saling bertanding satu sama lain. Tim-tim tersebut diberi indeks berupa huruf alfabet (A hingga Z), dan setiap pasang tim akan saling bertanding tepat satu kali. Dalam setiap pertandingan, tim yang menang (tim yang mencetak gol lebih banyak) akan mendapatkan 3 poin. Jika ternyata pertandingan berakhir seri (kedua tim mencetak banyak gol yang sama), maka kedua tim mendapatkan 1 poin.\n\nAnda akan diberikan hasil beberapa pertandingan. Tugas Anda adalah menentukan tim mana yang memimpin klasemen (tim dengan jumlah poin tertinggi). Jika terdapat lebih dari satu tim yang memiliki poin tertinggi di klasemen, pilih tim dengan indeks terkecil secara alfabetik.",
+    "deskripsi_soal": "Dalam sebuah pertandingan sepak bola, terdapat beberapa tim yang saling bertanding satu sama lain. Tim-tim tersebut diberi indeks berupa huruf alfabet (A hingga Z), dan setiap pasang tim akan saling bertanding tepat satu kali. Dalam setiap pertandingan, tim yang menang (tim yang mencetak gol lebih banyak) akan mendapatkan 3 poin. Jika ternyata pertandingan berakhir seri (kedua tim mencetak banyak gol yang sama), maka kedua tim mendapatkan 1 poin.\n\nAnda akan diberikan hasil beberapa pertandingan. Tugas Anda adalah menentukan tim mana yang memimpin klasemen (tim dengan jumlah poin tertinggi). Jika terdapat lebih dari satu tim yang memiliki poin tertinggi di klasemen, pilih tim dengan indeks terkecil secara alfabetik.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_11_kab_2024.png",
     "pertanyaan": [
@@ -189,7 +189,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 14 sampai 16.\nPak Blangkon memiliki 15 ekor ayam di pekarangan rumahnya: A, B, C, D, E, F, G, H, I, J, K, L, M, N, dan O. Diketahui bahwa ada beberapa pertemanan antara dua ekor ayam, yang didefinisikan sebagai P(X,Y) yang artinya ayam X dan ayam Y berteman. Jika ayam X dan ayam Y berteman, serta ayam Y dan ayam Z juga berteman, maka secara otomatis ayam X dan ayam Z juga berteman sehingga ayam X, ayam Y, dan ayam Z akan berada pada lingkaran pertemanan yang sama.\n\nPada suatu sore, Pak Blangkon ingin mengajak ayam-ayamnya bermain ke rumah Pak Dengklek. Namun karena keterbatasan tempat, Pak Blangkon tidak bisa mengajak semua ayamnya. Oleh karena itu Pak Blangkon akan mengajak beberapa ayamnya dengan ketentuan berikut:\n- Minimal satu ekor ayam Pak Blangkon akan diajak.\n- Ayam-ayam yang diajak berasal dari lingkaran pertemanan yang berbeda (agar tidak ada rasa iri antar ayam-ayamnya).\n\nDiketahui informasi pertemanan antar ayam adalah sebagai berikut:\nP(A,B), P(C,M), P(E,G), P(A,M)\nP(D,J), P(O,N), P(B,O), P(K,L)\nP(D,I), P(B,N), P(L,D), P(H,F)",
+    "deskripsi_soal": "Pak Blangkon memiliki 15 ekor ayam di pekarangan rumahnya: A, B, C, D, E, F, G, H, I, J, K, L, M, N, dan O. Diketahui bahwa ada beberapa pertemanan antara dua ekor ayam, yang didefinisikan sebagai P(X,Y) yang artinya ayam X dan ayam Y berteman. Jika ayam X dan ayam Y berteman, serta ayam Y dan ayam Z juga berteman, maka secara otomatis ayam X dan ayam Z juga berteman sehingga ayam X, ayam Y, dan ayam Z akan berada pada lingkaran pertemanan yang sama.\n\nPada suatu sore, Pak Blangkon ingin mengajak ayam-ayamnya bermain ke rumah Pak Dengklek. Namun karena keterbatasan tempat, Pak Blangkon tidak bisa mengajak semua ayamnya. Oleh karena itu Pak Blangkon akan mengajak beberapa ayamnya dengan ketentuan berikut:\n- Minimal satu ekor ayam Pak Blangkon akan diajak.\n- Ayam-ayam yang diajak berasal dari lingkaran pertemanan yang berbeda (agar tidak ada rasa iri antar ayam-ayamnya).\n\nDiketahui informasi pertemanan antar ayam adalah sebagai berikut:\nP(A,B), P(C,M), P(E,G), P(A,M)\nP(D,J), P(O,N), P(B,O), P(K,L)\nP(D,I), P(B,N), P(L,D), P(H,F)",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -227,7 +227,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 17 sampai 19.\nPak Dengklek sedang belajar membuat biskuit. Ia membuat beberapa tipe biskuit berbeda yang masing-masing tipe diletakkan pada toples-toples yang berbeda. Karena bahan-bahan yang diperlukan untuk membuat masing-masing tipe biskuit berbeda, bisa jadi tiap toples berisi banyak butir biskuit yang berbeda pula.\n\nPak Dengklek kemudian mengundang bebek-bebeknya untuk mencicipi biskuit-biskuit buatannya. Satu per satu, para bebek bebas mengambil satu butir biskuit mana pun yang mereka ingin cicipi. Agar Pak Dengklek mendapatkan ulasan yang cukup konkret, ia ingin semua tipe biskuit pernah dicicipi oleh sekian ekor bebek. Pak Dengklek ingin mencari tahu minimal bebek yang perlu diundang untuk mencicipi biskuit-biskuitnya.",
+    "deskripsi_soal": "Pak Dengklek sedang belajar membuat biskuit. Ia membuat beberapa tipe biskuit berbeda yang masing-masing tipe diletakkan pada toples-toples yang berbeda. Karena bahan-bahan yang diperlukan untuk membuat masing-masing tipe biskuit berbeda, bisa jadi tiap toples berisi banyak butir biskuit yang berbeda pula.\n\nPak Dengklek kemudian mengundang bebek-bebeknya untuk mencicipi biskuit-biskuit buatannya. Satu per satu, para bebek bebas mengambil satu butir biskuit mana pun yang mereka ingin cicipi. Agar Pak Dengklek mendapatkan ulasan yang cukup konkret, ia ingin semua tipe biskuit pernah dicicipi oleh sekian ekor bebek. Pak Dengklek ingin mencari tahu minimal bebek yang perlu diundang untuk mencicipi biskuit-biskuitnya.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -265,7 +265,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 20 sampai 22.\nTerdapat dua buah meja berbentuk poligon beraturan: satu meja berwarna hitam, serta satu meja berwarna putih dengan suatu tanda panah di atasnya. Setiap sisi meja, baik meja hitam maupun meja putih, memiliki panjang yang sama, panjang sisi meja hitam dan sisi meja putih pun sama.\n\nPada awalnya, meja hitam terletak di tengah-tengah ruangan dan tidak dapat digerakkan, sedangkan meja putih terletak tepat di sebelah Utara (UT) meja hitam sedemikian sehingga kedua sisi meja saling berhimpitan dan tanda panah di atas meja putih juga menunjukkan ke arah UT.\n\nAnda kemudian memiliki ide usil yakni menggelindingkan meja putih searah jarum jam mengelilingi meja hitam, dan menjamin bahwa kedua meja selalu bersentuhan, selama beberapa putaran. Singkatan arah mata angin yang digunakan: UT (Utara), TL (Timur Laut), TM (Timur), TG (Tenggara), SL (Selatan), BD (Barat Daya), BR (Barat), BL (Barat Laut).",
+    "deskripsi_soal": "Terdapat dua buah meja berbentuk poligon beraturan: satu meja berwarna hitam, serta satu meja berwarna putih dengan suatu tanda panah di atasnya. Setiap sisi meja, baik meja hitam maupun meja putih, memiliki panjang yang sama, panjang sisi meja hitam dan sisi meja putih pun sama.\n\nPada awalnya, meja hitam terletak di tengah-tengah ruangan dan tidak dapat digerakkan, sedangkan meja putih terletak tepat di sebelah Utara (UT) meja hitam sedemikian sehingga kedua sisi meja saling berhimpitan dan tanda panah di atas meja putih juga menunjukkan ke arah UT.\n\nAnda kemudian memiliki ide usil yakni menggelindingkan meja putih searah jarum jam mengelilingi meja hitam, dan menjamin bahwa kedua meja selalu bersentuhan, selama beberapa putaran. Singkatan arah mata angin yang digunakan: UT (Utara), TL (Timur Laut), TM (Timur), TG (Tenggara), SL (Selatan), BD (Barat Daya), BR (Barat), BL (Barat Laut).",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_20_kab_2024.png",
     "pertanyaan": [
@@ -303,7 +303,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 23 sampai 25.\nTerdapat 31 kursi di dalam sebuah kelas. Kursi-kursi tersebut ditempatkan dengan bentuk lingkaran dan diberi angka dari 1 hingga 31.\n\nPara siswa awalnya berada di luar kelas lalu bermain permainan berikut:\n1. Siswa masuk ke dalam kelas satu per satu.\n2. Siswa duduk di kursi yang angkanya sesuai dengan tanggal lahirnya.\n3. Jika kursi yang dituju telah terisi, ia akan berjalan sepanjang lingkaran searah jarum jam, hingga ia menemukan sebuah kursi kosong yang akhirnya ia duduki.\n\nSebagai contoh:\n- Gita dan Sita lahir pada 20 April, Arun lahir pada 21 Januari, dan Zubin lahir pada 22 September.\n- Jika mereka datang dengan urutan: Gita, Sita, Zubin, dan Arun; maka Gita duduk pada kursi 20, Sita pada kursi 21, Zubin pada kursi 22, dan Arun pada kursi 23.\n- Jika mereka datang dengan urutan: Sita, Arun, Zubin, dan Gita; maka Sita duduk pada kursi 20, Arun pada kursi 21, Zubin pada kursi 22, dan Gita pada kursi 23.",
+    "deskripsi_soal": "Terdapat 31 kursi di dalam sebuah kelas. Kursi-kursi tersebut ditempatkan dengan bentuk lingkaran dan diberi angka dari 1 hingga 31.\n\nPara siswa awalnya berada di luar kelas lalu bermain permainan berikut:\n1. Siswa masuk ke dalam kelas satu per satu.\n2. Siswa duduk di kursi yang angkanya sesuai dengan tanggal lahirnya.\n3. Jika kursi yang dituju telah terisi, ia akan berjalan sepanjang lingkaran searah jarum jam, hingga ia menemukan sebuah kursi kosong yang akhirnya ia duduki.\n\nSebagai contoh:\n- Gita dan Sita lahir pada 20 April, Arun lahir pada 21 Januari, dan Zubin lahir pada 22 September.\n- Jika mereka datang dengan urutan: Gita, Sita, Zubin, dan Arun; maka Gita duduk pada kursi 20, Sita pada kursi 21, Zubin pada kursi 22, dan Arun pada kursi 23.\n- Jika mereka datang dengan urutan: Sita, Arun, Zubin, dan Gita; maka Sita duduk pada kursi 20, Arun pada kursi 21, Zubin pada kursi 22, dan Gita pada kursi 23.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_23_kab_2024.png",
     "pertanyaan": [
@@ -316,15 +316,7 @@
         "pembahasan": "Simulasi kedatangan siswa:\n1. Andi (11): duduk di Kursi 11.\n2. Benny (12): duduk di Kursi 12.\n3. Chacha (14): duduk di Kursi 14.\n4. David (11): k-11 isi -> k-12 isi -> k-13 kosong -> David duduk di Kursi 13.\n5. Ela (13): k-13 isi -> k-14 isi -> k-15 kosong -> Ela duduk di Kursi 15.\nMaka Ela duduk di kursi 15.",
         "level": "mudah",
         "materi_id": "kab-simulasi"
-      }
-    ]
-  },
-  {
-    "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 23 sampai 25.\nTerdapat 31 kursi di dalam sebuah kelas. Kursi-kursi tersebut ditempatkan dengan bentuk lingkaran dan diberi angka dari 1 hingga 31.\n\nPara siswa awalnya berada di luar kelas lalu bermain permainan berikut:\n1. Siswa masuk ke dalam kelas satu per satu.\n2. Siswa duduk di kursi yang angkanya sesuai dengan tanggal lahirnya.\n3. Jika kursi yang dituju telah terisi, ia akan berjalan sepanjang lingkaran searah jarum jam, hingga ia menemukan sebuah kursi kosong yang akhirnya ia duduki.",
-    "gambar_url_deskripsi": null,
-    "gambar_lokal_deskripsi": null,
-    "pertanyaan": [
+      },
       {
         "soal_id": "kab_soal24_2024",
         "soal": "Diketahui bahwa terdapat 6 siswa yang sudah selesai bermain permainan tersebut:\n- Andi (11 Mei): Duduk di Kursi 13\n- Benny (12 Februari): Duduk di Kursi 12\n- Chacha (14 September): Duduk di Kursi 14\n- David (11 Agustus): Duduk di Kursi 11\n- Ela (13 April): Duduk di Kursi 15\n- Fatima (12 Juli): Duduk di Kursi 16\n\nDari 5 pernyataan berikut, manakah yang tidak akan pernah mungkin benar?",
@@ -355,8 +347,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Perhatikan potongan kode program berikut!",
-    "gambar_url_deskripsi": null,
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\nbool cek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] > S[i + 1]) return false;\n  }\n  return true;\n}\n\nbool ricek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] <= S[i + 1]) return true;\n  }\n  return false;\n}",
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
       {
@@ -369,7 +360,7 @@
           "d": "cek(\"BERUPA\")",
           "e": "cek(\"BETAPA\")"
         },
-        "kode": "bool cek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] > S[i + 1]) return false;\n  }\n  return true;\n}",
+        "kode": "bool cek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] > S[i + 1]) return false;\n  }\n  return true;\n}\n\nbool ricek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] <= S[i + 1]) return true;\n  }\n  return false;\n}",
         "kunci": "a",
         "pembahasan": "Fungsi `cek(S)` memeriksa apakah karakter-karakter dalam string S terurut secara non-decreasing (S[0] <= S[1] <= ... <= S[n-1]).\nUji pilihan a: \"BEGINI\" -> B <= E (ya), E <= G (ya), G <= I (ya), I <= N (ya), N <= I (SALAH: 'N' > 'I').\nMengevaluasi kata yang huruf-hurufnya secara alfabetis tidak pernah turun.",
         "level": "sedang",
@@ -379,7 +370,7 @@
         "soal_id": "kab_soal27_2024",
         "soal": "Jika S adalah sebuah string dengan panjang 3 dan hanya terdiri dari huruf kapital 'A' hingga 'Z', maka berapa banyak kemungkinan S sedemikian sehingga pemanggilan cek(S) mengembalikan TRUE?",
         "pilihan": {},
-        "kode": "bool cek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] > S[i + 1]) return false;\n  }\n  return true;\n}",
+        "kode": "bool cek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] > S[i + 1]) return false;\n  }\n  return true;\n}\n\nbool ricek(string S) {\n  int n = S.length();\n  for (int i = 0; i < n - 1; i++) {\n    if (S[i] <= S[i + 1]) return true;\n  }\n  return false;\n}",
         "kunci": "3276",
         "pembahasan": "Memilih 3 huruf dari 26 huruf alfabet dengan pengulangan diperbolehkan (Combination with Repetitions):\nC'(26, 3) = C(26 + 3 - 1, 3) = C(28, 3) = (28 * 27 * 26) / (3 * 2 * 1) = 3276 kemungkinan string.",
         "level": "sedang",
@@ -394,7 +385,14 @@
         "pembahasan": "Counterexample: Ambil string S = \"BAA\".\n- `cek(\"BAA\")`: 'B' > 'A' -> langsung return `false`.\n- `ricek(\"BAA\")`: memeriksa 'B' <= 'A' (false), lalu 'A' <= 'A' (true) -> return `true`.\nKarena `cek(\"BAA\")` (false) != `ricek(\"BAA\")` (true), maka jawabannya adalah SALAH.",
         "level": "mudah",
         "materi_id": "kab-algoritma"
-      },
+      }
+    ]
+  },
+  {
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\nint go(int N) {\n  int s = 0;\n  int f = 1;\n  for (int i = 2; i <= N; i++) {\n    if (N % i == 0) {\n      if (i - f > s) {\n        s = i - f;\n      }\n      f = i;\n    }\n  }\n  return s;\n}",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
       {
         "soal_id": "kab_soal29_2024",
         "soal": "Berapakah kembalian dari pemanggilan go(30)?",
@@ -424,7 +422,14 @@
         "pembahasan": "Pembagi terbesar dari N yang kurang dari N dinamakan d_max. Pembagi terbesar berikutnya d_max <= N/2.\nSelisih antara N dan d_max adalah N - d_max >= N - N/2 = N/2.\nKarena langkah terakhir loop selalu menghitung selisih N - d_max, maka nilai `s` minimal bernilai N/2 (yaitu >= N/2).\nOleh karena itu, pernyataannya BENAR.",
         "level": "mudah",
         "materi_id": "kab-algoritma"
-      },
+      }
+    ]
+  },
+  {
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\nbool dua_mata(vector<int> A, int kiri, int kanan) {\n  if (kiri == kanan) {\n    return (A[kiri] == 0);\n  } else {\n    int mid = (kiri + kanan) / 2;\n    if (A[mid] < 0) {\n      return dua_mata(A, kiri, mid - 1);\n    } else if (A[mid] > 0) {\n      return dua_mata(A, mid + 1, kanan);\n    } else {\n      return false;\n    }\n  }\n}",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
       {
         "soal_id": "kab_soal32_2024",
         "soal": "Dari 5 pilihan pemanggilan berikut, manakah yang hasil kembaliannya adalah TRUE?",
@@ -445,7 +450,7 @@
         "soal_id": "kab_soal33_2024",
         "soal": "Misalkan N menyatakan panjang dari vektor A. Anda melakukan eksperimen di komputer tua Anda bahwa pemanggilan dua_mata(A,0,N-1) dengan N=1000 selambat-lambatnya membutuhkan waktu 20 detik. Untuk N=2000, ternyata selambat-lambatnya membutuhkan waktu 22 detik. Kira-kira, selambat-lambatnya, berapa detikkah waktu yang dibutuhkan untuk N=8000?",
         "pilihan": {},
-        "kode": null,
+        "kode": "bool dua_mata(vector<int> A, int kiri, int kanan) {\n  if (kiri == kanan) {\n    return (A[kiri] == 0);\n  } else {\n    int mid = (kiri + kanan) / 2;\n    if (A[mid] < 0) {\n      return dua_mata(A, kiri, mid - 1);\n    } else if (A[mid] > 0) {\n      return dua_mata(A, mid + 1, kanan);\n    } else {\n      return false;\n    }\n  }\n}",
         "kunci": "26",
         "pembahasan": "Kompleksitas waktu fungsi `dua_mata` adalah O(log N) karena setiap langkah membagi jangkauan menjadi setengahnya.\n- Perubahan N dari 1000 ke 2000 (dua kali lipat = +1 kedalaman rekursi) menambah waktu sebesar 22 - 20 = 2 detik.\n- N = 4000 (+1 kedalaman rekursi) butuh 22 + 2 = 24 detik.\n- N = 8000 (+1 kedalaman rekursi) butuh 24 + 2 = 26 detik.",
         "level": "sulit",
@@ -460,7 +465,14 @@
         "pembahasan": "Jalur rekursi dari (0,6) agar mencapai `kiri == kanan` dengan `A[target] == 0` menuntut nilai-nilai pada elemen mid yang diperiksa bernilai spesifik (+1 atau -1), dan elemen akhir bernilai 0. Variasi elemen bebas yang tidak memengaruhi cabang pencarian menghasilkan total 27 vektor A yang memenuhi.",
         "level": "sedang",
         "materi_id": "kab-kombinatorika"
-      },
+      }
+    ]
+  },
+  {
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\nint panas(int X) {\n  if (X == 0)\n    return 0;\n  else\n    return (X % 10) + panas(X / 10);\n}\n\nint dingin(int X, int Y) {\n  int air = 0;\n  while (panas(air) != X) air = air + Y;\n  return air;\n}",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
       {
         "soal_id": "kab_soal35_2024",
         "soal": "Berapakah kembalian dari pemanggilan dingin(10,7)?",
@@ -490,7 +502,14 @@
         "pembahasan": "Agar `dingin(X, Y)` berhenti saat `air = 77`:\n1. Nilai X harus sama dengan `panas(77) = 7 + 7 = 14`.\n2. Y harus merupakan faktor/pembagi dari 77 (pilihan Y ∈ {1, 7, 11, 77}).\n3. Untuk setiap Y pembagi 77 tersebut, tidak boleh ada kelipatan k * Y < 77 yang memiliki jumlah digit 14.\nMengevaluasi keempat pembagi 77: Y = 1, 7, 11, 77 semuanya memenuhi syarat penghentian pertama pada air = 77.\nBanyaknya pasangan <X,Y> adalah 4.",
         "level": "sedang",
         "materi_id": "kab-algoritma"
-      },
+      }
+    ]
+  },
+  {
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\nint pndk(int N, int K) {\n  if (N == 1)\n    return 1;\n  else\n    return (pndk(N - 1, K) + K - 1) % N + 1;\n}",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
       {
         "soal_id": "kab_soal38_2024",
         "soal": "Berapakah kembalian dari pemanggilan pndk(7,7)?",

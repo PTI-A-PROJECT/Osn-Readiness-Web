@@ -1,7 +1,7 @@
 [
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 1 sampai dengan 2\n Deret bilangan Fibonacci didefinisikan secara rekursif sbb.\nf₁ = 1\nf₂ = 2\nfₙ = fₙ₋₁ + fₙ₋₂ untuk semua n > 2",
+    "deskripsi_soal": "Deret bilangan Fibonacci didefinisikan secara rekursif sbb.\nf₁ = 1\nf₂ = 2\nfₙ = fₙ₋₁ + fₙ₋₂ untuk semua n > 2",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -41,7 +41,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 3 sampai dengan 4\n Di suatu negri antah berantah alat tukar yang digunakan hanya mata uang dengan empat pecahan saja: satu Gordi, satu Gorde yang sama dengan 17 Gordi, satu Gordo yang sama dengan 57 Gordi, dan satu Goram yang sama dengan 115 Gordi.",
+    "deskripsi_soal": "Di suatu negri antah berantah alat tukar yang digunakan hanya mata uang dengan empat pecahan saja: satu Gordi, satu Gorde yang sama dengan 17 Gordi, satu Gordo yang sama dengan 57 Gordi, dan satu Goram yang sama dengan 115 Gordi.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -81,7 +81,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 5 sampai dengan 9\n Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
+    "deskripsi_soal": "Suatu pesan akan saya distribusikan ke orang-orang bernama A, B, C, D, E, F, G, H, dan I melalui pesan singkat (SMS) secara berantai. Mereka mengetahui beberapa nomor telp yang lain sbb.\nA hanya mengetahui nomor-nomor telp F, G;\nB hanya mengetahui nomor-nomor telp C, E, H;\nC hanya mengetahui nomor telp A;\nD hanya mengetahui nomor-nomor telp E, I;\nE hanya mengetahui nomor telp H;\nF hanya mengetahui nomor-nomor telp B, E;\nG hanya mengetahui nomor telp F;\nH hanya mengetahui nomor-nomor telp I, C;\nI hanya mengetahui nomor-nomor telp A, B.\nKarena teknologi komunikasi masih terbatas maka saat menerima SMS mereka tidak mengetahui siapa dan apa nomor telp pengirimnya. Diasumsikan bahwa begitu mereka menerima SMS, maka dalam jeda tepat 5 menit SMS akan diteruskan secara serentak ke orang-orang yang mereka ketahui nomor teleponnya dan SMS yang dikirim tsb langsung diterima tanpa ada jeda. Dipastikan bahwa mereka tidak akan mengirimi SMS yang sama ke orang yang sama lebih dari satu kali.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -188,7 +188,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 11 sampai dengan 13\n   TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
+    "deskripsi_soal": "TWO\n   TWO +\n  ------\n  FOUR\nT, W, O, F, U, dan R masing-masing mewakili satu digit integer (bilangan bulat) positif; dan masing-masing mewakili bilangan yang berbeda. F dan T tidak sama dengan 0.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -472,7 +472,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 26 sampai dengan 31\n Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
+    "deskripsi_soal": "Suatu waktu empat orang siswa peserta seleksi TOKI bernama A, B, C, dan D. Semula data mereka disimpan dalam database yang meliputi data asal Sekolah, asal Kota dan asal Propinsinya masing-masing. Namun karena gangguan virus komputer susunan data itu menjadi kacau. Yang diketahui mereka berasal dari empat Sekolah berlainan, dari empat kota yang juga berlainan dan dari empat propinsi yang juga berlainan. Karena sudah lamanya, sudah tidak diketahui bagaimana menghubungi mereka kembali. Nama-nama sekolah mereka berasal diketahui adalah: E, F, G, dan H; nama-nama kota sekolah itu berada diketahui adalah: I, J, K, dan L; serta nama-nama propinsi kota itu berada diketahui adalah: M, N, O, dan P. Ingat urutan tsb belum tentu bersesuaian satu dengan lainnya!!\nSelain itu ada sejumlah informasi yang masih dicatat sbb.\n- B berasal dari sekolah di kota K\n- Sekolah H ada di kota J yang terletak di propinsi N\n- Kota I ada di propinsi P\n- D berasal dari sekolah F\n- A berasal dari sekolah yang berada di propinsi O",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -648,7 +648,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 36 sampai dengan 40\n(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
+    "deskripsi_soal": "(1) Satu rombongan yang terdiri atas lima pemuda, bernama L, M, N, O dan P serta lima pemudi, bernama S, T, U, V, dan W, nonton bareng di suatu bioskop. Mereka adalah 5 pasang pemuda-pemudi yang berpacaran. Mereka menempati 10 kursi dalam satu barisan bernomor 1 s.d. 10 dari kiri ke kanan. Para pemuda duduk di kursi-kursi bernomor ganjil; setiap pemudi duduk di sebelah kanan dari pemuda yang menjadi pacarnya.\n(2) O adalah pacar dari V\n(3) W tidak berada diujung terkanan, dan pemuda pacarnya juga tidak berada di ujung terkiri\n(4) N berada satu kursi dari ujung terkanan\n(5) Pacar dari W adalah kakak dari T dan supaya ia bisa mengawasinya ia ingin T berada di sebelah kirinya\n(6) M dan pacarnya menempati pasangan paling tengah dalam deretan\n(7) V duduk bersebelahan dengan M",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -864,7 +864,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut adalah untuk menjawab pertanyaan no 48 sampai dengan 50\nEnam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
+    "deskripsi_soal": "Enam (6) orang diurutkan dari 1-6 menurut tinggi badannya (Urutan pertama paling pendek, urutan ke-6 paling tinggi) dan dari 1-6 menurut berat badannya. (Urutan pertama paling ringan, urutan ke-6 paling berat). Nilai tiap orang adalah hasil jumlah kedua nilai urutan tersebut.\nHasil perhitungan menyatakan bahwa :\n- Galuh lebih tinggi dari Maya dan lebih ringan dari Budi\n- Heri lebih tinggi dari Galuh dan lebih ringan dari Lisa\n- Cici lebih pendek dari dan lebih berat dari Galuh\n- Maya lebih tinggi dari Lisa dan lebih berat dari Cici",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [

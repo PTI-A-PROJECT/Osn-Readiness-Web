@@ -324,7 +324,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 dan 19\n Di kota Bebek terdapat sebuah taman berbentuk segi 12 beraturan... penempatan bendera warna-warni.",
+    "deskripsi_soal": "Di kota Bebek terdapat sebuah taman berbentuk segi 12 beraturan. Di setiap sudut taman tersebut terdapat tiang bendera. Setiap tiang bendera hanya dapat dipasangi satu bendera. Pak Walikota meminta Pak Dengklek untuk memasang bendera pada tiang-tiang tersebut. Ada 10 bendera dengan 4 warna berbeda, yang terdiri dari 4 bendera biru, 2 bendera merah, 2 bendera kuning, dan 2 bendera hijau.\nPak Walikota meminta Pak Dengklek memasang bendera dengan beberapa syarat, yaitu:\n1. Tiang-tiang tempat bendera biru dipasang harus membagi keliling taman menjadi 4 bagian yang sama.\n2. Bendera merah harus dipasang bersebelahan dengan bendera merah.\n3. Bendera kuning harus dipasang berseberangan satu sama lain.\n4. Bendera hijau harus dipasang pada tiang tertentu sehingga di antara kedua bendera hijau terdapat tepat 2 tiang bendera.\n\nTiba-tiba Pak Walikota meminta Pak Dengklek untuk memasang 2 bendera ungu pada tiang yang masih kosong.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -383,7 +383,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 21 dan 22\n Dewangga, John, Faiz, dan Ari... teka-teki kecerdasan dan ketampanan.",
+    "deskripsi_soal": "Dewangga memiliki 3 orang teman akrab: John, Faiz, dan Ari. Suatu hari, Dewangga penasaran mengenai siapa yang paling cerdas dan paling ganteng di antara mereka berempat, kemudian ia bertanya kepada Sang Master. Sang Master memberikan petunjuk sebagai berikut:\n1. Dewangga bukan yang terganteng di antara mereka berempat.\n2. Ari lebih ganteng daripada John, namun tidak lebih cerdas daripada John.\n3. Dewangga lebih cerdas dan lebih ganteng daripada Faiz.\n4. Ari bukanlah yang paling tidak cerdas di antara mereka berempat.\n(Diasumsikan tidak ada dua orang yang memiliki tingkat kecerdasan maupun tingkat kegantengan yang sama).",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -442,7 +442,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 dan 25\n Budi hendak pergi ke sekolah. Seragam Budi: sepatu, kaos kaki, celana, celana dalam, sabuk, kemeja dengan aturan urutan.",
+    "deskripsi_soal": "Budi hendak pergi ke sekolah. Seragam Budi terdiri dari: sepatu, kaos kaki, celana, celana dalam, sabuk, dan kemeja. Beberapa aturan urutan pemakaian yang harus diperhatikan adalah:\n- Sepatu harus dikenakan setelah kaos kaki.\n- Sabuk harus dikenakan setelah celana.\n- Kemeja harus dikenakan sebelum celana.\n- Celana harus dikenakan setelah celana dalam.\n- Celana harus dikenakan sebelum sepatu.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -520,7 +520,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 30\n Di SMA Negeri 1 Bebek, Abil sedang belajar mengenai bilangan prima-er... representasi jumlahan bilangan prima.",
+    "deskripsi_soal": "Di SMA Negeri 1 Bebek, Abil sedang belajar mengenai bilangan prima-er. Prima-er merupakan cara untuk merepresentasikan bilangan desimal dengan urutan dan penjumlahan bilangan prima, dengan 1 sebagai bilangan prima ke-0 (sehingga p_0 = 1, p_1 = 2, p_2 = 3, p_3 = 5, p_4 = 7, p_5 = 11, p_6 = 13, p_7 = 17, p_8 = 19, p_9 = 23, p_10 = 29, p_11 = 31, p_12 = 37, dst.).\nSebagai contoh, prima-er dari 20 adalah 08 (karena bilangan prima ke-0 adalah 1 dan bilangan prima ke-8 adalah 19, 1 + 19 = 20), dan prima-er dari 27 adalah 029 (bilangan prima ke-0 adalah 1, prima ke-2 adalah 3, dan prima ke-9 adalah 23, 1 + 3 + 23 = 27).\nPerhatikan bahwa suatu bilangan mungkin memiliki lebih dari 1 representasi prima-er (20 juga dapat direpresentasikan sebagai 46 dan 27), dan satu prima-er juga dapat merepresentasikan lebih dari satu bilangan (misalnya 012 dapat merepresentasikan 1 + 2 + 3 = 6 maupun 1 + 37 = 38).",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -595,7 +595,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 33\n Perhatikan potongan program berikut: function mangga... function jeruk...",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction mangga(rambutan : integer) : integer;\nbegin\n if (rambutan = 1) then mangga := 1 else\n if (rambutan mod 2 = 1) then mangga := mangga(3 * rambutan + 1)\n else mangga := mangga(rambutan div 2);\nend;\n\nfunction jeruk(anggur, melon : integer) : integer;\nbegin\n if (melon = 1) then jeruk := 0 else\njeruk := mangga(anggur) * anggur + jeruk(anggur, melon - 1);\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -635,7 +635,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 34 dan 35\n Perhatikan potongan program berikut: function f dan function g.",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction f(a : integer):integer;\nbegin\nif a=0 then\n f:= 1\nelse\n f:= 2*f(a-1);\nend;\n\nfunction g(b: integer):integer;\nbegin\nif b=0 then\n g:= f(b)\nelse\n g:= f(b) + g(b-1);\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -675,7 +675,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 36 dan 37\n Perhatikan potongan program berikut: function bincin (a:integer):string...",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction bincin (a:integer):string;\nvar\nb:integer;\nstr:string;\nbegin\n if a=0 then\n bincin:=''\n else\n begin\n b:=a mod 4;\n if (b=0) then str:='0'\n else str:='1';\n bincin:=bincin (a div 2)+str;\n end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -705,7 +705,7 @@
           "d": "1101",
           "e": "1110"
         },
-        "kode": null,
+        "kode": "function bincin (a:integer):string;\nvar\nb:integer;\nstr:string;\nbegin\n if a=0 then\n bincin:=''\n else\n begin\n b:=a mod 4;\n if (b=0) then str:='0'\n else str:='1';\n bincin:=bincin (a div 2)+str;\n end;\nend;",
         "kunci": "d",
         "pembahasan": "Dengan modifikasi basis 3 (`a div 3` dan `a mod 3`), pemanggilan `bincin(73)` menghasilkan string `1101`.",
         "level": "mudah",
@@ -715,7 +715,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 38 dan 39\n Perhatikan potongan program berikut: fungsi sapi, ayam, dan rumput.",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction sapi(kucing: integer): integer;\nbegin\nif (kucing <= 2 ) then\n sapi:= 1\nelse\n sapi:= sapi(kucing div 2)+1;\nend;\n\nfunction ayam(rumput: integer): integer;\nbegin\nif (rumput < 1024) then\n ayam:= ayam(rumput*2) + sapi(rumput)\nelse\n ayam:= 0;\nend;\n\nfunction rumput(batu: integer): integer;\nvar a, c:integer;\nbegin\na:=2;\nc:=1;\nwhile (batu > 0) do\nbegin\n if ((batu mod 2) = 1) then\nc:=c*a;\n batu:= batu div 2;\n a:= a*a;\nend;\nrumput:=c;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -793,7 +793,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n Perhatikan potongan program berikut: procedure callfoo(var a : integer; b : integer);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nprocedure callfoo(var a : integer; b : integer);\nvar p,q : integer;\nbegin\nif (b <= 2) then\n a := 1\n else begin\n callfoo(p,b-1);\n callfoo(q,b-2);\n a := p + q;\n end;\nend;\nvar x,y : integer;\nbegin\n x := ...; y := ... ; {inisialisasi}\n callfoo(x,y);\n writeln(x);\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -833,7 +833,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 45\n Perhatikan potongan program berikut: prosedur ubah(s:string) enkripsi karakter ASCII.",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nvar input : string;\nprocedure ubah(s:string)\nvar i,j:integer;\nbegin\n for i:=1 to length(s)-1 do\n begin\n s[i] := chr((((ord(s[i])-65) + (ord(s[i+1]) - 65)) mod 26) + 65);\n end;\n writeln(s);\nend;\nbegin\n ubah(input);\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -873,7 +873,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 46 dan 47\n Perhatikan potongan program berikut: function pingpong(x : integer) : integer;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction pingpong(x : integer) : integer;\nvar ping, pong, tenis, meja : integer;\nbegin\n meja := 0;\n for ping := 1 to x do begin\n for pong := 1 to ping do begin\n for tenis := ping downto pong do begin\n meja := meja + tenis;\n end;\n end;\n end;\n pingpong := tenis + meja;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -903,7 +903,7 @@
           "d": "6",
           "e": "5"
         },
-        "kode": null,
+        "kode": "function pingpong(x : integer) : integer;\nvar ping, pong, tenis, meja : integer;\nbegin\n meja := 0;\n for ping := 1 to x do begin\n for pong := 1 to ping do begin\n for tenis := ping downto pong do begin\n meja := meja + tenis;\n end;\n end;\n end;\n pingpong := tenis + meja;\nend;",
         "kunci": "d",
         "pembahasan": "Evaluasi nilai `pingpong(x)` untuk berbagai $x$ menunjukkan bahwa pada $x = 6$, hasilnya melampaui 200.",
         "level": "mudah",
@@ -913,7 +913,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 49\n Perhatikan potongan program berikut: function yolo(x,y:integer):integer;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction yolo(x,y:integer):integer;\nbegin\n if (y = 0) then yolo:=x\n else yolo:= yolo(y,x mod y)*yolo(y mod x, x mod y)*y;\nend;\nbegin\n writeln(yolo(19,5));\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -943,7 +943,7 @@
           "d": "4",
           "e": "5"
         },
-        "kode": null,
+        "kode": "function yolo(x,y:integer):integer;\nbegin\n if (y = 0) then yolo:=x\n else yolo:= yolo(y,x mod y)*yolo(y mod x, x mod y)*y;\nend;\nbegin\n writeln(yolo(19,5));\nend.",
         "kunci": "d",
         "pembahasan": "Kunci jawaban terverifikasi: opsi D.\nDasar Verifikasi & Pembahasan:\nyolo(9,4) = 4, sehingga y = 4.\n\n[Analisis Tambahan]:\nMenguji parameter $y$ pada fungsi `yolo(9, y)` yang menghasilkan keluaran 4 memberikan nilai $y = 2$.",
         "level": "mudah",

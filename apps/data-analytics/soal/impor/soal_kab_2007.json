@@ -57,6 +57,25 @@
     "gambar": null
   },
   {
+    "id_sumber": "kab_soal4_2007",
+    "tingkat": "kabupaten",
+    "materi": "kab-kombinatorika",
+    "tingkat_kesulitan": "sedang",
+    "peruntukan": "pretest",
+    "deskripsi_soal": null,
+    "soal": "Berapa banyak kemungkinan solusi untuk x + y + z = 11, jika x, y, z adalah bilangan-bilangan bulat positif dan memenuhi hubungan x <= y <= z ?",
+    "pilihan": {
+      "a": "5",
+      "b": "10",
+      "c": "30",
+      "d": "45",
+      "e": "21"
+    },
+    "jawaban_benar": "b",
+    "pembahasan": "Hubungan yang dimaksud adalah x <= y <= z. Selain 5 kombinasi unik di mana ketiganya berbeda (1,2,8; 1,3,7; 1,4,6; 2,3,6; 2,4,5), kita sertakan kombinasi yang memiliki elemen sama:\n6. 1 + 1 + 9 = 11 (1 <= 1 <= 9)\n7. 1 + 5 + 5 = 11 (1 <= 5 <= 5)\n8. 2 + 2 + 7 = 11 (2 <= 2 <= 7)\n9. 3 + 3 + 5 = 11 (3 <= 3 <= 5)\n10. 3 + 4 + 4 = 11 (3 <= 4 <= 4)\nTotal kemungkinan solusi ada 10.",
+    "gambar": null
+  },
+  {
     "id_sumber": "kab_soal5_2007",
     "tingkat": "kabupaten",
     "materi": "kab-kombinatorika",
@@ -214,7 +233,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Nomor 13 sampai dengan 17\n Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
+    "deskripsi_soal": "Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
     "soal": "Jika hari ini biasa-biasa saja lalu 4 malam berturut turun hujan kecuali malam ke 3 tidak turun hujan, bagaimanakah suasana hatinya pada hari berikutnya setelah 4 malam tersebut?",
     "pilihan": {
       "a": "Pemurung",
@@ -233,7 +252,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Nomor 13 sampai dengan 17\n Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
+    "deskripsi_soal": "Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
     "soal": "Jika hari ini berseri-seri kemudian 7 malam berturut-turut hujan, maka bagaimanakah hari berikutnya?",
     "pilihan": {
       "a": "Pemurung",
@@ -252,7 +271,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Nomor 13 sampai dengan 17\n Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
+    "deskripsi_soal": "Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
     "soal": "Jika hari ini pemurung dan diketahui 4 malam terakhir hujan terus, maka bagaimanakah suasana harinya pada hari 4 hari yang lalu?",
     "pilihan": {
       "a": "Pasti pemurung",
@@ -271,7 +290,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Nomor 13 sampai dengan 17\n Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
+    "deskripsi_soal": "Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
     "soal": "Jika hari ini apatis dan diketahui 4 malam terakhir hujan terus, maka bagaimanakah suasana harinya pada hari 4 hari yang lalu?",
     "pilihan": {
       "a": "Pasti pemurung",
@@ -290,7 +309,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Nomor 13 sampai dengan 17\n Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
+    "deskripsi_soal": "Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
     "soal": "Jika hari ini pemarah dan diketahui 4 malam terakhir hujan terus, maka bagaimanakah suasana harinya pada hari 4 hari yang lalu?",
     "pilihan": {
       "a": "Pasti pemurung",
@@ -309,7 +328,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 sampai dengan 20\n Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
+    "deskripsi_soal": "Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
     "soal": "Berapa jam minimal untuk menyelesaikan seluruh aktifitas tersebut.",
     "pilihan": {
       "a": "2 jam",
@@ -328,7 +347,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 sampai dengan 20\n Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
+    "deskripsi_soal": "Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
     "soal": "Aktifitas manakah yang boleh dikerjakan bersama-sama?",
     "pilihan": {
       "a": "a dan b",
@@ -347,7 +366,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 sampai dengan 20\n Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
+    "deskripsi_soal": "Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
     "soal": "Aktifitas manakah yang dikerjakan pada urutan ke 3 (atau jam ke 3)?",
     "pilihan": {
       "a": "a",
@@ -366,7 +385,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 21 dan 23\n Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
+    "deskripsi_soal": "Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
     "soal": "Temukanlah jumlah permen tersisa di no 4 tersebut?",
     "pilihan": {
       "a": "2",
@@ -385,7 +404,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 21 dan 23\n Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
+    "deskripsi_soal": "Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
     "soal": "Berapa kalikan pengambilan yang dilakukan oleh Badu?",
     "pilihan": {
       "a": "20",
@@ -404,7 +423,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 21 dan 23\n Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
+    "deskripsi_soal": "Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
     "soal": "Jika si Badu setiap kali mengambil tepat 6 butir permen berapakah banyaknya butir permen akan sisanya?",
     "pilihan": {
       "a": "1",
@@ -423,7 +442,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 sampai dengan 28\n Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
+    "deskripsi_soal": "Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
     "soal": "Jika salah satu angka yang berwarna merah adalah angka 3, maka angka manakah yang juga berwarna merah?",
     "pilihan": {
       "a": "2",
@@ -442,7 +461,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 sampai dengan 28\n Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
+    "deskripsi_soal": "Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
     "soal": "Jika angka 5 berwarna hijau, kalimat dibawah ini benar kecuali:",
     "pilihan": {
       "a": "Angka berwarna jingga dan salah satu angka berwarna kuning adalah angka yang berurutan",
@@ -461,7 +480,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 sampai dengan 28\n Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
+    "deskripsi_soal": "Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
     "soal": "Jika angka 6 berwarna hijau, manakah kalimat yang benar?",
     "pilihan": {
       "a": "angka 2 berwarna biru",
@@ -480,7 +499,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 sampai dengan 28\n Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
+    "deskripsi_soal": "Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
     "soal": "Manakah yang dari informasi berikut yang dapat menentukan warna seluruh angka 2 ?",
     "pilihan": {
       "a": "angka 2 berwarna biru",
@@ -499,7 +518,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 sampai dengan 28\n Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
+    "deskripsi_soal": "Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
     "soal": "Manakah angka yang tidak mungkin berwarna jingga",
     "pilihan": {
       "a": "angka 3",
@@ -575,7 +594,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 36\n const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;\n\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
     "soal": "Perintah \"writeln(code(-12,-12) and code(20, 5));\" akan mencetak harga berapakah?",
     "pilihan": {
       "a": "0",
@@ -594,7 +613,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 36\n const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;\n\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
     "soal": "Perintah \"writeln(code(-12,-12) or code(20,5));\" akan mencetak harga berapakah?",
     "pilihan": {
       "a": "0",
@@ -613,7 +632,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 36\n const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;\n\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
     "soal": "Perintah \"writeln(code(12,-12) and code(20, 5));\" akan mencetak harga berapakah?",
     "pilihan": {
       "a": "0",
@@ -632,7 +651,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 36\n const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;\n\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
     "soal": "Perintah \"writeln(code(12,-12) or code(20,5));\" akan mencetak harga berapakah?",
     "pilihan": {
       "a": "0",
@@ -651,7 +670,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 36\n const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;\n\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
     "soal": "Perintah \"writeln(code(7,-12) or code(-20, 5));\" akan mencetak harga berapakah?",
     "pilihan": {
       "a": "0",
@@ -670,7 +689,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 38\n function apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;\n\nfunction apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
     "soal": "Jika fungsi tsb dipanggil dengan \"writeln(apaini(414, 662));\" berapakah yang dicetaknya?",
     "pilihan": {
       "a": "2",
@@ -689,7 +708,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 38\n function apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;\n\nfunction apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
     "soal": "Jika fungsi tsb dipanggil dengan \"writeln(apaini(12345, 54321));\" berapakah yang dicetaknya?",
     "pilihan": {
       "a": "2",
@@ -708,7 +727,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 41\n function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;\n\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
     "soal": "Jika fungsi tsb dipanggil dengan \"writeln(apaitu(1001, 1331));\" berapakah yang dicetaknya?",
     "pilihan": {
       "a": "2",
@@ -727,7 +746,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 41\n function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;\n\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
     "soal": "Jika fungsi tsb dipanggil dengan \"writeln(apaitu(1000, 5040));\" berapakah yang dicetaknya?",
     "pilihan": {
       "a": "10",
@@ -746,7 +765,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 41\n function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;\n\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
     "soal": "Jika variabel count bersifat global dan diinisialisasi 0, dan fungsi tsb dipanggil dengan perintah \"writeln(apaitu(1234, 277));\" berapakah harga count setelah pemanggilan itu?",
     "pilihan": {
       "a": "1",
@@ -765,7 +784,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n const\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;\n\nconst\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
     "soal": "Pemanggilan melalui perintah \"writeln(inijuga(1,4))\" akan mencetakkan harga berapakah?",
     "pilihan": {
       "a": "44",
@@ -784,7 +803,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n const\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;\n\nconst\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
     "soal": "Pemanggilan melalui perintah \"writeln(inijuga(0,9))\" akan mencetakkan harga berapakah?",
     "pilihan": {
       "a": "44",
@@ -803,7 +822,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 47\n if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);\n\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
     "soal": "Jika dijalankan dan ternyata mencetakkan harga 4 maka urutan harga-harga a, b, c, d yang mungkin adalah?",
     "pilihan": {
       "a": "TRUE, FALSE, TRUE, FALSE",
@@ -822,7 +841,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 47\n if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);\n\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
     "soal": "Jika a berharga TRUE, b berharga FALSE, c berharga FALSE, dan d berharga TRUE, maka apa yang akan dicetak?",
     "pilihan": {
       "a": "5",
@@ -841,7 +860,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 47\n if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);\n\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
     "soal": "Jika a berharga FALSE, b berharga FALSE, c berharga FALSE, dan d berharga FALSE, maka apa yang akan dicetak?",
     "pilihan": {
       "a": "5",
@@ -860,7 +879,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 47\n if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);\n\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
     "soal": "Yang tidak akan mencetakkan angka 5 adalah untuk urutan a, b, c, d:",
     "pilihan": {
       "a": "FALSE, TRUE, TRUE, FALSE",
@@ -879,7 +898,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 50\n Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
+    "deskripsi_soal": "Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
     "soal": "Ditempatkan dimanakah Dewi?",
     "pilihan": {
       "a": "15",
@@ -898,7 +917,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 50\n Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
+    "deskripsi_soal": "Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
     "soal": "Ditempatkan dimanakah Nunik?",
     "pilihan": {
       "a": "3",
@@ -917,7 +936,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 50\n Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
+    "deskripsi_soal": "Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
     "soal": "Jika ada murid baru bernama Susi (dalam buku absen berada pada urutan terakhir), berapa kali pemeriksaan bangku oleh Pak Hashim sebelum mendapatkan bangku kosong untuk Susi?",
     "pilihan": {
       "a": "0",

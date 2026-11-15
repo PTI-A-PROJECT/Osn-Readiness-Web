@@ -157,7 +157,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Deskripsi berikut digunakan untuk soal nomor 9 dan 10\nPada liburan kali ini, Pak Blangkon akan melakukan bersih-bersih pada 5 kandang ayamnya yakni kandang E, F, G, H, dan I. Karena kelima kandang tersebut saling berhubungan maka Pak Blangkon harus memperhatikan ketentuan berikut dalam menentukan urutan pembersihan kandang:\n- Kandang H dapat dibersihkan jika kandang F sudah dibersihkan\n- Kandang G harus dibersihkan sebelum membersihkan kandang E\n- Kandang I dibersihkan pada urutan keempat",
+    "deskripsi_soal": "Pada liburan kali ini, Pak Blangkon akan melakukan bersih-bersih pada 5 kandang ayamnya yakni kandang E, F, G, H, dan I. Karena kelima kandang tersebut saling berhubungan maka Pak Blangkon harus memperhatikan ketentuan berikut dalam menentukan urutan pembersihan kandang:\n- Kandang H dapat dibersihkan jika kandang F sudah dibersihkan\n- Kandang G harus dibersihkan sebelum membersihkan kandang E\n- Kandang I dibersihkan pada urutan keempat",
     "soal": "Urutan pembersihan kandang yang benar adalah",
     "pilihan": {
       "a": "I, G, E, F, H",
@@ -176,7 +176,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Deskripsi berikut digunakan untuk soal nomor 9 dan 10\nPada liburan kali ini, Pak Blangkon akan melakukan bersih-bersih pada 5 kandang ayamnya yakni kandang E, F, G, H, dan I. Karena kelima kandang tersebut saling berhubungan maka Pak Blangkon harus memperhatikan ketentuan berikut dalam menentukan urutan pembersihan kandang:\n- Kandang H dapat dibersihkan jika kandang F sudah dibersihkan\n- Kandang G harus dibersihkan sebelum membersihkan kandang E\n- Kandang I dibersihkan pada urutan keempat",
+    "deskripsi_soal": "Pada liburan kali ini, Pak Blangkon akan melakukan bersih-bersih pada 5 kandang ayamnya yakni kandang E, F, G, H, dan I. Karena kelima kandang tersebut saling berhubungan maka Pak Blangkon harus memperhatikan ketentuan berikut dalam menentukan urutan pembersihan kandang:\n- Kandang H dapat dibersihkan jika kandang F sudah dibersihkan\n- Kandang G harus dibersihkan sebelum membersihkan kandang E\n- Kandang I dibersihkan pada urutan keempat",
     "soal": "Jika Pak Blangkon membersihkan kandang G pada urutan kedua, maka pernyataan yang benar adalah",
     "pilihan": {
       "a": "Kandang E dibersihkan pada urutan keempat",
@@ -195,7 +195,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 12\nPak Dengklek menugaskan Kwak, Kwik, Kwuk, Kwek, dan Kwok untuk menjaga pekarangan berisi banyak bebek di belakang rumahnya. Setiap harinya biasanya terdiri 2-3 bebek yang harus menjaga dengan ketentuan sebagai berikut:\n- Setiap bebek mendapat jatah tiga hari bertugas dan libur setiap Senin.\n- Pada Selasa dan Jumat harus ada tiga bebek yang menjaga.\n- Kwak bertugas selama tiga hari berturut-turut, termasuk Jumat.\n- Kwek tidak bertugas di hari Minggu.\n- Hari tugas Kwik dan Kwuk berselang-seling.\n- Kwok selalu bertugas bersama Kwik.",
+    "deskripsi_soal": "Pak Dengklek menugaskan Kwak, Kwik, Kwuk, Kwek, dan Kwok untuk menjaga pekarangan berisi banyak bebek di belakang rumahnya. Setiap harinya biasanya terdiri 2-3 bebek yang harus menjaga dengan ketentuan sebagai berikut:\n- Setiap bebek mendapat jatah tiga hari bertugas dan libur setiap Senin.\n- Pada Selasa dan Jumat harus ada tiga bebek yang menjaga.\n- Kwak bertugas selama tiga hari berturut-turut, termasuk Jumat.\n- Kwek tidak bertugas di hari Minggu.\n- Hari tugas Kwik dan Kwuk berselang-seling.\n- Kwok selalu bertugas bersama Kwik.",
     "soal": "Jika Kwuk bertugas pada Rabu, manakah pernyataan yang tepat?",
     "pilihan": {
       "a": "Kwak bertugas dengan Kwok pada hari Selasa.",
@@ -214,7 +214,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 12\nPak Dengklek menugaskan Kwak, Kwik, Kwuk, Kwek, dan Kwok untuk menjaga pekarangan berisi banyak bebek di belakang rumahnya. Setiap harinya biasanya terdiri 2-3 bebek yang harus menjaga dengan ketentuan sebagai berikut:\n- Setiap bebek mendapat jatah tiga hari bertugas dan libur setiap Senin.\n- Pada Selasa dan Jumat harus ada tiga bebek yang menjaga.\n- Kwak bertugas selama tiga hari berturut-turut, termasuk Jumat.\n- Kwek tidak bertugas di hari Minggu.\n- Hari tugas Kwik dan Kwuk berselang-seling.\n- Kwok selalu bertugas bersama Kwik.",
+    "deskripsi_soal": "Pak Dengklek menugaskan Kwak, Kwik, Kwuk, Kwek, dan Kwok untuk menjaga pekarangan berisi banyak bebek di belakang rumahnya. Setiap harinya biasanya terdiri 2-3 bebek yang harus menjaga dengan ketentuan sebagai berikut:\n- Setiap bebek mendapat jatah tiga hari bertugas dan libur setiap Senin.\n- Pada Selasa dan Jumat harus ada tiga bebek yang menjaga.\n- Kwak bertugas selama tiga hari berturut-turut, termasuk Jumat.\n- Kwek tidak bertugas di hari Minggu.\n- Hari tugas Kwik dan Kwuk berselang-seling.\n- Kwok selalu bertugas bersama Kwik.",
     "soal": "Jika Kwuk bertugas pada Rabu, pada hari apa saja dipastikan yang jaga hanya ada dua bebek?",
     "pilihan": {
       "a": "Selasa, Rabu, dan Kamis",
@@ -670,8 +670,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sulit",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Perhatikan potongan berikut ini:\n\nfunction panas(x: integer): integer;\nvar dingin: integer;\nbegin\n  dingin := 0;\n  while (x >= 0) do begin\n    dingin := dingin + 1;\n    if (x mod 3 = 0) then\n      x := x - 5\n    else if (x mod 5 = 0) then\n      x := x - 3\n    else\n      x := x - 1;\n  end;\n  panas := dingin;\nend;",
-    "soal": "Apakah kembalian dari panas(789)?",
+    "deskripsi_soal": "function panas(x: integer): integer;\nvar dingin: integer;\nbegin\n  dingin := 0;\n  while (x >= 0) do begin\n    dingin := dingin + 1;\n    if (x mod 3 = 0) then\n      x := x - 5\n    else if (x mod 5 = 0) then\n      x := x - 3\n    else\n      x := x - 1;\n  end;\n  panas := dingin;\nend;",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction panas(x: integer): integer;\nvar dingin: integer;\nbegin\n  dingin := 0;\n  while (x >= 0) do begin\n    dingin := dingin + 1;\n    if (x mod 3 = 0) then\n      x := x - 5\n    else if (x mod 5 = 0) then\n      x := x - 3\n    else\n      x := x - 1;\n  end;\n  panas := dingin;\nend;\n\nApakah kembalian dari panas(789)?",
     "pilihan": {
       "a": "262",
       "b": "263",
@@ -689,8 +689,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sulit",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Perhatikan potongan program berikut ini:\n\nfunction ayam(a, b: integer): integer;\nbegin\n  if b = 0 then ayam := 0\n  else if b = 1 then ayam := a\n  else ayam := ayam(a, b div 2) * 2 + ayam(a, b mod 2);\nend;",
-    "soal": "Berapakah hasil dari pemanggilan fungsi ayam(19, 39)?",
+    "deskripsi_soal": "function ayam(a, b: integer): integer;\nbegin\n  if b = 0 then ayam := 0\n  else if b = 1 then ayam := a\n  else ayam := ayam(a, b div 2) * 2 + ayam(a, b mod 2);\nend;",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction ayam(a, b: integer): integer;\nbegin\n  if b = 0 then ayam := 0\n  else if b = 1 then ayam := a\n  else ayam := ayam(a, b div 2) * 2 + ayam(a, b mod 2);\nend;\n\nBerapakah hasil dari pemanggilan fungsi ayam(19, 39)?",
     "pilihan": {
       "a": "39",
       "b": "741",
@@ -708,8 +708,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Perhatikan potongan program berikut ini:\n\nfunction kucing(tikus, keju: integer): integer;\nbegin\n  if (tikus > keju) then\n    kucing := 0\n  else\n    kucing := kucing(tikus * 2 + 1, keju);\nend;",
-    "soal": "Berapakah hasil dari pemanggilan fungsi kucing(1, 2018)?",
+    "deskripsi_soal": "function kucing(tikus, keju: integer): integer;\nbegin\n  if (tikus > keju) then\n    kucing := 0\n  else\n    kucing := kucing(tikus * 2 + 1, keju);\nend;",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction kucing(tikus, keju: integer): integer;\nbegin\n  if (tikus > keju) then\n    kucing := 0\n  else\n    kucing := kucing(tikus * 2 + 1, keju);\nend;\n\nBerapakah hasil dari pemanggilan fungsi kucing(1, 2018)?",
     "pilihan": {
       "a": "1",
       "b": "1024",
@@ -722,32 +722,13 @@
     "gambar": null
   },
   {
-    "id_sumber": "kab_soal40_2020",
-    "tingkat": "kabupaten",
-    "materi": "kab-algoritma",
-    "tingkat_kesulitan": "sulit",
-    "peruntukan": "simulasi",
-    "deskripsi_soal": "Perhatikan potongan program berikut ini:\n\nfunction apaIni(kwak: integer): boolean;\nvar i, j: integer;\nbegin\n  if (kwak <= 1) then\n  begin\n    apaIni := false;\n    exit;\n  end;\n  for i := 2 to (kwak - 1) do\n  begin\n    j := 1;\n    while j * i <= kwak do\n    begin\n      if (i * j = kwak) then\n      begin\n        apaIni := false;\n        exit;\n      end;\n      j := j + 1;\n    end;\n  end;\n  apaIni := true;\nend;\n\nfunction apaItu(kwok: integer): integer;\nvar i, kwak, kwik: integer;\nbegin\n  kwak := kwok;\n  kwik := 0;\n  for i := 0 to kwak do\n  begin\n    if (apaIni(i) = true) then\n      kwik := kwik + 1;\n  end;\n  apaItu := kwik;\nend;",
-    "soal": "Berapa nilai dari apaItu(1000)?",
-    "pilihan": {
-      "a": "16",
-      "b": "24",
-      "c": "25",
-      "d": "157",
-      "e": "168"
-    },
-    "jawaban_benar": "e",
-    "pembahasan": "Fungsi `apaIni` mengecek apakah suatu bilangan adalah bilangan prima. Fungsi `apaItu(1000)` menghitung banyaknya bilangan prima dari 0 sampai 1000. Jumlah bilangan prima dari 1 sampai 1000 adalah tepat 168.",
-    "gambar": null
-  },
-  {
     "id_sumber": "kab_soal39_2020",
     "tingkat": "kabupaten",
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "simulasi",
-    "deskripsi_soal": "Perhatikan program di bawah ini:\n\nProgram santuy;\nvar n, a, b, ambyar, f, m: integer;\ndata: array[1..15] of integer = (13,17,25,28,30,41,45,56,58,64,73,76,87,91,98);\nbegin\n  n := 15; a := 1; b := n; ambyar := 0; f := 98;\n  while (a <= b) do\n  begin\n    m := (a + b) div 2;\n    ambyar := ambyar + data[m];\n    if (data[m] = f) then break\n    else if (data[m] < f) then\n    begin\n      a := m + 1;\n    end else\n    begin\n      b := m - 1;\n    end;\n  end;\n  writeln(ambyar);\nend.",
-    "soal": "Tentukan nilai variabel ambyar yang tercetak setelah program selesai dijalankan jika f = 98:",
+    "deskripsi_soal": "Program santuy;\nvar n, a, b, ambyar, f, m: integer;\ndata: array[1..15] of integer = (13,17,25,28,30,41,45,56,58,64,73,76,87,91,98);\nbegin\n  n := 15; a := 1; b := n; ambyar := 0; f := 98;\n  while (a <= b) do\n  begin\n    m := (a + b) div 2;\n    ambyar := ambyar + data[m];\n    if (data[m] = f) then break\n    else if (data[m] < f) then\n    begin\n      a := m + 1;\n    end else\n    begin\n      b := m - 1;\n    end;\n  end;\n  writeln(ambyar);\nend.",
+    "soal": "Perhatikan potongan program berikut ini:\nProgram santuy;\nvar n, a, b, ambyar, f, m: integer;\ndata: array[1..15] of integer = (13,17,25,28,30,41,45,56,58,64,73,76,87,91,98);\nbegin\n  n := 15; a := 1; b := n; ambyar := 0; f := 98;\n  while (a <= b) do\n  begin\n    m := (a + b) div 2;\n    ambyar := ambyar + data[m];\n    if (data[m] = f) then break\n    else if (data[m] < f) then\n    begin\n      a := m + 1;\n    end else\n    begin\n      b := m - 1;\n    end;\n  end;\n  writeln(ambyar);\nend.\n\nTentukan nilai variabel ambyar yang tercetak setelah program selesai dijalankan jika f = 98:",
     "pilihan": {
       "a": "322",
       "b": "321",
@@ -757,6 +738,25 @@
     },
     "jawaban_benar": "d",
     "pembahasan": "Simulasi Binary Search untuk f = 98:\n- Iterasi 1: a=1, b=15 -> m=8, data[8]=56. ambyar = 0 + 56 = 56. Karena 56 < 98, a = 9.\n- Iterasi 2: a=9, b=15 -> m=12, data[12]=76. ambyar = 56 + 76 = 132. Karena 76 < 98, a = 13.\n- Iterasi 3: a=13, b=15 -> m=14, data[14]=91. ambyar = 132 + 91 = 223. Karena 91 < 98, a = 15.\n- Iterasi 4: a=15, b=15 -> m=15, data[15]=98. ambyar = 223 + 98 = 321 (Atau jika data[14] dan data[15] dihitung pada batas index: 56 + 76 + 24 = 254).",
+    "gambar": null
+  },
+  {
+    "id_sumber": "kab_soal40_2020",
+    "tingkat": "kabupaten",
+    "materi": "kab-algoritma",
+    "tingkat_kesulitan": "sulit",
+    "peruntukan": "simulasi",
+    "deskripsi_soal": "function apaIni(kwak: integer): boolean;\nvar i, j: integer;\nbegin\n  if (kwak <= 1) then\n  begin\n    apaIni := false;\n    exit;\n  end;\n  for i := 2 to (kwak - 1) do\n  begin\n    j := 1;\n    while j * i <= kwak do\n    begin\n      if (i * j = kwak) then\n      begin\n        apaIni := false;\n        exit;\n      end;\n      j := j + 1;\n    end;\n  end;\n  apaIni := true;\nend;\n\nfunction apaItu(kwok: integer): integer;\nvar i, kwak, kwik: integer;\nbegin\n  kwak := kwok;\n  kwik := 0;\n  for i := 0 to kwak do\n  begin\n    if (apaIni(i) = true) then\n      kwik := kwik + 1;\n  end;\n  apaItu := kwik;\nend;",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction apaIni(kwak: integer): boolean;\nvar i, j: integer;\nbegin\n  if (kwak <= 1) then\n  begin\n    apaIni := false;\n    exit;\n  end;\n  for i := 2 to (kwak - 1) do\n  begin\n    j := 1;\n    while j * i <= kwak do\n    begin\n      if (i * j = kwak) then\n      begin\n        apaIni := false;\n        exit;\n      end;\n      j := j + 1;\n    end;\n  end;\n  apaIni := true;\nend;\n\nfunction apaItu(kwok: integer): integer;\nvar i, kwak, kwik: integer;\nbegin\n  kwak := kwok;\n  kwik := 0;\n  for i := 0 to kwak do\n  begin\n    if (apaIni(i) = true) then\n      kwik := kwik + 1;\n  end;\n  apaItu := kwik;\nend;\n\nBerapa nilai dari apaItu(1000)?",
+    "pilihan": {
+      "a": "16",
+      "b": "24",
+      "c": "25",
+      "d": "157",
+      "e": "168"
+    },
+    "jawaban_benar": "e",
+    "pembahasan": "Fungsi `apaIni` mengecek apakah suatu bilangan adalah bilangan prima. Fungsi `apaItu(1000)` menghitung banyaknya bilangan prima dari 0 sampai 1000. Jumlah bilangan prima dari 1 sampai 1000 adalah tepat 168.",
     "gambar": null
   }
 ]

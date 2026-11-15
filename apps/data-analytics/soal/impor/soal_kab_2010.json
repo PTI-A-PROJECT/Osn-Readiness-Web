@@ -195,7 +195,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 13\n Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk...",
+    "deskripsi_soal": "Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk. Nampaknya karena kertas petunjuknya sudah lapuk maka sebagian tulisan tidak terbaca, yang terbaca hanyalah:\n\"dari pohon beringin, melangkah ke timur ? langkah, lalu ke utara ? langkah, dan ke barat ? langkah, kemudian melangkah ke utara ? langkah, dan berakhir dengan 1 langkah ke timur\".\n\nKeterangan peta:\n- Tanda '?' seharusnya berisi angka satu digit dan bukan 0 (angka 1 sampai 9).\n- Tanda '#' menunjukkan laut/air (harta karun tidak mungkin berada di laut, meskipun rute langkah bisa melintasi jembatan/perahu).\n- Tanda '.' menunjukkan daratan (lokasi yang mungkin untuk peti harta karun).\n- Tanda '@' menunjukkan posisi pohon beringin.\n- Jarak antar tanda arah vertikal/horizontal yang bersebelahan adalah satu langkah.",
     "soal": "Ada berapa posisi harta karun yang mungkin?",
     "pilihan": {
       "a": "2",
@@ -214,7 +214,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 13\n Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk...",
+    "deskripsi_soal": "Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk. Nampaknya karena kertas petunjuknya sudah lapuk maka sebagian tulisan tidak terbaca, yang terbaca hanyalah:\n\"dari pohon beringin, melangkah ke timur ? langkah, lalu ke utara ? langkah, dan ke barat ? langkah, kemudian melangkah ke utara ? langkah, dan berakhir dengan 1 langkah ke timur\".\n\nKeterangan peta:\n- Tanda '?' seharusnya berisi angka satu digit dan bukan 0 (angka 1 sampai 9).\n- Tanda '#' menunjukkan laut/air (harta karun tidak mungkin berada di laut, meskipun rute langkah bisa melintasi jembatan/perahu).\n- Tanda '.' menunjukkan daratan (lokasi yang mungkin untuk peti harta karun).\n- Tanda '@' menunjukkan posisi pohon beringin.\n- Jarak antar tanda arah vertikal/horizontal yang bersebelahan adalah satu langkah.",
     "soal": "Jika ada informasi bahwa jumlah langkah adalah\nyang paling banyak dari semua kemungkinan\nmaka berapa langkah kah itu?",
     "pilihan": {
       "a": "15",
@@ -233,7 +233,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 13\n Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk...",
+    "deskripsi_soal": "Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk. Nampaknya karena kertas petunjuknya sudah lapuk maka sebagian tulisan tidak terbaca, yang terbaca hanyalah:\n\"dari pohon beringin, melangkah ke timur ? langkah, lalu ke utara ? langkah, dan ke barat ? langkah, kemudian melangkah ke utara ? langkah, dan berakhir dengan 1 langkah ke timur\".\n\nKeterangan peta:\n- Tanda '?' seharusnya berisi angka satu digit dan bukan 0 (angka 1 sampai 9).\n- Tanda '#' menunjukkan laut/air (harta karun tidak mungkin berada di laut, meskipun rute langkah bisa melintasi jembatan/perahu).\n- Tanda '.' menunjukkan daratan (lokasi yang mungkin untuk peti harta karun).\n- Tanda '@' menunjukkan posisi pohon beringin.\n- Jarak antar tanda arah vertikal/horizontal yang bersebelahan adalah satu langkah.",
     "soal": "Jika waktu itu malam hari dengan langit gelap\ngulita sehingga Sinbad kehilangan orientasi arah\nmata angin, ada berapa banyak kemungkinan\nlokasi lain yang bisa ditemukan jika timur\ntertukar menjadi utara /selatan / barat saja?",
     "pilihan": {
       "a": "0",
@@ -252,7 +252,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 14 dan 17\n Sebuah alat musik baru sedang dibuat. Musik hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah, dan tombol putih...",
+    "deskripsi_soal": "Sebuah alat musik baru sedang dibuat. Alat musik ini hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah dan tombol putih. Nada yang akan dibunyikan saat penekanan suatu tombol tergantung pada nada sebelumnya dan tombol apa yang ditekan.\nPada saat dihidupkan, alat musik dalam keadaan reset dan langsung membunyikan nada do. Aturan perpindahan nada ditunjukkan oleh tabel berikut:\n- Jika nada sebelumnya 'do': Tombol Merah -> 'mi' | Tombol Putih -> 're'\n- Jika nada sebelumnya 're': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'mi': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'fa': Tombol Merah -> 'sol' | Tombol Putih -> 'fa'\n- Jika nada sebelumnya 'sol': Tombol Merah -> 'mi' | Tombol Putih -> 'do'",
     "soal": "Jika ditekan 7 kali tombol merah setelah\ndihidupkan maka nada apakah yang terakhir\nterdengar?",
     "pilihan": {
       "a": "do",
@@ -271,7 +271,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 14 dan 17\n Sebuah alat musik baru sedang dibuat. Musik hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah, dan tombol putih...",
+    "deskripsi_soal": "Sebuah alat musik baru sedang dibuat. Alat musik ini hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah dan tombol putih. Nada yang akan dibunyikan saat penekanan suatu tombol tergantung pada nada sebelumnya dan tombol apa yang ditekan.\nPada saat dihidupkan, alat musik dalam keadaan reset dan langsung membunyikan nada do. Aturan perpindahan nada ditunjukkan oleh tabel berikut:\n- Jika nada sebelumnya 'do': Tombol Merah -> 'mi' | Tombol Putih -> 're'\n- Jika nada sebelumnya 're': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'mi': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'fa': Tombol Merah -> 'sol' | Tombol Putih -> 'fa'\n- Jika nada sebelumnya 'sol': Tombol Merah -> 'mi' | Tombol Putih -> 'do'",
     "soal": "Jika sejak dihidupkan diikuti beberapa kali\npenekanan tombol dan terdengan nada-nada\n\"do-re-mi-fa-sol-do\" maka berapa kali tombol\nmerah ditekan dalam rangkaian penekanan itu?",
     "pilihan": {
       "a": "3",
@@ -290,7 +290,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 14 dan 17\n Sebuah alat musik baru sedang dibuat. Musik hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah, dan tombol putih...",
+    "deskripsi_soal": "Sebuah alat musik baru sedang dibuat. Alat musik ini hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah dan tombol putih. Nada yang akan dibunyikan saat penekanan suatu tombol tergantung pada nada sebelumnya dan tombol apa yang ditekan.\nPada saat dihidupkan, alat musik dalam keadaan reset dan langsung membunyikan nada do. Aturan perpindahan nada ditunjukkan oleh tabel berikut:\n- Jika nada sebelumnya 'do': Tombol Merah -> 'mi' | Tombol Putih -> 're'\n- Jika nada sebelumnya 're': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'mi': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'fa': Tombol Merah -> 'sol' | Tombol Putih -> 'fa'\n- Jika nada sebelumnya 'sol': Tombol Merah -> 'mi' | Tombol Putih -> 'do'",
     "soal": "Setelah dihidupkan dilakukan penekanan 4 kali\ntombol maka berapa banyak kemungkinan nada\nterakhir yang mungkin jika diketahui nada\nsetelah penekanan ke 3 bukan mi dan bukan fa?",
     "pilihan": {
       "a": "1",
@@ -309,7 +309,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 14 dan 17\n Sebuah alat musik baru sedang dibuat. Musik hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah, dan tombol putih...",
+    "deskripsi_soal": "Sebuah alat musik baru sedang dibuat. Alat musik ini hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah dan tombol putih. Nada yang akan dibunyikan saat penekanan suatu tombol tergantung pada nada sebelumnya dan tombol apa yang ditekan.\nPada saat dihidupkan, alat musik dalam keadaan reset dan langsung membunyikan nada do. Aturan perpindahan nada ditunjukkan oleh tabel berikut:\n- Jika nada sebelumnya 'do': Tombol Merah -> 'mi' | Tombol Putih -> 're'\n- Jika nada sebelumnya 're': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'mi': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'fa': Tombol Merah -> 'sol' | Tombol Putih -> 'fa'\n- Jika nada sebelumnya 'sol': Tombol Merah -> 'mi' | Tombol Putih -> 'do'",
     "soal": "Sejak nada do terakhir terdengar sedikitnya\nberapa kali penekanan yang harus dilakukan agar\nnada do kembali muncul?",
     "pilihan": {
       "a": "1",
@@ -328,7 +328,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 dan 22\n Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
+    "deskripsi_soal": "Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
     "soal": "Urutan menaik mana yang memenuhi:",
     "pilihan": {
       "a": "R, W, P, T, V, S",
@@ -347,7 +347,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 dan 22\n Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
+    "deskripsi_soal": "Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
     "soal": "Kalau P = 13 mana yang benar?",
     "pilihan": {
       "a": "S = 15",
@@ -366,7 +366,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 dan 22\n Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
+    "deskripsi_soal": "Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
     "soal": "Jika W = 13, mana yang pasti benar?",
     "pilihan": {
       "a": "V = 10",
@@ -385,7 +385,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 dan 22\n Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
+    "deskripsi_soal": "Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
     "soal": "Jika P > T, semua ini bisa benar KECUALI:",
     "pilihan": {
       "a": "W = 10",
@@ -404,7 +404,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
+    "deskripsi_soal": "Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
     "soal": "Mana urutan cara mereka duduk dari kiri ke\nkanan yang memenuhi?",
     "pilihan": {
       "a": "M, N, L, J, O, K",
@@ -423,7 +423,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
+    "deskripsi_soal": "Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
     "soal": "Mana yang pasti benar :",
     "pilihan": {
       "a": "K pada posisi di sebelah kiri dari J.",
@@ -442,7 +442,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
+    "deskripsi_soal": "Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
     "soal": "Jika O pada bangku terkanan, siapa yang duduk\ndi bangku kelima ?",
     "pilihan": {
       "a": "N",
@@ -461,7 +461,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
+    "deskripsi_soal": "Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
     "soal": "Jika J turun dari bis pada dua halte setelah M\nturun, di manakah kemungkinan J turun dari\nbis?",
     "pilihan": {
       "a": "Halte 2 dan halte 4.",
@@ -480,7 +480,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
+    "deskripsi_soal": "Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
     "soal": "Jika K dan L sudah turun tapi tidak bersamaan\nsebelum bis meninggalkan halte 8, manakah\npernyataan dibawah ini yang paling salah ?",
     "pilihan": {
       "a": "J tidak turun dari dalam Bis",
@@ -499,7 +499,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
+    "deskripsi_soal": "Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
     "soal": "Jika P turun dari bis setelah M (dan tidak pada\nhalte yang sama), dan tidak ada yang turun di\nhalte 7, maka",
     "pilihan": {
       "a": "M turun setelah J.",
@@ -518,7 +518,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 30\n Pecatur senior L, M, N dan pemula O, P, Q bertanding satu sama lain masing-masing 1 kali. Aturan nilai: menang lawan pemula +1, menang lawan senior +2, kalah dari senior -2, kalah dari pemula -1.",
+    "deskripsi_soal": "Tiga orang pecatur senior L, M, N dan 3 orang pecatur pemula O, P, Q bertanding dalam sebuah turnamen. Semua pecatur akan bertanding satu sama lain masing-masing satu kali pertemuan.\nAturan penilaian:\n- Di awal turnamen nilai seluruh peserta adalah 0.\n- 1 angka diberikan jika berhasil mengalahkan pecatur pemula.\n- 2 angka diberikan jika berhasil mengalahkan pecatur senior.\n- Jika pecatur senior kalah dalam satu game, nilainya akan dikurangi 2.\n- Jika pecatur pemula kalah dalam satu game, nilainya akan dikurangi 1.\n- Jika sebuah pertandingan berakhir dengan seri, maka pertandingan tersebut akan diulang.",
     "soal": "Berapakah nilai maksimum yang dapat diraih\noleh seorang pecatur senior, jika di menderita 2\nkekalahan dalam turnamen tersebut ?",
     "pilihan": {
       "a": "4",
@@ -537,7 +537,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 30\n Pecatur senior L, M, N dan pemula O, P, Q bertanding satu sama lain masing-masing 1 kali. Aturan nilai: menang lawan pemula +1, menang lawan senior +2, kalah dari senior -2, kalah dari pemula -1.",
+    "deskripsi_soal": "Tiga orang pecatur senior L, M, N dan 3 orang pecatur pemula O, P, Q bertanding dalam sebuah turnamen. Semua pecatur akan bertanding satu sama lain masing-masing satu kali pertemuan.\nAturan penilaian:\n- Di awal turnamen nilai seluruh peserta adalah 0.\n- 1 angka diberikan jika berhasil mengalahkan pecatur pemula.\n- 2 angka diberikan jika berhasil mengalahkan pecatur senior.\n- Jika pecatur senior kalah dalam satu game, nilainya akan dikurangi 2.\n- Jika pecatur pemula kalah dalam satu game, nilainya akan dikurangi 1.\n- Jika sebuah pertandingan berakhir dengan seri, maka pertandingan tersebut akan diulang.",
     "soal": "Berapa permainan yang harus dimenangkan oleh\nseorang pecatur pemula untuk menempatkan\nposisinya dalam klasemen diatas seorang pecatur\nsenior yang pernah kalah sekali dari pecatur\nsenior lainnya ?",
     "pilihan": {
       "a": "2",
@@ -556,7 +556,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 30\n Pecatur senior L, M, N dan pemula O, P, Q bertanding satu sama lain masing-masing 1 kali. Aturan nilai: menang lawan pemula +1, menang lawan senior +2, kalah dari senior -2, kalah dari pemula -1.",
+    "deskripsi_soal": "Tiga orang pecatur senior L, M, N dan 3 orang pecatur pemula O, P, Q bertanding dalam sebuah turnamen. Semua pecatur akan bertanding satu sama lain masing-masing satu kali pertemuan.\nAturan penilaian:\n- Di awal turnamen nilai seluruh peserta adalah 0.\n- 1 angka diberikan jika berhasil mengalahkan pecatur pemula.\n- 2 angka diberikan jika berhasil mengalahkan pecatur senior.\n- Jika pecatur senior kalah dalam satu game, nilainya akan dikurangi 2.\n- Jika pecatur pemula kalah dalam satu game, nilainya akan dikurangi 1.\n- Jika sebuah pertandingan berakhir dengan seri, maka pertandingan tersebut akan diulang.",
     "soal": "Jika P memenangkan seluruh permainan kecuali\nsatu game melawan L dan tidak kalah dari\npemenang dalam turnamen tersebut, Siapakah\nyag mungkin akan menjadi juara dalam\nturnamen tersebut ?",
     "pilihan": {
       "a": "O atau Q",
@@ -632,8 +632,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "for i := 1 to 10 do\n swap(X[i],X[10-i+1]);\nfor i := 1 to 10 do write(X[i]);",
-    "soal": "Suatu array X berindeks dari 1 s.d. 10 dan setiap\nelemennya berisi huruf-huruf berurutan dari 'a'\nsampai 'j'. Suatu algoritma bekerja pada array\ntersebut sbb. (Prosedur swap(a,b) adalah\nmenukarkan harga a dan b) for i := 1 to 10 do\n swap(X[i],X[10-i+1]);\nfor i := 1 to 10 do write(X[i]); Hasil yang dicetak adalah:",
+    "deskripsi_soal": "Suatu array X berindeks dari 1 s.d. 10 dan setiap elemennya berisi huruf-huruf berurutan dari 'a' sampai 'j' (yaitu X[1] = 'a', X[2] = 'b', ..., X[10] = 'j'). Prosedur swap(a, b) adalah prosedur untuk menukarkan nilai a dan b.",
+    "soal": "Jika algoritma yang bekerja pada array X tersebut adalah sebagai berikut:\nfor i := 1 to 10 do\n  swap(X[i], X[10-i+1]);\nfor i := 1 to 10 do write(X[i]);\n\nHasil yang dicetak adalah:",
     "pilihan": {
       "a": "abcdefghij",
       "b": "jihgfedcba",
@@ -651,8 +651,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "for i := 2 to 9 do\n swap(X[i-1],X[i+1];\nfor i := 1 to 10 do write(X[i]);",
-    "soal": "Dari soal no 34, jika algoritma yang bekerja pada\narray tersebut adalah sbb for i := 2 to 9 do\n swap(X[i-1],X[i+1];\nfor i := 1 to 10 do write(X[i]); Hasil yang akan dicetak adalah",
+    "deskripsi_soal": "Suatu array X berindeks dari 1 s.d. 10 dan setiap elemennya berisi huruf-huruf berurutan dari 'a' sampai 'j' (yaitu X[1] = 'a', X[2] = 'b', ..., X[10] = 'j'). Prosedur swap(a, b) adalah prosedur untuk menukarkan nilai a dan b.",
+    "soal": "Jika algoritma yang bekerja pada array X tersebut adalah sebagai berikut:\nfor i := 2 to 9 do\n  swap(X[i-1], X[i+1]);\nfor i := 1 to 10 do write(X[i]);\n\nHasil yang akan dicetak adalah:",
     "pilihan": {
       "a": "ebacdhfgij",
       "b": "abcdefghij",
@@ -670,8 +670,8 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sulit",
     "peruntukan": "pretest",
-    "deskripsi_soal": "procedure lagi(a: integer; b: integer);\nvar t: integer;\nbegin\n t := (a+b) div 2;\n if (a <= b) then begin\n write(X[t]);\n lagi (a,t-1);\n lagi (t+1,b);\n end\nend;",
-    "soal": "Dari soal no 34, suatu algoritma bekerja pada\narray tersebut sbb procedure lagi(a: integer; b: integer);\nvar t: integer;\nbegin\n t := (a+b) div 2;\n if (a <= b) then begin\n write(X[t]);\n lagi (a,t-1);\n lagi (t+1,b);\n end\nend; pemanggilan lagi(1,10) akan mencetakkan keluaran:",
+    "deskripsi_soal": "Suatu array X berindeks dari 1 s.d. 10 dan setiap elemennya berisi huruf-huruf berurutan dari 'a' sampai 'j' (yaitu X[1] = 'a', X[2] = 'b', ..., X[10] = 'j'). Prosedur swap(a, b) adalah prosedur untuk menukarkan nilai a dan b.",
+    "soal": "Jika suatu algoritma yang bekerja pada array X tersebut adalah sebagai berikut:\nprocedure lagi(a: integer; b: integer);\nvar t: integer;\nbegin\n  t := (a+b) div 2;\n  if (a <= b) then begin\n    write(X[t]);\n    lagi(a, t-1);\n    lagi(t+1, b);\n  end;\nend;\n\nPemanggilan lagi(1, 10) akan mencetak keluaran:",
     "pilihan": {
       "a": "ebacdhfgij",
       "b": "abcdefghij",
@@ -689,7 +689,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 40\n Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke 30 dan mencetak hasilnya ke layar.\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
+    "deskripsi_soal": "Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan-bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke-30 dan mencetak hasilnya ke layar:\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
     "soal": "Berapakah harga untuk menginisialisasi variabel i\npada baris \"// inisialisasi i\" agar algoritma\nbekerja seperti yang diharapkan?",
     "pilihan": {
       "a": "0",
@@ -708,7 +708,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 40\n Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke 30 dan mencetak hasilnya ke layar.\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
+    "deskripsi_soal": "Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan-bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke-30 dan mencetak hasilnya ke layar:\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
     "soal": "Perintah manakah yang harus diberikan\nmenggantikan \"// increment i\" ?",
     "pilihan": {
       "a": "i := i + 1;",
@@ -727,7 +727,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 40\n Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke 30 dan mencetak hasilnya ke layar.\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
+    "deskripsi_soal": "Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan-bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke-30 dan mencetak hasilnya ke layar:\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
     "soal": "Berapakah variabel hargabatas seharusnya\ndiberi harga agar algoritma bekerja seperti yang\ndiharapkan?",
     "pilihan": {
       "a": "31",
@@ -746,7 +746,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 40\n Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke 30 dan mencetak hasilnya ke layar.\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
+    "deskripsi_soal": "Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan-bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke-30 dan mencetak hasilnya ke layar:\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);\n\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
     "soal": "Apa yang akan dicetak oleh algoritma jika setiap\nelemen array berisi harga yang sama dengan\nnomor indeksnya jika algoritma dituliskan\nsebagaimana yang seharusnya?",
     "pilihan": {
       "a": "240",
@@ -765,7 +765,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 41 dan 43\n Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');\n\nif (a and not (not c and not b)) or not ((c and b) or not a)\nthen writeln('ding')\nelse writeln('dong');",
+    "deskripsi_soal": "Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');\n\nif (a and not (not c and not b)) or not ((c and b) or not a)\nthen writeln('ding')\nelse writeln('dong');",
     "soal": "Pemeriksaan ekspresi lojik (dari struktur if-then)\ntersebut bisa digantikan dengan ekspresi berikut",
     "pilihan": {
       "a": "E. a and not b and not c",
@@ -782,7 +782,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 41 dan 43\n Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');\n\nif (a and not (not c and not b)) or not ((c and b) or not a)\nthen writeln('ding')\nelse writeln('dong');",
+    "deskripsi_soal": "Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');\n\nif (a and not (not c and not b)) or not ((c and b) or not a)\nthen writeln('ding')\nelse writeln('dong');",
     "soal": "Agar algoritma selalu menuliskan 'dong' maka\nkondisi yang tepat adalah",
     "pilihan": {
       "a": "Variabel a dan variabel c keduanya harus true\nsementara variabel b tidak penting",
@@ -801,7 +801,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 41 dan 43\n Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');",
+    "deskripsi_soal": "Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');\n\nif (a and not (not c and not b)) or not ((c and b) or not a)\nthen writeln('ding')\nelse writeln('dong');",
     "soal": "Jika variable a berharga false maka",
     "pilihan": {
       "a": "algoritma selalu menuliskan 'dong' jika salah\nsatu lainnya true",
@@ -820,7 +820,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 45\n Perhatikan algoritma berikut. Array X berisi n bilangan dengan index dari 1 s.d. n. Dan, fungsi Max(a,b) adalah mencari bilangan terbesar dari a atau b. ts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
+    "deskripsi_soal": "Perhatikan algoritma berikut. Array X berisi n bilangan dengan index dari 1 s.d. n. Dan, fungsi Max(a,b) adalah mencari bilangan terbesar dari a atau b.\nts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);\n\nts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
     "soal": "Jika array berisi harga-harga sebagai berikut:\n1, -1, 1, -1, 1, -1, 1\n(berarti juga n berharga 7) maka algoritma akan\nmencetak harga?",
     "pilihan": {
       "a": "-5",
@@ -839,7 +839,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 45\n Perhatikan algoritma berikut. Array X berisi n bilangan dengan index dari 1 s.d. n. Dan, fungsi Max(a,b) adalah mencari bilangan terbesar dari a atau b. ts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
+    "deskripsi_soal": "Perhatikan algoritma berikut. Array X berisi n bilangan dengan index dari 1 s.d. n. Dan, fungsi Max(a,b) adalah mencari bilangan terbesar dari a atau b.\nts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);\n\nts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
     "soal": "Jika jumlah data adalah N maka berapakalikah\nfungsi Max(a,b) akan dipanggil selama algoritma\nitu dijalankan?",
     "pilihan": {
       "a": "N",
@@ -858,7 +858,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 46 dan 47\n Perhatikan algoritma rekursif Star(t).",
+    "deskripsi_soal": "Perhatikan algoritma prosedur rekursif Star(t) berikut ini:\nprocedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;\n\nprocedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;",
     "soal": "Berapa kalikah simbol '*' dituliskan jika\nprocedure tersebut dipanggil dengan perintah\nStar(6)?",
     "pilihan": {
       "a": "8",
@@ -877,7 +877,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 46 dan 47\n Perhatikan algoritma rekursif Star(t).",
+    "deskripsi_soal": "Perhatikan algoritma prosedur rekursif Star(t) berikut ini:\nprocedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;\n\nprocedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;",
     "soal": "Untuk menghasilkan keluaran antara 100 - 200\nbuah simbol '*' pemanggilan adalah dengan\nperintah?",
     "pilihan": {
       "a": "Star (5)",
@@ -896,7 +896,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 49\n Perhatikan algoritma prosedur Bintang(t).",
+    "deskripsi_soal": "Perhatikan algoritma prosedur Bintang(t) berikut ini:\nprocedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;\n\nprocedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;",
     "soal": "Pemanggilan Bintang(1000) menghasilkan\npencetakan \"*\" sebanyak?",
     "pilihan": {
       "a": "2000 baris",
@@ -915,7 +915,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 49\n Perhatikan algoritma prosedur Bintang(t).",
+    "deskripsi_soal": "Perhatikan algoritma prosedur Bintang(t) berikut ini:\nprocedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;\n\nprocedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;",
     "soal": "Untuk menghasilkan pencetakan \"*\" sebanyak\n200 kali memerlukan pemanggilan dengan?",
     "pilihan": {
       "a": "Bintang(100)",

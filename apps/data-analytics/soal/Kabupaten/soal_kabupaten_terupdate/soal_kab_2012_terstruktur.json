@@ -58,7 +58,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 4 dan 6\n Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A,B,C,D dan profesi mereka E,F,G,H...",
+    "deskripsi_soal": "Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A, B, C, D dan profesi mereka E, F, G, H. Setiap orang memberikan 2 pernyataan. Namun, pernyataan yang dapat dipercaya hanyalah pernyataan yang membicarakan pekerjaan asli orang tersebut. Pernyataan lain bisa benar maupun salah.\nBerikut pernyataan keempat orang tersebut:\n- A: \"G memiliki penghasilan 3 kali lipat dari penghasilan F. E memiliki penghasilan lebih besar daripada saya.\"\n- B: \"F memiliki penghasilan lebih besar daripada G. C pekerjaannya adalah H atau E.\"\n- C: \"Saya memiliki penghasilan lebih besar daripada E. F memiliki penghasilan paling rendah.\"\n- D: \"G memiliki penghasilan 2 kali lipat dari penghasilan F. Saya memiliki penghasilan lebih besar daripada H.\"",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -209,7 +209,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta...",
+    "deskripsi_soal": "Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta (dengan posisi start 1 sampai 5). Jika tidak ada yang start bersamaan, tentukan berapa kemungkinan urutan finish yang dapat terjadi untuk masing-masing kondisi berikut:",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -398,7 +398,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Di negeri tempat Timo tinggal, terdapat 5 kota: A, B, C, D, E. Rute jam pasir: A->B, A->C, B->C, C->E, D->E, D->A, E->B.",
+    "deskripsi_soal": "Di negeri tempat Timo tinggal, terdapat 5 kota: kota A, kota B, kota C, kota D, dan kota E. Timo memiliki sebuah jam pasir ajaib. Ketika jam pasir itu dibalik, ia dapat berpindah tempat secara seketika, namun tidak semua rute perpindahan tempat dari setiap kota yang ada tersedia. Jam pasir ajaib tersebut juga memiliki batasan pemakaian. Rute perpindahan kota (satu arah) yang disediakan oleh jam pasir tersebut adalah: A ke B, A ke C, B ke C, C ke E, D ke E, D ke A, dan E ke B.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -456,7 +456,7 @@
     "soal_id": "kab_soal25_2012",
     "tipe": "tunggal",
     "materi_id": "kab-kombinatorika",
-    "soal": "Bilangan kuadrat A adalah bilangan dimana terdapat\nbilangan bulat B sehingga B*B =",
+    "soal": "Bilangan kuadrat A adalah bilangan dimana terdapat bilangan bulat B sehingga B*B = A. Ada berapa bilangan kuadrat antara 212 hingga 2012?",
     "pilihan": {
       "a": "20",
       "b": "25",
@@ -492,7 +492,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 27 dan 30\n Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J...",
+    "deskripsi_soal": "Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J. Diketahui beberapa fakta sebagai berikut:\n- J adalah anak tunggal. Dia juga keponakan dari C.\n- E adalah ibu dari I.\n- B adalah ibu mertua dari F.\n- A dan B adalah pasangan suami-istri yang memiliki dua anak, dan keduanya laki-laki.\n- G memiliki paman D.\n- H adalah seorang perempuan, sedangkan adik dan kakaknya semuanya laki-laki.\n- D adalah kakak ipar E.\n- Semua orang terhubung dalam pohon keluarga dan tidak ada orang yang hilang.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -564,7 +564,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 31 dan 34\n Perhatikan potongan program bitwise:",
+    "deskripsi_soal": "Perhatikan potongan program bitwise:\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -636,7 +636,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 35 dan 36\n Perhatikan potongan program berikut: x := x xor y; x := y xor x; x := x xor y;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nx := x xor y;\nx := y xor x;\nx := x xor y;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -676,7 +676,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 39\n Perhatikan prosedur swap(a,b,c) array x.",
+    "deskripsi_soal": "Perhatikan prosedur swap(a,b,c) array x.\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -732,7 +732,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 40 dan 41\n Perhatikan fungsi rekursif ox(m,n).",
+    "deskripsi_soal": "Perhatikan fungsi rekursif ox(m,n).\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -791,7 +791,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 43 dan 44\n Perhatikan potongan program konversi basis / bit.",
+    "deskripsi_soal": "Perhatikan potongan program konversi basis / bit.\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -831,7 +831,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 45 dan 46\n Perhatikan potongan program perulangan while.",
+    "deskripsi_soal": "Perhatikan potongan program perulangan while.\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -871,7 +871,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 48\n Perhatikan prosedur rekursif haha(d:string).",
+    "deskripsi_soal": "Perhatikan prosedur rekursif haha(d:string).\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -910,7 +910,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 49 dan 50\n Perhatikan potongan program pencetakan bintang bersarang.",
+    "deskripsi_soal": "Perhatikan potongan program pencetakan bintang bersarang.\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [

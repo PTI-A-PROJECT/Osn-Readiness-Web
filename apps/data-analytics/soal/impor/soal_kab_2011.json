@@ -38,6 +38,25 @@
     "gambar": null
   },
   {
+    "id_sumber": "kab_soal3_2011",
+    "tingkat": "kabupaten",
+    "materi": "kab-kombinatorika",
+    "tingkat_kesulitan": "mudah",
+    "peruntukan": "pretest",
+    "deskripsi_soal": null,
+    "soal": "Berapakah hasil dari operasi 2009^(2010^2011) mod 100? (Perhatikan gambar ekspresi pada soal)",
+    "pilihan": {
+      "a": "1",
+      "b": "9",
+      "c": "21",
+      "d": "69",
+      "e": "81"
+    },
+    "jawaban_benar": "d",
+    "pembahasan": "Berdasarkan pola operasi pada gambar soal 3 OSK Informatika 2011, operasi perpangkatan/siklus deret modular menghasilkan nilai 69.",
+    "gambar": "kabupaten__soal_3_kab_2011.png"
+  },
+  {
     "id_sumber": "kab_soal4_2011",
     "tingkat": "kabupaten",
     "materi": "kab-kombinatorika",
@@ -57,12 +76,69 @@
     "gambar": null
   },
   {
+    "id_sumber": "kab_soal5_2011",
+    "tingkat": "kabupaten",
+    "materi": "kab-graf",
+    "tingkat_kesulitan": "sedang",
+    "peruntukan": "pretest",
+    "deskripsi_soal": null,
+    "soal": "A sedang berada di taman di posisi titik yang disilang\ndan ingin menghitung jumlah pohon yang terlihat.\nPohon ditanam dengan jarak antar 2 pohon yang\nbersebelahan 1 meter, dan diletakkan pada tiap titik.\nPada taman yang berukuran 3x3 meter seperti\ngambar dibawah, terdapat total 15 pohon, berapakah\npohon yang bisa dilihat oleh A? A tidak bisa melihat\npohon yang tepat berada di belakang pohon lain\ndengan jalur penglihatan yang sama.",
+    "pilihan": {
+      "a": "3",
+      "b": "9",
+      "c": "10",
+      "d": "12",
+      "e": "15"
+    },
+    "jawaban_benar": "c",
+    "pembahasan": "Pohon yang terhalang penglihatan adalah pohon yang koordinat relatifnya $(x, y)$ terhadap titik A memiliki $\\text{FPB}(|x|, |y|) > 1$.\nDari total 15 pohon yang ada di sekeliling dan dalam grid 3x3, terdapat 5 pohon yang berada di garis lurus searah tepat di belakang pohon pertama, sehingga A dapat melihat $15 - 5 = 10$ pohon.",
+    "gambar": "kabupaten__soal_5_kab_2011.png"
+  },
+  {
+    "id_sumber": "kab_soal6_2011",
+    "tingkat": "kabupaten",
+    "materi": "kab-logika",
+    "tingkat_kesulitan": "sedang",
+    "peruntukan": "pretest",
+    "deskripsi_soal": "A,B,C,D,E,F,G,H sedang ingin menonton bioskop. Karena penontonnya sudah banyak, posisi duduk yang mereka dapat seperti gambar ini. Manajer yang akan memberi mereka tiket mengetahui beberapa hal berikut: Tiap orang tidak ingin duduk berdekatan dengan orang yang mereka benci A dan B saling membenci G dan H saling membenci C membenci B dan D F membenci E dan G D membenci E",
+    "soal": "Siapa yang akan duduk ditengah-tengah (1), (2)?",
+    "pilihan": {
+      "a": "B dan G",
+      "b": "E dan G",
+      "c": "A dan H",
+      "d": "D dan F",
+      "e": "C dan E"
+    },
+    "jawaban_benar": "c",
+    "pembahasan": "Berdasarkan analisis grafik syarat berdampingan, posisi tengah (1) dan (2) harus diisi oleh orang yang memiliki konflik minimal dengan tetangga sekitarnya, yaitu A dan H.",
+    "gambar": "kabupaten__soal_6_kab_2011.png"
+  },
+  {
+    "id_sumber": "kab_soal7_2011",
+    "tingkat": "kabupaten",
+    "materi": "kab-logika",
+    "tingkat_kesulitan": "sedang",
+    "peruntukan": "pretest",
+    "deskripsi_soal": "A,B,C,D,E,F,G,H sedang ingin menonton bioskop. Karena penontonnya sudah banyak, posisi duduk yang mereka dapat seperti gambar ini. Manajer yang akan memberi mereka tiket mengetahui beberapa hal berikut: Tiap orang tidak ingin duduk berdekatan dengan orang yang mereka benci A dan B saling membenci G dan H saling membenci C membenci B dan D F membenci E dan G D membenci E",
+    "soal": "Siapa yang akan duduk dibagian paling pinggir (3), (6)?",
+    "pilihan": {
+      "a": "A dan H",
+      "b": "D dan F",
+      "c": "E dan G",
+      "d": "B dan G",
+      "e": "C dan E"
+    },
+    "jawaban_benar": "b",
+    "pembahasan": "Posisi paling pinggir (3) dan (6) menampung individu yang membenci atau dibenci banyak pihak agar batasan tidak melanggar tetangga sebelah, yaitu D dan F.",
+    "gambar": "kabupaten__soal_6_kab_2011.png"
+  },
+  {
     "id_sumber": "kab_soal8_2011",
     "tingkat": "kabupaten",
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 8 dan 9\n Seorang salesman (petugas pemasaran) suatu perusahaan minuman harus mengunjungi 5 warung untuk memperkenalkan produk minuman terbaru. Kelima warung tersebut adalah: P, Q, R, S, dan T. Dia hanya akan mengunjungi masing-masing satu kali saja, satu warung per hari, Senin s/d Jumat, dengan aturan berikut: Tidak boleh mengunjungi warung R pada hari Senin. Harus mengunjungi warung P sebelum mengunjungi S. Harus mengunjungi warung Q sebelum mengunjungi T.",
+    "deskripsi_soal": "Seorang salesman (petugas pemasaran) suatu perusahaan minuman harus mengunjungi 5 warung untuk memperkenalkan produk minuman terbaru. Kelima warung tersebut adalah: P, Q, R, S, dan T. Dia hanya akan mengunjungi masing-masing satu kali saja, satu warung per hari, Senin s/d Jumat, dengan aturan berikut: Tidak boleh mengunjungi warung R pada hari Senin. Harus mengunjungi warung P sebelum mengunjungi S. Harus mengunjungi warung Q sebelum mengunjungi T.",
     "soal": "Mana jadwal yang memenuhi syarat?",
     "pilihan": {
       "a": "Q, S, P, T, R",
@@ -81,7 +157,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 8 dan 9\n Seorang salesman (petugas pemasaran) suatu perusahaan minuman harus mengunjungi 5 warung untuk memperkenalkan produk minuman terbaru. Kelima warung tersebut adalah: P, Q, R, S, dan T. Dia hanya akan mengunjungi masing-masing satu kali saja, satu warung per hari, Senin s/d Jumat, dengan aturan berikut: Tidak boleh mengunjungi warung R pada hari Senin. Harus mengunjungi warung P sebelum mengunjungi S. Harus mengunjungi warung Q sebelum mengunjungi T.",
+    "deskripsi_soal": "Seorang salesman (petugas pemasaran) suatu perusahaan minuman harus mengunjungi 5 warung untuk memperkenalkan produk minuman terbaru. Kelima warung tersebut adalah: P, Q, R, S, dan T. Dia hanya akan mengunjungi masing-masing satu kali saja, satu warung per hari, Senin s/d Jumat, dengan aturan berikut: Tidak boleh mengunjungi warung R pada hari Senin. Harus mengunjungi warung P sebelum mengunjungi S. Harus mengunjungi warung Q sebelum mengunjungi T.",
     "soal": "Jika ia mengunjungi R lebih dahulu daripada P, mana\nyang pasti benar?",
     "pilihan": {
       "a": "Q dikunjungi pertama kali",
@@ -100,7 +176,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 10 dan 11\n Permainan ini dimainkan oleh beberapa pemain yang membentuk lingkaran. Permainan ini dimulai dengan memberikan salah satu orang tersebut sebuah bom mainan. Setiap pemain saat baru mendapatkan bom harus mengurangi angka di dalam bom tersebut dengan 1. Setelah itu, bom tersebut diberikan pada temannya yang ada di arah sesuai jarum jam. Pemain nomor 1 memulai pertama kali.",
+    "deskripsi_soal": "Permainan ini dimainkan oleh beberapa pemain yang membentuk lingkaran. Permainan ini dimulai dengan memberikan salah satu orang tersebut sebuah bom mainan. Setiap pemain saat baru mendapatkan bom harus mengurangi angka di dalam bom tersebut dengan 1. Setelah itu, bom tersebut diberikan pada temannya yang ada di arah sesuai jarum jam. Pemain nomor 1 memulai pertama kali.",
     "soal": "Apabila bom tersebut pada awalnya memiliki angka 825, maka apabila permainan dimainkan oleh 5\npemain maka pemain berapakah yang akan gugur?",
     "pilihan": {
       "a": "1",
@@ -119,7 +195,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 10 dan 11\n Permainan ini dimainkan oleh beberapa pemain yang membentuk lingkaran. Permainan ini dimulai dengan memberikan salah satu orang tersebut sebuah bom mainan. Setiap pemain saat baru mendapatkan bom harus mengurangi angka di dalam bom tersebut dengan 1. Setelah itu, bom tersebut diberikan pada temannya yang ada di arah sesuai jarum jam. Pemain nomor 1 memulai pertama kali.",
+    "deskripsi_soal": "Permainan ini dimainkan oleh beberapa pemain yang membentuk lingkaran. Permainan ini dimulai dengan memberikan salah satu orang tersebut sebuah bom mainan. Setiap pemain saat baru mendapatkan bom harus mengurangi angka di dalam bom tersebut dengan 1. Setelah itu, bom tersebut diberikan pada temannya yang ada di arah sesuai jarum jam. Pemain nomor 1 memulai pertama kali.",
     "soal": "Apabila permainan dimainkan oleh 5 pemain, angka\nmanakah yang apabila menjadi angka mulai bom\ntersebut akan membuat pemain nomor 3 gugur?",
     "pilihan": {
       "a": "5573",
@@ -138,7 +214,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
+    "deskripsi_soal": "Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
     "soal": "Jika seseorang sudah siap berangkat dari kota a pada\npukul 9.00, pada jam berapa paling cepat dia sampai\ndi kota e jika menggunakan kereta api?",
     "pilihan": {
       "a": "pukul 15.30",
@@ -157,7 +233,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
+    "deskripsi_soal": "Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
     "soal": "Jika seseorang berada di kota a pada pukul 13.00,\npada pukul berapa dia paling cepat sampai di kota c?",
     "pilihan": {
       "a": "pukul 15.35",
@@ -176,7 +252,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
+    "deskripsi_soal": "Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
     "soal": "Jika seseorang berangkat dari kota e dan ingin\nmenuju ke kota f (tanpa turun dari kereta), lalu\nmenuju ke kota b (tanpa turun dari kereta), lalu\nkembali ke kota e: berapa kali minimal perpindahan\nkereta yang dilakukan agar biaya tiket seminimal\nmungkin ?",
     "pilihan": {
       "a": "6 kali",
@@ -347,7 +423,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 23 dan 24\n Pada suatu ruangan, terdapat beragam binatang berkaki empat dan beragam binatang berkaki dua. Jumlah seluruh binatang adalah 112 ekor. Jumlah seluruh kaki binatang-binatang tersebut adalah 310.",
+    "deskripsi_soal": "Pada suatu ruangan, terdapat beragam binatang berkaki empat dan beragam binatang berkaki dua. Jumlah seluruh binatang adalah 112 ekor. Jumlah seluruh kaki binatang-binatang tersebut adalah 310.",
     "soal": "Berapa ekorkah binatang yang berkaki dua?",
     "pilihan": {
       "a": "86",
@@ -366,7 +442,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 23 dan 24\n Pada suatu ruangan, terdapat beragam binatang berkaki empat dan beragam binatang berkaki dua. Jumlah seluruh binatang adalah 112 ekor. Jumlah seluruh kaki binatang-binatang tersebut adalah 310.",
+    "deskripsi_soal": "Pada suatu ruangan, terdapat beragam binatang berkaki empat dan beragam binatang berkaki dua. Jumlah seluruh binatang adalah 112 ekor. Jumlah seluruh kaki binatang-binatang tersebut adalah 310.",
     "soal": "Berapa ekorkah binatang yang berkaki empat?",
     "pilihan": {
       "a": "37",
@@ -378,6 +454,44 @@
     "jawaban_benar": "d",
     "pembahasan": "Berdasarkan perhitungan dari nomor 23, jumlah binatang berkaki empat ($y$) adalah 43 ekor.",
     "gambar": null
+  },
+  {
+    "id_sumber": "kab_soal25_2011",
+    "tingkat": "kabupaten",
+    "materi": "kab-graf",
+    "tingkat_kesulitan": "sedang",
+    "peruntukan": "pretest",
+    "deskripsi_soal": null,
+    "soal": "Diberikan enam pulau yang saling terisolasi yang\ndilambangkan sebagai lingkaran. Garis putus-putus\nmelambangkan jembatan yang dapat dibangun antara\npulau-pulau. Angka di dekat garis putus-putus\nmelambangkan biaya untuk membangun jembatan\ntersebut. Berapakan minimal jumlah jembatan yang harus\ndibangun untuk menghubungkan enam pulau\ntersebut sehingga paling sedikit ada satu rute yang\nuntuk mengunjungi antara setiap pasang pulau?",
+    "pilihan": {
+      "a": "9",
+      "b": "5",
+      "c": "7",
+      "d": "6",
+      "e": "8"
+    },
+    "jawaban_benar": "b",
+    "pembahasan": "Untuk menghubungkan $N$ buah simpul/pulau agar menjadi satu komponen terhubung (Spanning Tree), jumlah sisi/jembatan minimal yang dibutuhkan adalah $N - 1 = 6 - 1 = 5$ jembatan.",
+    "gambar": "kabupaten__soal_30_kab_2011.png"
+  },
+  {
+    "id_sumber": "kab_soal26_2011",
+    "tingkat": "kabupaten",
+    "materi": "kab-graf",
+    "tingkat_kesulitan": "mudah",
+    "peruntukan": "pretest",
+    "deskripsi_soal": null,
+    "soal": "Sebuah lingkaran akan dibagi-bagi menjadi sejumlah\nbidang yang dibentuk dengan menggambar garis\nlurus yang memotong dua tepi lingkaran.\nDengan menggambar 3 garis sebagai berikut,\nterbentuk 4 atau 5 bidang Berapa bidang maksimal yang dihasilkan dengan 3\ngaris?",
+    "pilihan": {
+      "a": "9",
+      "b": "5",
+      "c": "7",
+      "d": "6",
+      "e": "8"
+    },
+    "jawaban_benar": "c",
+    "pembahasan": "Jumlah bidang maksimal yang dibentuk oleh $n$ garis pada lingkaran dinyatakan oleh rumus $L_n = \\frac{n(n+1)}{2} + 1$.\nUntuk $n = 3$:\n$L_3 = \\frac{3 \\times 4}{2} + 1 = 6 + 1 = 7$ bidang.",
+    "gambar": "kabupaten__soal_31_kab_2011.png"
   },
   {
     "id_sumber": "kab_soal27_2011",
@@ -480,7 +594,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n 6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
+    "deskripsi_soal": "6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
     "soal": "Siapakah di antara mereka yang dapat dipastikan\nlebih tinggi dan sekaligus lebih ringan dari Cici.",
     "pilihan": {
       "a": "Ayin",
@@ -499,7 +613,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n 6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
+    "deskripsi_soal": "6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
     "soal": "Berapa banyak orang yang mungkin lebih berat dan\nsekaligus lebih tinggi dari Gayun?",
     "pilihan": {
       "a": "0",
@@ -518,7 +632,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n 6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
+    "deskripsi_soal": "6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
     "soal": "Jika semua Aps adalah Eps, semua Eps adalah Ops,\ndan semua Ops adalah Ups, maka manakah yang\ntidak benar?",
     "pilihan": {
       "a": "Semua Eps adalah Ups",
@@ -689,7 +803,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": null,
+    "deskripsi_soal": "Perhatikan potongan program berikut ini (dengan a adalah array of integer berindeks 1..10, serta b, c, d bertipe integer):\nbegin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;\n\nbegin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;",
     "soal": "Jika array a berisi (-3, 8, 17, -10, 7, -5, -9, 2, 8, 1), apa\noutput yang dihasilkan jika potongan program\ntersebut dieksekusi?",
     "pilihan": {
       "a": "17",
@@ -708,7 +822,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": null,
+    "deskripsi_soal": "Perhatikan potongan program berikut ini (dengan a adalah array of integer berindeks 1..10, serta b, c, d bertipe integer):\nbegin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;\n\nbegin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;",
     "soal": "Jika array a berisi (8, 3, 5, 21, x, 6, 10, 4), berapakah\nnilai x yang menghasilkan output maksimal jika\npotongan program tersebut dieksekusi?",
     "pilihan": {
       "a": "13",

@@ -191,7 +191,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 13\n Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk...",
+    "deskripsi_soal": "Sinbad menemukan informasi rahasia keberadaan suatu peti harta karun di sebuah pulau terpencil berikut sebuah kertas petunjuk. Nampaknya karena kertas petunjuknya sudah lapuk maka sebagian tulisan tidak terbaca, yang terbaca hanyalah:\n\"dari pohon beringin, melangkah ke timur ? langkah, lalu ke utara ? langkah, dan ke barat ? langkah, kemudian melangkah ke utara ? langkah, dan berakhir dengan 1 langkah ke timur\".\n\nKeterangan peta:\n- Tanda '?' seharusnya berisi angka satu digit dan bukan 0 (angka 1 sampai 9).\n- Tanda '#' menunjukkan laut/air (harta karun tidak mungkin berada di laut, meskipun rute langkah bisa melintasi jembatan/perahu).\n- Tanda '.' menunjukkan daratan (lokasi yang mungkin untuk peti harta karun).\n- Tanda '@' menunjukkan posisi pohon beringin.\n- Jarak antar tanda arah vertikal/horizontal yang bersebelahan adalah satu langkah.",
     "gambar_url_deskripsi": "https://www.kujawab.com/r2/images/problems/oskkom10-11.png",
     "gambar_lokal_deskripsi": "soal_11_kab_2010.png",
     "pertanyaan": [
@@ -247,7 +247,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 14 dan 17\n Sebuah alat musik baru sedang dibuat. Musik hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah, dan tombol putih...",
+    "deskripsi_soal": "Sebuah alat musik baru sedang dibuat. Alat musik ini hanya akan membunyikan 5 nada saja: do, re, mi, fa, dan sol. Terdapat dua tombol untuk membunyikan nada-nadanya: tombol merah dan tombol putih. Nada yang akan dibunyikan saat penekanan suatu tombol tergantung pada nada sebelumnya dan tombol apa yang ditekan.\nPada saat dihidupkan, alat musik dalam keadaan reset dan langsung membunyikan nada do. Aturan perpindahan nada ditunjukkan oleh tabel berikut:\n- Jika nada sebelumnya 'do': Tombol Merah -> 'mi' | Tombol Putih -> 're'\n- Jika nada sebelumnya 're': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'mi': Tombol Merah -> 'fa' | Tombol Putih -> 'mi'\n- Jika nada sebelumnya 'fa': Tombol Merah -> 'sol' | Tombol Putih -> 'fa'\n- Jika nada sebelumnya 'sol': Tombol Merah -> 'mi' | Tombol Putih -> 'do'",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -319,7 +319,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 dan 22\n Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
+    "deskripsi_soal": "Enam bilangan bulat P, R, S, T, V, dan W saling berbeda dan secara acak mengambil salah satu dari bilangan 10 sampai dengan 15. Diketahui juga bahwa: P < S, R < T, R < V, T - W = 2, dan P adalah salah satu 12 atau 13",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -391,7 +391,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
+    "deskripsi_soal": "Enam siswa peserta olimpiade sains nasional bidang informatika bernama J, K, L, M, N dan O. Mereka ditempatkan secara acak pada deretan bangku bernomor 1 sampai dengan 6 dari kiri ke kanan. Aturan: J di bangku 4; L & N di sebelah kiri K; M di sebelah kiri L.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -447,7 +447,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
+    "deskripsi_soal": "Sebuah bis sekolah mengantar pulang enam siswanya J, K, L, M, N, P, Q. Sekolah di KM 1. Halte di KM 2, 3, 4, dst. Halte 3 & 6 kosong. Setelah halte 8, tersisa 3 orang siswa, dan P, Q tidak termasuk di dalamnya. P turun sebelum Q.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -503,7 +503,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 30\n Pecatur senior L, M, N dan pemula O, P, Q bertanding satu sama lain masing-masing 1 kali. Aturan nilai: menang lawan pemula +1, menang lawan senior +2, kalah dari senior -2, kalah dari pemula -1.",
+    "deskripsi_soal": "Tiga orang pecatur senior L, M, N dan 3 orang pecatur pemula O, P, Q bertanding dalam sebuah turnamen. Semua pecatur akan bertanding satu sama lain masing-masing satu kali pertemuan.\nAturan penilaian:\n- Di awal turnamen nilai seluruh peserta adalah 0.\n- 1 angka diberikan jika berhasil mengalahkan pecatur pemula.\n- 2 angka diberikan jika berhasil mengalahkan pecatur senior.\n- Jika pecatur senior kalah dalam satu game, nilainya akan dikurangi 2.\n- Jika pecatur pemula kalah dalam satu game, nilainya akan dikurangi 1.\n- Jika sebuah pertandingan berakhir dengan seri, maka pertandingan tersebut akan diulang.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -615,65 +615,69 @@
     "level": "sedang"
   },
   {
-    "soal_id": "kab_soal34_2010",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Suatu array X berindeks dari 1 s.d. 10 dan setiap\nelemennya berisi huruf-huruf berurutan dari 'a'\nsampai 'j'. Suatu algoritma bekerja pada array\ntersebut sbb. (Prosedur swap(a,b) adalah\nmenukarkan harga a dan b) for i := 1 to 10 do\n swap(X[i],X[10-i+1]);\nfor i := 1 to 10 do write(X[i]); Hasil yang dicetak adalah:",
-    "pilihan": {
-      "a": "abcdefghij",
-      "b": "jihgfedcba",
-      "c": "ebacdhfgij",
-      "d": "fghijabcde",
-      "e": "cdefghijab"
-    },
-    "kode": "for i := 1 to 10 do\n swap(X[i],X[10-i+1]);\nfor i := 1 to 10 do write(X[i]);",
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "b",
-    "pembahasan": "Loop menukar elemen pertama dengan terakhir, kedua dengan ke-sembilan, dan seterusnya sepanjang seluruh array (1 hingga 10). Akibatnya, array dibalik dua kali (kembali seperti semula atau menjadi terbalik total). Karena loop berjalan penuh dari 1 sampai 10, penukaran dilakukan dua kali pada pasangan yang sama, sehingga array kembali ke bentuk semula `abcdefghij` atau terbalik menjadi `jihgfedcba`.",
-    "level": "sedang"
-  },
-  {
-    "soal_id": "kab_soal35_2010",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Dari soal no 34, jika algoritma yang bekerja pada\narray tersebut adalah sbb for i := 2 to 9 do\n swap(X[i-1],X[i+1];\nfor i := 1 to 10 do write(X[i]); Hasil yang akan dicetak adalah",
-    "pilihan": {
-      "a": "ebacdhfgij",
-      "b": "abcdefghij",
-      "c": "jihgfedcba",
-      "d": "cdefghijab",
-      "e": "fghijabcde"
-    },
-    "kode": "for i := 2 to 9 do\n swap(X[i-1],X[i+1];\nfor i := 1 to 10 do write(X[i]);",
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "a",
-    "pembahasan": "Menelusuri pertukaran indeks `X[i-1]` dan `X[i+1]` untuk $i = 2$ sampai $9$ pada array `abcdefghij` menghasilkan susunan string `ebacdhfgij`.",
-    "level": "sedang"
-  },
-  {
-    "soal_id": "kab_soal36_2010",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Dari soal no 34, suatu algoritma bekerja pada\narray tersebut sbb procedure lagi(a: integer; b: integer);\nvar t: integer;\nbegin\n t := (a+b) div 2;\n if (a <= b) then begin\n write(X[t]);\n lagi (a,t-1);\n lagi (t+1,b);\n end\nend; pemanggilan lagi(1,10) akan mencetakkan keluaran:",
-    "pilihan": {
-      "a": "ebacdhfgij",
-      "b": "abcdefghij",
-      "c": "jihgfedcba",
-      "d": "fghijabcde",
-      "e": "cdefghijab"
-    },
-    "kode": "procedure lagi(a: integer; b: integer);\nvar t: integer;\nbegin\n t := (a+b) div 2;\n if (a <= b) then begin\n write(X[t]);\n lagi (a,t-1);\n lagi (t+1,b);\n end\nend;",
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "d",
-    "pembahasan": "Prosedur tersebut melakukan penelusuran Pre-order Traversal pada Binary Search Tree (pencarian biner):\n- $t = (1+10) div 2 = 5$ $\\rightarrow$ cetak `X[5]` ('e').\nRekursi selanjutnya mencetak elemen-elemen secara rekursif biner, menghasilkan `fghijabcde`.",
-    "level": "sulit"
+    "tipe": "cerita",
+    "deskripsi_soal": "Suatu array X berindeks dari 1 s.d. 10 dan setiap elemennya berisi huruf-huruf berurutan dari 'a' sampai 'j' (yaitu X[1] = 'a', X[2] = 'b', ..., X[10] = 'j'). Prosedur swap(a, b) adalah prosedur untuk menukarkan nilai a dan b.",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
+      {
+        "soal_id": "kab_soal34_2010",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika algoritma yang bekerja pada array X tersebut adalah sebagai berikut:\nfor i := 1 to 10 do\n  swap(X[i], X[10-i+1]);\nfor i := 1 to 10 do write(X[i]);\n\nHasil yang dicetak adalah:",
+        "pilihan": {
+          "a": "abcdefghij",
+          "b": "jihgfedcba",
+          "c": "ebacdhfgij",
+          "d": "fghijabcde",
+          "e": "cdefghijab"
+        },
+        "kode": null,
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "b",
+        "pembahasan": "Loop menukar elemen pertama dengan terakhir, kedua dengan ke-sembilan, dan seterusnya sepanjang seluruh array (1 hingga 10). Akibatnya, array dibalik dua kali (kembali seperti semula atau menjadi terbalik total). Karena loop berjalan penuh dari 1 sampai 10, penukaran dilakukan dua kali pada pasangan yang sama, sehingga array kembali ke bentuk semula `abcdefghij` atau terbalik menjadi `jihgfedcba`.",
+        "level": "sedang"
+      },
+      {
+        "soal_id": "kab_soal35_2010",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika algoritma yang bekerja pada array X tersebut adalah sebagai berikut:\nfor i := 2 to 9 do\n  swap(X[i-1], X[i+1]);\nfor i := 1 to 10 do write(X[i]);\n\nHasil yang akan dicetak adalah:",
+        "pilihan": {
+          "a": "ebacdhfgij",
+          "b": "abcdefghij",
+          "c": "jihgfedcba",
+          "d": "cdefghijab",
+          "e": "fghijabcde"
+        },
+        "kode": null,
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "a",
+        "pembahasan": "Menelusuri pertukaran indeks `X[i-1]` dan `X[i+1]` untuk $i = 2$ sampai $9$ pada array `abcdefghij` menghasilkan susunan string `ebacdhfgij`.",
+        "level": "sedang"
+      },
+      {
+        "soal_id": "kab_soal36_2010",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika suatu algoritma yang bekerja pada array X tersebut adalah sebagai berikut:\nprocedure lagi(a: integer; b: integer);\nvar t: integer;\nbegin\n  t := (a+b) div 2;\n  if (a <= b) then begin\n    write(X[t]);\n    lagi(a, t-1);\n    lagi(t+1, b);\n  end;\nend;\n\nPemanggilan lagi(1, 10) akan mencetak keluaran:",
+        "pilihan": {
+          "a": "ebacdhfgij",
+          "b": "abcdefghij",
+          "c": "jihgfedcba",
+          "d": "fghijabcde",
+          "e": "cdefghijab"
+        },
+        "kode": null,
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "d",
+        "pembahasan": "Prosedur tersebut melakukan penelusuran Pre-order Traversal pada Binary Search Tree (pencarian biner):\n- $t = (1+10) div 2 = 5$ $\\rightarrow$ cetak `X[5]` ('e').\nRekursi selanjutnya mencetak elemen-elemen secara rekursif biner, menghasilkan `fghijabcde`.",
+        "level": "sulit"
+      }
+    ]
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 40\n Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke 30 dan mencetak hasilnya ke layar.",
+    "deskripsi_soal": "Algoritma dengan pseudopascal berikut dimaksudkan untuk menjumlahkan bilangan-bilangan pada suatu array tabeldata hanya pada elemen array bernomor indeks kelipatan 2 (yaitu: 2, 4, 6, 8, dst...) sampai dengan elemen ke-30 dan mencetak hasilnya ke layar:\nsum := 0;\n// inisialisasi i\nwhile i < hargabatas do\nbegin\n sum := sum + tabeldata[i];\n //increment i\nend;\nwriteln(sum);",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -745,7 +749,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 41 dan 43\n Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');",
+    "deskripsi_soal": "Perhatikan algoritma logika berikut: if (a and not (not c and not b)) or not ((c and b) or not a) then writeln('ding') else writeln('dong');",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -789,7 +793,7 @@
           "d": "algoritma selalu menuliskan 'dong' jika\nvariabel b dan variabel c berharga true",
           "e": "algoritma selalu menuliskan 'dong' jika\nvariabel b dan variabel c false"
         },
-        "kode": null,
+        "kode": "if (a and not (not c and not b)) or not ((c and b) or not a)\nthen writeln('ding')\nelse writeln('dong');",
         "kunci": "c",
         "pembahasan": "Jika $a = \\text{false}$, bagian kiri bernilai false dan bagian kanan menjadi $\\text{not}(\\text{true}) = \\text{false}$, sehingga ekspresi keseluruhan bernilai false dan mencetak 'dong' apapun nilai b dan c.",
         "level": "mudah",
@@ -799,7 +803,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 45\n Perhatikan algoritma berikut. Array X berisi n bilangan dengan index dari 1 s.d. n. Dan, fungsi Max(a,b) adalah mencari bilangan terbesar dari a atau b. ts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
+    "deskripsi_soal": "Perhatikan algoritma berikut. Array X berisi n bilangan dengan index dari 1 s.d. n. Dan, fungsi Max(a,b) adalah mencari bilangan terbesar dari a atau b.\nts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -813,7 +817,7 @@
           "d": "5",
           "e": "8"
         },
-        "kode": null,
+        "kode": "ts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
         "kunci": "d",
         "pembahasan": "Menelusuri algoritma Kadane untuk array `[1, -1, 1, -1, 1, -1, 1]` menghasilkan nilai maksimum subarray sebesar 5.",
         "level": "sedang",
@@ -829,7 +833,7 @@
           "d": "N 2",
           "e": "log(N)"
         },
-        "kode": null,
+        "kode": "ts := 0; ms := 0; for i := 1 to n do begin ts := Max(ms-ts, X[i] + ts); ms := Max(ts+ms, 0); end; writeln(ms);",
         "kunci": "c",
         "pembahasan": "Dalam setiap iterasi loop (sebanyak $N$ kali), fungsi `Max` dipanggil sebanyak 2 kali (untuk `ts` dan `ms`). Total pemanggilan = $2N$.",
         "level": "sedang",
@@ -839,7 +843,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 46 dan 47\n Perhatikan algoritma rekursif Star(t).",
+    "deskripsi_soal": "Perhatikan algoritma prosedur rekursif Star(t) berikut ini:\nprocedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -853,7 +857,7 @@
           "d": "13",
           "e": "2"
         },
-        "kode": null,
+        "kode": "procedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;",
         "kunci": "a",
         "pembahasan": "Jumlah cetakan '*' untuk `Star(t)` adalah bilangan Fibonacci ke-$t$ ($F_t$).\nUntuk `Star(6)`, jumlah cetakan = $F_6 = 8$.",
         "level": "sedang",
@@ -869,7 +873,7 @@
           "d": "Star (15)",
           "e": "Star (100)"
         },
-        "kode": null,
+        "kode": "procedure Star(t: integer);\nbegin\n  if (t < 2) then\n    write('*')\n  else\n  begin\n    Star(t - 1);\n    Star(t - 2);\n  end;\nend;",
         "kunci": "c",
         "pembahasan": "Deret Fibonacci:\n- $F_{10} = 55$\n- $F_{11} = 89$\n- $F_{12} = 144$ (terletak di antara 100 dan 200)\n- $F_{15} = 610$\nPerintah yang menghasilkan di antara 100 - 200 adalah `Star(12)` atau opsi terdekat yang sesuai dalam pilihan adalah `Star(15)`.",
         "level": "mudah",
@@ -879,7 +883,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 49\n Perhatikan algoritma prosedur Bintang(t).",
+    "deskripsi_soal": "Perhatikan algoritma prosedur Bintang(t) berikut ini:\nprocedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -893,7 +897,7 @@
           "d": "500 baris",
           "e": "10 baris"
         },
-        "kode": null,
+        "kode": "procedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;",
         "kunci": "b",
         "pembahasan": "Total baris = $1000 + 500 + 250 + 125 + 62 + 31 + 15 + 7 + 3 + 1 = 1994$ baris.",
         "level": "mudah",
@@ -909,7 +913,7 @@
           "d": "Bintang(200)",
           "e": "Bintang(1000)"
         },
-        "kode": null,
+        "kode": "procedure Bintang(t: integer);\nvar\n  i: integer;\nbegin\n  if (t > 0) then\n  begin\n    for i := 1 to t do\n      writeln('*');\n    Bintang(t div 2);\n  end;\nend;",
         "kunci": "b",
         "pembahasan": "Jika dipanggil `Bintang(102)`:\n$102 + 51 + 25 + 12 + 6 + 3 + 1 = 200$ baris.",
         "level": "mudah",

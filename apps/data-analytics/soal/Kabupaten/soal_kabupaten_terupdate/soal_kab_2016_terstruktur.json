@@ -400,7 +400,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 23\n Rina sedang bermain dengan string (deretan) huruf. Aturan permainannya adalah sebagai berikut. Pada satu kali permainan pemain memilih sebuah string. Selanjutnya setiap huruf akan diganti dengan string tertentu, misalnya setiap huruf A diganti dengan \"AB\" dan setiap huruf B diganti dengan \"A\". Jika permainan dilakukan lebih dari satu kali, pergantian dilakukan pada hasil sebelumnya menggunakan aturan pergantian yang sama. Misalkan Rina memilih string \"BAABA\" dan bermain 1 kali, maka string itu akan berubah menjadi \"AABABAAB\". Jika bermain 2 kali, maka string itu akan berubah menjadi \"ABABAABAABABA\".",
+    "deskripsi_soal": "Rina sedang bermain dengan string (deretan) huruf. Aturan permainannya adalah sebagai berikut. Pada satu kali permainan pemain memilih sebuah string. Selanjutnya setiap huruf akan diganti dengan string tertentu, misalnya setiap huruf A diganti dengan \"AB\" dan setiap huruf B diganti dengan \"A\". Jika permainan dilakukan lebih dari satu kali, pergantian dilakukan pada hasil sebelumnya menggunakan aturan pergantian yang sama. Misalkan Rina memilih string \"BAABA\" dan bermain 1 kali, maka string itu akan berubah menjadi \"AABABAAB\". Jika bermain 2 kali, maka string itu akan berubah menjadi \"ABABAABAABABA\".",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -459,7 +459,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
+    "deskripsi_soal": "Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
     "gambar_url_deskripsi": "https://www.kujawab.com/r2/uploads/1456925995_K16_25.PNG",
     "gambar_lokal_deskripsi": "soal_26_kab_2016.png",
     "pertanyaan": [
@@ -534,7 +534,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 29 dan 31\n Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
+    "deskripsi_soal": "Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -590,7 +590,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
+    "deskripsi_soal": "Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -641,27 +641,26 @@
         "pembahasan": "Berdasarkan pohon keluarga yang dibentuk, I adalah anak tunggal dari pasangannya.",
         "level": "sedang",
         "materi_id": "kab-logika"
+      },
+      {
+        "soal_id": "kab_soal35_2016",
+        "materi_id": "kab-logika",
+        "soal": "Suami dari E adalah ...",
+        "pilihan": {
+          "a": "A",
+          "b": "B",
+          "c": "C",
+          "d": "F",
+          "e": "H"
+        },
+        "kode": null,
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "d",
+        "pembahasan": "E menikah dengan F (F adalah suami E).",
+        "level": "mudah"
       }
     ]
-  },
-  {
-    "soal_id": "kab_soal35_2016",
-    "tipe": "tunggal",
-    "materi_id": "kab-logika",
-    "soal": "Suami dari E adalah ...",
-    "pilihan": {
-      "a": "A",
-      "b": "B",
-      "c": "C",
-      "d": "F",
-      "e": "H"
-    },
-    "kode": null,
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "d",
-    "pembahasan": "E menikah dengan F (F adalah suami E).",
-    "level": "mudah"
   },
   {
     "soal_id": "kab_soal36_2016",
@@ -722,7 +721,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Terdapat suatu permainan Grid berbentuk petak-petak yang tersusun 3x3 yang dilengkapi dengan 4 tombol, dengan bentuk seperti seperti pada Gambar 1. Jika sebuah tombol ditekan, angka-angka pada keempat petak di sekelilingnya akan berputar searah jarum jam. Susunan pada Grid 1 akan ditulis per baris sebagai berikut 1-4-5;7-3-2;8-9-6. Contoh: diberikan susunan semula seperti pada Grid 2, jika tombol A ditekan maka agka-angka pada petak menjadi seperti pada Grid 3.",
+    "deskripsi_soal": "Terdapat suatu permainan Grid berbentuk petak-petak yang tersusun 3x3 yang dilengkapi dengan 4 tombol, dengan bentuk seperti seperti pada Gambar 1. Jika sebuah tombol ditekan, angka-angka pada keempat petak di sekelilingnya akan berputar searah jarum jam. Susunan pada Grid 1 akan ditulis per baris sebagai berikut 1-4-5;7-3-2;8-9-6. Contoh: diberikan susunan semula seperti pada Grid 2, jika tombol A ditekan maka agka-angka pada petak menjadi seperti pada Grid 3.",
     "gambar_url_deskripsi": "https://www.kujawab.com/r2/uploads/1456926306_K16_39.PNG",
     "gambar_lokal_deskripsi": "soal_43_kab_2016.png",
     "pertanyaan": [
@@ -781,7 +780,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n var\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nvar\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -795,7 +794,7 @@
           "d": "65",
           "e": "76"
         },
-        "kode": null,
+        "kode": "var\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
         "kunci": "c",
         "pembahasan": "Untuk n = 10: Hasil = 10 * 11 / 2 = 55.",
         "level": "mudah",
@@ -811,7 +810,7 @@
           "d": "505000",
           "e": "500500"
         },
-        "kode": null,
+        "kode": "var\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
         "kunci": "d",
         "pembahasan": "Kunci jawaban terverifikasi: opsi D.\nDasar Verifikasi & Pembahasan:\nProgram menjumlahkan 1 + 2 + ... + 1000 = 500500.\n\n[Analisis Tambahan]:\nUntuk n = 1000: Hasil = 1000 * 1001 / 2 = 500500.",
         "level": "mudah",
@@ -878,7 +877,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 48\n a := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\na := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -892,7 +891,7 @@
           "d": "71",
           "e": "72"
         },
-        "kode": null,
+        "kode": "a := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
         "kunci": "a",
         "pembahasan": "Agar nilai `a` di akhir bernilai 79, kondisi loop `a < n` harus bernilai TRUE pada a = 68 dan FALSE pada a = 79.\nArtinya n harus berada pada rentang: 68 < n <= 79 (yaitu 69, 70, 71, ..., 79).\nJika n = 68, saat a = 68 kondisi `68 < 68` FALSE, sehingga loop berhenti saat a = 68 (bukan 79). Maka n = 68 adalah pilihan yang TIDAK membuat a di akhir bernilai 79.",
         "level": "sedang",
@@ -908,7 +907,7 @@
           "d": "118",
           "e": "117"
         },
-        "kode": null,
+        "kode": "a := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
         "kunci": "d",
         "pembahasan": "Kunci jawaban terverifikasi: opsi D.\nDasar Verifikasi & Pembahasan:\nNilai n maksimum yang menghasilkan b = 15 adalah 118, bukan 119.\n\n[Analisis Tambahan]:\nNilai b di akhir bernilai 15 artinya loop berjalan 14 kali.\nPada langkah ke-13 (b = 14): a = 13 + (1 + 2 + ... + 13) = 13 + 91 = 104.\nPada langkah ke-14 (b = 15): a = 104 + 14 = 118.\nAgar loop berjalan tepat 14 kali, kondisi `a < n` harus TRUE saat a = 104 (104 < n) dan FALSE saat a = 118 (118 >= n).\nNilai n maksimum yang memenuhi adalah n = 118.",
         "level": "sedang",
@@ -918,7 +917,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 49 dan 50\n function\nbegin\nif y = 0 then naon := 1\nelse if y = 1 then naon := x\nelse naon := naon(x, y div 2) * naon(x, y div 2 ) * naon(x, y mod 2);\nend;",
+    "deskripsi_soal": "Perhatikan fungsi berikut ini:\nfunction naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -932,7 +931,7 @@
           "d": "512",
           "e": "81"
         },
-        "kode": null,
+        "kode": "function naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;",
         "kunci": "c",
         "pembahasan": "`naon(3, 8)` menghitung 3^8 = 6561.",
         "level": "mudah",
@@ -948,7 +947,7 @@
           "d": "21",
           "e": "22"
         },
-        "kode": null,
+        "kode": "function naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;",
         "kunci": "e",
         "pembahasan": "Kunci jawaban terverifikasi: opsi E.\nDasar Verifikasi & Pembahasan:\nFungsi naon dipanggil 22 kali pada naon(4,13), bukan 21.\n\n[Analisis Tambahan]:\nMenghitung total node pemanggilan pada pohon rekursi untuk `naon(4, 13)`:\nSetiap pemanggilan dengan y > 1 memicu 3 pemanggilan anak: `naon(x, y div 2)`, `naon(x, y div 2)`, dan `naon(x, y mod 2)`.\nTotal pemanggilan rekursif yang dieksekusi adalah 21 kali.",
         "level": "sedang",

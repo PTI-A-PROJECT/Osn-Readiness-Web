@@ -290,8 +290,8 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": null,
-    "soal": "Kwak bertanya pada 120 orang untuk menebak sebuah angka yang merupakan permutasi dari 12345 yang sedang dipikirkannya. Setiap orang mencoba menebak permutasi yang benar. 10 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 5 tempat (contoh apabila angka yang dipikirkan Kwak adalah 54321, kemudian seseorang menebak 12435, maka orang tersebut salah dalam 5 tempat). 45 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 4 tempat. 45 orang menebak dan berbeda dalam 3 tempat. 15 orang menebak dan berbeda dalam 2 tempat. M merupakan bilangan yang menyatakan banyaknya orang yang berhasil menebak angka yang dipikirkan oleh Kwak dengan benar (tidak ada tempat yang salah), dan N merupakan bilangan yang menyatakan banyaknya orang yang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 1 tempat. Berapakah nilai M-N?",
+    "deskripsi_soal": "Kwak bertanya pada 120 orang untuk menebak sebuah angka 5 digit yang merupakan permutasi dari 12345 yang sedang dipikirkannya. Setiap orang mencoba menebak permutasi yang benar. Diketahui hasil tebakan sebagai berikut:\n- 10 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 5 tempat (contoh: apabila angka yang dipikirkan Kwak adalah 54321, kemudian seseorang menebak 12435, maka orang tersebut salah dalam 5 tempat).\n- 45 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 4 tempat.\n- 45 orang menebak dan berbeda dalam 3 tempat.\n- 15 orang menebak dan berbeda dalam 2 tempat.",
+    "soal": "Misalkan M merupakan bilangan yang menyatakan banyaknya orang yang berhasil menebak angka yang dipikirkan oleh Kwak dengan benar (tidak ada tempat yang salah), dan N merupakan bilangan yang menyatakan banyaknya orang yang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 1 tempat. Berapakah nilai M - N?",
     "pilihan": {
       "a": "5",
       "b": "3",
@@ -309,8 +309,8 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sulit",
     "peruntukan": "latihan",
-    "deskripsi_soal": null,
-    "soal": "Berkaitan dengan soal nomor 16, berapa banyak kemungkinan susunan permutasi yang berbeda dan tidak ada digit yang benar penempatannya (berbeda dalam 5 tempat)?",
+    "deskripsi_soal": "Kwak bertanya pada 120 orang untuk menebak sebuah angka 5 digit yang merupakan permutasi dari 12345 yang sedang dipikirkannya. Setiap orang mencoba menebak permutasi yang benar. Diketahui hasil tebakan sebagai berikut:\n- 10 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 5 tempat (contoh: apabila angka yang dipikirkan Kwak adalah 54321, kemudian seseorang menebak 12435, maka orang tersebut salah dalam 5 tempat).\n- 45 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 4 tempat.\n- 45 orang menebak dan berbeda dalam 3 tempat.\n- 15 orang menebak dan berbeda dalam 2 tempat.",
+    "soal": "Dari seluruh kemungkinan permutasi 12345, berapa banyak kemungkinan susunan permutasi yang berbeda dengan angka yang dipikirkan Kwak di kelima tempatnya (tidak ada satu pun digit yang benar penempatannya / berbeda dalam 5 tempat)?",
     "pilihan": {
       "a": "119",
       "b": "60",

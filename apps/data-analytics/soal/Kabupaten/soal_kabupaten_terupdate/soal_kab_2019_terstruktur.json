@@ -288,42 +288,47 @@
     "level": "sedang"
   },
   {
-    "soal_id": "kab_soal16_2019",
-    "tipe": "tunggal",
-    "materi_id": "kab-kombinatorika",
-    "soal": "Kwak bertanya pada 120 orang untuk menebak sebuah angka yang merupakan permutasi dari 12345 yang sedang dipikirkannya. Setiap orang mencoba menebak permutasi yang benar. 10 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 5 tempat (contoh apabila angka yang dipikirkan Kwak adalah 54321, kemudian seseorang menebak 12435, maka orang tersebut salah dalam 5 tempat). 45 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 4 tempat. 45 orang menebak dan berbeda dalam 3 tempat. 15 orang menebak dan berbeda dalam 2 tempat. M merupakan bilangan yang menyatakan banyaknya orang yang berhasil menebak angka yang dipikirkan oleh Kwak dengan benar (tidak ada tempat yang salah), dan N merupakan bilangan yang menyatakan banyaknya orang yang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 1 tempat. Berapakah nilai M-N?",
-    "pilihan": {
-      "a": "5",
-      "b": "3",
-      "c": "2",
-      "d": "1",
-      "e": "0"
-    },
-    "kode": null,
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "a",
-    "pembahasan": "Total orang = 120. Jumlah orang yang salah 5, 4, 3, 2 tempat berturut-turut adalah 10 + 45 + 45 + 15 = 115 orang. Sisanya = 120 - 115 = 5 orang. Dalam permutasi, tidak mungkin hanya 1 tempat yang salah (N = 0) karena jika 4 digit benar, digit ke-5 pasti benar. Jadi N = 0, sehingga M = 5. Nilai M - N = 5 - 0 = 5 (opsi a) atau jika tidak ada salah 1 tempat maka M=1, N=0 -> M-N=1.",
-    "level": "sedang"
-  },
-  {
-    "soal_id": "kab_soal17_2019",
-    "tipe": "tunggal",
-    "materi_id": "kab-kombinatorika",
-    "soal": "Berkaitan dengan soal nomor 16, berapa banyak kemungkinan susunan permutasi yang berbeda dan tidak ada digit yang benar penempatannya (berbeda dalam 5 tempat)?",
-    "pilihan": {
-      "a": "119",
-      "b": "60",
-      "c": "44",
-      "d": "24",
-      "e": "10"
-    },
-    "kode": null,
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "c",
-    "pembahasan": "Ini adalah masalah Derangement (D_n) untuk n = 5. Rumus derangement D_5 = 5! * (1/0! - 1/1! + 1/2! - 1/3! + 1/4! - 1/5!) = 120 * (1 - 1 + 1/2 - 1/6 + 1/24 - 1/120) = 44.",
-    "level": "sulit"
+    "tipe": "cerita",
+    "deskripsi_soal": "Kwak bertanya pada 120 orang untuk menebak sebuah angka 5 digit yang merupakan permutasi dari 12345 yang sedang dipikirkannya. Setiap orang mencoba menebak permutasi yang benar. Diketahui hasil tebakan sebagai berikut:\n- 10 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 5 tempat (contoh: apabila angka yang dipikirkan Kwak adalah 54321, kemudian seseorang menebak 12435, maka orang tersebut salah dalam 5 tempat).\n- 45 orang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 4 tempat.\n- 45 orang menebak dan berbeda dalam 3 tempat.\n- 15 orang menebak dan berbeda dalam 2 tempat.",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
+      {
+        "soal_id": "kab_soal16_2019",
+        "materi_id": "kab-kombinatorika",
+        "soal": "Misalkan M merupakan bilangan yang menyatakan banyaknya orang yang berhasil menebak angka yang dipikirkan oleh Kwak dengan benar (tidak ada tempat yang salah), dan N merupakan bilangan yang menyatakan banyaknya orang yang menebak sebuah permutasi dan berbeda dengan yang dipikirkan oleh Kwak dalam 1 tempat. Berapakah nilai M - N?",
+        "pilihan": {
+          "a": "5",
+          "b": "3",
+          "c": "2",
+          "d": "1",
+          "e": "0"
+        },
+        "kode": null,
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "a",
+        "pembahasan": "Total orang = 120. Jumlah orang yang salah 5, 4, 3, 2 tempat berturut-turut adalah 10 + 45 + 45 + 15 = 115 orang. Sisanya = 120 - 115 = 5 orang. Dalam permutasi, tidak mungkin hanya 1 tempat yang salah (N = 0) karena jika 4 digit benar, digit ke-5 pasti benar. Jadi N = 0, sehingga M = 5. Nilai M - N = 5 - 0 = 5 (opsi a) atau jika tidak ada salah 1 tempat maka M=1, N=0 -> M-N=1.",
+        "level": "sedang"
+      },
+      {
+        "soal_id": "kab_soal17_2019",
+        "materi_id": "kab-kombinatorika",
+        "soal": "Dari seluruh kemungkinan permutasi 12345, berapa banyak kemungkinan susunan permutasi yang berbeda dengan angka yang dipikirkan Kwak di kelima tempatnya (tidak ada satu pun digit yang benar penempatannya / berbeda dalam 5 tempat)?",
+        "pilihan": {
+          "a": "119",
+          "b": "60",
+          "c": "44",
+          "d": "24",
+          "e": "10"
+        },
+        "kode": null,
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "c",
+        "pembahasan": "Ini adalah masalah Derangement (D_n) untuk n = 5. Rumus derangement D_5 = 5! * (1/0! - 1/1! + 1/2! - 1/3! + 1/4! - 1/5!) = 120 * (1 - 1 + 1/2 - 1/6 + 1/24 - 1/120) = 44.",
+        "level": "sulit"
+      }
+    ]
   },
   {
     "soal_id": "kab_soal18_2019",

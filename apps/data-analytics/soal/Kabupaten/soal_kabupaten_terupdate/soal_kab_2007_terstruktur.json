@@ -60,7 +60,7 @@
     "soal_id": "kab_soal4_2007",
     "tipe": "tunggal",
     "materi_id": "kab-kombinatorika",
-    "soal": "Berapa banyak kemungkinan solusi untuk x + y + z = 11, jika x, y, z adalah bilangan-bilangan bulat positif dan memenuhi hubungan x y z ?",
+    "soal": "Berapa banyak kemungkinan solusi untuk x + y + z = 11, jika x, y, z adalah bilangan-bilangan bulat positif dan memenuhi hubungan x <= y <= z ?",
     "pilihan": {
       "a": "5",
       "b": "10",
@@ -70,7 +70,7 @@
     },
     "kode": null,
     "gambar_url": null,
-    "gambar_lokal": "soal_4.png",
+    "gambar_lokal": null,
     "kunci": "b",
     "pembahasan": "Hubungan yang dimaksud adalah x <= y <= z. Selain 5 kombinasi unik di mana ketiganya berbeda (1,2,8; 1,3,7; 1,4,6; 2,3,6; 2,4,5), kita sertakan kombinasi yang memiliki elemen sama:\n6. 1 + 1 + 9 = 11 (1 <= 1 <= 9)\n7. 1 + 5 + 5 = 11 (1 <= 5 <= 5)\n8. 2 + 2 + 7 = 11 (2 <= 2 <= 7)\n9. 3 + 3 + 5 = 11 (3 <= 3 <= 5)\n10. 3 + 4 + 4 = 11 (3 <= 4 <= 4)\nTotal kemungkinan solusi ada 10.",
     "level": "sedang"
@@ -229,7 +229,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Nomor 13 sampai dengan 17\n Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
+    "deskripsi_soal": "Si Ani adalah seorang anak yang suka berubah-ubah suasana hatinya yang ternyata dipengaruhi cuaca pada malam harinya. Jika hari ini hatinya berseri-seri, dan di malam hari nanti terjadi hujan maka besok ia pasti akan pemurung. Kalau tidak, besoknya menjadi biasa-biasa saja. Jika hari ini biasa-biasa saja, kemudian malam hari tidak hujan maka besoknya berseri-seri kembali. Kalau turun hujan, besoknya menjadi apatis. Jika hari ini pemurung, lalu malamnya tidak hujan, besoknya menjadi biasa-biasa saja. Kalau turun hujan, besoknya menjadi pemarah. Jika hari ini pemarah, lalu malamnya turun hujan ia menjadi apatis keesokan harinya. Kalau tidak, ia menjadi biasa-biasa saja. Jika hari ini apatis, lalu malamnya turun hujan besoknya ia menjadi pemurung. Kalau tidak, ia menjadi berseri-seri kembali.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -317,7 +317,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 18 sampai dengan 20\n Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
+    "deskripsi_soal": "Suatu proyek terdiri atas 5 aktifitas: a, b, c, d, dan e. Aktifitas a harus dikerjakan sebelum b, aktifitas c harus dikerjakan setelah d dan e, aktifitas d harus dikerjakan sebelum e dan setelah a dan aktifitas e harus dikerjakan sebelum b. Beberapa aktifitas boleh dikerjakan bersamaan. Setiap aktifitas memerlukan waktu pengerjaan 1 jam.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -373,7 +373,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 21 dan 23\n Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
+    "deskripsi_soal": "Ada empat topeles masing-masing berisi sejumlah permen yang sama banyaknya. Topeles no 1 disediakan untuk si Ali, topeles no 2 disediakan untuk si Badu, topeles no 3 disediakan untuk si Cecep, dan toples no 4 diseduakan untuk si Dedi. Si Ali setiap kali selalu mengambil tepat 3 butir permen sekaligus. Si Badu setiap kali selalu mengambil tepat 5 butir sekaligus. Si Cecep setiap kali selalu mengambil tepat 7 butir permen sekaligus. Si Dedi selalu mengambil tepat 9 butir permen sekaligus. Hingga suatu ketika topeles no 1 bersisa 2 butir permen, toples no 2 bersisa 3 butir permen dan topeles no 3 bersisa 2 butir permen. Sementara topeles no 4, tidak jelas bersisa berapa, yang pasti kurang dari 9 butir.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -429,7 +429,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 sampai dengan 28\n Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
+    "deskripsi_soal": "Joko membelikan mainan untuk anaknya. Mainan tersebut terdiri dari 9 potongan angka-angka yang berwarnawarni. Dari hasil pengamatan dinyatakan informasi berikut: sebuah angka berwarna jingga dan ada masing2 dua angka yang berwarna merah, hijau , kuning dan biru. angka-angka yang berwarna merah, adalah angka yang berurutan angka 4 berwarna hijau dua buah angka yang berwarna biru bukanlah angka yang berurutan angka 1 dan 9 berwarna kuning angka berwarna jingga bukanlah angka yang berurut langsung dengan salah satu angka yang berwarna hijau.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -574,7 +574,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 36\n const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -588,7 +588,7 @@
           "d": "5",
           "e": "12"
         },
-        "kode": null,
+        "kode": "const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
         "kunci": "a",
         "pembahasan": "code(-12, -12) = 12 (1100 dalam biner)\ncode(20, 5) = 1 (0001 dalam biner)\n12 AND 1 = 0.",
         "level": "sedang",
@@ -604,7 +604,7 @@
           "d": "5",
           "e": "12"
         },
-        "kode": null,
+        "kode": "const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
         "kunci": "b",
         "pembahasan": "code(-12, -12) = 12\ncode(20, 5) = 1\n12 OR 1 = 13.",
         "level": "mudah",
@@ -620,7 +620,7 @@
           "d": "5",
           "e": "12"
         },
-        "kode": null,
+        "kode": "const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
         "kunci": "c",
         "pembahasan": "code(12, -12) = 1 OR 4 = 5 (0101 dalam biner)\ncode(20, 5) = 1 (0001 dalam biner)\n5 AND 1 = 1.",
         "level": "sedang",
@@ -636,7 +636,7 @@
           "d": "5",
           "e": "12"
         },
-        "kode": null,
+        "kode": "const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
         "kunci": "d",
         "pembahasan": "code(12, -12) = 5\ncode(20, 5) = 1\n5 OR 1 = 5.",
         "level": "mudah",
@@ -652,7 +652,7 @@
           "d": "5",
           "e": "12"
         },
-        "kode": null,
+        "kode": "const\n xmin = -10;\n xmax = 10;\n ymin = -10;\n ymax = 10;\nfunction code(x: integer; y: integer): byte;\nvar \n c : byte;\nbegin\n c := 0;\n if (x < xmin) then \n c := c or 8\n else if (x > xmax) then \n c := c or 1;\n if (y < ymin) then \n c := c or 4\n else if (y > ymax) then \n c := c or 2;\n code := c;\nend;",
         "kunci": "e",
         "pembahasan": "code(7, -12) = 4 (y < -10)\ncode(-20, 5) = 8 (x < -10)\n4 OR 8 = 12.",
         "level": "mudah",
@@ -662,7 +662,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 38\n function apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -676,7 +676,7 @@
           "d": "414",
           "e": "14"
         },
-        "kode": null,
+        "kode": "function apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
         "kunci": "a",
         "pembahasan": "Kunci jawaban terverifikasi: opsi A.\nDasar Verifikasi & Pembahasan:\nDokumen asli OSK 2007 tertulis 'while (y <> 0) do'. Kondisi 'y <= 0' membuat isi loop tidak pernah dijalankan (karena y = b > 0) sehingga hasilnya selalu a, padahal maksud soal adalah algoritma Euclid.\n\n[Analisis Tambahan]:\nMencari FPB(414, 662):\n- 662 mod 414 = 248\n- 414 mod 248 = 166\n- 248 mod 166 = 82\n- 166 mod 82 = 2\n- 82 mod 2 = 0\n\nFPB(414, 662) = 2. Dari pilihan jawaban yang paling mendekati (terdapat typo pilihan pada soal asli), nilai FPB-nya adalah 2 (atau jika soal 414 & 663, FPB = 1).",
         "level": "sedang",
@@ -693,7 +693,7 @@
           "d": "7",
           "e": "11"
         },
-        "kode": null,
+        "kode": "function apaini(a: integer; b: integer): integer;\nvar \n x, y, r: integer;\nbegin\n x := a;\n y := b;\n while (y <> 0) do\n begin\n r := x mod y;\n x := y;\n y := r;\n end;\n apaini := x;\nend;",
         "kunci": "b",
         "pembahasan": "Kunci jawaban terverifikasi: opsi B.\nDasar Verifikasi & Pembahasan:\nSama seperti nomor 37: dokumen asli tertulis 'while (y <> 0) do'. Dengan kondisi tersebut fungsi menghitung FPB(a, b), sehingga FPB(12345, 54321) = 3.\n\n[Analisis Tambahan]:\nMencari FPB(12345, 54321):\n- Jumlah digit 12345 = 15 (habis dibagi 3)\n- Jumlah digit 54321 = 15 (habis dibagi 3)\n- 54321 mod 12345 = 4941\n- 12345 mod 4941 = 2463\n- 4941 mod 2463 = 15\n- 2463 mod 15 = 3\n- 15 mod 3 = 0\n\nFPB(12345, 54321) = 3.",
         "level": "sedang",
@@ -703,7 +703,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 41\n function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nfunction apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -717,7 +717,7 @@
           "d": "3",
           "e": "11"
         },
-        "kode": null,
+        "kode": "function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
         "kunci": "e",
         "pembahasan": "Faktor prima:\n1001 = 7 x 11 x 13\n1331 = 11^3\nFPB(1001, 1331) = 11.",
         "level": "sedang",
@@ -733,7 +733,7 @@
           "d": "40",
           "e": "5"
         },
-        "kode": null,
+        "kode": "function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
         "kunci": "d",
         "pembahasan": "Mencari FPB(1000, 5040):\n1000 = 2^3 x 5^3\n5040 = 2^4 x 3^2 x 5 x 7\nFPB = 2^3 x 5 = 40.",
         "level": "sedang",
@@ -749,7 +749,7 @@
           "d": "10",
           "e": "13"
         },
-        "kode": null,
+        "kode": "function apaitu(a: integer; b: integer): integer;\nbegin\n count := count + 1;\n if (a > b) then \n apaitu := apaitu(b,a) \n else if (a = 0) then \n apaitu := b \n else \n apaitu := apaitu (b mod a, a) \nend;",
         "kunci": "b",
         "pembahasan": "Trase pemanggilan `apaitu(1234, 277)`:\n1. apaitu(1234, 277) -> a > b -> panggil apaitu(277, 1234) [count=1]\n2. apaitu(277, 1234) -> 1234 mod 277 = 126 -> panggil apaitu(126, 277) [count=2]\n3. apaitu(126, 277) -> 277 mod 126 = 25 -> panggil apaitu(25, 126) [count=3]\n4. apaitu(25, 126) -> 126 mod 25 = 1 -> panggil apaitu(1, 25) [count=4]\n5. apaitu(1, 25) -> 25 mod 1 = 0 -> panggil apaitu(0, 1) [count=5]\n6. apaitu(0, 1) -> a = 0 -> return 1.\n\nNilai akhir count = 5 (atau bergantung pada jumlah swap awal).\n\n[Catatan Telaah / Cacat Naskah Asli OSN]:\nSecara harfiah count bertambah pada setiap pemanggilan, termasuk pemanggilan pertama dan pemanggilan kasus dasar (a = 0), sehingga count = 6. Karena 6 tidak ada di pilihan, kunci pembuat soal menghitung 5 (banyaknya pemanggilan rekursif). Kunci 'b' dipertahankan dengan catatan.",
         "level": "mudah",
@@ -759,7 +759,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n const\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nconst\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -773,7 +773,7 @@
           "d": "14",
           "e": "98"
         },
-        "kode": null,
+        "kode": "const\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
         "kunci": "c",
         "pembahasan": "Jumlah elemen array x dari indeks 1 hingga 4:\nx[1] + x[2] + x[3] + x[4] = 6 + 4 + 3 + 3 = 16.",
         "level": "sedang",
@@ -789,7 +789,7 @@
           "d": "14",
           "e": "98"
         },
-        "kode": null,
+        "kode": "const\n x : array[0..9] of integer = (2,6,4,3,3,7,7,3,4,8);\nfunction inijuga(a: integer; b: integer): integer;\nvar \n t : integer;\nbegin\n if (a > b) then inijuga := inijuga(b,a);\n if (a = b) then inijuga := x[a];\n else begin\n t := (a+b) div 2;\n inijuga := inijuga(a, t) + inijuga(t+1, b);\n end;\nend;",
         "kunci": "b",
         "pembahasan": "Jumlah seluruh elemen array x dari indeks 0 hingga 9:\n2 + 6 + 4 + 3 + 3 + 7 + 7 + 3 + 4 + 8 = 47.",
         "level": "sedang",
@@ -799,7 +799,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 44 dan 47\n if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nif (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -813,7 +813,7 @@
           "d": "TRUE, TRUE, FALSE, FALSE",
           "e": "TRUE, FALSE, FALSE, TRUE"
         },
-        "kode": null,
+        "kode": "if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
         "kunci": "b",
         "pembahasan": "Agar mencetak 4:\n1. `(a and b) or ((not c) and d)` harus TRUE.\n2. `((a or not b) and c) or (b and (not a))` harus FALSE.\n3. `(a or (d and b)) and (not b)` harus FALSE.\n\nUji pilihan b (a=T, b=T, c=T, d=F):\n1. (T and T) or (F and F) = T OR F = TRUE.\n2. ((T or F) and T) or (T and F) = T OR F = TRUE -> Eh wait, ini mencetak 1! Cek ulang pilihan e (a=T, b=F, c=F, d=T):\n- Syarat 1: (T and F) or (T and T) = TRUE.\n- Syarat 2: ((T or T) and F) or (F and F) = FALSE.\n- Syarat 3: (T or F) and T = TRUE -> mencetak 2.\nDengan pengujian serupa untuk pilihan b/d yang memenuhi kondisi mengarah ke output 4, diperoleh pilihan b/d.",
         "level": "mudah",
@@ -829,7 +829,7 @@
           "d": "2",
           "e": "1"
         },
-        "kode": null,
+        "kode": "if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
         "kunci": "d",
         "pembahasan": "a=T, b=F, c=F, d=T:\n1. (a and b) or ((not c) and d) = (F) or (T and T) = TRUE.\n2. Cek cabang-1: ((T or T) and F) or (F and F) = F OR F = FALSE.\n3. Masuk ke cabang else-if: (a or (d and b)) and (not b) = (T or F) and T = TRUE.\n4. Maka mencetak 2.",
         "level": "mudah",
@@ -845,7 +845,7 @@
           "d": "2",
           "e": "1"
         },
-        "kode": null,
+        "kode": "if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
         "kunci": "a",
         "pembahasan": "a=F, b=F, c=F, d=F:\n1. (F and F) or (T and F) = FALSE.\n2. Masuk ke cabang luar `else`:\n3. Cek `not (d and c) and (not a)` = not(F and F) and T = T and T = TRUE.\n4. Maka mencetak 5.",
         "level": "mudah",
@@ -861,7 +861,7 @@
           "d": "FALSE, FALSE, FALSE, TRUE",
           "e": "FALSE, FALSE, FALSE, FALSE"
         },
-        "kode": null,
+        "kode": "if (a and b) or ((not c) and d) then\n if ((a or not b) and c) or (b and (nota)) then \n writeln(1) \n else \n if (a or (d and b)) and (not b) then \n writeln(2) \n else \n writeln(4) \nelse \n if not (d and c) and (not a) then \n writeln(5) \n else \n writeln(6);",
         "kunci": "d",
         "pembahasan": "Kunci jawaban terverifikasi: opsi D.\nDasar Verifikasi & Pembahasan:\nUntuk (a,b,c,d) = FALSE, TRUE, TRUE, FALSE kondisi luar bernilai FALSE sehingga mencetak 5. Yang tidak akan mencetak 5 adalah FALSE, TRUE, FALSE, FALSE... salah: yang benar adalah (FALSE, FALSE, FALSE, TRUE) karena kondisi luar bernilai TRUE sehingga yang dicetak 1/2/4, bukan 5.\n\n[Analisis Tambahan]:\nUji pilihan a (a=F, b=T, c=T, d=F):\n1. (F and T) or (F and F) = FALSE.\n2. Masuk cabang `else`:\n3. `not (d and c) and (not a)` = not(F and T) and T = T and T = TRUE -> mencetak 5.\nApabila d=T dan c=T (seperti d and c = True, not(d and c) = False), maka cabang 5 tidak akan tercapai dan akan mencetak 6.",
         "level": "mudah",
@@ -871,7 +871,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 50\n Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
+    "deskripsi_soal": "Pak Hashim adalah guru yang kreatif. Ia menempatkan anak-anak dikelasnya mengikuti suatu algoritma sebagai berikut. Bangku-bangku dinomori dari 0 sampai dengan 16 (jadi ada 17 bangku). Kebetulan siswa di kelasnya hanya ada 12, dengan urutan buku absen sbb: Afandi, Andi, Bella, Budi, Coki,.Dewi, Fany, Gunawan, Mega, Mulya, Nunik, dan Riska. Berdasarkan dua huruf awal nama para siswa ia menghitung suatu fungsi H(nama) = (10 X harga huruf pertama dari nama + harga huruf kedua dari nama) mod 17. Harga huruf a adalah 1, huruf b adalah 2, dan seterusnya hingga harga z adalah 26 (huruf besar dan huruf kecil sama saja). Misalnya H(Afandi) = (10 harga a + harga f) mod 17 = (10 x 1 + 6) mod 17 = 16 dan H(Bella) = (10 x 2 + 5) mod 17 = 8. Berdasarkan harga fungsi dari nama-nama itu dan urutan pada buku absen, maka siswa yang bersangkutan ditempatkan pada bangku dengan nomor yang sesuai dengan harga fungsi itu. Ternyata pada terdapat fungsi H(nama) yang berharga sama untuk nama berlainan. Untuk itu ia membuat algoritma tambahan, jika H(x) berharga suatu nomor bangku yang sudah ditempati oleh yang lain pada urutan sebelumnya., maka x akan dicarikan bangku dengan urutan berikutnya yang masih belum ditempati. Begitu juga kalau ternyata, bangku itu sudah ditempati pula, maka diperiksa yang berikutnya lagi hingga didapatkan bangku kosong. Kecuali, jika akan ditempatkan di nomor 16 ternyata no 16 sudah ditempati maka akan diperiksa mulai bangku no 0, dan seterusnya. Berikut ini penempatan untuk 3 siswa pertama dalam urutan. H(Afandi) = 16, ditempatkan di 16 karena 16 kosong H(Andi) = 7, ditempatkan di bangku no 7 karena bangku no 7 kosong H(Bella) = 8, ditempatkan di bangku no 8 karena bangku no 8 kosong Untuk Budi, karena H(Budi) = 7, dan bangku no 7 sudah terisi, periksa di bangku no 8, tetapi bangku no 8 juga sudah terisi, periksa bangku no 9, dan ditempatkan di bangku no 9 karena bangku no 9 kosong. Untuk Budi, banyaknya bangku yang diperiksa Pak Hashim sebelum mendapatkan bangku kosong adalah 2 (yaitu gagal di no 7 dan no 8).",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [

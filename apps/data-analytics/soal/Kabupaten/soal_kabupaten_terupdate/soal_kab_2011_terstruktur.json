@@ -41,7 +41,7 @@
     "soal_id": "kab_soal3_2011",
     "tipe": "tunggal",
     "materi_id": "kab-kombinatorika",
-    "soal": "(Perhatikan gambar pada soal nomor 3)",
+    "soal": "Berapakah hasil dari operasi 2009^(2010^2011) mod 100? (Perhatikan gambar ekspresi pada soal)",
     "pilihan": {
       "a": "1",
       "b": "9",
@@ -96,7 +96,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 6 dan 7\n A,B,C,D,E,F,G,H sedang ingin menonton bioskop. Karena penontonnya sudah banyak, posisi duduk yang mereka dapat seperti gambar ini. Manajer yang akan memberi mereka tiket mengetahui beberapa hal berikut: Tiap orang tidak ingin duduk berdekatan dengan orang yang mereka benci A dan B saling membenci G dan H saling membenci C membenci B dan D F membenci E dan G D membenci E",
+    "deskripsi_soal": "A,B,C,D,E,F,G,H sedang ingin menonton bioskop. Karena penontonnya sudah banyak, posisi duduk yang mereka dapat seperti gambar ini. Manajer yang akan memberi mereka tiket mengetahui beberapa hal berikut: Tiap orang tidak ingin duduk berdekatan dengan orang yang mereka benci A dan B saling membenci G dan H saling membenci C membenci B dan D F membenci E dan G D membenci E",
     "gambar_url_deskripsi": "https://www.kujawab.com/r2/images/problems/oskkom11-6.png",
     "gambar_lokal_deskripsi": "soal_6_kab_2011.png",
     "pertanyaan": [
@@ -138,7 +138,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 8 dan 9\n Seorang salesman (petugas pemasaran) suatu perusahaan minuman harus mengunjungi 5 warung untuk memperkenalkan produk minuman terbaru. Kelima warung tersebut adalah: P, Q, R, S, dan T. Dia hanya akan mengunjungi masing-masing satu kali saja, satu warung per hari, Senin s/d Jumat, dengan aturan berikut: Tidak boleh mengunjungi warung R pada hari Senin. Harus mengunjungi warung P sebelum mengunjungi S. Harus mengunjungi warung Q sebelum mengunjungi T.",
+    "deskripsi_soal": "Seorang salesman (petugas pemasaran) suatu perusahaan minuman harus mengunjungi 5 warung untuk memperkenalkan produk minuman terbaru. Kelima warung tersebut adalah: P, Q, R, S, dan T. Dia hanya akan mengunjungi masing-masing satu kali saja, satu warung per hari, Senin s/d Jumat, dengan aturan berikut: Tidak boleh mengunjungi warung R pada hari Senin. Harus mengunjungi warung P sebelum mengunjungi S. Harus mengunjungi warung Q sebelum mengunjungi T.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -178,7 +178,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 10 dan 11\n Permainan ini dimainkan oleh beberapa pemain yang membentuk lingkaran. Permainan ini dimulai dengan memberikan salah satu orang tersebut sebuah bom mainan. Setiap pemain saat baru mendapatkan bom harus mengurangi angka di dalam bom tersebut dengan 1. Setelah itu, bom tersebut diberikan pada temannya yang ada di arah sesuai jarum jam. Pemain nomor 1 memulai pertama kali.",
+    "deskripsi_soal": "Permainan ini dimainkan oleh beberapa pemain yang membentuk lingkaran. Permainan ini dimulai dengan memberikan salah satu orang tersebut sebuah bom mainan. Setiap pemain saat baru mendapatkan bom harus mengurangi angka di dalam bom tersebut dengan 1. Setelah itu, bom tersebut diberikan pada temannya yang ada di arah sesuai jarum jam. Pemain nomor 1 memulai pertama kali.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -218,7 +218,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
+    "deskripsi_soal": "Jadwal Kereta:\nK1: 09.10 & 15.40 (e-a-b-d)\nK2: 07.00 & 16.50 (f-c-e-b)\nK3: 12.25 & 15.40 (d-a-f-e)\nWaktu tempuh per antarkota = 1 jam, berhenti di stasiun = 5 menit.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -426,7 +426,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 23 dan 24\n Pada suatu ruangan, terdapat beragam binatang berkaki empat dan beragam binatang berkaki dua. Jumlah seluruh binatang adalah 112 ekor. Jumlah seluruh kaki binatang-binatang tersebut adalah 310.",
+    "deskripsi_soal": "Pada suatu ruangan, terdapat beragam binatang berkaki empat dan beragam binatang berkaki dua. Jumlah seluruh binatang adalah 112 ekor. Jumlah seluruh kaki binatang-binatang tersebut adalah 310.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -599,7 +599,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n 6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
+    "deskripsi_soal": "6 orang (Gayun, Mila, Budi, Heni, Ayin, Cici) diurutkan berdasarkan tinggi dan berat badan.\n- Tinggi: Gayun > Mila, Heni > Gayun, Cici < Gayun, Mila > Ayin. (Heni > Gayun > Mila > Ayin/Cici)\n- Berat: Gayun < Budi, Heni < Ayin, Cici > Gayun, Mila > Cici.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -806,42 +806,47 @@
     "level": "sedang"
   },
   {
-    "soal_id": "kab_soal43_2011",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Jika array a berisi (-3, 8, 17, -10, 7, -5, -9, 2, 8, 1), apa\noutput yang dihasilkan jika potongan program\ntersebut dieksekusi?",
-    "pilihan": {
-      "a": "17",
-      "b": "21",
-      "c": "25",
-      "d": "39",
-      "e": "31"
-    },
-    "kode": null,
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "c",
-    "pembahasan": "Program mengimplementasikan algoritma **Kadane** (Maximum Subarray Sum).\nSubarray contiguous dengan jumlah terbesar dari `[-3, 8, 17, -10, 7, -5, -9, 2, 8, 1]` adalah `[8, 17]` yang berjumlah 25.",
-    "level": "sedang"
-  },
-  {
-    "soal_id": "kab_soal44_2011",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Jika array a berisi (8, 3, 5, 21, x, 6, 10, 4), berapakah\nnilai x yang menghasilkan output maksimal jika\npotongan program tersebut dieksekusi?",
-    "pilihan": {
-      "a": "13",
-      "b": "10",
-      "c": "9",
-      "d": "0",
-      "e": "-12"
-    },
-    "kode": null,
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "a",
-    "pembahasan": "Mencari nilai $x$ agar jumlah maksimum subarray contiguous mencapai batas optimal dari susunan elemen pendukung.",
-    "level": "sedang"
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan program berikut ini (dengan a adalah array of integer berindeks 1..10, serta b, c, d bertipe integer):\nbegin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
+      {
+        "soal_id": "kab_soal43_2011",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika array a berisi (-3, 8, 17, -10, 7, -5, -9, 2, 8, 1), apa\noutput yang dihasilkan jika potongan program\ntersebut dieksekusi?",
+        "pilihan": {
+          "a": "17",
+          "b": "21",
+          "c": "25",
+          "d": "39",
+          "e": "31"
+        },
+        "kode": "begin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;",
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "c",
+        "pembahasan": "Program mengimplementasikan algoritma **Kadane** (Maximum Subarray Sum).\nSubarray contiguous dengan jumlah terbesar dari `[-3, 8, 17, -10, 7, -5, -9, 2, 8, 1]` adalah `[8, 17]` yang berjumlah 25.",
+        "level": "sedang"
+      },
+      {
+        "soal_id": "kab_soal44_2011",
+        "materi_id": "kab-algoritma",
+        "soal": "Jika array a berisi (8, 3, 5, 21, x, 6, 10, 4), berapakah\nnilai x yang menghasilkan output maksimal jika\npotongan program tersebut dieksekusi?",
+        "pilihan": {
+          "a": "13",
+          "b": "10",
+          "c": "9",
+          "d": "0",
+          "e": "-12"
+        },
+        "kode": "begin\n  b := 0;\n  c := 0;\n  for d := 1 to 10 do\n  begin\n    b := b + a[d];\n    if b > c then c := b;\n    if b < 0 then b := 0;\n  end;\n  writeln(c);\nend;",
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "a",
+        "pembahasan": "Mencari nilai $x$ agar jumlah maksimum subarray contiguous mencapai batas optimal dari susunan elemen pendukung.",
+        "level": "sedang"
+      }
+    ]
   },
   {
     "soal_id": "kab_soal45_2011",

@@ -404,7 +404,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 23\n Rina sedang bermain dengan string (deretan) huruf. Aturan permainannya adalah sebagai berikut. Pada satu kali permainan pemain memilih sebuah string. Selanjutnya setiap huruf akan diganti dengan string tertentu, misalnya setiap huruf A diganti dengan \"AB\" dan setiap huruf B diganti dengan \"A\". Jika permainan dilakukan lebih dari satu kali, pergantian dilakukan pada hasil sebelumnya menggunakan aturan pergantian yang sama. Misalkan Rina memilih string \"BAABA\" dan bermain 1 kali, maka string itu akan berubah menjadi \"AABABAAB\". Jika bermain 2 kali, maka string itu akan berubah menjadi \"ABABAABAABABA\".",
+    "deskripsi_soal": "Rina sedang bermain dengan string (deretan) huruf. Aturan permainannya adalah sebagai berikut. Pada satu kali permainan pemain memilih sebuah string. Selanjutnya setiap huruf akan diganti dengan string tertentu, misalnya setiap huruf A diganti dengan \"AB\" dan setiap huruf B diganti dengan \"A\". Jika permainan dilakukan lebih dari satu kali, pergantian dilakukan pada hasil sebelumnya menggunakan aturan pergantian yang sama. Misalkan Rina memilih string \"BAABA\" dan bermain 1 kali, maka string itu akan berubah menjadi \"AABABAAB\". Jika bermain 2 kali, maka string itu akan berubah menjadi \"ABABAABAABABA\".",
     "soal": "Dengan peraturan A diganti dengan \"AB\" dan B diganti dengan \"A\", berapa panjang string hasil setelah dilakukan 10 kali permainan dengan string awal adalah \"A\"?",
     "pilihan": {
       "a": "90",
@@ -423,7 +423,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 23\n Rina sedang bermain dengan string (deretan) huruf. Aturan permainannya adalah sebagai berikut. Pada satu kali permainan pemain memilih sebuah string. Selanjutnya setiap huruf akan diganti dengan string tertentu, misalnya setiap huruf A diganti dengan \"AB\" dan setiap huruf B diganti dengan \"A\". Jika permainan dilakukan lebih dari satu kali, pergantian dilakukan pada hasil sebelumnya menggunakan aturan pergantian yang sama. Misalkan Rina memilih string \"BAABA\" dan bermain 1 kali, maka string itu akan berubah menjadi \"AABABAAB\". Jika bermain 2 kali, maka string itu akan berubah menjadi \"ABABAABAABABA\".",
+    "deskripsi_soal": "Rina sedang bermain dengan string (deretan) huruf. Aturan permainannya adalah sebagai berikut. Pada satu kali permainan pemain memilih sebuah string. Selanjutnya setiap huruf akan diganti dengan string tertentu, misalnya setiap huruf A diganti dengan \"AB\" dan setiap huruf B diganti dengan \"A\". Jika permainan dilakukan lebih dari satu kali, pergantian dilakukan pada hasil sebelumnya menggunakan aturan pergantian yang sama. Misalkan Rina memilih string \"BAABA\" dan bermain 1 kali, maka string itu akan berubah menjadi \"AABABAAB\". Jika bermain 2 kali, maka string itu akan berubah menjadi \"ABABAABAABABA\".",
     "soal": "Rina melakukan permainan yang sama dengan soal sebelumnya dan dia menemukan secarik kertas di meja bertuliskan \"ABABBBABABBBBBBBBBABABBBABA\". Dia ingat bahwa itu adalah string hasil permainan yang pernah dilakukannya dengan string awal dan peraturan yang berbeda (seperti soal sebelumnya). Tapi dia lupa string awalnya apa dan peraturannya apa, yang hanya dia ingat adalah dia melakukan permainan sebanyak 3 kali. Rina meminta kalian mencari string awal dan peraturan penggantian untuk menghasilkan string yang ditemukan di meja tersebut!",
     "pilihan": {
       "a": "string awal: \"B\", peraturan: (A diganti dengan \"AAA\", B diganti dengan \"BAB\")",
@@ -461,7 +461,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
+    "deskripsi_soal": "Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
     "soal": "Manakah yang benar dari pernyataan berikut?",
     "pilihan": {
       "a": "Ungu dan Nila berjarak sebanyak 3 titik.",
@@ -480,7 +480,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
+    "deskripsi_soal": "Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
     "soal": "Warna apakah yang berada tepat sebelah kiri jingga?",
     "pilihan": {
       "a": "merah",
@@ -499,7 +499,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 25 dan 27\n Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
+    "deskripsi_soal": "Di Kota TOKI terdapat tempat yang berbentuk segi-7 beraturan. Masing-masing titik pada segi-7 tersebut harus diwarnai salah satu dari 7 warna yaitu: merah, jingga, kuning, hijau, biru, nila, dan ungu. Pemberian warnanya mengikuti aturan sebagai berikut : kuning tidak boleh bersebelahan dengan hijau. biru harus berada 3 titik disebelah kiri nila. hijau harus berada tepat disebelah merah (boleh sebelah kiri maupun sebelah kanan). jingga tidak boleh ditempatkan bersebelahan dengan biru maupun nila. ungu harus berada 3 titik dari biru. merah harus berada pada 2 titik dari ungu.",
     "soal": "Apabila pernyataan \"merah harus berada pada 2 titik dari ungu\" dihapus, warna apa saja yang mungkin berada tepat sebelah kiri nila?",
     "pilihan": {
       "a": "Merah atau Biru",
@@ -537,7 +537,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 29 dan 31\n Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
+    "deskripsi_soal": "Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
     "soal": "Berapakah jumlah seluruh kaki yang ada?",
     "pilihan": {
       "a": "160",
@@ -556,7 +556,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 29 dan 31\n Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
+    "deskripsi_soal": "Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
     "soal": "Berapa banyaknya binatang berkaki satu?",
     "pilihan": {
       "a": "20",
@@ -575,7 +575,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 29 dan 31\n Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
+    "deskripsi_soal": "Pada suatu ketika di kebun Pak Dengklek sedang berkumpul berbagai macam binatang. Binatang tersebut ada yang berkaki satu, ada yang berkaki tiga, dan ada yang berkaki lima. Diketahui bahwa jumlah seluruh binatang adalah 52 ekor, jumlah seluruh kaki dari binatang berkaki satu dan tiga adalah 88, dan jumlah seluruh kaki dari binatang berkaki tiga dan lima adalah 106.",
     "soal": "Berapa banyaknya binatang berkaki lima?",
     "pilihan": {
       "a": "8",
@@ -594,7 +594,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
+    "deskripsi_soal": "Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
     "soal": "Siapakah Istri A?",
     "pilihan": {
       "a": "B",
@@ -613,7 +613,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
+    "deskripsi_soal": "Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
     "soal": "Siapa yang dapat dipastikan adalah seorang perempuan?",
     "pilihan": {
       "a": "F",
@@ -632,7 +632,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 32 dan 34\n Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
+    "deskripsi_soal": "Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
     "soal": "Siapa yang merupakan anak tunggal?",
     "pilihan": {
       "a": "G",
@@ -651,7 +651,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": null,
+    "deskripsi_soal": "Sebuah keluarga besar, terdiri dari 9 orang: A, B, C, D, E, F, G, H, I. Diketahui beberapa fakta sebagai berikut: A adalah ayah dari E E adalah bibi dari D I adalah keponakan dari F H adalah nenek dari G dan ibu dari E. B adalah paman dari G dan suami C. A, H, E, dan F, sudah menikah, dan pasangannya merupakan salah satu dari 9 anggota keluarga tersebut (pasangan merupakan suami istri).",
     "soal": "Suami dari E adalah ...",
     "pilihan": {
       "a": "A",
@@ -727,7 +727,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Terdapat suatu permainan Grid berbentuk petak-petak yang tersusun 3x3 yang dilengkapi dengan 4 tombol, dengan bentuk seperti seperti pada Gambar 1. Jika sebuah tombol ditekan, angka-angka pada keempat petak di sekelilingnya akan berputar searah jarum jam. Susunan pada Grid 1 akan ditulis per baris sebagai berikut 1-4-5;7-3-2;8-9-6. Contoh: diberikan susunan semula seperti pada Grid 2, jika tombol A ditekan maka agka-angka pada petak menjadi seperti pada Grid 3.",
+    "deskripsi_soal": "Terdapat suatu permainan Grid berbentuk petak-petak yang tersusun 3x3 yang dilengkapi dengan 4 tombol, dengan bentuk seperti seperti pada Gambar 1. Jika sebuah tombol ditekan, angka-angka pada keempat petak di sekelilingnya akan berputar searah jarum jam. Susunan pada Grid 1 akan ditulis per baris sebagai berikut 1-4-5;7-3-2;8-9-6. Contoh: diberikan susunan semula seperti pada Grid 2, jika tombol A ditekan maka agka-angka pada petak menjadi seperti pada Grid 3.",
     "soal": "Jika dari susunan pada Grid 1, kemudian dilakukan penekanan tombol A dua kali dan kemudian tombol C satu kali, maka susunannya akan menjadi (urutan ditulis dari kiri ke kanan",
     "pilihan": {
       "a": "3-7-5;4-6-9;8-2-1",
@@ -746,7 +746,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Terdapat suatu permainan Grid berbentuk petak-petak yang tersusun 3x3 yang dilengkapi dengan 4 tombol, dengan bentuk seperti seperti pada Gambar 1. Jika sebuah tombol ditekan, angka-angka pada keempat petak di sekelilingnya akan berputar searah jarum jam. Susunan pada Grid 1 akan ditulis per baris sebagai berikut 1-4-5;7-3-2;8-9-6. Contoh: diberikan susunan semula seperti pada Grid 2, jika tombol A ditekan maka agka-angka pada petak menjadi seperti pada Grid 3.",
+    "deskripsi_soal": "Terdapat suatu permainan Grid berbentuk petak-petak yang tersusun 3x3 yang dilengkapi dengan 4 tombol, dengan bentuk seperti seperti pada Gambar 1. Jika sebuah tombol ditekan, angka-angka pada keempat petak di sekelilingnya akan berputar searah jarum jam. Susunan pada Grid 1 akan ditulis per baris sebagai berikut 1-4-5;7-3-2;8-9-6. Contoh: diberikan susunan semula seperti pada Grid 2, jika tombol A ditekan maka agka-angka pada petak menjadi seperti pada Grid 3.",
     "soal": "Berapa penekanan tombol minimal (tombol apa saja) yang diperlukan untuk menyusun susunan angka pada Grid 2 menjadi susunan pada Grid 1 di atas?",
     "pilihan": {
       "a": "3",
@@ -784,7 +784,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n var\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nvar\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.\n\nvar\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
     "soal": "Apakah output program di atas apabila masukan n bernilai 10?",
     "pilihan": {
       "a": "10",
@@ -803,7 +803,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 42 dan 43\n var\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nvar\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.\n\nvar\ni, n, c : longint;\nbegin\nreadln(n);\nc := 0;\nfor i := 1 to n do begin\ninc(c, i);\nend;\nwriteln(c);\nend.",
     "soal": "Apakah output program di atas apabila masukan n bernilai 1000?",
     "pilihan": {
       "a": "1000",
@@ -879,7 +879,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 48\n a := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\na := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);\n\na := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
     "soal": "Dari pilihan berikut ini, berapakah nilai n yang TIDAK membuat nilai a di akhir adalah 79?",
     "pilihan": {
       "a": "68",
@@ -898,7 +898,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 48\n a := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\na := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);\n\na := 13; b := 1;\nwhile(a < n) do\nbegin\na := a + b;\nb := b + 1;\nend;\nwriteln(a, ' ', b);",
     "soal": "Berapakah nilai n maksimum yang membuat nilai b di akhir bernilai 15?",
     "pilihan": {
       "a": "134",
@@ -917,7 +917,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 49 dan 50\n function\nbegin\nif y = 0 then naon := 1\nelse if y = 1 then naon := x\nelse naon := naon(x, y div 2) * naon(x, y div 2 ) * naon(x, y mod 2);\nend;",
+    "deskripsi_soal": "Perhatikan fungsi berikut ini:\nfunction naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;\n\nfunction naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;",
     "soal": "Berapakah hasil dari naon(3, 8)?",
     "pilihan": {
       "a": "11",
@@ -936,7 +936,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 49 dan 50\n function\nbegin\nif y = 0 then naon := 1\nelse if y = 1 then naon := x\nelse naon := naon(x, y div 2) * naon(x, y div 2 ) * naon(x, y mod 2);\nend;",
+    "deskripsi_soal": "Perhatikan fungsi berikut ini:\nfunction naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;\n\nfunction naon(x, y: integer): integer;\nbegin\n  if y = 0 then naon := 1\n  else if y = 1 then naon := x\n  else naon := naon(x, y div 2) * naon(x, y div 2) * naon(x, y mod 2);\nend;",
     "soal": "Berapa kalikah fungsi naon dipanggil pada pemanggilan naon(4, 13)?",
     "pilihan": {
       "a": "13",

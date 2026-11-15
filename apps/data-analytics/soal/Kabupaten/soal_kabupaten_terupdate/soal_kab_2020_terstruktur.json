@@ -153,7 +153,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut digunakan untuk soal nomor 9 dan 10\nPada liburan kali ini, Pak Blangkon akan melakukan bersih-bersih pada 5 kandang ayamnya yakni kandang E, F, G, H, dan I. Karena kelima kandang tersebut saling berhubungan maka Pak Blangkon harus memperhatikan ketentuan berikut dalam menentukan urutan pembersihan kandang:\n- Kandang H dapat dibersihkan jika kandang F sudah dibersihkan\n- Kandang G harus dibersihkan sebelum membersihkan kandang E\n- Kandang I dibersihkan pada urutan keempat",
+    "deskripsi_soal": "Pada liburan kali ini, Pak Blangkon akan melakukan bersih-bersih pada 5 kandang ayamnya yakni kandang E, F, G, H, dan I. Karena kelima kandang tersebut saling berhubungan maka Pak Blangkon harus memperhatikan ketentuan berikut dalam menentukan urutan pembersihan kandang:\n- Kandang H dapat dibersihkan jika kandang F sudah dibersihkan\n- Kandang G harus dibersihkan sebelum membersihkan kandang E\n- Kandang I dibersihkan pada urutan keempat",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -193,7 +193,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 12\nPak Dengklek menugaskan Kwak, Kwik, Kwuk, Kwek, dan Kwok untuk menjaga pekarangan berisi banyak bebek di belakang rumahnya. Setiap harinya biasanya terdiri 2-3 bebek yang harus menjaga dengan ketentuan sebagai berikut:\n- Setiap bebek mendapat jatah tiga hari bertugas dan libur setiap Senin.\n- Pada Selasa dan Jumat harus ada tiga bebek yang menjaga.\n- Kwak bertugas selama tiga hari berturut-turut, termasuk Jumat.\n- Kwek tidak bertugas di hari Minggu.\n- Hari tugas Kwik dan Kwuk berselang-seling.\n- Kwok selalu bertugas bersama Kwik.",
+    "deskripsi_soal": "Pak Dengklek menugaskan Kwak, Kwik, Kwuk, Kwek, dan Kwok untuk menjaga pekarangan berisi banyak bebek di belakang rumahnya. Setiap harinya biasanya terdiri 2-3 bebek yang harus menjaga dengan ketentuan sebagai berikut:\n- Setiap bebek mendapat jatah tiga hari bertugas dan libur setiap Senin.\n- Pada Selasa dan Jumat harus ada tiga bebek yang menjaga.\n- Kwak bertugas selama tiga hari berturut-turut, termasuk Jumat.\n- Kwek tidak bertugas di hari Minggu.\n- Hari tugas Kwik dan Kwuk berselang-seling.\n- Kwok selalu bertugas bersama Kwik.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -492,7 +492,10 @@
     },
     "kode": null,
     "gambar_url": null,
-    "gambar_lokal": ["soal_26_1_kab_2020.png", "soal_26_2_kab_2020.png"],
+    "gambar_lokal": [
+      "soal_26_1_kab_2020.png",
+      "soal_26_2_kab_2020.png"
+    ],
     "kunci": "b",
     "pembahasan": "Dengan memilih 3 rumah yang saling berdekatan pada petak/graf denah perumahan, jumlah keliling/jarak dari ketiga pasang rumah terkecil bernilai 26.",
     "level": "sedang"
@@ -568,7 +571,10 @@
     },
     "kode": null,
     "gambar_url": null,
-    "gambar_lokal": ["soal_30_kab_2020.png", "soal_30_kab_2020(1).png"],
+    "gambar_lokal": [
+      "soal_30_kab_2020.png",
+      "soal_30_kab_2020(1).png"
+    ],
     "kunci": "e",
     "pembahasan": "Mencari diameter graf (jarak terpanjang antara dua simpul menggunakan jalur terpendek). Setelah menghitung lintasan terpendek antar seluruh pasangan simpul, diperoleh nilai diameter sebesar 26.",
     "level": "sedang"
@@ -669,107 +675,88 @@
     "level": "sedang"
   },
   {
-    "tipe": "cerita",
-    "deskripsi_soal": "Perhatikan potongan berikut ini:",
-    "gambar_url_deskripsi": null,
-    "gambar_lokal_deskripsi": null,
-    "pertanyaan": [
-      {
-        "soal_id": "kab_soal36_2020",
-        "soal": "Apakah kembalian dari panas(789)?",
-        "pilihan": {
-          "a": "262",
-          "b": "263",
-          "c": "264",
-          "d": "265",
-          "e": "266"
-        },
-        "kode": "function panas(x: integer): integer;\nvar dingin: integer;\nbegin\n  dingin := 0;\n  while (x >= 0) do begin\n    dingin := dingin + 1;\n    if (x mod 3 = 0) then\n      x := x - 5\n    else if (x mod 5 = 0) then\n      x := x - 3\n    else\n      x := x - 1;\n  end;\n  panas := dingin;\nend;",
-        "kunci": "c",
-        "pembahasan": "Menelusuri pengurangan x hingga < 0:\nKetika x mod 3 = 0, x berkurang 5.\nPola pengurangan akan membentuk siklus terulang hingga x < 0. Banyak iterasi (dingin) yang dilakukan adalah 264.",
-        "level": "sulit",
-        "materi_id": "kab-algoritma"
-      }
-    ]
+    "soal_id": "kab_soal36_2020",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction panas(x: integer): integer;\nvar dingin: integer;\nbegin\n  dingin := 0;\n  while (x >= 0) do begin\n    dingin := dingin + 1;\n    if (x mod 3 = 0) then\n      x := x - 5\n    else if (x mod 5 = 0) then\n      x := x - 3\n    else\n      x := x - 1;\n  end;\n  panas := dingin;\nend;\n\nApakah kembalian dari panas(789)?",
+    "pilihan": {
+      "a": "262",
+      "b": "263",
+      "c": "264",
+      "d": "265",
+      "e": "266"
+    },
+    "kode": "function panas(x: integer): integer;\nvar dingin: integer;\nbegin\n  dingin := 0;\n  while (x >= 0) do begin\n    dingin := dingin + 1;\n    if (x mod 3 = 0) then\n      x := x - 5\n    else if (x mod 5 = 0) then\n      x := x - 3\n    else\n      x := x - 1;\n  end;\n  panas := dingin;\nend;",
+    "kunci": "c",
+    "pembahasan": "Menelusuri pengurangan x hingga < 0:\nKetika x mod 3 = 0, x berkurang 5.\nPola pengurangan akan membentuk siklus terulang hingga x < 0. Banyak iterasi (dingin) yang dilakukan adalah 264.",
+    "level": "sulit",
+    "materi_id": "kab-algoritma",
+    "tipe": "tunggal"
   },
   {
-    "tipe": "cerita",
-    "deskripsi_soal": "Perhatikan potongan program berikut ini:",
-    "gambar_url_deskripsi": null,
-    "gambar_lokal_deskripsi": null,
-    "pertanyaan": [
-      {
-        "soal_id": "kab_soal37_2020",
-        "soal": "Berapakah hasil dari pemanggilan fungsi ayam(19, 39)?",
-        "pilihan": {
-          "a": "39",
-          "b": "741",
-          "c": "58",
-          "d": "750",
-          "e": "748"
-        },
-        "kode": "function ayam(a, b: integer): integer;\nbegin\n  if b = 0 then ayam := 0\n  else if b = 1 then ayam := a\n  else ayam := ayam(a, b div 2) * 2 + ayam(a, b mod 2);\nend;",
-        "kunci": "b",
-        "pembahasan": "Fungsi `ayam(a, b)` adalah implementasi perkalian rekursif `a * b` (Russian Peasant Multiplication).\n`ayam(19, 39)` = 19 * 39 = 741.",
-        "level": "sulit",
-        "materi_id": "kab-algoritma"
-      },
-      {
-        "soal_id": "kab_soal38_2020",
-        "soal": "Berapakah hasil dari pemanggilan fungsi kucing(1, 2018)?",
-        "pilihan": {
-          "a": "1",
-          "b": "1024",
-          "c": "2018",
-          "d": "2036",
-          "e": "2048"
-        },
-        "kode": "function kucing(tikus, keju: integer): integer;\nbegin\n  if (tikus > keju) then\n    kucing := 0\n  else\n    kucing := kucing(tikus * 2 + 1, keju);\nend;",
-        "kunci": "a",
-        "pembahasan": "Fungsi `kucing` tidak mengembalikan nilai penjumlahan dari rekursi, namun hanya terus memanggil dirinya sampai `tikus > keju` yang mengembalikan 0. Pada kasus bahasa Pascal dasar dengan return value tak terdefinisi dari penugasan akhir, hasil akhir bernilai 0 atau 1 (sesuai spesifikasi kunci pilihan a).",
-        "level": "sedang",
-        "materi_id": "kab-algoritma"
-      },
-      {
-        "soal_id": "kab_soal40_2020",
-        "soal": "Berapa nilai dari apaItu(1000)?",
-        "pilihan": {
-          "a": "16",
-          "b": "24",
-          "c": "25",
-          "d": "157",
-          "e": "168"
-        },
-        "kode": "function apaIni(kwak: integer): boolean;\nvar i, j: integer;\nbegin\n  if (kwak <= 1) then\n  begin\n    apaIni := false;\n    exit;\n  end;\n  for i := 2 to (kwak - 1) do\n  begin\n    j := 1;\n    while j * i <= kwak do\n    begin\n      if (i * j = kwak) then\n      begin\n        apaIni := false;\n        exit;\n      end;\n      j := j + 1;\n    end;\n  end;\n  apaIni := true;\nend;\n\nfunction apaItu(kwok: integer): integer;\nvar i, kwak, kwik: integer;\nbegin\n  kwak := kwok;\n  kwik := 0;\n  for i := 0 to kwak do\n  begin\n    if (apaIni(i) = true) then\n      kwik := kwik + 1;\n  end;\n  apaItu := kwik;\nend;",
-        "kunci": "e",
-        "pembahasan": "Fungsi `apaIni` mengecek apakah suatu bilangan adalah bilangan prima. Fungsi `apaItu(1000)` menghitung banyaknya bilangan prima dari 0 sampai 1000. Jumlah bilangan prima dari 1 sampai 1000 adalah tepat 168.",
-        "level": "sulit",
-        "materi_id": "kab-algoritma"
-      }
-    ]
+    "soal_id": "kab_soal37_2020",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction ayam(a, b: integer): integer;\nbegin\n  if b = 0 then ayam := 0\n  else if b = 1 then ayam := a\n  else ayam := ayam(a, b div 2) * 2 + ayam(a, b mod 2);\nend;\n\nBerapakah hasil dari pemanggilan fungsi ayam(19, 39)?",
+    "pilihan": {
+      "a": "39",
+      "b": "741",
+      "c": "58",
+      "d": "750",
+      "e": "748"
+    },
+    "kode": "function ayam(a, b: integer): integer;\nbegin\n  if b = 0 then ayam := 0\n  else if b = 1 then ayam := a\n  else ayam := ayam(a, b div 2) * 2 + ayam(a, b mod 2);\nend;",
+    "kunci": "b",
+    "pembahasan": "Fungsi `ayam(a, b)` adalah implementasi perkalian rekursif `a * b` (Russian Peasant Multiplication).\n`ayam(19, 39)` = 19 * 39 = 741.",
+    "level": "sulit",
+    "materi_id": "kab-algoritma",
+    "tipe": "tunggal"
   },
   {
-    "tipe": "cerita",
-    "deskripsi_soal": "Perhatikan program di bawah ini:",
-    "gambar_url_deskripsi": null,
-    "gambar_lokal_deskripsi": null,
-    "pertanyaan": [
-      {
-        "soal_id": "kab_soal39_2020",
-        "soal": "Tentukan nilai variabel ambyar yang tercetak setelah program selesai dijalankan jika f = 98:",
-        "pilihan": {
-          "a": "322",
-          "b": "321",
-          "c": "223",
-          "d": "254",
-          "e": "193"
-        },
-        "kode": "Program santuy;\nvar n, a, b, ambyar, f, m: integer;\ndata: array[1..15] of integer = (13,17,25,28,30,41,45,56,58,64,73,76,87,91,98);\nbegin\n  n := 15; a := 1; b := n; ambyar := 0; f := 98;\n  while (a <= b) do\n  begin\n    m := (a + b) div 2;\n    ambyar := ambyar + data[m];\n    if (data[m] = f) then break\n    else if (data[m] < f) then\n    begin\n      a := m + 1;\n    end else\n    begin\n      b := m - 1;\n    end;\n  end;\n  writeln(ambyar);\nend.",
-        "kunci": "d",
-        "pembahasan": "Simulasi Binary Search untuk f = 98:\n- Iterasi 1: a=1, b=15 -> m=8, data[8]=56. ambyar = 0 + 56 = 56. Karena 56 < 98, a = 9.\n- Iterasi 2: a=9, b=15 -> m=12, data[12]=76. ambyar = 56 + 76 = 132. Karena 76 < 98, a = 13.\n- Iterasi 3: a=13, b=15 -> m=14, data[14]=91. ambyar = 132 + 91 = 223. Karena 91 < 98, a = 15.\n- Iterasi 4: a=15, b=15 -> m=15, data[15]=98. ambyar = 223 + 98 = 321 (Atau jika data[14] dan data[15] dihitung pada batas index: 56 + 76 + 24 = 254).",
-        "level": "sedang",
-        "materi_id": "kab-algoritma"
-      }
-    ]
+    "soal_id": "kab_soal38_2020",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction kucing(tikus, keju: integer): integer;\nbegin\n  if (tikus > keju) then\n    kucing := 0\n  else\n    kucing := kucing(tikus * 2 + 1, keju);\nend;\n\nBerapakah hasil dari pemanggilan fungsi kucing(1, 2018)?",
+    "pilihan": {
+      "a": "1",
+      "b": "1024",
+      "c": "2018",
+      "d": "2036",
+      "e": "2048"
+    },
+    "kode": "function kucing(tikus, keju: integer): integer;\nbegin\n  if (tikus > keju) then\n    kucing := 0\n  else\n    kucing := kucing(tikus * 2 + 1, keju);\nend;",
+    "kunci": "a",
+    "pembahasan": "Fungsi `kucing` tidak mengembalikan nilai penjumlahan dari rekursi, namun hanya terus memanggil dirinya sampai `tikus > keju` yang mengembalikan 0. Pada kasus bahasa Pascal dasar dengan return value tak terdefinisi dari penugasan akhir, hasil akhir bernilai 0 atau 1 (sesuai spesifikasi kunci pilihan a).",
+    "level": "sedang",
+    "materi_id": "kab-algoritma",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal39_2020",
+    "soal": "Perhatikan potongan program berikut ini:\nProgram santuy;\nvar n, a, b, ambyar, f, m: integer;\ndata: array[1..15] of integer = (13,17,25,28,30,41,45,56,58,64,73,76,87,91,98);\nbegin\n  n := 15; a := 1; b := n; ambyar := 0; f := 98;\n  while (a <= b) do\n  begin\n    m := (a + b) div 2;\n    ambyar := ambyar + data[m];\n    if (data[m] = f) then break\n    else if (data[m] < f) then\n    begin\n      a := m + 1;\n    end else\n    begin\n      b := m - 1;\n    end;\n  end;\n  writeln(ambyar);\nend.\n\nTentukan nilai variabel ambyar yang tercetak setelah program selesai dijalankan jika f = 98:",
+    "pilihan": {
+      "a": "322",
+      "b": "321",
+      "c": "223",
+      "d": "254",
+      "e": "193"
+    },
+    "kode": "Program santuy;\nvar n, a, b, ambyar, f, m: integer;\ndata: array[1..15] of integer = (13,17,25,28,30,41,45,56,58,64,73,76,87,91,98);\nbegin\n  n := 15; a := 1; b := n; ambyar := 0; f := 98;\n  while (a <= b) do\n  begin\n    m := (a + b) div 2;\n    ambyar := ambyar + data[m];\n    if (data[m] = f) then break\n    else if (data[m] < f) then\n    begin\n      a := m + 1;\n    end else\n    begin\n      b := m - 1;\n    end;\n  end;\n  writeln(ambyar);\nend.",
+    "kunci": "d",
+    "pembahasan": "Simulasi Binary Search untuk f = 98:\n- Iterasi 1: a=1, b=15 -> m=8, data[8]=56. ambyar = 0 + 56 = 56. Karena 56 < 98, a = 9.\n- Iterasi 2: a=9, b=15 -> m=12, data[12]=76. ambyar = 56 + 76 = 132. Karena 76 < 98, a = 13.\n- Iterasi 3: a=13, b=15 -> m=14, data[14]=91. ambyar = 132 + 91 = 223. Karena 91 < 98, a = 15.\n- Iterasi 4: a=15, b=15 -> m=15, data[15]=98. ambyar = 223 + 98 = 321 (Atau jika data[14] dan data[15] dihitung pada batas index: 56 + 76 + 24 = 254).",
+    "level": "sedang",
+    "materi_id": "kab-algoritma",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal40_2020",
+    "soal": "Perhatikan potongan program berikut ini:\nfunction apaIni(kwak: integer): boolean;\nvar i, j: integer;\nbegin\n  if (kwak <= 1) then\n  begin\n    apaIni := false;\n    exit;\n  end;\n  for i := 2 to (kwak - 1) do\n  begin\n    j := 1;\n    while j * i <= kwak do\n    begin\n      if (i * j = kwak) then\n      begin\n        apaIni := false;\n        exit;\n      end;\n      j := j + 1;\n    end;\n  end;\n  apaIni := true;\nend;\n\nfunction apaItu(kwok: integer): integer;\nvar i, kwak, kwik: integer;\nbegin\n  kwak := kwok;\n  kwik := 0;\n  for i := 0 to kwak do\n  begin\n    if (apaIni(i) = true) then\n      kwik := kwik + 1;\n  end;\n  apaItu := kwik;\nend;\n\nBerapa nilai dari apaItu(1000)?",
+    "pilihan": {
+      "a": "16",
+      "b": "24",
+      "c": "25",
+      "d": "157",
+      "e": "168"
+    },
+    "kode": "function apaIni(kwak: integer): boolean;\nvar i, j: integer;\nbegin\n  if (kwak <= 1) then\n  begin\n    apaIni := false;\n    exit;\n  end;\n  for i := 2 to (kwak - 1) do\n  begin\n    j := 1;\n    while j * i <= kwak do\n    begin\n      if (i * j = kwak) then\n      begin\n        apaIni := false;\n        exit;\n      end;\n      j := j + 1;\n    end;\n  end;\n  apaIni := true;\nend;\n\nfunction apaItu(kwok: integer): integer;\nvar i, kwak, kwik: integer;\nbegin\n  kwak := kwok;\n  kwik := 0;\n  for i := 0 to kwak do\n  begin\n    if (apaIni(i) = true) then\n      kwik := kwik + 1;\n  end;\n  apaItu := kwik;\nend;",
+    "kunci": "e",
+    "pembahasan": "Fungsi `apaIni` mengecek apakah suatu bilangan adalah bilangan prima. Fungsi `apaItu(1000)` menghitung banyaknya bilangan prima dari 0 sampai 1000. Jumlah bilangan prima dari 1 sampai 1000 adalah tepat 168.",
+    "level": "sulit",
+    "materi_id": "kab-algoritma",
+    "tipe": "tunggal"
   }
 ]

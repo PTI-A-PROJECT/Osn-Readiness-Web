@@ -191,7 +191,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 11 dan 13\n Mesin counter 3 digit rusak: saat angka 3, lompat ke 5, digit kanan mundur 1, digit kiri naik 1...",
+    "deskripsi_soal": "Sebuah mesin counter (pencacah) 3 digit dapat mencacah dari 0 (tertera sebagai 000, semua digit 0) hingga 999 (semua digitnya berharga 9). Normalnya setiap kali tombol ditekan maka bilangan akan meningkat 1.\n\nNamun, saat ini mesin itu dalam keadaan rusak. Pada setiap digitnya, saat seharusnya naik ke angka 3, ia segera melompat ke angka 5 sementara digit sebelah kanannya (jika ada) mundur satu angka (termasuk jika dari 0 maka mundur ke 9) dan digit sebelah kirinya (jika ada) naik satu angka (kecuali angka 9 tetap).\nCatatan: Kejadian ini dapat terjadi berantai, ketika satu digit menyebabkan digit sebelahnya berubah ke angka yang seharusnya 3 maka terjadi juga efek yang sama yaitu lompat ke angka 5.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -246,64 +246,59 @@
     ]
   },
   {
-    "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 14 dan 16\n Operasi modulo dan faktorial.",
-    "gambar_url_deskripsi": null,
-    "gambar_lokal_deskripsi": null,
-    "pertanyaan": [
-      {
-        "soal_id": "kab_soal14_2009",
-        "soal": "Berapakah 10 12 mod 13 ?",
-        "pilihan": {
-          "a": "12",
-          "b": "3",
-          "c": "4",
-          "d": "9",
-          "e": "1"
-        },
-        "kode": null,
-        "kunci": "e",
-        "pembahasan": "Kunci jawaban terverifikasi: opsi E.\nDasar Verifikasi & Pembahasan:\n10^12 mod 13 = 1 (Teorema Kecil Fermat: 13 prima dan 10 tidak habis dibagi 13, maka 10^12 = 10^(13-1) = 1 mod 13). Periksa: 10^6 = 1.000.000 = 1 mod 13, sehingga 10^12 = 1.\n\n[Analisis Tambahan]:\nBerdasarkan Teorema Kecil Fermat ($a^{p-1} \\equiv 1 \\pmod p$ untuk $p prima$), $10^{12} \\equiv 1 \\pmod{13}$ tidak langsung jika pangkatnya 12. Namun dihitung manual/modular exponentiation: $10^2 = 100 \\equiv 9$, $10^4 \\equiv 81 \\equiv 3$, $10^{12} \\equiv 3^3 = 27 \\equiv 1$ atau dengan perhitungan sisa menghasilkan 9.",
-        "level": "mudah",
-        "materi_id": "kab-kombinatorika"
-      },
-      {
-        "soal_id": "kab_soal15_2009",
-        "soal": "Berapakah 12! mod 13 ?",
-        "pilihan": {
-          "a": "5",
-          "b": "9",
-          "c": "12",
-          "d": "7",
-          "e": "11"
-        },
-        "kode": null,
-        "kunci": "c",
-        "pembahasan": "Menurut Teorema Wilson, jika $p$ adalah bilangan prima, maka $(p-1)! \\equiv -1 \\pmod p$. Untuk $p = 13$, $12! \\equiv -1 \\equiv 12 \\pmod{13}$.",
-        "level": "mudah",
-        "materi_id": "kab-kombinatorika"
-      },
-      {
-        "soal_id": "kab_soal16_2009",
-        "soal": "Jika 10! mod x = 0, maka manakah dari berikut ini yang tidak bisa memenuhi sebagai x?",
-        "pilihan": {
-          "a": "14175",
-          "b": "2268",
-          "c": "1575",
-          "d": "2025",
-          "e": "3584"
-        },
-        "kode": null,
-        "kunci": "e",
-        "pembahasan": "Faktorisasi prima dari $10! = 2^8 \\times 3^4 \\times 5^2 \\times 7$. Angka 3584 ($2^9 \\times 7$) memiliki pangkat faktor 2 sebesar 9, yang melebihi jumlah faktor 2 pada $10!$ (hanya 8), sehingga tidak bisa membagi $10!$.",
-        "level": "mudah",
-        "materi_id": "kab-kombinatorika"
-      }
-    ]
+    "soal_id": "kab_soal14_2009",
+    "soal": "Berapakah 10^12 mod 13 ?",
+    "pilihan": {
+      "a": "12",
+      "b": "3",
+      "c": "4",
+      "d": "9",
+      "e": "1"
+    },
+    "kode": null,
+    "kunci": "e",
+    "pembahasan": "Kunci jawaban terverifikasi: opsi E.\nDasar Verifikasi & Pembahasan:\n10^12 mod 13 = 1 (Teorema Kecil Fermat: 13 prima dan 10 tidak habis dibagi 13, maka 10^12 = 10^(13-1) = 1 mod 13). Periksa: 10^6 = 1.000.000 = 1 mod 13, sehingga 10^12 = 1.\n\n[Analisis Tambahan]:\nBerdasarkan Teorema Kecil Fermat ($a^{p-1} \\equiv 1 \\pmod p$ untuk $p prima$), $10^{12} \\equiv 1 \\pmod{13}$ tidak langsung jika pangkatnya 12. Namun dihitung manual/modular exponentiation: $10^2 = 100 \\equiv 9$, $10^4 \\equiv 81 \\equiv 3$, $10^{12} \\equiv 3^3 = 27 \\equiv 1$ atau dengan perhitungan sisa menghasilkan 9.",
+    "level": "mudah",
+    "materi_id": "kab-kombinatorika",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal15_2009",
+    "soal": "Berapakah 12! mod 13 ?",
+    "pilihan": {
+      "a": "5",
+      "b": "9",
+      "c": "12",
+      "d": "7",
+      "e": "11"
+    },
+    "kode": null,
+    "kunci": "c",
+    "pembahasan": "Menurut Teorema Wilson, jika $p$ adalah bilangan prima, maka $(p-1)! \\equiv -1 \\pmod p$. Untuk $p = 13$, $12! \\equiv -1 \\equiv 12 \\pmod{13}$.",
+    "level": "mudah",
+    "materi_id": "kab-kombinatorika",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal16_2009",
+    "soal": "Jika 10! mod x = 0, maka manakah dari berikut ini yang tidak bisa memenuhi sebagai x?",
+    "pilihan": {
+      "a": "14175",
+      "b": "2268",
+      "c": "1575",
+      "d": "2025",
+      "e": "3584"
+    },
+    "kode": null,
+    "kunci": "e",
+    "pembahasan": "Faktorisasi prima dari $10! = 2^8 \\times 3^4 \\times 5^2 \\times 7$. Angka 3584 ($2^9 \\times 7$) memiliki pangkat faktor 2 sebesar 9, yang melebihi jumlah faktor 2 pada $10!$ (hanya 8), sehingga tidak bisa membagi $10!$.",
+    "level": "mudah",
+    "materi_id": "kab-kombinatorika",
+    "tipe": "tunggal"
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 17 dan 19\n Enam siswa (Gina, Bunga, Heni, Lina, Cici, Mira) menerima hadiah ujian Matematika dan Fisika...",
+    "deskripsi_soal": "Enam orang siswa, yaitu Gina, Bunga, Heni, Lina, Cici, dan Mira, menerima sejumlah uang sebagai hadiah berdasarkan nilai ujian Matematika dan Fisika mereka. Untuk masing-masing mata ujian, nilai tertinggi mendapat hadiah Rp6.000, terbaik kedua Rp5.000, terbaik ketiga Rp4.000, terbaik keempat Rp3.000, terbaik kelima Rp2.000, dan peringkat terakhir mendapat Rp1.000. Tidak ada dua siswa yang memperoleh nilai yang sama pada mata ujian yang sama, dan setiap siswa menerima hadiah dari kedua mata ujian tersebut.\n\nDiketahui informasi nilai sebagai berikut:\n1. Nilai Matematika Gina lebih besar daripada Mira, sementara nilai Fisika Gina lebih kecil daripada Bunga.\n2. Nilai Matematika Heni lebih besar daripada Gina, dan nilai Fisika Heni lebih kecil daripada Lina.\n3. Nilai Matematika Cici lebih kecil daripada Gina, tetapi nilai Fisika Cici lebih besar daripada Gina.\n4. Nilai Matematika Mira lebih besar daripada Lina, sementara nilai Fisika Mira lebih besar daripada Cici.\n5. Nilai Fisika Lina lebih kecil daripada Gina.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -359,7 +354,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 20 dan 23\n Aturan perpindahan pengelana antar kota A, B, C, D, E, F.",
+    "deskripsi_soal": "Seorang pengelana berkeliling dari satu kota ke kota lain. Kota-kota yang dapat dikunjungi adalah A, B, C, D, E, dan F. Ia menentukan aturan perpindahan sebagai berikut:\n- Jika hari ini ia berada di kota A, maka besoknya ia akan pergi ke kota B atau D.\n- Jika hari ini ia berada di kota B, maka besoknya ia akan pergi ke kota D atau E.\n- Jika hari ini ia berada di kota C, maka besoknya ia akan pergi ke kota D atau F.\n- Jika hari ini ia berada di kota D, maka besoknya ia akan pergi ke kota E atau F.\n- Jika hari ini ia berada di kota E, maka besoknya ia akan pergi ke kota A atau C.\n- Jika hari ini ia berada di kota F, maka besoknya ia akan pergi ke kota B atau E.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -431,7 +426,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 dan 26\n Informasi mengenai wanita A, B, dan C (cerdas, cantik, artistik, kaya).",
+    "deskripsi_soal": "Ada 3 wanita, yaitu A, B, dan C. Berikut adalah sejumlah informasi mengenai mereka:\n[1] Ada 2 orang yang cerdas, 2 orang cantik, 2 orang artistik, dan 2 orang kaya.\n[2] Tiap orang hanya mempunyai sifat di atas paling banyak 3 macam.\n[3] Mengenai A diketahui bila dia cantik maka dia kaya.\n[4] Mengenai B dan C bila dia cantik, maka dia artistik.\n[5] Mengenai A dan C bila dia kaya maka dia artistik.\n[6] Dari A dan B bila dia cantik maka dia tak cerdas.\n[7] B dan C cerdas.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -487,7 +482,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 27 dan 30\n Pilihan ekstrakurikuler siswa A, B, C, D, E (basket/voli dan musik/melukis).",
+    "deskripsi_soal": "Lima orang siswa bernama A, B, C, D, dan E masing-masing memilih satu kegiatan ekstrakurikuler olahraga (Bola Basket atau Bola Voli) dan satu kegiatan ekstrakurikuler kesenian (Musik atau Melukis).\nDiketahui ketentuan dan fakta berikut:\n- Terdapat 3 orang yang memilih Bola Basket dan 2 orang yang memilih Bola Voli.\n- Terdapat 2 orang yang memilih Musik dan 3 orang yang memilih Melukis.\n1. A dan C memilih olahraga yang sama.\n2. D dan E memilih olahraga yang berbeda.\n3. B dan E memilih kesenian yang sama.\n4. C dan D memilih kesenian yang berbeda.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -672,46 +667,51 @@
     "level": "sedang"
   },
   {
-    "soal_id": "kab_soal37_2009",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Nilai kembalian pemanggilan fungsi move(16) adalah...",
-    "pilihan": {
-      "a": "31",
-      "b": "1",
-      "c": "32768",
-      "d": "65535",
-      "e": "33"
-    },
-    "kode": "function move(n:integer): integer;\nbegin\n if (n=1) then move:=1 else move:=2*move(n-1)+1;\nend;",
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "d",
-    "pembahasan": "Fungsi ini menghitung jumlah langkah Menara Hanoi, yaitu $2^n - 1$. Untuk $n = 16$, $2^{16} - 1 = 65536 - 1 = 65535$.",
-    "level": "sedang"
-  },
-  {
-    "soal_id": "kab_soal38_2009",
-    "tipe": "tunggal",
-    "materi_id": "kab-algoritma",
-    "soal": "Untuk semua nilai n bilangan bulat positif, nilai\nkembalian pemanggilan fungsi move(n) ekivalen\ndengan...",
-    "pilihan": {
-      "a": "2 n -1",
-      "b": "2 (n-1)",
-      "c": "2 (n-1) + 1",
-      "d": "2 (n-1)",
-      "e": "2 (n-1) + 1"
-    },
-    "kode": null,
-    "gambar_url": null,
-    "gambar_lokal": null,
-    "kunci": "a",
-    "pembahasan": "Bentuk closed-form dari rekurensi tersebut adalah $2^n - 1$.",
-    "level": "mudah"
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan fungsi rekursif berikut ini:\nfunction move(n:integer): integer;\nbegin\n if (n=1) then move:=1 else move:=2*move(n-1)+1;\nend;",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
+      {
+        "soal_id": "kab_soal37_2009",
+        "materi_id": "kab-algoritma",
+        "soal": "Nilai kembalian pemanggilan fungsi move(16) adalah...",
+        "pilihan": {
+          "a": "31",
+          "b": "1",
+          "c": "32768",
+          "d": "65535",
+          "e": "33"
+        },
+        "kode": "function move(n:integer): integer;\nbegin\n if (n=1) then move:=1 else move:=2*move(n-1)+1;\nend;",
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "d",
+        "pembahasan": "Fungsi ini menghitung jumlah langkah Menara Hanoi, yaitu $2^n - 1$. Untuk $n = 16$, $2^{16} - 1 = 65536 - 1 = 65535$.",
+        "level": "sedang"
+      },
+      {
+        "soal_id": "kab_soal38_2009",
+        "materi_id": "kab-algoritma",
+        "soal": "Untuk semua nilai n bilangan bulat positif, nilai\nkembalian pemanggilan fungsi move(n) ekivalen\ndengan...",
+        "pilihan": {
+          "a": "2 n -1",
+          "b": "2 (n-1)",
+          "c": "2 (n-1) + 1",
+          "d": "2 (n-1)",
+          "e": "2 (n-1) + 1"
+        },
+        "kode": "function move(n:integer): integer;\nbegin\n if (n=1) then move:=1 else move:=2*move(n-1)+1;\nend;",
+        "gambar_url": null,
+        "gambar_lokal": null,
+        "kunci": "a",
+        "pembahasan": "Bentuk closed-form dari rekurensi tersebut adalah $2^n - 1$.",
+        "level": "mudah"
+      }
+    ]
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Prosedur Pagar(N).",
+    "deskripsi_soal": "Perhatikan prosedur berikut ini:\nprocedure Pagar(N: integer);\nvar\n  k: integer;\nbegin\n  k := N;\n  while k > 0 do\n  begin\n    write('#');\n    k := k - 10; {update harga k}\n  end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -725,7 +725,7 @@
           "d": "N",
           "e": "N log N"
         },
-        "kode": null,
+        "kode": "procedure Pagar(N: integer);\nvar\n  k: integer;\nbegin\n  k := N;\n  while k > 0 do\n  begin\n    write('#');\n    k := k - 10; {update harga k}\n  end;\nend;",
         "kunci": "d",
         "pembahasan": "Karena pengurangan bernilai linier tetap `k := k - 10`, jumlah iterasi berbanding lurus dengan $N$, yakni berorde linier $O(N)$.",
         "level": "sedang",
@@ -741,7 +741,7 @@
           "d": "N",
           "e": "N log N"
         },
-        "kode": "k := k - 10;",
+        "kode": "procedure Pagar(N: integer);\nvar\n  k: integer;\nbegin\n  k := N;\n  while k > 0 do\n  begin\n    write('#');\n    k := k - 10; {update harga k}\n  end;\nend;",
         "kunci": "c",
         "pembahasan": "Pembagian dengan 10 pada setiap iterasi (`div 10`) membuat kompleksitas waktu menjadi logaritmik $O(\\log N)$.",
         "level": "sulit",
@@ -751,7 +751,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 41 dan 47\n Array X berukuran 10 (indeks 0..9) dengan isi (9, 5, 2, 10, 1, 8, 4, 3, 7, 6) beserta prosedur manipulasi array.",
+    "deskripsi_soal": "Perhatikan deklarasi variabel dan prosedur-prosedur berikut ini:\nconst\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -765,7 +765,7 @@
           "d": "9 10 5 7 4 3 7 6 2 1",
           "e": "9 5 10 2 8 4 3 7 6 1"
         },
-        "kode": null,
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "b",
         "pembahasan": "Kunci jawaban terverifikasi: opsi B.\nDasar Verifikasi & Pembahasan:\nSetelah dua kali pemanggilan adukaduk (dua kali lintasan bubble sort), array menjadi (2, 5, 1, 8, 4, 3, 7, 6, 9, 10). Kunci lama (c) adalah hasil setelah SATU kali pemanggilan.\n\n[Analisis Tambahan]:\nSimulasi dua kali iterasi prosedur `adukaduk` (Bubble Sort pass) pada array X menghasilkan susunan `5 2 9 1 8 4 3 7 6 10`.",
         "level": "sedang",
@@ -781,7 +781,7 @@
           "d": "4",
           "e": "8"
         },
-        "kode": null,
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "d",
         "pembahasan": "Kunci jawaban terverifikasi: opsi D.\nDasar Verifikasi & Pembahasan:\nX[0] pertama kali bernilai 1 setelah pemanggilan adukaduk yang ke-4, bukan ke-5.\n\n[Analisis Tambahan]:\nAngka 1 pada array bergerak ke kiri (indeks 0) sebanyak 1 posisi per iterasi bubble sort. Karena posisi awal angka 1 berada di indeks 4, dibutuhkan 5 kali pemanggilan.",
         "level": "sedang",
@@ -797,7 +797,7 @@
           "d": "25",
           "e": "10"
         },
-        "kode": null,
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "d",
         "pembahasan": "Kunci jawaban terverifikasi: opsi D.\nDasar Verifikasi & Pembahasan:\nJumlah pertukaran (ctr) adalah 8 + 7 + 5 + 4 + 1 = 25. Setelah lintasan ke-5 array sudah terurut sehingga lintasan ke-6 sampai ke-20 tidak menambah ctr.\n\n[Analisis Tambahan]:\nVariabel `ctr` menghitung total pertukaran elemen (`tx`). Setelah array terurut sepenuhnya pada beberapa iterasi awal, pertukaran berhenti sehingga nilai `ctr` konstan di angka 34.",
         "level": "sedang",
@@ -813,7 +813,7 @@
           "d": "5",
           "e": "8"
         },
-        "kode": "procedure adukaduk;\nvar i, j, tmp: integer;\nbegin\n for i := 0 to 8 do begin\n tmp := i;\n for j := i+1 to 9 do\n if (X[tmp] > X[j]) then tmp := j;\n if (X[i] > X[tmp]) then tx(i,tmp);\n end;\nend;",
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "c",
         "pembahasan": "Kunci jawaban terverifikasi: opsi C.\nDasar Verifikasi & Pembahasan:\nVersi selection sort pada array (9, 5, 2, 10, 1, 8, 4, 3, 7, 6) melakukan 9 pertukaran dalam satu kali pemanggilan.\n\n[Analisis Tambahan]:\nSimulasi selection sort pada 1 iterasi luar mengeksekusi prosedur penukaran (`tx`) sebanyak 7 kali.",
         "level": "sedang",
@@ -821,7 +821,7 @@
       },
       {
         "soal_id": "kab_soal45_2009",
-        "soal": "Jika fungsi cetak(i: integer) ditulis ulang sebagai berikut. procedure cetak(i: integer);\nbegin\n if (i>=0) then\n begin write(X[i],? „);cetak(i-1) end;\nend; keluaran hasil dari pemanggilan cetak(9) adalah:",
+        "soal": "Jika prosedur cetak(i: integer) ditulis ulang sebagai berikut:\nprocedure cetak(i: integer);\nbegin\n  if (i >= 0) then\n  begin\n    write(X[i], ' ');\n    cetak(i - 1);\n  end;\nend;\nkeluaran hasil dari pemanggilan cetak(9) adalah:",
         "pilihan": {
           "a": "1 6 7 3 4 8 3 10 5",
           "b": "2 5 1 8 4 3 7 6 9 10",
@@ -829,7 +829,7 @@
           "d": "5 9 10 2 8 1 3 4 6 7",
           "e": "10 9 8 7 6 5 4 3 2 1"
         },
-        "kode": "cetak(i: integer)",
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "c",
         "pembahasan": "Kunci jawaban terverifikasi: opsi C.\nDasar Verifikasi & Pembahasan:\ncetak yang baru mencetak X[i] lalu memanggil cetak(i-1), sehingga mencetak dari indeks 9 turun ke 0, yaitu kebalikan dari isi array semula: 6 7 3 4 8 1 10 2 5 9.\n\n[Analisis Tambahan]:\nProsedur cetak rekursif menurun mencetak elemen dari indeks akhir ke awal dengan format cetak terbalik.",
         "level": "sedang",
@@ -845,7 +845,7 @@
           "d": "Semua isinya berharga sama",
           "e": "Tidak berbeda hasilnya jika versi adukaduk yang semula dipanggil 6 kali"
         },
-        "kode": "procedure pingpong(var left, right: integer);\nvar tmp: integer;\nbegin\n tmp := X[(left+right) div 2];\n while left < right do begin\n while X[left] < tmp do left := left + 1;\n while tmp < X[right] do right := right - 1;\n tx(left, right);\n end;\nend;\n\nprocedure adukaduk(l,r: integer);\nvar l1, r1: integer;\nbegin\n if (l < r) then begin\n l1 := l; r1 := r;\n pingpong(l1, r1);\n adukaduk(l, r1);\n adukaduk(l1, r);\n end;\nend;",
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "e",
         "pembahasan": "Algoritma QuickSort menghasilkan array terurut yang sama persis seperti halnya jika algoritma sorting sebelumnya dijalankan hingga selesai (atau dipanggil cukup banyak, yaitu 6 kali).",
         "level": "sedang",
@@ -853,7 +853,7 @@
       },
       {
         "soal_id": "kab_soal47_2009",
-        "soal": "Mengacu pada pertanyaan no 46 sebelumnya, pada pemanggilan pingpong(left, right) akan terjadi peristiwa:",
+        "soal": "Jika prosedur adukaduk diganti isinya serta dilengkapi satu prosedur tambahan pingpong sebagai berikut:\nprocedure pingpong(var left, right: integer);\nvar tmp: integer;\nbegin\n  tmp := X[(left+right) div 2];\n  while left < right do begin\n    while X[left] < tmp do left := left + 1;\n    while tmp < X[right] do right := right - 1;\n    tx(left, right);\n  end;\nend;\n\nprocedure adukaduk(l, r: integer);\nvar l1, r1: integer;\nbegin\n  if (l < r) then begin\n    l1 := l; r1 := r;\n    pingpong(l1, r1);\n    adukaduk(l, r1);\n    adukaduk(l1, r);\n  end;\nend;\n\nPada pemanggilan pingpong(left, right) melalui adukaduk(0, 9) akan terjadi peristiwa:",
         "pilihan": {
           "a": "Membagi array menjadi dua segmen kiri dan kanan dan setiap segmen data menjadi terurut menaik..",
           "b": "Seluruh elemen array antara left dan right menjadi terurut",
@@ -861,7 +861,7 @@
           "d": "Membagi array menjadi dua segmen kiri dan kanan dan data di kiri dipindah kekanan, dan dari kanan\nke kiri.",
           "e": "Data dalam array hanya teracak tanpa pola."
         },
-        "kode": "pingpong(left, right)",
+        "kode": "const\n  ctr: integer = 0;\nvar\n  X: array[0..9] of integer = (9, 5, 2, 10, 1, 8, 4, 3, 7, 6);\n\nprocedure tx(a, b: integer);\nvar\n  tmp: integer;\nbegin\n  ctr := ctr + 1;\n  tmp := X[a];\n  X[a] := X[b];\n  X[b] := tmp;\nend;\n\nprocedure adukaduk;\nvar\n  j: integer;\nbegin\n  for j := 0 to 8 do\n    if (X[j] > X[j+1]) then\n      tx(j, j+1);\nend;\n\nprocedure cetak(i: integer);\nvar\n  j: integer;\nbegin\n  for j := 0 to i do\n    write(X[j], ' ');\n  writeln;\nend;",
         "kunci": "c",
         "pembahasan": "Prosedur partisi QuickSort (`pingpong`) berfungsi membagi elemen-elemen sehingga elemen di sebelah kiri pivot bernilai lebih kecil atau sama dengan elemen di sebelah kanan.",
         "level": "mudah",
@@ -871,7 +871,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 48 dan 50\n Perhatikan fungsi rekursif wah(x, y).",
+    "deskripsi_soal": "Perhatikan fungsi rekursif berikut ini:\nfunction wah(x, y: integer): integer;\nbegin\n  if ((x = 0) and (y = 0)) then\n    wah := 0\n  else if (x > y) then\n  begin\n    if (x > -y) then\n      wah := wah(x - 1, y) + 1\n    else\n      wah := wah(x, y + 1) + 1;\n  end\n  else\n  begin\n    if (x > -y) then\n      wah := wah(x, y - 1) + 1\n    else\n      wah := wah(x + 1, y) + 1;\n  end;\nend;",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -885,7 +885,7 @@
           "d": "12",
           "e": "Tidak ada pilihan jawaban yang benar"
         },
-        "kode": "wah(3, 3)",
+        "kode": "function wah(x, y: integer): integer;\nbegin\n  if ((x = 0) and (y = 0)) then\n    wah := 0\n  else if (x > y) then\n  begin\n    if (x > -y) then\n      wah := wah(x - 1, y) + 1\n    else\n      wah := wah(x, y + 1) + 1;\n  end\n  else\n  begin\n    if (x > -y) then\n      wah := wah(x, y - 1) + 1\n    else\n      wah := wah(x + 1, y) + 1;\n  end;\nend;",
         "kunci": "b",
         "pembahasan": "Kunci jawaban terverifikasi: opsi B.\nDasar Verifikasi & Pembahasan:\nwah(3,3) = 6, bukan 3. Runtutan: wah(1,0)=1, wah(1,1)=2, wah(2,1)=3, wah(2,2)=4, wah(3,2)=5, wah(3,3)=6.\n\n[Analisis Tambahan]:\nPelacakan eksekusi `wah(3, 3)` mengembalikan nilai 3.",
         "level": "mudah",
@@ -901,7 +901,7 @@
           "d": "8",
           "e": "Tidak ada pilihan jawaban yang benar"
         },
-        "kode": "wah(-4, 2)",
+        "kode": "function wah(x, y: integer): integer;\nbegin\n  if ((x = 0) and (y = 0)) then\n    wah := 0\n  else if (x > y) then\n  begin\n    if (x > -y) then\n      wah := wah(x - 1, y) + 1\n    else\n      wah := wah(x, y + 1) + 1;\n  end\n  else\n  begin\n    if (x > -y) then\n      wah := wah(x, y - 1) + 1\n    else\n      wah := wah(x + 1, y) + 1;\n  end;\nend;",
         "kunci": "c",
         "pembahasan": "Pelacakan eksekusi `wah(-4, 2)` melalui percabangan rekursif menghasilkan nilai 6.",
         "level": "sedang",
@@ -917,7 +917,7 @@
           "d": "8",
           "e": "Tidak ada pilihan jawaban yang benar"
         },
-        "kode": "wah(x, y)",
+        "kode": "function wah(x, y: integer): integer;\nbegin\n  if ((x = 0) and (y = 0)) then\n    wah := 0\n  else if (x > y) then\n  begin\n    if (x > -y) then\n      wah := wah(x - 1, y) + 1\n    else\n      wah := wah(x, y + 1) + 1;\n  end\n  else\n  begin\n    if (x > -y) then\n      wah := wah(x, y - 1) + 1\n    else\n      wah := wah(x + 1, y) + 1;\n  end;\nend;",
         "kunci": "b",
         "pembahasan": "Terdapat tepat 12 pasangan koordinat $(x, y)$ yang memenuhi fungsi `wah(x, y) = 3`.",
         "level": "mudah",

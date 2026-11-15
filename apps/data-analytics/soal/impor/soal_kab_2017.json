@@ -25,7 +25,7 @@
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
     "deskripsi_soal": null,
-    "soal": "Jika diketahui A, B, C dan D adalah bilangan bulat dan memenuhi:",
+    "soal": "Jika diketahui A, B, C, dan D adalah bilangan bulat dan memenuhi sistem persamaan berikut:\nAB + C + D = 3\nBC + A + D = 5\nCD + A + B = 2\nDA + B + C = 6\n\nBerapakah nilai A?",
     "pilihan": {
       "a": "0",
       "b": "1",
@@ -120,7 +120,7 @@
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
     "deskripsi_soal": null,
-    "soal": "Berapakah mod ?",
+    "soal": "Berapakah hasil dari (2^2016 * 3^2017 / 6^1000) mod 10 ?",
     "pilihan": {
       "a": "0",
       "b": "2",
@@ -271,7 +271,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 15 dan 17\n Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
+    "deskripsi_soal": "Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
     "soal": "Apabila pelajaran di IIS adalah \"Ekonomi\", \"Geografi\", dan \"Bahasa Indonesia\"; sedangkan pelajaran di MIA adalah \"Fisika\", \"Bahasa Indonesia\", \"Kimia\", dan \"Biologi\"; pelajaran apa saja yang ada di IBB dan SMA?",
     "pilihan": {
       "a": "\"Bahasa Indonesia\"",
@@ -290,7 +290,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 15 dan 17\n Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
+    "deskripsi_soal": "Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
     "soal": "Apabila dibuat kelompok baru bernama NEW yang terdiri dari pelajaran-pelajaran yang ada di kelompok IBB atau kelompok SMA, berapakah jumlah pelajaran yang ada di kelompok NEW?",
     "pilihan": {
       "a": "Sama dengan jumlah pelajaran di kelompok IBB",
@@ -309,7 +309,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 15 dan 17\n Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
+    "deskripsi_soal": "Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
     "soal": "Apabila dibuat kelompok baru bernama EXT yang berisi pelajaran MIA namun bukan pelajaran IIS, maka pelajaran-pelajaran yang merupakan gabungan dari kelompok EXT dan kelompok IBB adalah ...",
     "pilihan": {
       "a": "Pelajaran-pelajaran di SMA",
@@ -442,7 +442,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 dan 25\n Pak Totok adalah pedagang keliling. Setiap hari ia berjualan di suatu kampung dan besoknya berpindah ke kampung lain. Namun, ia memiliki aturan-aturan sbb. Pak Totok selalu berjualan di 4 kampung berbeda yaitu: A, B, C, dan D. Jika hari ini ia ada di A, maka besoknya akan pasti pindah ke C. Jika hari ini ia ada di B maka hari berikutnya ia akan berada di A atau D. Jika hari ini ia ada di C maka besoknya ia akan ke B atau D. Jika hari ini ia ada di D maka besoknya ia pasti akan berada di A.",
+    "deskripsi_soal": "Pak Totok adalah pedagang keliling. Setiap hari ia berjualan di suatu kampung dan besoknya berpindah ke kampung lain. Namun, ia memiliki aturan-aturan sbb. Pak Totok selalu berjualan di 4 kampung berbeda yaitu: A, B, C, dan D. Jika hari ini ia ada di A, maka besoknya akan pasti pindah ke C. Jika hari ini ia ada di B maka hari berikutnya ia akan berada di A atau D. Jika hari ini ia ada di C maka besoknya ia akan ke B atau D. Jika hari ini ia ada di D maka besoknya ia pasti akan berada di A.",
     "soal": "Jika pada suatu hari ia ada di A, dimanakah ia bisa berada 3 hari kemudian?",
     "pilihan": {
       "a": "A atau B",
@@ -461,7 +461,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 dan 25\n Pak Totok adalah pedagang keliling. Setiap hari ia berjualan di suatu kampung dan besoknya berpindah ke kampung lain. Namun, ia memiliki aturan-aturan sbb. Pak Totok selalu berjualan di 4 kampung berbeda yaitu: A, B, C, dan D. Jika hari ini ia ada di A, maka besoknya akan pasti pindah ke C. Jika hari ini ia ada di B maka hari berikutnya ia akan berada di A atau D. Jika hari ini ia ada di C maka besoknya ia akan ke B atau D. Jika hari ini ia ada di D maka besoknya ia pasti akan berada di A.",
+    "deskripsi_soal": "Pak Totok adalah pedagang keliling. Setiap hari ia berjualan di suatu kampung dan besoknya berpindah ke kampung lain. Namun, ia memiliki aturan-aturan sbb. Pak Totok selalu berjualan di 4 kampung berbeda yaitu: A, B, C, dan D. Jika hari ini ia ada di A, maka besoknya akan pasti pindah ke C. Jika hari ini ia ada di B maka hari berikutnya ia akan berada di A atau D. Jika hari ini ia ada di C maka besoknya ia akan ke B atau D. Jika hari ini ia ada di D maka besoknya ia pasti akan berada di A.",
     "soal": "Jika pada suatu hari ia berada di A, 20 hari kemudian berada di suatu kampung X. Kampung apakah yang tidak mungkin sebagai X?",
     "pilihan": {
       "a": "A",
@@ -480,7 +480,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 26 dan 27\n Proses sebuah mesin terkait pada 5 macam materi: A, B, C, D dan E. Proses pertama mengolah setiap 3 unit A dan 2 unit B menghasilkan 3 unit D. Proses kedua mengolah setiap 1 unit A, 1 unit C, dan 1 unit D menjadi 2 unit E dan 3 unit B. Proses ketiga mengolah setiap 1 unit E dan 1 unit D menjadi 2 unit",
+    "deskripsi_soal": "Proses sebuah mesin terkait pada 5 macam materi: A, B, C, D dan E. Proses pertama mengolah setiap 3 unit A dan 2 unit B menghasilkan 3 unit D. Proses kedua mengolah setiap 1 unit A, 1 unit C, dan 1 unit D menjadi 2 unit E dan 3 unit B. Proses ketiga mengolah setiap 1 unit E dan 1 unit D menjadi 2 unit",
     "soal": "Jika mula-mula terdapat 5 unit A, 3 unit B, dan 1 unit C, ada berapa banyak materi A tepat pada 3 jam berikutnya?",
     "pilihan": {
       "a": "1 unit",
@@ -499,7 +499,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 26 dan 27\n Proses sebuah mesin terkait pada 5 macam materi: A, B, C, D dan E. Proses pertama mengolah setiap 3 unit A dan 2 unit B menghasilkan 3 unit D. Proses kedua mengolah setiap 1 unit A, 1 unit C, dan 1 unit D menjadi 2 unit E dan 3 unit B. Proses ketiga mengolah setiap 1 unit E dan 1 unit D menjadi 2 unit",
+    "deskripsi_soal": "Proses sebuah mesin terkait pada 5 macam materi: A, B, C, D dan E. Proses pertama mengolah setiap 3 unit A dan 2 unit B menghasilkan 3 unit D. Proses kedua mengolah setiap 1 unit A, 1 unit C, dan 1 unit D menjadi 2 unit E dan 3 unit B. Proses ketiga mengolah setiap 1 unit E dan 1 unit D menjadi 2 unit",
     "soal": "Jika semula terdapat 10 unit A, 4 unit C dan 6 unit D, ada berapa banyak materi D setelah tepat 4 jam berikutnya?",
     "pilihan": {
       "a": "6 unit",
@@ -518,7 +518,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 29\n Suatu robot bergerak di atas suatu rel yang terentang dari kiri ke kanan dengan ujung pada jarak yang cukup jauh. Pada rel tertera angka-angka posisi per10cm membesar ke kanan, mulai dari 0cm, 10cm, 20cm, ... dst. Robot akan bergerak menuruti deretan instruksi yang diberikan. Robot dapat menuliskan/ menghapus tanda X pada posisi robot. Instruksi-instruksi didefinisikan sebagai berikut: [R] memerintahkan robot untuk berpindah 10 cm ke kanan, [L] memerintahkan robot untuk berpindah 10 cm ke kiri, [W] memerintahkan robot untuk menuliskan X pada posisinya, [H] memerintahkan robot untuk menghapus X pada posisinya (jika ada), [RX] memerintahkan robot untuk berpindah ke kanan sampai ketemu tanda X atau berhenti jika mencapai ujung kanan rel. [LX] memerintahkan robot untuk berpindah ke kiri sampai ketemu tanda X atau berhenti jika mencapai ujung kiri rel. Rep(n,...) adalah perintah untuk dapat melakukan pengulangan deretan perintah yang dituliskan menggantikan \"....\" sebanyak n kali, sementara Rep(...) adalah perintah pengulangan terus menerus yang akan berhenti karena [LX] atau [RX] mencapai ujung rel.",
+    "deskripsi_soal": "Suatu robot bergerak di atas suatu rel yang terentang dari kiri ke kanan dengan ujung pada jarak yang cukup jauh. Pada rel tertera angka-angka posisi per10cm membesar ke kanan, mulai dari 0cm, 10cm, 20cm, ... dst. Robot akan bergerak menuruti deretan instruksi yang diberikan. Robot dapat menuliskan/ menghapus tanda X pada posisi robot. Instruksi-instruksi didefinisikan sebagai berikut: [R] memerintahkan robot untuk berpindah 10 cm ke kanan, [L] memerintahkan robot untuk berpindah 10 cm ke kiri, [W] memerintahkan robot untuk menuliskan X pada posisinya, [H] memerintahkan robot untuk menghapus X pada posisinya (jika ada), [RX] memerintahkan robot untuk berpindah ke kanan sampai ketemu tanda X atau berhenti jika mencapai ujung kanan rel. [LX] memerintahkan robot untuk berpindah ke kiri sampai ketemu tanda X atau berhenti jika mencapai ujung kiri rel. Rep(n,...) adalah perintah untuk dapat melakukan pengulangan deretan perintah yang dituliskan menggantikan \"....\" sebanyak n kali, sementara Rep(...) adalah perintah pengulangan terus menerus yang akan berhenti karena [LX] atau [RX] mencapai ujung rel.",
     "soal": "Pada suatu saat robot berada di posisi 0cm dan sejumlah tanda X diletakkan di posisi 80cm, 130cm dan 180cm. Pada robot diberikan perintah [RX] [RX] [H] [LX] Rep(3, [L] ) [W] [RX] [RX] [H] [LX] [LX] (Rep(3, [L] ) [W] Dimanakah posisi robot beserta tanda-tanda X itu sekarang?",
     "pilihan": {
       "a": "0cm, 50cm, dan 80cm",
@@ -537,7 +537,7 @@
     "materi": "kab-simulasi",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 29\n Suatu robot bergerak di atas suatu rel yang terentang dari kiri ke kanan dengan ujung pada jarak yang cukup jauh. Pada rel tertera angka-angka posisi per10cm membesar ke kanan, mulai dari 0cm, 10cm, 20cm, ... dst. Robot akan bergerak menuruti deretan instruksi yang diberikan. Robot dapat menuliskan/ menghapus tanda X pada posisi robot. Instruksi-instruksi didefinisikan sebagai berikut: [R] memerintahkan robot untuk berpindah 10 cm ke kanan, [L] memerintahkan robot untuk berpindah 10 cm ke kiri, [W] memerintahkan robot untuk menuliskan X pada posisinya, [H] memerintahkan robot untuk menghapus X pada posisinya (jika ada), [RX] memerintahkan robot untuk berpindah ke kanan sampai ketemu tanda X atau berhenti jika mencapai ujung kanan rel. [LX] memerintahkan robot untuk berpindah ke kiri sampai ketemu tanda X atau berhenti jika mencapai ujung kiri rel. Rep(n,...) adalah perintah untuk dapat melakukan pengulangan deretan perintah yang dituliskan menggantikan \"....\" sebanyak n kali, sementara Rep(...) adalah perintah pengulangan terus menerus yang akan berhenti karena [LX] atau [RX] mencapai ujung rel.",
+    "deskripsi_soal": "Suatu robot bergerak di atas suatu rel yang terentang dari kiri ke kanan dengan ujung pada jarak yang cukup jauh. Pada rel tertera angka-angka posisi per10cm membesar ke kanan, mulai dari 0cm, 10cm, 20cm, ... dst. Robot akan bergerak menuruti deretan instruksi yang diberikan. Robot dapat menuliskan/ menghapus tanda X pada posisi robot. Instruksi-instruksi didefinisikan sebagai berikut: [R] memerintahkan robot untuk berpindah 10 cm ke kanan, [L] memerintahkan robot untuk berpindah 10 cm ke kiri, [W] memerintahkan robot untuk menuliskan X pada posisinya, [H] memerintahkan robot untuk menghapus X pada posisinya (jika ada), [RX] memerintahkan robot untuk berpindah ke kanan sampai ketemu tanda X atau berhenti jika mencapai ujung kanan rel. [LX] memerintahkan robot untuk berpindah ke kiri sampai ketemu tanda X atau berhenti jika mencapai ujung kiri rel. Rep(n,...) adalah perintah untuk dapat melakukan pengulangan deretan perintah yang dituliskan menggantikan \"....\" sebanyak n kali, sementara Rep(...) adalah perintah pengulangan terus menerus yang akan berhenti karena [LX] atau [RX] mencapai ujung rel.",
     "soal": "Jika pada suatu saat robot berada di posisi 0cm, sejumlah tanda X berturut-turut berada pada suatu posisi di sebelah kanannya (lebih dari satu tanda X). Kemudian, robot menjalankan deretan perintah ini: Rep(2, [RX] [H] ) [L] [W] [R] Rep(Rep(2, [RX] [H] ) [LX] [R] [W] ) Ada berapa banyak kah tanda X saat robot berhenti jika sebelumnya ada 11 tanda X?",
     "pilihan": {
       "a": "0",
@@ -649,7 +649,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 35 dan 36\n Perhatikan potongan kode berikut: var \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
+    "deskripsi_soal": "Perhatikan potongan kode berikut:\nvar \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.\n\nvar \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
     "soal": "Berapakah nilai akhir n, jika nilai n pada awalnya adalah 62792912?",
     "pilihan": {
       "a": "4",
@@ -668,7 +668,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 35 dan 36\n Perhatikan potongan kode berikut: var \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
+    "deskripsi_soal": "Perhatikan potongan kode berikut:\nvar \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.\n\nvar \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
     "soal": "Berapakah nilai akhir n, jika nilai n pada awalnya adalah 14934976?",
     "pilihan": {
       "a": "4",
@@ -725,7 +725,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Perhatikan potongan kode berikut: var\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
+    "deskripsi_soal": "Perhatikan potongan kode berikut:\nvar\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.\n\nvar\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
     "soal": "Berapakah hasil akhir dari variabel count, jika n = 1?",
     "pilihan": {
       "a": "5",
@@ -744,7 +744,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "latihan",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Perhatikan potongan kode berikut: var\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
+    "deskripsi_soal": "Perhatikan potongan kode berikut:\nvar\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.\n\nvar\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
     "soal": "Berapakah nilai maksimal dari variabel count dari semua kemungkinan nilai n?",
     "pilihan": {
       "a": "6",

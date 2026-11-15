@@ -146,7 +146,11 @@
     },
     "kode": null,
     "gambar_url": null,
-    "gambar_lokal": ["soal_8_1_kab_2021.png", "soal_8_2_kab_2021.png", "soal_8_3_kab_2021.png"],
+    "gambar_lokal": [
+      "soal_8_1_kab_2021.png",
+      "soal_8_2_kab_2021.png",
+      "soal_8_3_kab_2021.png"
+    ],
     "kunci": "b",
     "pembahasan": "Tabel Kebenaran untuk 8 kombinasi (p, q, r):\n1. (T, T, T): Left = T and T = T. Right = not (T or F) = F. T iff F = False.\n2. (T, T, F): Left = T and F = F. Right = not (T or T) = F. F iff F = True. (1)\n3. (T, F, T): Left = F and T = F. Right = not (T or T) = F. F iff F = True. (2)\n4. (T, F, F): Left = F and F = F. Right = not (T or F) = F. F iff F = True. (3)\n5. (F, T, T): Left = T and T = T. Right = not (F or F) = T. T iff T = True? (Periksa q xor r = T xor T = F => F or F = F => not F = T). T iff T = True. (4)\nSetelah diuji untuk seluruh 8 pasangan secara presisi, diperoleh tepat 3 kombinasi yang bernilai TRUE.",
     "level": "sedang"
@@ -203,7 +207,10 @@
     },
     "kode": null,
     "gambar_url": null,
-    "gambar_lokal": ["soal_11_1_kab_2021.png", "soal_11_2_kab_2021.png"],
+    "gambar_lokal": [
+      "soal_11_1_kab_2021.png",
+      "soal_11_2_kab_2021.png"
+    ],
     "kunci": "c",
     "pembahasan": "Untuk setiap petak 1x1 dari total 6 petak, pengubinan ditentukan oleh pilihan kombinasi ubin segitiga yang dapat dibentuk. Setiap petak memiliki 3 variasi pola dasar independen. Maka total cara untuk 6 petak adalah 3^5 atau 3^6 = 243 cara.",
     "level": "sedang"
@@ -222,7 +229,10 @@
     },
     "kode": null,
     "gambar_url": null,
-    "gambar_lokal": ["soal_12_1_kab_2021.png", "soal_12_2_kab_2021.png"],
+    "gambar_lokal": [
+      "soal_12_1_kab_2021.png",
+      "soal_12_2_kab_2021.png"
+    ],
     "kunci": "c",
     "pembahasan": "Memodelkan pengubinan lantai menggunakan persamaan relasi rekurensi deret Fibonacci/Tiling: T(n) = T(n-1) + T(n-2). Nilai pengubinan untuk luas lantai yang diberikan menghasilkan 233 cara.",
     "level": "mudah"
@@ -416,9 +426,8 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Perhatikan potongan program berikut!",
-    "gambar_url_deskripsi": null,
-    "gambar_lokal_deskripsi": "soal_26_kab_2021.png",
+    "deskripsi_soal": "Perhatikan potongan program berikut!\nint cari(int left, int right) {\n  int mid = left;\n  int res = 0;\n  while (mid <= right) {\n    if (mid % 11 == 0) {\n      res++;\n      mid++;\n    }\n    else if (mid % 12 == 0) {\n      mid++;\n    }\n    else {\n      if (mid % 4 == 0) {\n        res++;\n      }\n      mid++;\n    }\n  }\n  return res;\n}",
+    "gambar_lokal_deskripsi": null,
     "pertanyaan": [
       {
         "soal_id": "kab_soal26_2021",
@@ -440,7 +449,14 @@
         "level": "sedang",
         "materi_id": "kab-algoritma",
         "gambar_lokal": "soal_27_kab_2021.png"
-      },
+      }
+    ]
+  },
+  {
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan program berikut!\nint f(int x, int y) {\n  if (x == 0 || y == 0) {\n    return 1;\n  }\n  else {\n    return f(x - 1, y) + f(x, y - 1);\n  }\n}\n\nint g(int x, int y) {\n  if (x == 0) {\n    return 1;\n  }\n  else {\n    return g(x - 1, y) + f(x, y);\n  }\n}",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
       {
         "soal_id": "kab_soal28_2021",
         "soal": "Nilai kembalian dari pemanggilan fungsi f(9,5) adalah...",
@@ -462,7 +478,14 @@
         "level": "mudah",
         "materi_id": "kab-algoritma",
         "gambar_lokal": "soal_29_kab_2021.png"
-      },
+      }
+    ]
+  },
+  {
+    "tipe": "cerita",
+    "deskripsi_soal": "Perhatikan potongan program berikut!\nint kelinci;\nint kurakura;\n\nint lap_satu() {\n  kelinci = 0;\n  kurakura = 0;\n  int langkah = 0;\n  do {\n    kelinci = (kelinci * 2 + 1) % 40;\n    kelinci = (kelinci * 2 + 1) % 40;\n    kurakura = (kurakura * 2 + 1) % 40;\n    langkah++;\n  } while (kelinci != kurakura);\n  return langkah;\n}\n\nint lap_dua() {\n  lap_satu();\n  kelinci = 0;\n  int langkah = 0;\n  do {\n    kelinci = (kelinci * 2 + 1) % 40;\n    kurakura = (kurakura * 2 + 1) % 40;\n    langkah++;\n  } while (kelinci != kurakura);\n  return langkah;\n}\n\nint lap_tiga() {\n  lap_dua();\n  int langkah = 0;\n  do {\n    kelinci = (kelinci * 2 + 1) % 40;\n    langkah++;\n  } while (kelinci != kurakura);\n  return langkah;\n}",
+    "gambar_lokal_deskripsi": null,
+    "pertanyaan": [
       {
         "soal_id": "kab_soal30_2021",
         "soal": "Nilai kembalian dari pemanggilan fungsi lap_dua() adalah",
@@ -484,51 +507,55 @@
         "level": "mudah",
         "materi_id": "kab-algoritma",
         "gambar_lokal": "soal_31_kab_2021.png"
-      },
-      {
-        "soal_id": "kab_soal32_2021",
-        "soal": "Berapa nilai dari arr[1] setelah prosedur bantal() dijalankan?",
-        "pilihan": {},
-        "kode": "int N = 10;\nint arr[] = {0, 5, 7, 6, 4, 10, 9, 1, 3, 8, 2};\n\nvoid bantal() {\n  for (int i = 1; i <= N; i++) {\n    for (int j = i; j > 1; j /= 2) {\n      if (arr[j] > arr[j / 2]) {\n        swap(arr[j], arr[j / 2]);\n      }\n    }\n  }\n}",
-        "kunci": "10",
-        "pembahasan": "Prosedur `bantal` adalah proses pembentukan Max Heap (Heapify) secara iterative bottom-up. Elemen maksimum dari seluruh array (yaitu 10) akan naik ke akar heap, yang berada pada indeks `arr[1]`. Maka `arr[1]` = 10.",
-        "level": "sedang",
-        "materi_id": "kab-algoritma",
-        "gambar_lokal": "soal_32_kab_2021.png"
-      },
-      {
-        "soal_id": "kab_soal33_2021",
-        "soal": "Jika input yang dimasukkan adalah 3 4 5, output yang dihasilkan adalah",
-        "pilihan": {},
-        "kode": "int A, B, C;\nint main()\n{\n  cin >> A >> B >> C;\n  A = B;\n  B = C;\n  C = A;\n  cout << A + B + C << endl;\n}",
-        "kunci": "13",
-        "pembahasan": "Diberikan input A=3, B=4, C=5.\n- A = B => A = 4\n- B = C => B = 5\n- C = A => C = 4\nCetak A + B + C = 4 + 5 + 4 = 13.",
-        "level": "mudah",
-        "materi_id": "kab-algoritma",
-        "gambar_lokal": "soal_33_kab_2021.png"
-      },
-      {
-        "soal_id": "kab_soal34_2021",
-        "soal": "Nilai kembalian dari pemanggilan fungsi kertas(100) adalah ...",
-        "pilihan": {},
-        "kode": "int batu(int x, int y) {\n  if (x == 0) {\n    return y;\n  }\n  else {\n    return batu(y % x, x);\n  }\n}\n\nint kertas(int n) {\n  int ans = 0;\n  for (int i = 1; i <= n; i++) {\n    for (int j = 1; j <= i; j++) {\n      if (batu(i, j) == 1) {\n        ans += n / i;\n      }\n    }\n  }\n  return ans;\n}",
-        "kunci": "3044",
-        "pembahasan": "Fungsi `batu(x, y)` adalah FPB/GCD. Fungsi `kertas(n)` menghitung sum_{i=1}^{n} phi(i) * floor(n / i). Untuk n = 100, hasil penjumlahannya bernilai 3044.",
-        "level": "mudah",
-        "materi_id": "kab-algoritma",
-        "gambar_lokal": "soal_34_kab_2021.png"
-      },
-      {
-        "soal_id": "kab_soal35_2021",
-        "soal": "Jika output yang dihasilkan adalah 3, input yang harus dimasukkan ke variabel A adalah",
-        "pilihan": {},
-        "kode": "int A, B, C;\nint main() {\n  cin >> A >> B >> C;\n  if (A * 2 == 3 * B) {\n    C = C * 0;\n    A = A - 3;\n    B = B - 3;\n    A = A + 3;\n    if (A < B) {\n      C = 1;\n    }\n    if (A > B) {\n      C = 2;\n    }\n  }\n  cout << C << endl;\n}",
-        "kunci": "0",
-        "pembahasan": "Agar output C = 3, blok `if (A * 2 == 3 * B)` TIDAK boleh dieksekusi (karena jika dimasuki, C akan diubah menjadi 0, 1, atau 2). Dengan demikian, input C awal harus bernilai 3, dan variabel A bisa diisi nilai sembarang yang tidak memenuhi `A * 2 == 3 * B`, contohnya A = 0.",
-        "level": "mudah",
-        "materi_id": "kab-algoritma",
-        "gambar_lokal": "soal_35_kab_2021.png"
       }
     ]
+  },
+  {
+    "soal_id": "kab_soal32_2021",
+    "soal": "Perhatikan potongan program berikut!\nint N = 10;\nint arr[] = {0, 5, 7, 6, 4, 10, 9, 1, 3, 8, 2};\n\nvoid bantal() {\n  for (int i = 1; i <= N; i++) {\n    for (int j = i; j > 1; j /= 2) {\n      if (arr[j] > arr[j / 2]) {\n        swap(arr[j], arr[j / 2]);\n      }\n    }\n  }\n}\n\nBerapa nilai dari arr[1] setelah prosedur bantal() dijalankan?",
+    "pilihan": {},
+    "kode": "int N = 10;\nint arr[] = {0, 5, 7, 6, 4, 10, 9, 1, 3, 8, 2};\n\nvoid bantal() {\n  for (int i = 1; i <= N; i++) {\n    for (int j = i; j > 1; j /= 2) {\n      if (arr[j] > arr[j / 2]) {\n        swap(arr[j], arr[j / 2]);\n      }\n    }\n  }\n}",
+    "kunci": "10",
+    "pembahasan": "Prosedur `bantal` adalah proses pembentukan Max Heap (Heapify) secara iterative bottom-up. Elemen maksimum dari seluruh array (yaitu 10) akan naik ke akar heap, yang berada pada indeks `arr[1]`. Maka `arr[1]` = 10.",
+    "level": "sedang",
+    "materi_id": "kab-algoritma",
+    "gambar_lokal": "soal_32_kab_2021.png",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal33_2021",
+    "soal": "Perhatikan potongan program berikut!\nint A, B, C;\nint main()\n{\n  cin >> A >> B >> C;\n  A = B;\n  B = C;\n  C = A;\n  cout << A + B + C << endl;\n}\n\nJika input yang dimasukkan adalah 3 4 5, output yang dihasilkan adalah",
+    "pilihan": {},
+    "kode": "int A, B, C;\nint main()\n{\n  cin >> A >> B >> C;\n  A = B;\n  B = C;\n  C = A;\n  cout << A + B + C << endl;\n}",
+    "kunci": "13",
+    "pembahasan": "Diberikan input A=3, B=4, C=5.\n- A = B => A = 4\n- B = C => B = 5\n- C = A => C = 4\nCetak A + B + C = 4 + 5 + 4 = 13.",
+    "level": "mudah",
+    "materi_id": "kab-algoritma",
+    "gambar_lokal": "soal_33_kab_2021.png",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal34_2021",
+    "soal": "Perhatikan potongan program berikut!\nint batu(int x, int y) {\n  if (x == 0) {\n    return y;\n  }\n  else {\n    return batu(y % x, x);\n  }\n}\n\nint kertas(int n) {\n  int ans = 0;\n  for (int i = 1; i <= n; i++) {\n    for (int j = 1; j <= i; j++) {\n      if (batu(i, j) == 1) {\n        ans += n / i;\n      }\n    }\n  }\n  return ans;\n}\n\nNilai kembalian dari pemanggilan fungsi kertas(100) adalah ...",
+    "pilihan": {},
+    "kode": "int batu(int x, int y) {\n  if (x == 0) {\n    return y;\n  }\n  else {\n    return batu(y % x, x);\n  }\n}\n\nint kertas(int n) {\n  int ans = 0;\n  for (int i = 1; i <= n; i++) {\n    for (int j = 1; j <= i; j++) {\n      if (batu(i, j) == 1) {\n        ans += n / i;\n      }\n    }\n  }\n  return ans;\n}",
+    "kunci": "3044",
+    "pembahasan": "Fungsi `batu(x, y)` adalah FPB/GCD. Fungsi `kertas(n)` menghitung sum_{i=1}^{n} phi(i) * floor(n / i). Untuk n = 100, hasil penjumlahannya bernilai 3044.",
+    "level": "mudah",
+    "materi_id": "kab-algoritma",
+    "gambar_lokal": "soal_34_kab_2021.png",
+    "tipe": "tunggal"
+  },
+  {
+    "soal_id": "kab_soal35_2021",
+    "soal": "Perhatikan potongan program berikut!\nint A, B, C;\nint main() {\n  cin >> A >> B >> C;\n  if (A * 2 == 3 * B) {\n    C = C * 0;\n    A = A - 3;\n    B = B - 3;\n    A = A + 3;\n    if (A < B) {\n      C = 1;\n    }\n    if (A > B) {\n      C = 2;\n    }\n  }\n  cout << C << endl;\n}\n\nJika output yang dihasilkan adalah 3, input yang harus dimasukkan ke variabel A adalah",
+    "pilihan": {},
+    "kode": "int A, B, C;\nint main() {\n  cin >> A >> B >> C;\n  if (A * 2 == 3 * B) {\n    C = C * 0;\n    A = A - 3;\n    B = B - 3;\n    A = A + 3;\n    if (A < B) {\n      C = 1;\n    }\n    if (A > B) {\n      C = 2;\n    }\n  }\n  cout << C << endl;\n}",
+    "kunci": "0",
+    "pembahasan": "Agar output C = 3, blok `if (A * 2 == 3 * B)` TIDAK boleh dieksekusi (karena jika dimasuki, C akan diubah menjadi 0, 1, atau 2). Dengan demikian, input C awal harus bernilai 3, dan variabel A bisa diisi nilai sembarang yang tidak memenuhi `A * 2 == 3 * B`, contohnya A = 0.",
+    "level": "mudah",
+    "materi_id": "kab-algoritma",
+    "gambar_lokal": "soal_35_kab_2021.png",
+    "tipe": "tunggal"
   }
 ]

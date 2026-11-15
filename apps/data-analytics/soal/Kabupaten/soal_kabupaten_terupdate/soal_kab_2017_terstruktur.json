@@ -22,7 +22,7 @@
     "soal_id": "kab_soal2_2017",
     "tipe": "tunggal",
     "materi_id": "kab-kombinatorika",
-    "soal": "Jika diketahui A, B, C dan D adalah bilangan bulat dan memenuhi:",
+    "soal": "Jika diketahui A, B, C, dan D adalah bilangan bulat dan memenuhi sistem persamaan berikut:\nAB + C + D = 3\nBC + A + D = 5\nCD + A + B = 2\nDA + B + C = 6\n\nBerapakah nilai A?",
     "pilihan": {
       "a": "0",
       "b": "1",
@@ -117,7 +117,7 @@
     "soal_id": "kab_soal7_2017",
     "tipe": "tunggal",
     "materi_id": "kab-kombinatorika",
-    "soal": "Berapakah mod ?",
+    "soal": "Berapakah hasil dari (2^2016 * 3^2017 / 6^1000) mod 10 ?",
     "pilihan": {
       "a": "0",
       "b": "2",
@@ -267,7 +267,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 15 dan 17\n Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
+    "deskripsi_soal": "Sekolah di negeri TOKI terdiri atas jurusan MIA dan jurusan IIS. Masing-masing jurusan mengajarkan sejumlah mata pelajaran. Ada sejumlah pelajaran yang diberikan di kedua jurusan tersebut. Dengklek belajar di jurusan MIA dan Ganesh di jurusan IIS. Dengklek dan Ganesh mengikuti sejumlah pelajaran yang sama. Untuk memudahkan, kelompok pelajaran tersebut mereka namakan IBB. Setiap pelajaran di jurusan MIA atau di jurusan IIS, dikelompokkan pada kelompok yang mereka namai SMA, dimana tidak ada 2 atau lebih pelajaran yang sama di kelompok SMA.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -437,7 +437,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 24 dan 25\n Pak Totok adalah pedagang keliling. Setiap hari ia berjualan di suatu kampung dan besoknya berpindah ke kampung lain. Namun, ia memiliki aturan-aturan sbb. Pak Totok selalu berjualan di 4 kampung berbeda yaitu: A, B, C, dan D. Jika hari ini ia ada di A, maka besoknya akan pasti pindah ke C. Jika hari ini ia ada di B maka hari berikutnya ia akan berada di A atau D. Jika hari ini ia ada di C maka besoknya ia akan ke B atau D. Jika hari ini ia ada di D maka besoknya ia pasti akan berada di A.",
+    "deskripsi_soal": "Pak Totok adalah pedagang keliling. Setiap hari ia berjualan di suatu kampung dan besoknya berpindah ke kampung lain. Namun, ia memiliki aturan-aturan sbb. Pak Totok selalu berjualan di 4 kampung berbeda yaitu: A, B, C, dan D. Jika hari ini ia ada di A, maka besoknya akan pasti pindah ke C. Jika hari ini ia ada di B maka hari berikutnya ia akan berada di A atau D. Jika hari ini ia ada di C maka besoknya ia akan ke B atau D. Jika hari ini ia ada di D maka besoknya ia pasti akan berada di A.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -477,7 +477,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 26 dan 27\n Proses sebuah mesin terkait pada 5 macam materi: A, B, C, D dan E. Proses pertama mengolah setiap 3 unit A dan 2 unit B menghasilkan 3 unit D. Proses kedua mengolah setiap 1 unit A, 1 unit C, dan 1 unit D menjadi 2 unit E dan 3 unit B. Proses ketiga mengolah setiap 1 unit E dan 1 unit D menjadi 2 unit",
+    "deskripsi_soal": "Proses sebuah mesin terkait pada 5 macam materi: A, B, C, D dan E. Proses pertama mengolah setiap 3 unit A dan 2 unit B menghasilkan 3 unit D. Proses kedua mengolah setiap 1 unit A, 1 unit C, dan 1 unit D menjadi 2 unit E dan 3 unit B. Proses ketiga mengolah setiap 1 unit E dan 1 unit D menjadi 2 unit",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -517,7 +517,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 28 dan 29\n Suatu robot bergerak di atas suatu rel yang terentang dari kiri ke kanan dengan ujung pada jarak yang cukup jauh. Pada rel tertera angka-angka posisi per10cm membesar ke kanan, mulai dari 0cm, 10cm, 20cm, ... dst. Robot akan bergerak menuruti deretan instruksi yang diberikan. Robot dapat menuliskan/ menghapus tanda X pada posisi robot. Instruksi-instruksi didefinisikan sebagai berikut: [R] memerintahkan robot untuk berpindah 10 cm ke kanan, [L] memerintahkan robot untuk berpindah 10 cm ke kiri, [W] memerintahkan robot untuk menuliskan X pada posisinya, [H] memerintahkan robot untuk menghapus X pada posisinya (jika ada), [RX] memerintahkan robot untuk berpindah ke kanan sampai ketemu tanda X atau berhenti jika mencapai ujung kanan rel. [LX] memerintahkan robot untuk berpindah ke kiri sampai ketemu tanda X atau berhenti jika mencapai ujung kiri rel. Rep(n,...) adalah perintah untuk dapat melakukan pengulangan deretan perintah yang dituliskan menggantikan \"....\" sebanyak n kali, sementara Rep(...) adalah perintah pengulangan terus menerus yang akan berhenti karena [LX] atau [RX] mencapai ujung rel.",
+    "deskripsi_soal": "Suatu robot bergerak di atas suatu rel yang terentang dari kiri ke kanan dengan ujung pada jarak yang cukup jauh. Pada rel tertera angka-angka posisi per10cm membesar ke kanan, mulai dari 0cm, 10cm, 20cm, ... dst. Robot akan bergerak menuruti deretan instruksi yang diberikan. Robot dapat menuliskan/ menghapus tanda X pada posisi robot. Instruksi-instruksi didefinisikan sebagai berikut: [R] memerintahkan robot untuk berpindah 10 cm ke kanan, [L] memerintahkan robot untuk berpindah 10 cm ke kiri, [W] memerintahkan robot untuk menuliskan X pada posisinya, [H] memerintahkan robot untuk menghapus X pada posisinya (jika ada), [RX] memerintahkan robot untuk berpindah ke kanan sampai ketemu tanda X atau berhenti jika mencapai ujung kanan rel. [LX] memerintahkan robot untuk berpindah ke kiri sampai ketemu tanda X atau berhenti jika mencapai ujung kiri rel. Rep(n,...) adalah perintah untuk dapat melakukan pengulangan deretan perintah yang dituliskan menggantikan \"....\" sebanyak n kali, sementara Rep(...) adalah perintah pengulangan terus menerus yang akan berhenti karena [LX] atau [RX] mencapai ujung rel.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -650,7 +650,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 35 dan 36\n Perhatikan potongan kode berikut: var \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
+    "deskripsi_soal": "Perhatikan potongan kode berikut:\nvar \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -664,7 +664,7 @@
           "d": "7",
           "e": "8"
         },
-        "kode": null,
+        "kode": "var \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
         "kunci": "c",
         "pembahasan": "Kunci jawaban terverifikasi: opsi C (6).\nDasar Verifikasi & Pembahasan:\nUlangi mengalikan seluruh digit angka sampai tersisa satu digit (digital product):\n- Awal: 62792912\n- Tahap 1: 6 × 2 × 7 × 9 × 2 × 9 × 1 × 2 = 27.216\n- Tahap 2: 2 × 7 × 2 × 1 × 6 = 168\n- Tahap 3: 1 × 6 × 8 = 48\n- Tahap 4: 4 × 8 = 32\n- Tahap 5: 3 × 2 = 6 (karena 6 < 10, perulangan berhenti).\nJadi nilai akhir n adalah 6 (opsi c).",
         "level": "sedang",
@@ -680,7 +680,7 @@
           "d": "7",
           "e": "8"
         },
-        "kode": null,
+        "kode": "var \n n, temp : longint; \nbegin \n readln(n); \n while n >= 10 do \n temp := 1; \n while n > 0 do \n begin \n temp := temp * (n mod 10); \n n := n div 10; \n end; \n n := temp; \nend.",
         "kunci": "c",
         "pembahasan": "Kunci jawaban terverifikasi: opsi C (6).\nDasar Verifikasi & Pembahasan:\nUlangi mengalikan seluruh digit angka sampai tersisa satu digit (digital product):\n- Awal: 14934976\n- Tahap 1: 1 × 4 × 9 × 3 × 4 × 9 × 7 × 6 = 163.296\n- Tahap 2: 1 × 6 × 3 × 2 × 9 × 6 = 1.944\n- Tahap 3: 1 × 9 × 4 × 4 = 144\n- Tahap 4: 1 × 4 × 4 = 16\n- Tahap 5: 1 × 6 = 6 (karena 6 < 10, perulangan berhenti).\nJadi nilai akhir n adalah 6 (opsi c).",
         "level": "mudah",
@@ -728,7 +728,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 39 dan 40\n Perhatikan potongan kode berikut: var\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
+    "deskripsi_soal": "Perhatikan potongan kode berikut:\nvar\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -742,7 +742,7 @@
           "d": "8",
           "e": "9"
         },
-        "kode": null,
+        "kode": "var\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
         "kunci": "b",
         "pembahasan": "Tracing nilai n dengan n awal = 1:\n- Iterasi 1: n = (1^2 + 5) mod 23 = 6 (count = 1)\n- Iterasi 2: n = (6^2 + 5) mod 23 = 41 mod 23 = 18 (count = 2)\n- Iterasi 3: n = (18^2 + 5) mod 23 = 329 mod 23 = 7 (count = 3)\n- Iterasi 4: n = (7^2 + 5) mod 23 = 54 mod 23 = 8 (count = 4)\n- Iterasi 5: n = (8^2 + 5) mod 23 = 69 mod 23 = 0 (count = 5)\nSehingga variabel count pada akhirnya bernilai 5 (atau 6 bergantung kondisi batas).",
         "level": "sedang",
@@ -758,7 +758,7 @@
           "d": "9",
           "e": "Jawaban a, b, c, d salah"
         },
-        "kode": null,
+        "kode": "var\n n, count : integer;\nbegin\n readln(n);\n count := 0;\n repeat\n n := (n * n + 5) mod 23;\ncount := count + 1;\n until n = 0;\nend.",
         "kunci": "e",
         "pembahasan": "Ada beberapa nilai n awal yang masuk ke dalam siklus (loop) yang tidak pernah menyentuh 0 (misalnya n = 3 -> 14 -> 16 -> 8 -> 0 terjangkau, tetapi untuk nilai n tertentu n akan berputar dalam siklus tanpa pernah menjadi 0).\nKarena terdapat nilai n yang menyebabkan infinite loop (tidak pernah berhenti), nilai `count` bisa mencapai tak terhingga (Jawaban a, b, c, d salah).",
         "level": "sedang",

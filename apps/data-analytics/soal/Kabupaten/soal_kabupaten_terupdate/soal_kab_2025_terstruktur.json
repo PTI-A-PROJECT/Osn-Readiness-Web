@@ -159,7 +159,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 11 sampai 13.\nPak Dengklek memiliki sebuah mesin ajaib yang salah satu bagiannya berbentuk tabung dengan mekanisme buka tutup di atasnya. Selain itu, Pak Dengklek juga memiliki N buah koin yang dinomori dari 1 hingga N.\n\nMesin ajaib ini disebut juga sebagai Mesin BCS karena terdapat tiga tombol pada mesin tersebut:\n- Tombol B (\"Buka\"): Ketika ditekan, bagian atas tabung akan terbuka dan Pak Dengklek harus meletakkan koin dengan nomor terkecil miliknya yang belum pernah Pak Dengklek masukkan sebelumnya.\n- Tombol C (\"Cetak\"): Ketika ditekan, mesin akan mencetak nomor koin yang berada di bagian paling atas tabung ke selembar kertas, lalu secara otomatis mengeluarkan koin tersebut dari tabung. Apabila tidak ada koin pada mesin BCS, maka penekanan tombol ini akan menghasilkan error.\n- Tombol S (\"Stop\"): Ketika ditekan, mesin akan memastikan bahwa tidak ada lagi koin di dalam tabung, lalu diakhiri dengan mengeluarkan kertas hasil cetakan berupa nomor-nomor koin tanpa dipisahkan oleh spasi. Apabila masih ada koin pada mesin BCS, maka penekanan tombol ini akan menghasilkan error.\n\nKarena Pak Dengklek ingin memasukkan seluruh N koin miliknya, dijamin bahwa Pak Dengklek akan melakukan tepat 2 x N + 1 penekanan tombol. Pak Dengklek juga menjamin bahwa urutan penekanan tombolnya tidak akan menghasilkan error.",
+    "deskripsi_soal": "Pak Dengklek memiliki sebuah mesin ajaib yang salah satu bagiannya berbentuk tabung dengan mekanisme buka tutup di atasnya. Selain itu, Pak Dengklek juga memiliki N buah koin yang dinomori dari 1 hingga N.\n\nMesin ajaib ini disebut juga sebagai Mesin BCS karena terdapat tiga tombol pada mesin tersebut:\n- Tombol B (\"Buka\"): Ketika ditekan, bagian atas tabung akan terbuka dan Pak Dengklek harus meletakkan koin dengan nomor terkecil miliknya yang belum pernah Pak Dengklek masukkan sebelumnya.\n- Tombol C (\"Cetak\"): Ketika ditekan, mesin akan mencetak nomor koin yang berada di bagian paling atas tabung ke selembar kertas, lalu secara otomatis mengeluarkan koin tersebut dari tabung. Apabila tidak ada koin pada mesin BCS, maka penekanan tombol ini akan menghasilkan error.\n- Tombol S (\"Stop\"): Ketika ditekan, mesin akan memastikan bahwa tidak ada lagi koin di dalam tabung, lalu diakhiri dengan mengeluarkan kertas hasil cetakan berupa nomor-nomor koin tanpa dipisahkan oleh spasi. Apabila masih ada koin pada mesin BCS, maka penekanan tombol ini akan menghasilkan error.\n\nKarena Pak Dengklek ingin memasukkan seluruh N koin miliknya, dijamin bahwa Pak Dengklek akan melakukan tepat 2 x N + 1 penekanan tombol. Pak Dengklek juga menjamin bahwa urutan penekanan tombolnya tidak akan menghasilkan error.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_11_kab_2025.png",
     "pertanyaan": [
@@ -203,7 +203,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 14 sampai 16.\nBebek-bebek Pak Dengklek baru saja menyelesaikan film petualangan \"Perjalanan ke Barat\". Hari ini mereka ingin sekali bertualang dalam \"Perjalanan ke Timur\".\n\nDari titik asal A, mereka hanya dapat bergerak ke arah kanan melewati lajur-lajur dengan arah panah menuju titik terkanan H.\n\nStruktur graf lajur jalan:\n- A ke B: 2 lajur\n- B ke C: 1 lajur\n- B ke D: 1 lajur\n- B ke E: 1 lajur\n- C ke G: 1 lajur\n- D ke G: 2 lajur terbuka + 1 lajur rahasia (terkunci)\n- E ke D: 1 lajur rahasia (terkunci)\n- D ke F: 1 lajur rahasia (terkunci)\n- E ke F: 3 lajur\n- F ke G: 1 lajur\n- G ke H: 3 lajur\n\nTerdapat 3 lajur rahasia yang masing-masing ditutup dengan sebuah gembok (E ke D, D ke F, dan salah satu lajur D ke G). Untuk melewati lajur rahasia dibutuhkan kunci sakti. Satu kunci sakti hanya dapat digunakan untuk membuka gembok maksimal satu kali saja.",
+    "deskripsi_soal": "Bebek-bebek Pak Dengklek baru saja menyelesaikan film petualangan \"Perjalanan ke Barat\". Hari ini mereka ingin sekali bertualang dalam \"Perjalanan ke Timur\".\n\nDari titik asal A, mereka hanya dapat bergerak ke arah kanan melewati lajur-lajur dengan arah panah menuju titik terkanan H.\n\nStruktur graf lajur jalan:\n- A ke B: 2 lajur\n- B ke C: 1 lajur\n- B ke D: 1 lajur\n- B ke E: 1 lajur\n- C ke G: 1 lajur\n- D ke G: 2 lajur terbuka + 1 lajur rahasia (terkunci)\n- E ke D: 1 lajur rahasia (terkunci)\n- D ke F: 1 lajur rahasia (terkunci)\n- E ke F: 3 lajur\n- F ke G: 1 lajur\n- G ke H: 3 lajur\n\nTerdapat 3 lajur rahasia yang masing-masing ditutup dengan sebuah gembok (E ke D, D ke F, dan salah satu lajur D ke G). Untuk melewati lajur rahasia dibutuhkan kunci sakti. Satu kunci sakti hanya dapat digunakan untuk membuka gembok maksimal satu kali saja.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_14_kab_2025.png",
     "pertanyaan": [
@@ -241,7 +241,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 17 sampai 19.\nPak Dengklek menyukai estetika, sehingga ia ingin sekali membersihkan gudang di samping kandang-kandang bebeknya.\n\nDi dalam gudang ada banyak kotak kardus berbentuk kubus. Pak Dengklek bisa menaruh sebuah kotak kardus di dalam kotak kardus lainnya, asalkan panjang sisi kotak kardus yang di dalam lebih kecil dibandingkan panjang sisi kotak kardus yang di luar.\n\nAgar rapi, Pak Dengklek ingin agar seluruh kotak, jika dibuka, akan terlihat di dalamnya maksimal satu kotak kardus saja. Pak Dengklek ingin meminimalkan banyaknya kotak kardus yang terlihat (dari luar) di gudang tersebut.",
+    "deskripsi_soal": "Pak Dengklek menyukai estetika, sehingga ia ingin sekali membersihkan gudang di samping kandang-kandang bebeknya.\n\nDi dalam gudang ada banyak kotak kardus berbentuk kubus. Pak Dengklek bisa menaruh sebuah kotak kardus di dalam kotak kardus lainnya, asalkan panjang sisi kotak kardus yang di dalam lebih kecil dibandingkan panjang sisi kotak kardus yang di luar.\n\nAgar rapi, Pak Dengklek ingin agar seluruh kotak, jika dibuka, akan terlihat di dalamnya maksimal satu kotak kardus saja. Pak Dengklek ingin meminimalkan banyaknya kotak kardus yang terlihat (dari luar) di gudang tersebut.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_17_kab_2025.png",
     "pertanyaan": [
@@ -280,7 +280,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 20 sampai 22.\nPak Dengklek memiliki 26 kartu ajaib. Pada awalnya, kartu ajaib pertama berisi huruf 'A', kartu ajaib kedua berisi huruf 'B', dan seterusnya hingga kartu ajaib ke-26 berisi huruf 'Z'.\n\nDengan menjentikkan jarinya satu kali, Pak Dengklek akan mengubah semua isi kartu ajaib miliknya sekaligus berdasarkan aturan perubahan huruf:\n- A -> B, B -> C, C -> B, D -> C, E -> F, F -> H, G -> F, H -> I, I -> F, J -> E, K -> E, L -> N, M -> L\n- N -> M, O -> P, P -> T, Q -> P, R -> Q, S -> Q, T -> U, U -> V, V -> W, W -> X, X -> T, Y -> W, Z -> V",
+    "deskripsi_soal": "Pak Dengklek memiliki 26 kartu ajaib. Pada awalnya, kartu ajaib pertama berisi huruf 'A', kartu ajaib kedua berisi huruf 'B', dan seterusnya hingga kartu ajaib ke-26 berisi huruf 'Z'.\n\nDengan menjentikkan jarinya satu kali, Pak Dengklek akan mengubah semua isi kartu ajaib miliknya sekaligus berdasarkan aturan perubahan huruf:\n- A -> B, B -> C, C -> B, D -> C, E -> F, F -> H, G -> F, H -> I, I -> F, J -> E, K -> E, L -> N, M -> L\n- N -> M, O -> P, P -> T, Q -> P, R -> Q, S -> Q, T -> U, U -> V, V -> W, W -> X, X -> T, Y -> W, Z -> V",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -318,7 +318,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 23 sampai 25.\nPak Dengklek memiliki N ekor bebek yang dinomori dari Bebek ke-1 hingga Bebek ke-N. Hari ini adalah Hari Mandi Nasional, dan Pak Dengklek ingin memandikan seluruh bebek-bebeknya.\n\nPak Dengklek memiliki dua buah gayung berukuran X liter dan Y liter. Persyaratan bebek untuk mandi:\n1. Sekali Pak Dengklek mengambil air dengan gayung, air tersebut harus langsung digunakan untuk mandi.\n2. Bebek ke-P ingin mandi dengan air sebanyak tepat P liter.",
+    "deskripsi_soal": "Pak Dengklek memiliki N ekor bebek yang dinomori dari Bebek ke-1 hingga Bebek ke-N. Hari ini adalah Hari Mandi Nasional, dan Pak Dengklek ingin memandikan seluruh bebek-bebeknya.\n\nPak Dengklek memiliki dua buah gayung berukuran X liter dan Y liter. Persyaratan bebek untuk mandi:\n1. Sekali Pak Dengklek mengambil air dengan gayung, air tersebut harus langsung digunakan untuk mandi.\n2. Bebek ke-P ingin mandi dengan air sebanyak tepat P liter.",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": "soal_23_kab_2025.png",
     "pertanyaan": [
@@ -356,7 +356,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 26 sampai 28.\n Perhatikan potongan kode program berikut!\n int TIGA(int N) {\n  if (N <= 1) {\n    return 1;\n  } else if (N % 3 == 0) {\n    return TIGA(N - 1) + TIGA(N - 3);\n  } else if (N % 3 == 1) {\n    return TIGA(N - 2);\n  } else {\n    return TIGA(N - 3);\n  }\n}",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\n int TIGA(int N) {\n  if (N <= 1) {\n    return 1;\n  } else if (N % 3 == 0) {\n    return TIGA(N - 1) + TIGA(N - 3);\n  } else if (N % 3 == 1) {\n    return TIGA(N - 2);\n  } else {\n    return TIGA(N - 3);\n  }\n}",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -400,7 +400,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 29 sampai 31.\n Perhatikan potongan kode program berikut!\n int GSI(vector<int> B, int x, int y) {\n  return B[y] - B[x - 1];\n}\n\nint FUN(vector<int> A) {\n  int N = A.size();\n  vector<int> B;\n  B.push_back(0);\n  for (int i = 0; i < N; i++) {\n    B.push_back(B[i] + A[i]);\n  }\n  int out = 0;\n  for (int i = 1; i <= N; i++) {\n    for (int j = i; j <= N; j++) {\n      out = max(out, GSI(B, i, j));\n    }\n  }\n  return out;\n}",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\n int GSI(vector<int> B, int x, int y) {\n  return B[y] - B[x - 1];\n}\n\nint FUN(vector<int> A) {\n  int N = A.size();\n  vector<int> B;\n  B.push_back(0);\n  for (int i = 0; i < N; i++) {\n    B.push_back(B[i] + A[i]);\n  }\n  int out = 0;\n  for (int i = 1; i <= N; i++) {\n    for (int j = i; j <= N; j++) {\n      out = max(out, GSI(B, i, j));\n    }\n  }\n  return out;\n}",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -450,7 +450,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 32 sampai 34.\n Perhatikan potongan kode program berikut!\n int DUA(string S, string T) {\n  int N = S.length();\n  int M = T.length();\n  int P = 0;\n  for (int i = 0; i <= N - M; i++) {\n    int Q = 1;\n    for (int j = 0; j < M; j++) {\n      if (S[i + j] != T[M - 1 - j]) {\n        Q = 0;\n      }\n    }\n    P += Q;\n  }\n  return P;\n}",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\n int DUA(string S, string T) {\n  int N = S.length();\n  int M = T.length();\n  int P = 0;\n  for (int i = 0; i <= N - M; i++) {\n    int Q = 1;\n    for (int j = 0; j < M; j++) {\n      if (S[i + j] != T[M - 1 - j]) {\n        Q = 0;\n      }\n    }\n    P += Q;\n  }\n  return P;\n}",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -488,7 +488,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 35 sampai 37.\n Perhatikan potongan kode program berikut!\n int RAHASIA(vector<int> A) {\n  int N = A.size();\n  int sum = 0;\n  for (int i = 0; i < N; i++) {\n    int ctr = 0;\n    for (int j = 0; j < N; j++) {\n      if (A[j] > A[i]) {\n        ctr += 1;\n      } else if (A[j] < A[i]) {\n        ctr -= 1;\n      }\n    }\n    if (ctr == 0) {\n      sum += A[i];\n    }\n  }\n  return sum;\n}\n\nint PETAK(vector<vector<int>> B) {\n  int N = B.size();\n  vector<int> C;\n  for (int i = 0; i < N; i++) {\n    C.push_back(RAHASIA(B[i]));\n  }\n  return RAHASIA(C);\n}",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\n int RAHASIA(vector<int> A) {\n  int N = A.size();\n  int sum = 0;\n  for (int i = 0; i < N; i++) {\n    int ctr = 0;\n    for (int j = 0; j < N; j++) {\n      if (A[j] > A[i]) {\n        ctr += 1;\n      } else if (A[j] < A[i]) {\n        ctr -= 1;\n      }\n    }\n    if (ctr == 0) {\n      sum += A[i];\n    }\n  }\n  return sum;\n}\n\nint PETAK(vector<vector<int>> B) {\n  int N = B.size();\n  vector<int> C;\n  for (int i = 0; i < N; i++) {\n    C.push_back(RAHASIA(B[i]));\n  }\n  return RAHASIA(C);\n}",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [
@@ -526,7 +526,7 @@
   },
   {
     "tipe": "cerita",
-    "deskripsi_soal": "Deskripsi berikut berlaku untuk soal nomor 38 sampai 40.\nPerhatikan potongan kode program berikut!\n int MERAH(int A, int B) {\n  if (B == 0) {\n    return A;\n  } else {\n    return MERAH(B, A % B);\n  }\n}\n\nint PUTIH(int A, int B, int C) {\n  if (C == 0) {\n    return 0;\n  } else if (MERAH(A, C) == B) {\n    return 1 + PUTIH(A, B, C - 1);\n  } else {\n    return PUTIH(A, B, C - 1);\n  }\n}\n\nint NUSANTARA(int A, int B) {\n  return PUTIH(A, B, A);\n}",
+    "deskripsi_soal": "Perhatikan potongan kode program berikut!\n int MERAH(int A, int B) {\n  if (B == 0) {\n    return A;\n  } else {\n    return MERAH(B, A % B);\n  }\n}\n\nint PUTIH(int A, int B, int C) {\n  if (C == 0) {\n    return 0;\n  } else if (MERAH(A, C) == B) {\n    return 1 + PUTIH(A, B, C - 1);\n  } else {\n    return PUTIH(A, B, C - 1);\n  }\n}\n\nint NUSANTARA(int A, int B) {\n  return PUTIH(A, B, A);\n}",
     "gambar_url_deskripsi": null,
     "gambar_lokal_deskripsi": null,
     "pertanyaan": [

@@ -62,7 +62,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 4 dan 6\n Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A,B,C,D dan profesi mereka E,F,G,H...",
+    "deskripsi_soal": "Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A, B, C, D dan profesi mereka E, F, G, H. Setiap orang memberikan 2 pernyataan. Namun, pernyataan yang dapat dipercaya hanyalah pernyataan yang membicarakan pekerjaan asli orang tersebut. Pernyataan lain bisa benar maupun salah.\nBerikut pernyataan keempat orang tersebut:\n- A: \"G memiliki penghasilan 3 kali lipat dari penghasilan F. E memiliki penghasilan lebih besar daripada saya.\"\n- B: \"F memiliki penghasilan lebih besar daripada G. C pekerjaannya adalah H atau E.\"\n- C: \"Saya memiliki penghasilan lebih besar daripada E. F memiliki penghasilan paling rendah.\"\n- D: \"G memiliki penghasilan 2 kali lipat dari penghasilan F. Saya memiliki penghasilan lebih besar daripada H.\"",
     "soal": "Siapakah yang perkerjaannya adalah E?",
     "pilihan": {
       "a": "A",
@@ -81,7 +81,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 4 dan 6\n Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A,B,C,D dan profesi mereka E,F,G,H...",
+    "deskripsi_soal": "Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A, B, C, D dan profesi mereka E, F, G, H. Setiap orang memberikan 2 pernyataan. Namun, pernyataan yang dapat dipercaya hanyalah pernyataan yang membicarakan pekerjaan asli orang tersebut. Pernyataan lain bisa benar maupun salah.\nBerikut pernyataan keempat orang tersebut:\n- A: \"G memiliki penghasilan 3 kali lipat dari penghasilan F. E memiliki penghasilan lebih besar daripada saya.\"\n- B: \"F memiliki penghasilan lebih besar daripada G. C pekerjaannya adalah H atau E.\"\n- C: \"Saya memiliki penghasilan lebih besar daripada E. F memiliki penghasilan paling rendah.\"\n- D: \"G memiliki penghasilan 2 kali lipat dari penghasilan F. Saya memiliki penghasilan lebih besar daripada H.\"",
     "soal": "Apakah pekerjaan dari D?",
     "pilihan": {
       "a": "E",
@@ -100,7 +100,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 4 dan 6\n Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A,B,C,D dan profesi mereka E,F,G,H...",
+    "deskripsi_soal": "Ada 4 orang yang diinterview mengenai penghasilannya. Sebut saja namanya A, B, C, D dan profesi mereka E, F, G, H. Setiap orang memberikan 2 pernyataan. Namun, pernyataan yang dapat dipercaya hanyalah pernyataan yang membicarakan pekerjaan asli orang tersebut. Pernyataan lain bisa benar maupun salah.\nBerikut pernyataan keempat orang tersebut:\n- A: \"G memiliki penghasilan 3 kali lipat dari penghasilan F. E memiliki penghasilan lebih besar daripada saya.\"\n- B: \"F memiliki penghasilan lebih besar daripada G. C pekerjaannya adalah H atau E.\"\n- C: \"Saya memiliki penghasilan lebih besar daripada E. F memiliki penghasilan paling rendah.\"\n- D: \"G memiliki penghasilan 2 kali lipat dari penghasilan F. Saya memiliki penghasilan lebih besar daripada H.\"",
     "soal": "Manakah pernyataan berikut yang benar?",
     "pilihan": {
       "a": "Jika A adalah seorang H, maka C adalah seorang\nF",
@@ -214,7 +214,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta...",
+    "deskripsi_soal": "Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta (dengan posisi start 1 sampai 5). Jika tidak ada yang start bersamaan, tentukan berapa kemungkinan urutan finish yang dapat terjadi untuk masing-masing kondisi berikut:",
     "soal": "Tidak ada yang finish bersamaan",
     "pilihan": {
       "a": "720",
@@ -233,7 +233,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta...",
+    "deskripsi_soal": "Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta (dengan posisi start 1 sampai 5). Jika tidak ada yang start bersamaan, tentukan berapa kemungkinan urutan finish yang dapat terjadi untuk masing-masing kondisi berikut:",
     "soal": "Tidak ada yang finish bersamaan dan pembalap yang\nstart pada posisi ganjil harus finish pada posisi ganjil juga",
     "pilihan": {
       "a": "8",
@@ -252,7 +252,7 @@
     "materi": "kab-kombinatorika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 12 dan 14\n Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta...",
+    "deskripsi_soal": "Pada suatu balap mobil diketahui ada 5 pembalap yang ikut serta (dengan posisi start 1 sampai 5). Jika tidak ada yang start bersamaan, tentukan berapa kemungkinan urutan finish yang dapat terjadi untuk masing-masing kondisi berikut:",
     "soal": "Tidak ada yang finish bersamaan dan pembalap yang\nstart pada posisi genap tidak boleh finish pada\nposisi genap",
     "pilihan": {
       "a": "86",
@@ -404,7 +404,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Di negeri tempat Timo tinggal, terdapat 5 kota: A, B, C, D, E. Rute jam pasir: A->B, A->C, B->C, C->E, D->E, D->A, E->B.",
+    "deskripsi_soal": "Di negeri tempat Timo tinggal, terdapat 5 kota: kota A, kota B, kota C, kota D, dan kota E. Timo memiliki sebuah jam pasir ajaib. Ketika jam pasir itu dibalik, ia dapat berpindah tempat secara seketika, namun tidak semua rute perpindahan tempat dari setiap kota yang ada tersedia. Jam pasir ajaib tersebut juga memiliki batasan pemakaian. Rute perpindahan kota (satu arah) yang disediakan oleh jam pasir tersebut adalah: A ke B, A ke C, B ke C, C ke E, D ke E, D ke A, dan E ke B.",
     "soal": "Saat ini Timo berada di kota D. Jika jam pasir\ntersebut hanya dapat dipakai maksimum 2 kali, kota\nmana sajakah yang dapat dicapai oleh Timo?",
     "pilihan": {
       "a": "A",
@@ -423,7 +423,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Di negeri tempat Timo tinggal, terdapat 5 kota: A, B, C, D, E. Rute jam pasir: A->B, A->C, B->C, C->E, D->E, D->A, E->B.",
+    "deskripsi_soal": "Di negeri tempat Timo tinggal, terdapat 5 kota: kota A, kota B, kota C, kota D, dan kota E. Timo memiliki sebuah jam pasir ajaib. Ketika jam pasir itu dibalik, ia dapat berpindah tempat secara seketika, namun tidak semua rute perpindahan tempat dari setiap kota yang ada tersedia. Jam pasir ajaib tersebut juga memiliki batasan pemakaian. Rute perpindahan kota (satu arah) yang disediakan oleh jam pasir tersebut adalah: A ke B, A ke C, B ke C, C ke E, D ke E, D ke A, dan E ke B.",
     "soal": "Jika jam pasir tersebut dapat dipakai tanpa batas,\nperjalanan manakah yang tidak dapat Timo lakukan\ndengan menggunakan jam pasir tersebut?",
     "pilihan": {
       "a": "Dari kota A menuju kota D",
@@ -442,7 +442,7 @@
     "materi": "kab-graf",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 22 dan 24\n Di negeri tempat Timo tinggal, terdapat 5 kota: A, B, C, D, E. Rute jam pasir: A->B, A->C, B->C, C->E, D->E, D->A, E->B.",
+    "deskripsi_soal": "Di negeri tempat Timo tinggal, terdapat 5 kota: kota A, kota B, kota C, kota D, dan kota E. Timo memiliki sebuah jam pasir ajaib. Ketika jam pasir itu dibalik, ia dapat berpindah tempat secara seketika, namun tidak semua rute perpindahan tempat dari setiap kota yang ada tersedia. Jam pasir ajaib tersebut juga memiliki batasan pemakaian. Rute perpindahan kota (satu arah) yang disediakan oleh jam pasir tersebut adalah: A ke B, A ke C, B ke C, C ke E, D ke E, D ke A, dan E ke B.",
     "soal": "Jika jam pasir tersebut dapat dipakai tanpa batas,\nrute perjalanan manakah yang dapat ditambahkan\ndalam layanan jam pasir tersebut, supaya Timo dapat\nmenempuh perjalanan dari kota manapun menuju\nkota manapun?",
     "pilihan": {
       "a": "Dari kota E ke kota A",
@@ -462,7 +462,7 @@
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
     "deskripsi_soal": null,
-    "soal": "Bilangan kuadrat A adalah bilangan dimana terdapat\nbilangan bulat B sehingga B*B =",
+    "soal": "Bilangan kuadrat A adalah bilangan dimana terdapat bilangan bulat B sehingga B*B = A. Ada berapa bilangan kuadrat antara 212 hingga 2012?",
     "pilihan": {
       "a": "20",
       "b": "25",
@@ -499,7 +499,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 27 dan 30\n Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J...",
+    "deskripsi_soal": "Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J. Diketahui beberapa fakta sebagai berikut:\n- J adalah anak tunggal. Dia juga keponakan dari C.\n- E adalah ibu dari I.\n- B adalah ibu mertua dari F.\n- A dan B adalah pasangan suami-istri yang memiliki dua anak, dan keduanya laki-laki.\n- G memiliki paman D.\n- H adalah seorang perempuan, sedangkan adik dan kakaknya semuanya laki-laki.\n- D adalah kakak ipar E.\n- Semua orang terhubung dalam pohon keluarga dan tidak ada orang yang hilang.",
     "soal": "Siapakah yang tidak bisa ditentukan jenis\nkelaminnya?",
     "pilihan": {
       "a": "A",
@@ -518,7 +518,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 27 dan 30\n Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J...",
+    "deskripsi_soal": "Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J. Diketahui beberapa fakta sebagai berikut:\n- J adalah anak tunggal. Dia juga keponakan dari C.\n- E adalah ibu dari I.\n- B adalah ibu mertua dari F.\n- A dan B adalah pasangan suami-istri yang memiliki dua anak, dan keduanya laki-laki.\n- G memiliki paman D.\n- H adalah seorang perempuan, sedangkan adik dan kakaknya semuanya laki-laki.\n- D adalah kakak ipar E.\n- Semua orang terhubung dalam pohon keluarga dan tidak ada orang yang hilang.",
     "soal": "Siapakah yang pasti lebih tua dari C?",
     "pilihan": {
       "a": "A",
@@ -537,7 +537,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 27 dan 30\n Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J...",
+    "deskripsi_soal": "Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J. Diketahui beberapa fakta sebagai berikut:\n- J adalah anak tunggal. Dia juga keponakan dari C.\n- E adalah ibu dari I.\n- B adalah ibu mertua dari F.\n- A dan B adalah pasangan suami-istri yang memiliki dua anak, dan keduanya laki-laki.\n- G memiliki paman D.\n- H adalah seorang perempuan, sedangkan adik dan kakaknya semuanya laki-laki.\n- D adalah kakak ipar E.\n- Semua orang terhubung dalam pohon keluarga dan tidak ada orang yang hilang.",
     "soal": "Yang mungkin menjadi adik dari H adalah?",
     "pilihan": {
       "a": "C",
@@ -556,7 +556,7 @@
     "materi": "kab-logika",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 27 dan 30\n Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J...",
+    "deskripsi_soal": "Sebuah pohon keluarga terdiri dari 10 anggota keluarga A, B, C, D, E, F, G, H, I, dan J. Diketahui beberapa fakta sebagai berikut:\n- J adalah anak tunggal. Dia juga keponakan dari C.\n- E adalah ibu dari I.\n- B adalah ibu mertua dari F.\n- A dan B adalah pasangan suami-istri yang memiliki dua anak, dan keduanya laki-laki.\n- G memiliki paman D.\n- H adalah seorang perempuan, sedangkan adik dan kakaknya semuanya laki-laki.\n- D adalah kakak ipar E.\n- Semua orang terhubung dalam pohon keluarga dan tidak ada orang yang hilang.",
     "soal": "Ayah dari J adalah?",
     "pilihan": {
       "a": "A",
@@ -575,7 +575,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 31 dan 34\n Perhatikan potongan program bitwise:\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program bitwise:\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
     "soal": "Jika kode di atas dijalankan dengan n = 3, maka\nbanyak angka 0 yang dihasilkan oleh instruksi pada\nbaris ke-5 adalah:",
     "pilihan": {
       "a": "5",
@@ -594,7 +594,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 31 dan 34\n Perhatikan potongan program bitwise:\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program bitwise:\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
     "soal": "Agar keluaran kode di atas sama dengan 1100, maka\nnilai n yang harus diinput adalah:",
     "pilihan": {
       "a": "5",
@@ -613,7 +613,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 31 dan 34\n Perhatikan potongan program bitwise:\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program bitwise:\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
     "soal": "Untuk setiap baris hasil keluaran, selisih jumlah\nangka 1 paling banyak adalah:",
     "pilihan": {
       "a": "n*n",
@@ -632,7 +632,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 31 dan 34\n Perhatikan potongan program bitwise:\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program bitwise:\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;\n\nfor i := 0 to ((1 shl n) - 1 do\nbegin\n for j := 0 to n - 1 do\n begin\n if((i and (1 shl j)) <> 0)then\n write('1')\n else\n write('0');\n end;\nwriteln;\nend;",
     "soal": "Agar keluaran kode di atas menjadi angka 0 semua\npada baris ganjil dan hanya sebuah angka 1 pada\nbaris genap paling kiri,\nmaka baris kelima harus diganti menjadi:",
     "pilihan": {
       "a": "if ((i and (1 shl j)) = 1) then",
@@ -651,7 +651,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 35 dan 36\n Perhatikan potongan program berikut: x := x xor y; x := y xor x; x := x xor y;\n\nx := x xor y;\nx := y xor x;\nx := x xor y;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nx := x xor y;\nx := y xor x;\nx := x xor y;\n\nx := x xor y;\nx := y xor x;\nx := x xor y;",
     "soal": "Jika nilai awal x dan y adalah 3 dan 4, maka setelah\nkode di atas dijalankan nilainya adalah:",
     "pilihan": {
       "a": "x=4, y=3",
@@ -670,7 +670,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 35 dan 36\n Perhatikan potongan program berikut: x := x xor y; x := y xor x; x := x xor y;\n\nx := x xor y;\nx := y xor x;\nx := x xor y;",
+    "deskripsi_soal": "Perhatikan potongan program berikut:\nx := x xor y;\nx := y xor x;\nx := x xor y;\n\nx := x xor y;\nx := y xor x;\nx := x xor y;",
     "soal": "Jika nilai awal x dan y adalah 1 dan 0, maka setelah\nkode di atas dijalankan nilainya adalah:",
     "pilihan": {
       "a": "x=1, y=0",
@@ -689,7 +689,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 39\n Perhatikan prosedur swap(a,b,c) array x.\n\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
+    "deskripsi_soal": "Perhatikan prosedur swap(a,b,c) array x.\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;\n\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
     "soal": "Jika array x berisi (1,2,3,4,5,6). Dan dilakukan\npemanggilan swap(2,4,6) maka akan menghasilkan\noutput :",
     "pilihan": {
       "a": "1,6,5,4,3,2",
@@ -708,7 +708,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 39\n Perhatikan prosedur swap(a,b,c) array x.\n\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
+    "deskripsi_soal": "Perhatikan prosedur swap(a,b,c) array x.\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;\n\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
     "soal": "Jika array x berisi (6,4,3,5,1,2). Dan dilakukan\npemanggilan swap(1,2,4) dan swap(3,4,5) maka akan\nmenghasilkan output :",
     "pilihan": {
       "a": "3,5,1,4,6,2",
@@ -727,7 +727,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 37 dan 39\n Perhatikan prosedur swap(a,b,c) array x.\n\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
+    "deskripsi_soal": "Perhatikan prosedur swap(a,b,c) array x.\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;\n\nprocedure swap(a,b,c:integer);\nvar\n temp : array[1..20]:integer;\n i,j : integer;\nbegin\n j := 1;\n\n for i := b+1 to c do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n for i := a to b do\n begin\n temp[j] := x[i];\n j := j+1;\n end;\n\n j := 1;\n\n for i := a to c do\n begin\n x[i] := temp[j];\n j := j+1;\n end;\nend;",
     "soal": "Jika array x berisi (5, 8, 10, 11, 25, 30, 33, 42, 49, 54,\n63, 64, 66, 75, 78, 84, 93, 96). Dan diinginkan baris\ntersebut tersusun terbalik. Berapa kali minimal\npemanggilan swap dilakukan?",
     "pilihan": {
       "a": "16",
@@ -746,7 +746,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 40 dan 41\n Perhatikan fungsi rekursif ox(m,n).\n\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;",
+    "deskripsi_soal": "Perhatikan fungsi rekursif ox(m,n).\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;\n\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;",
     "soal": "Berapa kali fungsi ox dijalankan jika m=4 dan n=10?",
     "pilihan": {
       "a": "8",
@@ -765,7 +765,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 40 dan 41\n Perhatikan fungsi rekursif ox(m,n).\n\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;",
+    "deskripsi_soal": "Perhatikan fungsi rekursif ox(m,n).\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;\n\nfunction ox (m,n:integer):integer;\nbegin\n if n=1 then ox := m\n else if (n and 1)=0 then\n ox := ox(m,n shr 1) *\n ox(m,n shr 1)\n else\n ox := ox(m,n shr 1) *\n ox(m,n shr 1) * m;\nend;",
     "soal": "Berapa hasil ox(2,10)?",
     "pilihan": {
       "a": "2048",
@@ -803,7 +803,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 43 dan 44\n Perhatikan potongan program konversi basis / bit.\n\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c",
+    "deskripsi_soal": "Perhatikan potongan program konversi basis / bit.\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c\n\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c",
     "soal": "Nilai variabel a hanya dapat berada di antara 0..255\ndan nilai variabel c hanya dapat berada di antara\n0..65535. Jika c diinisialisasi dengan 512 dan nilai\nakhir b adalah 20, berapa nilai awal a?",
     "pilihan": {
       "a": "5",
@@ -822,7 +822,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 43 dan 44\n Perhatikan potongan program konversi basis / bit.\n\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c",
+    "deskripsi_soal": "Perhatikan potongan program konversi basis / bit.\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c\n\nb = 0\nwhile c > 1 do\n b = b + (a mod 2) * c\n a = a/2\n c = c/2\nb = b + (a mod 2) * c",
     "soal": "Jika nilai awal a adalah 107 dan nilai akhir b adalah 13, berapa nilai awal c?",
     "pilihan": {
       "a": "2",
@@ -841,7 +841,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 45 dan 46\n Perhatikan potongan program perulangan while.\n\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);",
+    "deskripsi_soal": "Perhatikan potongan program perulangan while.\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);\n\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);",
     "soal": "Berapakah nilai n yang tidak mungkin supaya output\nprogram tersebut adalah 52?",
     "pilihan": {
       "a": "41",
@@ -860,7 +860,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 45 dan 46\n Perhatikan potongan program perulangan while.\n\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);",
+    "deskripsi_soal": "Perhatikan potongan program perulangan while.\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);\n\na:=7; b:=1;\nwhile(a<=n) do\nbegin\n a:=a+b;\n b:=b+1;\nend;\nwriteln(a);",
     "soal": "Jika nilai n adalah 200, berapakah nilai variabel b di\nakhir potongan program?",
     "pilihan": {
       "a": "21",
@@ -879,7 +879,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 48\n Perhatikan prosedur rekursif haha(d:string).\n\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;",
+    "deskripsi_soal": "Perhatikan prosedur rekursif haha(d:string).\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;\n\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;",
     "soal": "Jika n bernilai 4, apakah 4 baris pertama dari output\nyang diberikan oleh pemanggilan haha('12')?",
     "pilihan": {
       "a": "1234\n1243\n1324\n1342",
@@ -897,7 +897,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 47 dan 48\n Perhatikan prosedur rekursif haha(d:string).\n\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;",
+    "deskripsi_soal": "Perhatikan prosedur rekursif haha(d:string).\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;\n\nprocedure haha(d:string);\nvar\n i:integer;\n tmp:string;\nbegin\n if (length(d)=n) then\n writeln(d)\n else\n\n for i:=1 to n do\n begin\n str(i,tmp);\n haha(d+tmp);\n end;\nend;",
     "soal": "Untuk mencetak seluruh permutasi urutan bilangan\nasli < n, bagaimana seharusnya prosedur haha\ndipanggil?",
     "pilihan": {
       "a": "haha('0')",
@@ -916,7 +916,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "mudah",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 49 dan 50\n Perhatikan potongan program pencetakan bintang bersarang.\n\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program pencetakan bintang bersarang.\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;\n\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;",
     "soal": "Untuk menghasilkan output seperti di bawah ini: *******\n*****\n***\n* Nilai x dan y harus diganti dengan ...",
     "pilihan": {
       "a": "i dan 4",
@@ -935,7 +935,7 @@
     "materi": "kab-algoritma",
     "tingkat_kesulitan": "sedang",
     "peruntukan": "pretest",
-    "deskripsi_soal": "Deskripsi Untuk Soal Nomor 49 dan 50\n Perhatikan potongan program pencetakan bintang bersarang.\n\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;",
+    "deskripsi_soal": "Perhatikan potongan program pencetakan bintang bersarang.\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;\n\nfor i:=1 to 4 do begin\n for j:=1 to x do write(' ');\n for j:=y downto i do write('*');\n writeln;\nend;",
     "soal": "Untuk menghasilkan output seperti di bawah ini: *\n**\n***\n**** Nilai x dan y harus diganti dengan ...",
     "pilihan": {
       "a": "4 dan 2*i",
