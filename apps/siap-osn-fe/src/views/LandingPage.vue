@@ -11,8 +11,8 @@ import CtaSection from '@/components/landing/CtaSection.vue'
 
 const navLinks = [
   { label: 'Kenapa SIAP OSN', href: '#kenapa' },
-  { label: 'Cara Kerja', href: '#cara-kerja' },
   { label: 'Fitur', href: '#fitur' },
+  { label: 'Cara Kerja', href: '#cara-kerja' },
   { label: 'Tingkat Seleksi', href: '#tingkat' },
   { label: 'Tim Kami', href: '#tim' },
 ]
@@ -33,7 +33,6 @@ const navLinks = [
 </template>
 
 <style scoped>
-
 .lp {
   --navy: #0a1d3d;
   --navy-2: #0e2a52;
