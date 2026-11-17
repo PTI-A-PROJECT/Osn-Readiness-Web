@@ -48,6 +48,7 @@ use App\Contracts\Services\SimulasiServiceInterface;
 use App\Contracts\Services\SiswaServiceInterface;
 use App\Contracts\Services\SoalAdminServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
+use App\Contracts\Services\PencatatSoalTampilServiceInterface;
 use App\Contracts\Services\SyaratSimulasiServiceInterface;
 use App\Contracts\Services\TingkatServiceAdminInterface;
 use App\Contracts\Services\TingkatServiceInterface;
@@ -97,6 +98,7 @@ use App\Services\PutaranService;
 use App\Services\RiwayatService;
 use App\Services\SimulasiService;
 use App\Services\SoalPickerService;
+use App\Services\PencatatSoalTampilService;
 use App\Services\SyaratSimulasiService;
 use App\Services\TingkatService;
 use App\Services\UserService;
@@ -127,6 +129,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AnggotaServiceInterface::class, AnggotaService::class);
         $this->app->bind(GoogleOAuthServiceInterface::class, GoogleOAuthService::class);
         $this->app->bind(TingkatServiceInterface::class, TingkatService::class);
+        $this->app->bind(PencatatSoalTampilServiceInterface::class, PencatatSoalTampilService::class);
 
         // [B1-D] Admin services
         $this->app->bind(TingkatServiceAdminInterface::class, AdminTingkatService::class);

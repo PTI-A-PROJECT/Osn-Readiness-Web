@@ -84,6 +84,10 @@ const waktuTampil = computed(() => {
 })
 
 let timerJam = null
+// Auto-submit hanya dicoba sekali; kalau submit gagal, jangan mengulang tiap
+// detik (toast error akan spam selama sisa pengerjaan).
+let sudahKumpulOtomatis = false
+
 function hitungSisa() {
   if (!simulasi.batasPada) return
   const batas = Date.parse(simulasi.batasPada)
@@ -91,7 +95,14 @@ function hitungSisa() {
   sisaDetik.value = Math.max(0, Math.round((batas - Date.now()) / 1000))
   // Waktu habis -> kumpulkan otomatis (server juga menolak simpan jawaban
   // lewat kode WAKTU_HABIS).
-  if (sisaDetik.value === 0 && bolehMengerjakan.value) kumpulkan({ paksa: true })
+  if (
+    sisaDetik.value === 0 &&
+    bolehMengerjakan.value &&
+    !sudahKumpulOtomatis
+  ) {
+    sudahKumpulOtomatis = true
+    kumpulkan({ paksa: true })
+  }
 }
 
 /* ---------- Autosave (debounce 800 ms per soal) ---------- */
@@ -250,7 +261,7 @@ onBeforeUnmount(() => {
 
     <!-- PENGERJAAN -->
     <PengerjaanSoal
-      v-else-if="bolehMengerjakan"
+      v-else-if="bolehMengerjakan || mengirim"
       judul="Simulasi Seleksi"
       :subjudul="subjudul"
       :soal="soal"
@@ -271,6 +282,7 @@ onBeforeUnmount(() => {
       @toggle-ragu="toggleRagu"
       @pindah="pindah"
       @kumpulkan="kumpulkan"
+      @kumpulkan-kosong="kumpulkan({ paksa: true })"
     />
   </div>
 </template>

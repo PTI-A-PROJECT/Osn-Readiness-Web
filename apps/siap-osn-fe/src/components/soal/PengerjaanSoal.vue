@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import UserMenu from '@/components/UserMenu.vue'
 import { renderKonten } from '@/lib/richtext.js'
+import { hitungRingkasan, sudahDijawab } from '@/lib/soal.js'
 
 const props = defineProps({
   judul: { type: String, default: 'Pengerjaan Soal' },
@@ -43,7 +44,8 @@ const emit = defineEmits([
 
 const petunjukTerbuka = ref(true)
 const modalSelesai = ref(false)
-const salinBerhasil = ref(false)
+// Indeks blok kode yang barusan disalin; null = belum ada.
+const salinBerhasil = ref(null)
 
 const soalAktif = computed(() => props.soal[props.aktif] ?? null)
 const totalSoal = computed(() => props.total || props.soal.length)
@@ -51,7 +53,7 @@ const opsiSoal = computed(() => soalAktif.value?.opsi ?? [])
 
 watch(soalAktif, () => {
   modalSelesai.value = false
-  salinBerhasil.value = false
+  salinBerhasil.value = null
 })
 
 function ambilNilai(data, indeks, fallback = '') {
@@ -60,33 +62,19 @@ function ambilNilai(data, indeks, fallback = '') {
 }
 
 function soalTerisi(i) {
-  const v = ambilNilai(props.jawaban, i, '')
-  return v != null && String(v).trim() !== ''
+  return sudahDijawab(props.jawaban, i)
 }
 
 function nomorSoal(i) {
   return i + 1
 }
 
-const ringkasan = computed(() => {
-  let terjawab = 0
-  let jumlahRagu = 0
-  const kosong = []
-
-  props.soal.forEach((_, i) => {
-    if (soalTerisi(i)) terjawab++
-    else kosong.push(i)
-
-    if (Boolean(ambilNilai(props.ragu, i, false))) jumlahRagu++
-  })
-
-  return {
-    terjawab,
-    ragu: jumlahRagu,
-    belum: kosong.length,
-    kosong,
-  }
-})
+// Satu sumber kebenaran dengan view pemanggil (lib/soal.js), supaya panel
+// ringkasan dan modal kumpulkan tidak pernah berbeda hitungan dengan guard
+// submit yang dipakai halaman pre-test/latihan/simulasi.
+const ringkasan = computed(() =>
+  hitungRingkasan(props.soal, props.jawaban, props.ragu),
+)
 
 function kelasNomer(i) {
   if (i === props.aktif) return ['n-open']
@@ -158,27 +146,19 @@ const kodeEksplisit = computed(() =>
 // DETEKSI BLOK KODE MARKDOWN
 // ======================================================
 
-function cariFence(teks) {
-  const cocok = [
-    ...teks.matchAll(/```([\w+.#-]*)[ \t]*\n([\s\S]*?)\n?```/g),
-  ]
-
-  if (cocok.length !== 1) return null
-
-  return {
-    bahasa: cocok[0][1],
-    kode: cocok[0][2].trim(),
-    lengkap: cocok[0][0],
-  }
+function cariFences(teks) {
+  return [
+    ...String(teks ?? '').matchAll(/```([\w+.#-]*)[ \t]*\n([\s\S]*?)\n?```/g),
+  ].map((cocok) => ({
+    bahasa: cocok[1],
+    kode: cocok[2].trim(),
+    lengkap: cocok[0],
+  }))
 }
 
-const konteksFence = computed(() =>
-  cariFence(konteksMentah.value),
-)
+const fenceKonteks = computed(() => cariFences(konteksMentah.value))
 
-const pertanyaanFence = computed(() =>
-  cariFence(pertanyaanMentah.value),
-)
+const fencePertanyaan = computed(() => cariFences(pertanyaanMentah.value))
 
 // ======================================================
 // DETEKSI KODE DARI DATA SOAL LAMA
@@ -221,64 +201,75 @@ function kodeLamaDariKonteks(teks) {
 // MENENTUKAN KODE PROGRAM
 // ======================================================
 
-const kodeProgram = computed(
-  () =>
-    kodeEksplisit.value ||
-    konteksFence.value?.kode ||
-    pertanyaanFence.value?.kode ||
-    kodeLamaDariKonteks(konteksMentah.value) ||
-    '',
-)
-
-const bahasaProgram = computed(() => {
-  const k = kodeProgram.value
-
-  const hint = String(
-    soalAktif.value?.bahasa ??
-    konteksFence.value?.bahasa ??
-    pertanyaanFence.value?.bahasa ??
-    '',
-  ).toLowerCase()
+function deteksiBahasa(hint, kode) {
+  const petunjuk = String(hint ?? '').toLowerCase()
 
   if (
-    /cpp|c\+\+|cxx/.test(hint) ||
-    /#include\s*[<"]|std::|cout\s*<</.test(k)
+    /cpp|c\+\+|cxx/.test(petunjuk) ||
+    /#include\s*[<"]|std::|cout\s*<</.test(kode)
   ) {
     return 'C++'
   }
 
-  if (
-    /python|\bpy\b/.test(hint) ||
-    /^\s*def\s+\w+\s*\(/m.test(k)
-  ) {
+  if (/python|\bpy\b/.test(petunjuk) || /^\s*def\s+\w+\s*\(/m.test(kode)) {
     return 'Python'
   }
 
   if (
-    /pascal|delphi/.test(hint) ||
-    /\b(?:begin|longint|writeln|readln)\b|:=/i.test(k)
+    /pascal|delphi/.test(petunjuk) ||
+    /\b(?:begin|longint|writeln|readln)\b|:=/i.test(kode)
   ) {
     return 'Pascal'
   }
 
-  if (/javascript|js/.test(hint)) return 'JavaScript'
+  if (/javascript|js/.test(petunjuk)) return 'JavaScript'
 
   return 'Kode Program'
+}
+
+// Soal boleh memuat lebih dari satu potongan kode (mis. "bandingkan kode A
+// dan B"). Semua blok ditampilkan dengan kartu yang sama, bukan hanya blok
+// pertama, supaya tampilan antarsoal konsisten.
+const blokKode = computed(() => {
+  if (kodeEksplisit.value) {
+    return [
+      {
+        kode: kodeEksplisit.value,
+        bahasa: deteksiBahasa(soalAktif.value?.bahasa, kodeEksplisit.value),
+      },
+    ]
+  }
+
+  const dariFence = [...fenceKonteks.value, ...fencePertanyaan.value]
+
+  if (dariFence.length) {
+    return dariFence.map((fence) => ({
+      kode: fence.kode,
+      bahasa: deteksiBahasa(fence.bahasa, fence.kode),
+    }))
+  }
+
+  const kodeLama = kodeLamaDariKonteks(konteksMentah.value)
+
+  return kodeLama
+    ? [{ kode: kodeLama, bahasa: deteksiBahasa(soalAktif.value?.bahasa, kodeLama) }]
+    : []
 })
 
-const namaFileKode = computed(
-  () =>
-    ({
+function namaFileKode(bahasa) {
+  return (
+    {
       'C++': 'program.cpp',
       Pascal: 'program.pas',
       Python: 'program.py',
       JavaScript: 'program.js',
-    })[bahasaProgram.value] ?? 'program.txt',
-)
+    }[bahasa] ?? 'program.txt'
+  )
+}
 
-const barisKode = computed(() =>
-  kodeProgram.value ? kodeProgram.value.split('\n') : [],
-)
+function barisKode(kode) {
+  return kode ? kode.split('\n') : []
+}
 
 // ======================================================
 // PERBAIKAN UTAMA: HAPUS KODE YANG MUNCUL DUA KALI
@@ -343,35 +334,54 @@ function tanpaKodeGanda(teks, kode) {
 // MENAMPILKAN KONTEKS TANPA KODE DUPLIKAT
 // ======================================================
 
-function konteksTanpaKode(teks, kode, fence) {
+// Semua kode yang sudah tampil di kartu program.
+function kodeTampil() {
+  return blokKode.value.map((blok) => blok.kode)
+}
+
+function ringkasSama(a, b) {
+  return ringkasSpasi(a) === ringkasSpasi(b)
+}
+
+// Buang fence yang isinya sudah dipindahkan ke kartu program, sisanya
+// (fence yang berbeda) tetap dirender oleh markdown.
+function buangFenceDikenal(teks, fences) {
+  let hasil = normalisasiBaris(teks)
+
+  for (const fence of fences) {
+    if (kodeTampil().some((kode) => ringkasSama(kode, fence.kode))) {
+      hasil = hasil.replace(fence.lengkap, '')
+    }
+  }
+
+  return normalisasiBaris(hasil)
+}
+
+// Buang sisa kode yang masih tertulis sebagai teks biasa.
+function tanpaSemuaKode(teks) {
+  return blokKode.value.reduce(
+    (hasil, blok) => tanpaKodeGanda(hasil, blok.kode),
+    teks,
+  )
+}
+
+function konteksTanpaKode(teks, fences) {
   const konteks = normalisasiBaris(teks)
+  const kodes = kodeTampil()
 
-  if (!kode) return konteks
+  if (!kodes.length) return konteks
 
-  if (ringkasSpasi(konteks) === ringkasSpasi(kode)) {
+  if (kodes.some((kode) => ringkasSama(konteks, kode))) {
     return ''
   }
 
-  if (fence?.kode === kode) {
-    return normalisasiBaris(
-      konteks.replace(fence.lengkap, ''),
-    )
-  }
-
-  if (konteks.includes(kode)) {
-    return normalisasiBaris(
-      konteks.replace(kode, ''),
-    )
-  }
-
-  return konteks
+  return tanpaSemuaKode(buangFenceDikenal(konteks, fences))
 }
 
 const konteksFinal = computed(() => {
   const konteks = konteksTanpaKode(
     konteksMentah.value,
-    kodeProgram.value,
-    konteksFence.value,
+    fenceKonteks.value,
   )
 
   if (
@@ -404,25 +414,8 @@ const pertanyaanFinal = computed(() => {
 
   if (!pertanyaan) return ''
 
-  // Jika pertanyaan menggunakan fenced code, hapus seluruh
-  // blok fenced ketika isinya sama dengan kode editor.
-  const fence = pertanyaanFence.value
-
-  if (
-    fence?.kode &&
-    ringkasSpasi(fence.kode) ===
-      ringkasSpasi(kodeProgram.value)
-  ) {
-    return normalisasiBaris(
-      pertanyaan.replace(fence.lengkap, ''),
-    )
-  }
-
-  // Untuk soal lama yang menyimpan kode sebagai teks biasa,
-  // hapus kode dari pertanyaan tetapi pertahankan narasinya.
-  return tanpaKodeGanda(
-    pertanyaan,
-    kodeProgram.value,
+  return tanpaSemuaKode(
+    buangFenceDikenal(pertanyaan, fencePertanyaan.value),
   )
 })
 
@@ -430,9 +423,15 @@ const pertanyaanFinal = computed(() => {
 // RENDER KONTEN
 // ======================================================
 
+// Pengantar juga dibersihkan: importer lama bisa menyimpan program yang sama
+// di pengantar dan di field kode, sehingga kode tampil dua kali.
 const pengantarHtml = computed(() => {
-  const pengantar = normalisasiBaris(
-    soalAktif.value?.pengantar,
+  const mentah = normalisasiBaris(soalAktif.value?.pengantar)
+
+  // Buang fence yang isinya sudah tampil di kartu program, lalu sisa kode
+  // yang tertulis sebagai teks biasa.
+  const pengantar = tanpaSemuaKode(
+    buangFenceDikenal(mentah, cariFences(mentah)),
   )
 
   return pengantar ? renderKonten(pengantar) : ''
@@ -451,6 +450,31 @@ const pertanyaanHtml = computed(() =>
 )
 
 // ======================================================
+// LABEL TIPE SOAL
+// ======================================================
+
+// Tipe soal menentukan label, bukan sebaliknya: soal uraian tidak boleh
+// dilabeli "Pilihan Ganda".
+const labelTipeAktif = computed(() => {
+  const tipe = soalAktif.value?.tipe
+
+  if (tipe === 'isian') return 'Uraian - Tulis jawaban'
+  if (tipe === 'ganda') return 'Pilihan Ganda - Pilih 1'
+
+  return props.labelTipe
+})
+
+const petunjukTipeAktif = computed(() => {
+  if (props.petunjukTipe) return props.petunjukTipe
+
+  if (soalAktif.value?.tipe === 'isian') {
+    return 'Tulis jawabanmu dengan kalimat sendiri; sertakan langkah atau alasan bila perlu.'
+  }
+
+  return ''
+})
+
+// ======================================================
 // JUDUL DAN TAMPILAN KONTEKS
 // ======================================================
 
@@ -461,11 +485,7 @@ const judulKonteks = computed(() => {
 
   if (!judul || judul === 'Konteks Soal') return ''
 
-  if (
-    kodeProgram.value &&
-    ringkasSpasi(judul) ===
-      ringkasSpasi(kodeProgram.value)
-  ) {
+  if (kodeTampil().some((kode) => ringkasSama(judul, kode))) {
     return ''
   }
 
@@ -501,10 +521,14 @@ const tampilKonteks = computed(() =>
 // SALIN KODE PROGRAM
 // ======================================================
 
-async function salinKode() {
+async function salinKode(indeks) {
+  const blok = blokKode.value[indeks]
+
+  if (!blok) return
+
   try {
-    await navigator.clipboard.writeText(kodeProgram.value)
-    salinBerhasil.value = true
+    await navigator.clipboard.writeText(blok.kode)
+    salinBerhasil.value = indeks
   } catch (error) {
     console.error('Tidak dapat menyalin kode:', error)
   }
@@ -596,7 +620,7 @@ async function salinKode() {
               </span>
 
               <span class="chip chip-gray">
-                {{ labelTipe }}
+                {{ labelTipeAktif }}
               </span>
             </div>
 
@@ -646,7 +670,11 @@ async function salinKode() {
           ></div>
 
           <!-- EDITOR KODE PROGRAM -->
-          <div v-if="kodeProgram" class="program-editor">
+          <div
+            v-for="(blok, blokIndeks) in blokKode"
+            :key="blokIndeks"
+            class="program-editor"
+          >
             <div class="program-header">
               <div class="program-header-left">
                 <span class="program-dot"></span>
@@ -654,19 +682,19 @@ async function salinKode() {
                 <span class="program-dot"></span>
 
                 <span class="program-filename">
-                  {{ namaFileKode }}
+                  {{ namaFileKode(blok.bahasa) }}
                 </span>
               </div>
 
               <div class="program-header-right">
-                <span>{{ bahasaProgram }}</span>
+                <span>{{ blok.bahasa }}</span>
 
                 <button
                   type="button"
                   class="program-copy"
-                  @click="salinKode"
+                  @click="salinKode(blokIndeks)"
                 >
-                  {{ salinBerhasil ? '✓ Disalin' : '▢ Salin' }}
+                  {{ salinBerhasil === blokIndeks ? '✓ Disalin' : '▢ Salin' }}
                 </button>
               </div>
             </div>
@@ -678,7 +706,7 @@ async function salinKode() {
               tabindex="0"
             >
               <div
-                v-for="(baris, index) in barisKode"
+                v-for="(baris, index) in barisKode(blok.kode)"
                 :key="index"
                 class="program-line"
               >
@@ -703,8 +731,8 @@ async function salinKode() {
             v-html="pertanyaanHtml"
           ></div>
 
-          <p v-if="petunjukTipe" class="hint">
-            {{ petunjukTipe }}
+          <p v-if="petunjukTipeAktif" class="hint">
+            {{ petunjukTipeAktif }}
           </p>
 
           <!-- PILIHAN JAWABAN -->
@@ -986,10 +1014,70 @@ async function salinKode() {
         </div>
       </div>
     </div>
+
+    <!-- OVERLAY MENGUMPULKAN -->
+    <!-- Status store berubah ke MENGUMPULKAN saat submit; halaman tetap
+         menampilkan soal supaya tidak berkedip kosong. -->
+    <div
+      v-if="mengirim"
+      class="overlay-kirim"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="overlay-kirim-kotak">
+        <span class="overlay-kirim-spinner" aria-hidden="true"></span>
+        <p>Mengumpulkan jawaban…</p>
+        <small>Jangan tutup halaman ini.</small>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.overlay-kirim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+}
+.overlay-kirim-kotak {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 26px 32px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.24);
+  text-align: center;
+}
+.overlay-kirim-kotak p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.overlay-kirim-kotak small {
+  font-size: 12px;
+  color: #6b778c;
+}
+.overlay-kirim-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #dbe4f0;
+  border-top-color: #1e3a8a;
+  border-radius: 50%;
+  animation: overlay-kirim-putar 0.8s linear infinite;
+}
+@keyframes overlay-kirim-putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .pengantar-soal {
   margin: 20px 0 12px;
   color: #334155;

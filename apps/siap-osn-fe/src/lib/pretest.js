@@ -8,7 +8,9 @@
 export const DURASI_PRETEST_MENIT = 60
 export const DURASI_PRETEST_DETIK = DURASI_PRETEST_MENIT * 60
 export const JUMLAH_SOAL_PRETEST = 20
-export const TIPE_SOAL_PRETEST = 3
+// Backend hanya punya dua tipe soal: pilihan_ganda dan isian
+// (App\Enums\TipeSoal). Tidak ada tipe "pilihan kompleks".
+export const TIPE_SOAL_PRETEST = 2
 
 // Penanda sekali-pakai setelah login/daftar: dashboard menampilkan popup
 // pretest satu kali, lalu penanda dihapus. Refresh/navigasi tidak

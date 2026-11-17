@@ -5,12 +5,16 @@
 #   `php artisan package:discover` gagal saat build.
 # - vendor/node_modules : diinstall di dalam image.
 # - tests/storage logs : tidak dipakai runtime.
+# - public/storage : symlink hasil `storage:link` (target path Linux). BuildKit
+#   gagal membaca symlink ini di host Windows ("invalid file request"). Saat
+#   runtime folder tetap ada lewat bind mount, jadi tidak perlu ikut ke image.
 .env
 .env.*
 .git
 .github
 vendor
 node_modules
+public/storage
 bootstrap/cache/*.php
 storage/logs/*
 storage/framework/cache/*

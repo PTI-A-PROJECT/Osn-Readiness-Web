@@ -34,6 +34,10 @@ class PretestResource extends JsonResource
         return [
             'id' => $dimulai->pretest->id,
             'tingkat_id' => $dimulai->pretest->tingkat_id,
+            // Batas waktu dari server: frontend menghitung sisa waktu dari
+            // sini, bukan dari hitungan lokal saat halaman dimuat.
+            'mulai_pada' => $dimulai->pretest->mulai_pada,
+            'batas_pada' => $dimulai->pretest->batas_pada,
             'disubmit_pada' => $dimulai->pretest->disubmit_pada,
             'selesai_pada' => $dimulai->pretest->selesai_pada,
             'soal' => SoalPengerjaanResource::collection($soal),

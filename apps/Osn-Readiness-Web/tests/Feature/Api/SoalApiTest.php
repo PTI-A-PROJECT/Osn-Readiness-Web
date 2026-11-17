@@ -75,7 +75,7 @@ class SoalApiTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'materi_id', 'level', 'tipe_soal', 'pertanyaan', 'pilihan_jawaban'],
+                    '*' => ['id', 'materi_id', 'level', 'tipe_soal', 'pertanyaan', 'pilihan_jawaban', 'jumlah_tampil'],
                 ],
                 'meta',
                 'links',

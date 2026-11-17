@@ -32,6 +32,11 @@ class SoalReviewResource extends JsonResource
                 'materi_id' => $soal->materi_id,
                 'level' => $soal->level->value,
                 'tipe_soal' => $soal->tipe_soal->value,
+                // Program dan pengantarnya ikut dikirim: tanpa ini halaman
+                // pembahasan kehilangan potongan kode yang menjadi inti soal.
+                'pengantar' => $soal->pengantar,
+                'kode' => $soal->kode,
+                'bahasa' => $soal->bahasa,
                 'pertanyaan' => $soal->pertanyaan,
                 'pilihan_jawaban' => $soal->pilihan_jawaban,
                 'kunci_jawaban' => $soal->kunci_jawaban,
@@ -41,6 +46,9 @@ class SoalReviewResource extends JsonResource
                 'konteks' => $soal->konteks === null ? null : [
                     'judul' => $soal->konteks->judul,
                     'isi_konteks' => $soal->konteks->isi_konteks,
+                    'gambar' => $soal->konteks->gambar === null
+                        ? null
+                        : Storage::disk('public')->url($soal->konteks->gambar),
                 ],
                 'pembahasan' => $soal->pembahasan?->isi_pembahasan,
             ],
