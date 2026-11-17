@@ -81,6 +81,11 @@ class PerhitunganClient implements PerhitunganClientInterface
         ];
     }
 
+    public function hitungAnalisisKlasik(array $payload): array
+    {
+        return $this->kirim('/hitung/analisis-klasik', $payload);
+    }
+
     /**
      * @param  array<string, mixed>  $payload
      * @return array<string, mixed>

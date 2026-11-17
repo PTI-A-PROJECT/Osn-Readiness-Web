@@ -23,6 +23,12 @@ class SoalRepository extends BaseRepository implements SoalRepositoryInterface
     public function kandidat(int $tingkatId, Peruntukan $peruntukan, array $kecuali = [], ?int $materiId = null): Collection
     {
         return $this->model->newQuery()
+            ->select('soal.*')
+            ->selectRaw(
+                '((SELECT COUNT(*) FROM pretest_jawaban WHERE pretest_jawaban.soal_id = soal.id) + '
+                .'(SELECT COUNT(*) FROM quiz_jawaban WHERE quiz_jawaban.soal_id = soal.id) + '
+                .'(SELECT COUNT(*) FROM hasil_simulasi_jawaban WHERE hasil_simulasi_jawaban.soal_id = soal.id)) as jumlah_keluar'
+            )
             ->where('tingkat_id', $tingkatId)
             ->where('peruntukan', $peruntukan->value)
             // newQuery() sudah menerapkan soft delete, jadi soal yang

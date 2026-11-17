@@ -24,6 +24,7 @@ from __future__ import annotations
 from fastapi import Depends, FastAPI, Header, HTTPException
 
 from data_analytics.config import get_settings
+from data_analytics.klasik import hitung_analisis_klasik
 from data_analytics.laravel import nilai_paket, peta_pretest
 from data_analytics.penilaian import (
     HasilPenilaian,
@@ -35,6 +36,8 @@ from data_analytics.penilaian import (
     nilai_simulasi,
 )
 from data_analytics.schemas import (
+    AnalisisKlasikRequest,
+    AnalisisKlasikResponse,
     HitungAkurasiMateriItem,
     HitungLatihanRequest,
     HitungLatihanResponse,
@@ -182,3 +185,14 @@ def hitung_latihan(
             for a in h.akurasi_per_materi
         ],
     )
+
+
+@app.post("/hitung/analisis-klasik", response_model=AnalisisKlasikResponse)
+def hitung_analisis(
+    req: AnalisisKlasikRequest, _: None = Depends(_wajib_token)
+) -> AnalisisKlasikResponse:
+    try:
+        return hitung_analisis_klasik(req)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+

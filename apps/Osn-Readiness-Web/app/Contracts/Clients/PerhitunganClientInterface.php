@@ -44,4 +44,17 @@ interface PerhitunganClientInterface
      * @throws PerhitunganKonfigurasiException
      */
     public function hitungPretest(array $soal, array $materi, int $jumlahMateriWajib): array;
+
+    /**
+     * Hitung 4 tes klasik soal (Reliabilitas KR-20, Validitas Point-Biserial,
+     * Daya Pembeda, Tingkat Kesukaran), persentase kali keluar & bobot peluang,
+     * serta analisis nilai percobaan 1 vs 2+.
+     *
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     *
+     * @throws PerhitunganTidakTersediaException
+     * @throws PerhitunganKonfigurasiException
+     */
+    public function hitungAnalisisKlasik(array $payload): array;
 }

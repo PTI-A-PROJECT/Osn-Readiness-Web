@@ -42,14 +42,17 @@ const menuAdmin = [
   { kelompok: 'ASESMEN', label: 'Manajemen Simulasi', to: { name: 'admin.ujian', query: { tab: 'simulasi' } } },
   { kelompok: 'ASESMEN', label: 'Manajemen Pembahasan', to: { name: 'admin.soal', query: { tab: 'pembahasan' } } },
   { kelompok: 'ASESMEN', label: 'Manajemen Aturan Pemetaan', to: { name: 'admin.aturan', query: { tab: 'aturan' } } },
-  { kelompok: 'AUDIT', label: 'Log Aktivitas', to: { name: 'admin.aktivitas' } },
+  { kelompok: 'AUDIT', label: 'Log Aktivitas', to: { name: 'admin.aktivitas', query: { tab: 'log' } } },
+  { kelompok: 'AUDIT', label: 'Analisis Percobaan (1x vs 2x)', to: { name: 'admin.aktivitas', query: { tab: 'percobaan' } } },
+  { kelompok: 'AUDIT', label: 'Persentase Keluar Soal', to: { name: 'admin.aktivitas', query: { tab: 'exposure' } } },
+  { kelompok: 'AUDIT', label: '4 Tes Klasik Soal (CTT)', to: { name: 'admin.aktivitas', query: { tab: 'klasik' } } },
 ]
 
 const isAdmin = computed(() => auth.user?.role === 'super_admin')
 const kelompokAdmin = ['UTAMA', 'ASESMEN', 'AUDIT']
 function adminMenuAktif(item) {
   return route.name === item.to.name &&
-    (!item.to.query?.tab || (route.query.tab || ({ 'admin.konten': 'kompetensi', 'admin.soal': 'soal', 'admin.ujian': 'latihan', 'admin.aturan': 'tingkat' }[route.name])) === item.to.query.tab)
+    (!item.to.query?.tab || (route.query.tab || ({ 'admin.konten': 'kompetensi', 'admin.soal': 'soal', 'admin.ujian': 'latihan', 'admin.aturan': 'tingkat', 'admin.aktivitas': 'log' }[route.name])) === item.to.query.tab)
 }
 
 // Sidebar ada di semua halaman siswa, jadi data progress dimuat dari sini.

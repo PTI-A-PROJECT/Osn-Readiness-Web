@@ -572,3 +572,116 @@ class LaravelMateriWajibItem(BaseModel):
 class LaravelPretestResponse(LaravelPenilaianResponse):
     pemetaan: list[LaravelPemetaanItem]
     materi_wajib: list[LaravelMateriWajibItem]
+
+
+# --- Analisis Teori Tes Klasik (CTT), Exposure Soal, & Attempt ----------------
+
+
+class AnalisisJawabanSesiItem(BaseModel):
+    soal_id: int
+    status_benar: bool
+
+
+class AnalisisSesiItem(BaseModel):
+    sesi_id: int
+    user_id: int
+    nilai_total: float
+    jawaban: list[AnalisisJawabanSesiItem] = []
+
+
+class AnalisisBankSoalItem(BaseModel):
+    soal_id: int
+    kode_soal: str
+    pertanyaan_ringkas: str
+    materi_id: int
+    materi_judul: str
+    level: str
+    peruntukan: str
+    jumlah_keluar: int = Field(ge=0, default=0)
+
+
+class AnalisisPengerjaanAttemptInput(BaseModel):
+    user_id: int
+    user_nama: str
+    jenis: str
+    target_id: int
+    target_nama: str
+    nilai: float
+    waktu: str
+
+
+class AnalisisKlasikRequest(BaseModel):
+    sesi: list[AnalisisSesiItem] = []
+    bank_soal: list[AnalisisBankSoalItem] = []
+    pengerjaan: list[AnalisisPengerjaanAttemptInput] = []
+
+
+class AnalisisReliabilitasRingkasan(BaseModel):
+    kr20: float
+    kategori: str
+    jumlah_sesi: int
+    jumlah_soal_teruji: int
+    jumlah_soal_valid: int
+    jumlah_soal_baik: int
+    rata_kesukaran: float
+    rata_daya_pembeda: float
+    rata_validitas: float
+
+
+class AnalisisButirItem(BaseModel):
+    soal_id: int
+    kode_soal: str
+    pertanyaan_ringkas: str
+    materi_id: int
+    materi_judul: str
+    level: str
+    peruntukan: str
+    jumlah_keluar: int
+    persentase_keluar: float
+    bobot_peluang: float
+    peluang_keluar_berikutnya: float
+    jumlah_menjawab: int
+    jumlah_benar: int
+    tingkat_kesukaran: float
+    kategori_kesukaran: str
+    daya_pembeda: float
+    kategori_daya_pembeda: str
+    validitas_rpbis: float
+    valid: bool
+    kategori_validitas: str
+    rekomendasi: str
+
+
+class AnalisisAttemptRingkasan(BaseModel):
+    total_kombinasi: int
+    jumlah_coba_sekali: int
+    jumlah_coba_dua_kali: int
+    jumlah_coba_tiga_plus: int
+    rata_nilai_percobaan_1: float
+    rata_nilai_percobaan_2: float
+    rata_nilai_percobaan_3_plus: float
+    rata_peningkatan_1_ke_2: float
+    persen_siswa_meningkat: float
+
+
+class AnalisisAttemptItem(BaseModel):
+    user_id: int
+    user_nama: str
+    jenis: str
+    target_id: int
+    target_nama: str
+    jumlah_percobaan: int
+    nilai_percobaan_1: float
+    nilai_percobaan_2: float | None = None
+    nilai_percobaan_3_plus: float | None = None
+    nilai_terbaik: float
+    selisih_1_ke_2: float | None = None
+    riwayat_nilai: list[float]
+
+
+class AnalisisKlasikResponse(BaseModel):
+    reliabilitas: AnalisisReliabilitasRingkasan
+    butir_soal: list[AnalisisButirItem]
+    ringkasan_percobaan: AnalisisAttemptRingkasan
+    rincian_percobaan: list[AnalisisAttemptItem]
+

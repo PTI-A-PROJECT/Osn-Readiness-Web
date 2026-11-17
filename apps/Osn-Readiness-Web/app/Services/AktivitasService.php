@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\Clients\PerhitunganClientInterface;
 use App\Contracts\Services\AktivitasServiceInterface;
 use App\Models\LogAktivitas;
 use App\Models\User;
@@ -13,6 +14,9 @@ use Illuminate\Support\Str;
 
 class AktivitasService implements AktivitasServiceInterface
 {
+    public function __construct(
+        private readonly ?PerhitunganClientInterface $perhitungan = null,
+    ) {}
     /** Log disimpan 90 hari, lalu dibersihkan oleh `aktivitas:prune`. */
     public const RETENSI_HARI = 90;
 
@@ -170,6 +174,284 @@ class AktivitasService implements AktivitasServiceInterface
                 'ip' => $log->ip,
             ])
             ->all();
+    }
+
+    public function analisis(?int $tingkatId = null, ?string $peruntukan = null, ?int $userId = null, ?int $materiId = null): array
+    {
+        $bankSoal = $this->kumpulkanBankSoalAnalisis($tingkatId, $peruntukan, $materiId);
+        $sesi = $this->kumpulkanSesiAnalisis($tingkatId, $peruntukan, $userId, $materiId);
+        $pengerjaan = $this->kumpulkanPengerjaanAttempt($tingkatId, $peruntukan, $userId, $materiId);
+
+        $klien = $this->perhitungan ?? app(PerhitunganClientInterface::class);
+
+        return $klien->hitungAnalisisKlasik([
+            'sesi' => $sesi,
+            'bank_soal' => $bankSoal,
+            'pengerjaan' => $pengerjaan,
+        ]);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function kumpulkanBankSoalAnalisis(?int $tingkatId, ?string $peruntukan, ?int $materiId): array
+    {
+        $baris = DB::table('soal as s')
+            ->join('materi as m', 'm.id', '=', 's.materi_id')
+            ->whereNull('s.deleted_at')
+            ->when($tingkatId !== null, fn ($q) => $q->where('s.tingkat_id', $tingkatId))
+            ->when($peruntukan !== null, fn ($q) => $q->where('s.peruntukan', $peruntukan))
+            ->when($materiId !== null, fn ($q) => $q->where('s.materi_id', $materiId))
+            ->select(
+                's.id',
+                's.id_sumber',
+                's.pertanyaan',
+                's.materi_id',
+                'm.judul as materi_judul',
+                's.level',
+                's.peruntukan',
+            )
+            ->selectRaw(
+                '((SELECT COUNT(*) FROM pretest_jawaban pj WHERE pj.soal_id = s.id) + '
+                .'(SELECT COUNT(*) FROM quiz_jawaban qj WHERE qj.soal_id = s.id) + '
+                .'(SELECT COUNT(*) FROM hasil_simulasi_jawaban hj WHERE hj.soal_id = s.id)) as jumlah_keluar'
+            )
+            ->orderBy('s.id')
+            ->get();
+
+        return $baris
+            ->map(fn ($row): array => [
+                'soal_id' => (int) $row->id,
+                'kode_soal' => $row->id_sumber ?: ('SOAL-'.str_pad((string) $row->id, 3, '0', STR_PAD_LEFT)),
+                'pertanyaan_ringkas' => Str::limit(trim(strip_tags((string) $row->pertanyaan)), 110),
+                'materi_id' => (int) $row->materi_id,
+                'materi_judul' => (string) $row->materi_judul,
+                'level' => (string) $row->level,
+                'peruntukan' => (string) $row->peruntukan,
+                'jumlah_keluar' => (int) $row->jumlah_keluar,
+            ])
+            ->all();
+    }
+
+    /**
+     * @return list<array{sesi_id: int, user_id: int, nilai_total: float, jawaban: list<array{soal_id: int, status_benar: bool}>}>
+     */
+    private function kumpulkanSesiAnalisis(?int $tingkatId, ?string $peruntukan, ?int $userId, ?int $materiId): array
+    {
+        $sesi = [];
+
+        // 1. Pretest
+        if ($peruntukan === null || $peruntukan === 'pretest') {
+            $pretestRows = DB::table('pretest as p')
+                ->whereNotNull('p.nilai')
+                ->when($tingkatId !== null, fn ($q) => $q->where('p.tingkat_id', $tingkatId))
+                ->when($userId !== null, fn ($q) => $q->where('p.user_id', $userId))
+                ->select('p.id', 'p.user_id', 'p.nilai')
+                ->get();
+
+            if ($pretestRows->isNotEmpty()) {
+                $ids = $pretestRows->pluck('id')->all();
+                $jawabanRows = DB::table('pretest_jawaban as pj')
+                    ->join('soal as s', 's.id', '=', 'pj.soal_id')
+                    ->whereIn('pj.pretest_id', $ids)
+                    ->whereNotNull('pj.status_benar')
+                    ->when($materiId !== null, fn ($q) => $q->where('s.materi_id', $materiId))
+                    ->select('pj.pretest_id', 'pj.soal_id', 'pj.status_benar')
+                    ->get()
+                    ->groupBy('pretest_id');
+
+                foreach ($pretestRows as $p) {
+                    $jList = ($jawabanRows->get($p->id) ?? collect())
+                        ->map(fn ($j): array => [
+                            'soal_id' => (int) $j->soal_id,
+                            'status_benar' => (bool) $j->status_benar,
+                        ])
+                        ->values()
+                        ->all();
+
+                    if ($jList !== []) {
+                        $sesi[] = [
+                            'sesi_id' => 1000000 + (int) $p->id,
+                            'user_id' => (int) $p->user_id,
+                            'nilai_total' => (float) $p->nilai,
+                            'jawaban' => $jList,
+                        ];
+                    }
+                }
+            }
+        }
+
+        // 2. Latihan (Quiz)
+        if ($peruntukan === null || $peruntukan === 'latihan') {
+            $latihanRows = DB::table('quiz_pengerjaan as qp')
+                ->join('quiz as q', 'q.id', '=', 'qp.quiz_id')
+                ->join('materi as m', 'm.id', '=', 'q.materi_id')
+                ->whereNotNull('qp.nilai')
+                ->when($tingkatId !== null, fn ($query) => $query->where('m.tingkat_id', $tingkatId))
+                ->when($materiId !== null, fn ($query) => $query->where('q.materi_id', $materiId))
+                ->when($userId !== null, fn ($query) => $query->where('qp.user_id', $userId))
+                ->select('qp.id', 'qp.user_id', 'qp.nilai')
+                ->get();
+
+            if ($latihanRows->isNotEmpty()) {
+                $ids = $latihanRows->pluck('id')->all();
+                $jawabanRows = DB::table('quiz_jawaban as qj')
+                    ->join('soal as s', 's.id', '=', 'qj.soal_id')
+                    ->whereIn('qj.pengerjaan_id', $ids)
+                    ->whereNotNull('qj.status_benar')
+                    ->when($materiId !== null, fn ($q) => $q->where('s.materi_id', $materiId))
+                    ->select('qj.pengerjaan_id', 'qj.soal_id', 'qj.status_benar')
+                    ->get()
+                    ->groupBy('pengerjaan_id');
+
+                foreach ($latihanRows as $qp) {
+                    $jList = ($jawabanRows->get($qp->id) ?? collect())
+                        ->map(fn ($j): array => [
+                            'soal_id' => (int) $j->soal_id,
+                            'status_benar' => (bool) $j->status_benar,
+                        ])
+                        ->values()
+                        ->all();
+
+                    if ($jList !== []) {
+                        $sesi[] = [
+                            'sesi_id' => 2000000 + (int) $qp->id,
+                            'user_id' => (int) $qp->user_id,
+                            'nilai_total' => (float) $qp->nilai,
+                            'jawaban' => $jList,
+                        ];
+                    }
+                }
+            }
+        }
+
+        // 3. Simulasi
+        if ($peruntukan === null || $peruntukan === 'simulasi') {
+            $simulasiRows = DB::table('hasil_simulasi as hs')
+                ->join('simulasi as sim', 'sim.id', '=', 'hs.simulasi_id')
+                ->whereNotNull('hs.nilai')
+                ->when($tingkatId !== null, fn ($q) => $q->where('sim.tingkat_id', $tingkatId))
+                ->when($userId !== null, fn ($q) => $q->where('hs.user_id', $userId))
+                ->select('hs.id', 'hs.user_id', 'hs.nilai')
+                ->get();
+
+            if ($simulasiRows->isNotEmpty()) {
+                $ids = $simulasiRows->pluck('id')->all();
+                $jawabanRows = DB::table('hasil_simulasi_jawaban as hj')
+                    ->join('soal as s', 's.id', '=', 'hj.soal_id')
+                    ->whereIn('hj.hasil_simulasi_id', $ids)
+                    ->whereNotNull('hj.status_benar')
+                    ->when($materiId !== null, fn ($q) => $q->where('s.materi_id', $materiId))
+                    ->select('hj.hasil_simulasi_id', 'hj.soal_id', 'hj.status_benar')
+                    ->get()
+                    ->groupBy('hasil_simulasi_id');
+
+                foreach ($simulasiRows as $hs) {
+                    $jList = ($jawabanRows->get($hs->id) ?? collect())
+                        ->map(fn ($j): array => [
+                            'soal_id' => (int) $j->soal_id,
+                            'status_benar' => (bool) $j->status_benar,
+                        ])
+                        ->values()
+                        ->all();
+
+                    if ($jList !== []) {
+                        $sesi[] = [
+                            'sesi_id' => 3000000 + (int) $hs->id,
+                            'user_id' => (int) $hs->user_id,
+                            'nilai_total' => (float) $hs->nilai,
+                            'jawaban' => $jList,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $sesi;
+    }
+
+    /**
+     * @return list<array{user_id: int, user_nama: string, jenis: string, target_id: int, target_nama: string, nilai: float, waktu: string}>
+     */
+    private function kumpulkanPengerjaanAttempt(?int $tingkatId, ?string $peruntukan, ?int $userId, ?int $materiId): array
+    {
+        $hasil = [];
+
+        if (($peruntukan === null || $peruntukan === 'pretest') && $materiId === null) {
+            $baris = DB::table('pretest as p')
+                ->join('users as u', 'u.id', '=', 'p.user_id')
+                ->join('tingkat_seleksi as t', 't.id', '=', 'p.tingkat_id')
+                ->whereNotNull('p.nilai')
+                ->when($tingkatId !== null, fn ($q) => $q->where('p.tingkat_id', $tingkatId))
+                ->when($userId !== null, fn ($q) => $q->where('p.user_id', $userId))
+                ->select('p.user_id', 'u.name as user_nama', 'p.tingkat_id', 't.nama_tingkat', 'p.nilai', 'p.disubmit_pada', 'p.created_at')
+                ->orderBy('p.id')
+                ->get();
+
+            foreach ($baris as $r) {
+                $hasil[] = [
+                    'user_id' => (int) $r->user_id,
+                    'user_nama' => (string) $r->user_nama,
+                    'jenis' => 'pretest',
+                    'target_id' => (int) $r->tingkat_id,
+                    'target_nama' => 'Pre-Test '.$r->nama_tingkat,
+                    'nilai' => (float) $r->nilai,
+                    'waktu' => Carbon::parse($r->disubmit_pada ?? $r->created_at)->toIso8601String(),
+                ];
+            }
+        }
+
+        if ($peruntukan === null || $peruntukan === 'latihan') {
+            $baris = DB::table('quiz_pengerjaan as qp')
+                ->join('users as u', 'u.id', '=', 'qp.user_id')
+                ->join('quiz as q', 'q.id', '=', 'qp.quiz_id')
+                ->join('materi as m', 'm.id', '=', 'q.materi_id')
+                ->whereNotNull('qp.nilai')
+                ->when($tingkatId !== null, fn ($query) => $query->where('m.tingkat_id', $tingkatId))
+                ->when($materiId !== null, fn ($query) => $query->where('q.materi_id', $materiId))
+                ->when($userId !== null, fn ($query) => $query->where('qp.user_id', $userId))
+                ->select('qp.user_id', 'u.name as user_nama', 'qp.quiz_id', 'q.nama_quiz', 'qp.nilai', 'qp.disubmit_pada', 'qp.created_at')
+                ->orderBy('qp.id')
+                ->get();
+
+            foreach ($baris as $r) {
+                $hasil[] = [
+                    'user_id' => (int) $r->user_id,
+                    'user_nama' => (string) $r->user_nama,
+                    'jenis' => 'latihan',
+                    'target_id' => (int) $r->quiz_id,
+                    'target_nama' => (string) $r->nama_quiz,
+                    'nilai' => (float) $r->nilai,
+                    'waktu' => Carbon::parse($r->disubmit_pada ?? $r->created_at)->toIso8601String(),
+                ];
+            }
+        }
+
+        if (($peruntukan === null || $peruntukan === 'simulasi') && $materiId === null) {
+            $baris = DB::table('hasil_simulasi as hs')
+                ->join('users as u', 'u.id', '=', 'hs.user_id')
+                ->join('simulasi as s', 's.id', '=', 'hs.simulasi_id')
+                ->whereNotNull('hs.nilai')
+                ->when($tingkatId !== null, fn ($q) => $q->where('s.tingkat_id', $tingkatId))
+                ->when($userId !== null, fn ($q) => $q->where('hs.user_id', $userId))
+                ->select('hs.user_id', 'u.name as user_nama', 'hs.simulasi_id', 's.nama_simulasi', 'hs.nilai', 'hs.disubmit_pada', 'hs.mulai_pada', 'hs.created_at')
+                ->orderBy('hs.id')
+                ->get();
+
+            foreach ($baris as $r) {
+                $hasil[] = [
+                    'user_id' => (int) $r->user_id,
+                    'user_nama' => (string) $r->user_nama,
+                    'jenis' => 'simulasi',
+                    'target_id' => (int) $r->simulasi_id,
+                    'target_nama' => (string) $r->nama_simulasi,
+                    'nilai' => (float) $r->nilai,
+                    'waktu' => Carbon::parse($r->disubmit_pada ?? $r->mulai_pada ?? $r->created_at)->toIso8601String(),
+                ];
+            }
+        }
+
+        return $hasil;
     }
 
     /**

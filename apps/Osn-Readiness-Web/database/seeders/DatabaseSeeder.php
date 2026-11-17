@@ -30,6 +30,10 @@ class DatabaseSeeder extends Seeder
             // memakai SoalFactory. Tanpa KONTEN_KABUPATEN_FOLDER, seeder ini
             // hanya mencetak peringatan dan tidak apa-apa.
             $this->call(KontenKabupatenSeeder::class);
+
+            if (app()->environment('local')) {
+                $this->call(AnalisisContohSeeder::class);
+            }
         }
     }
 }

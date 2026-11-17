@@ -330,4 +330,21 @@ export const adminService = {
     if (userId != null) params.user_id = userId
     return unwrap(await api.get(ENDPOINTS.admin.aktivitasDetail, { params, signal }))
   },
+
+  // GET /admin/aktivitas/analisis?tingkat_id=&peruntukan=&user_id=&materi_id= ->
+  // analisis percobaan (attempt 1 vs 2+), persentase kemunculan soal, & 4 tes klasik (CTT).
+  async analisisAktivitas({
+    tingkatId = null,
+    peruntukan = null,
+    userId = null,
+    materiId = null,
+    signal,
+  } = {}) {
+    const params = {}
+    if (tingkatId != null) params.tingkat_id = tingkatId
+    if (peruntukan) params.peruntukan = peruntukan
+    if (userId != null) params.user_id = userId
+    if (materiId != null) params.materi_id = materiId
+    return unwrap(await api.get(ENDPOINTS.admin.aktivitasAnalisis, { params, signal }))
+  },
 }

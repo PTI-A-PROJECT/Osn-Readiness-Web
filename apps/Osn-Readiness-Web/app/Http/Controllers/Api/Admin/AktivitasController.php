@@ -54,4 +54,24 @@ class AktivitasController
             ),
         ]);
     }
+
+    public function analisis(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'tingkat_id' => ['nullable', 'integer', 'exists:tingkat_seleksi,id'],
+            'peruntukan' => ['nullable', 'in:pretest,latihan,simulasi'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'materi_id' => ['nullable', 'integer', 'exists:materi,id'],
+        ]);
+
+        return response()->json([
+            'message' => 'OK',
+            'data' => $this->aktivitas->analisis(
+                isset($data['tingkat_id']) ? (int) $data['tingkat_id'] : null,
+                $data['peruntukan'] ?? null,
+                isset($data['user_id']) ? (int) $data['user_id'] : null,
+                isset($data['materi_id']) ? (int) $data['materi_id'] : null,
+            ),
+        ]);
+    }
 }

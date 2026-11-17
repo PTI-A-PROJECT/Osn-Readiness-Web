@@ -69,5 +69,6 @@ export const ENDPOINTS = {
     aturanPemetaan: (id) => `/admin/tingkat/${id}/aturan-pemetaan`,
     aktivitas: '/admin/aktivitas',
     aktivitasDetail: '/admin/aktivitas/detail',
+    aktivitasAnalisis: '/admin/aktivitas/analisis',
   },
 }
