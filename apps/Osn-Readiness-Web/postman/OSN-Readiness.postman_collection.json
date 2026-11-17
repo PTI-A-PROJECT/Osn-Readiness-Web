@@ -68,6 +68,14 @@
     {
       "key": "siswa_id",
       "value": ""
+    },
+    {
+      "key": "analytics_url",
+      "value": "http://localhost:8001"
+    },
+    {
+      "key": "analytics_token",
+      "value": "changeme-generate-a-real-secret"
     }
   ],
   "item": [
@@ -2749,6 +2757,269 @@
           }
         ]
       }
+    },
+    {
+      "name": "Admin · Aktivitas & Analisis Evaluasi Soal",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{admin_token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "item": [
+        {
+          "name": "Log Aktivitas (Timeline)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/aktivitas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "aktivitas"
+              ]
+            },
+            "description": "Daftar timeline aktivitas user (siswa dan admin) yang dikelompokkan per hari."
+          }
+        },
+        {
+          "name": "Detail Aktivitas Mentah",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/aktivitas/detail?aksi=akun.masuk&tanggal=2026-11-15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "aktivitas",
+                "detail"
+              ],
+              "query": [
+                {
+                  "key": "aksi",
+                  "value": "akun.masuk"
+                },
+                {
+                  "key": "tanggal",
+                  "value": "2026-11-15"
+                },
+                {
+                  "key": "user_id",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Melihat catatan log mentah aktivitas user pada tanggal tertentu."
+          }
+        },
+        {
+          "name": "Analisis Evaluasi Soal & Percobaan (Semua Data)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/aktivitas/analisis",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "aktivitas",
+                "analisis"
+              ]
+            },
+            "description": "Mengambil analisis psikometrik Teori Tes Klasik (KR-20, Validitas r_pbis, Daya Pembeda, Tingkat Kesukaran, Bobot Peluang W) dan Analisis Percobaan (Attempt 1x vs 2x vs 3x+) langsung dari database PostgreSQL."
+          }
+        },
+        {
+          "name": "Analisis Evaluasi Soal (Filter Simulasi)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/aktivitas/analisis?peruntukan=simulasi",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "aktivitas",
+                "analisis"
+              ],
+              "query": [
+                {
+                  "key": "peruntukan",
+                  "value": "simulasi"
+                }
+              ]
+            },
+            "description": "Filter analisis hanya untuk butir soal dan pengerjaan sesi simulasi."
+          }
+        },
+        {
+          "name": "Analisis Evaluasi Soal (Filter Tingkat & Materi)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/aktivitas/analisis?tingkat_id={{tingkat_id}}&materi_id={{materi_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "aktivitas",
+                "analisis"
+              ],
+              "query": [
+                {
+                  "key": "tingkat_id",
+                  "value": "{{tingkat_id}}"
+                },
+                {
+                  "key": "materi_id",
+                  "value": "{{materi_id}}"
+                }
+              ]
+            },
+            "description": "Filter butir soal pada tingkat dan materi tertentu."
+          }
+        },
+        {
+          "name": "Analisis Evaluasi Soal (Filter Siswa Tertentu)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/aktivitas/analisis?user_id=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "aktivitas",
+                "analisis"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Melihat riwayat peningkatan skor per percobaan untuk siswa tertentu."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics Engine (FastAPI Python)",
+      "item": [
+        {
+          "name": "Health Check Layanan Analitik",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{analytics_url}}/health",
+              "host": [
+                "{{analytics_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Pemeriksaan status hidup layanan microservice Python data-analytics."
+          }
+        },
+        {
+          "name": "Hitung Analisis Klasik & Item Exposure (Stateless Engine)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Internal-Token",
+                "value": "{{analytics_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{analytics_url}}/hitung/analisis-klasik",
+              "host": [
+                "{{analytics_url}}"
+              ],
+              "path": [
+                "hitung",
+                "analisis-klasik"
+              ]
+            },
+            "description": "Komputasi murni KR-20, Point-Biserial r_pbis, Daya Pembeda, Tingkat Kesukaran, Bobot Peluang W, dan Perbandingan Attempt 1 vs 2+.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sesi\": [\n    {\n      \"sesi_id\": 1,\n      \"user_id\": 2,\n      \"nilai_total\": 80.0,\n      \"jawaban\": [\n        {\n          \"soal_id\": 1,\n          \"status_benar\": true\n        },\n        {\n          \"soal_id\": 2,\n          \"status_benar\": false\n        },\n        {\n          \"soal_id\": 3,\n          \"status_benar\": true\n        }\n      ]\n    },\n    {\n      \"sesi_id\": 2,\n      \"user_id\": 3,\n      \"nilai_total\": 40.0,\n      \"jawaban\": [\n        {\n          \"soal_id\": 1,\n          \"status_benar\": false\n        },\n        {\n          \"soal_id\": 2,\n          \"status_benar\": false\n        },\n        {\n          \"soal_id\": 3,\n          \"status_benar\": true\n        }\n      ]\n    }\n  ],\n  \"bank_soal\": [\n    {\n      \"soal_id\": 1,\n      \"kode_soal\": \"soal_001\",\n      \"pertanyaan_ringkas\": \"Berapa bilangan prima pertama?\",\n      \"materi_id\": 1,\n      \"materi_judul\": \"Teori Bilangan\",\n      \"level\": \"mudah\",\n      \"peruntukan\": \"simulasi\",\n      \"kali_keluar\": 5\n    },\n    {\n      \"soal_id\": 2,\n      \"kode_soal\": \"soal_002\",\n      \"pertanyaan_ringkas\": \"Nilai faktorial 5!\",\n      \"materi_id\": 2,\n      \"materi_judul\": \"Kombinatorika\",\n      \"level\": \"sedang\",\n      \"peruntukan\": \"simulasi\",\n      \"kali_keluar\": 1\n    },\n    {\n      \"soal_id\": 3,\n      \"kode_soal\": \"soal_003\",\n      \"pertanyaan_ringkas\": \"Peluang lempar dadu genap\",\n      \"materi_id\": 2,\n      \"materi_judul\": \"Kombinatorika\",\n      \"level\": \"mudah\",\n      \"peruntukan\": \"simulasi\",\n      \"kali_keluar\": 10\n    }\n  ],\n  \"pengerjaan\": [\n    {\n      \"user_id\": 2,\n      \"user_nama\": \"Siswa Contoh\",\n      \"peruntukan\": \"simulasi\",\n      \"referensi_id\": 1,\n      \"judul_paket\": \"Simulasi Mandiri #1\",\n      \"urutan_percobaan\": 1,\n      \"nilai\": 60.0\n    },\n    {\n      \"user_id\": 2,\n      \"user_nama\": \"Siswa Contoh\",\n      \"peruntukan\": \"simulasi\",\n      \"referensi_id\": 1,\n      \"judul_paket\": \"Simulasi Mandiri #1\",\n      \"urutan_percobaan\": 2,\n      \"nilai\": 85.0\n    }\n  ]\n}"
+            }
+          }
+        }
+      ]
     }
   ]
 }
