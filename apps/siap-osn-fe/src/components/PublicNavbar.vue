@@ -1,16 +1,19 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+const route = useRoute()
 
 // Satu-satunya navbar untuk halaman publik (landing, login, register).
-// Tautan default mengarah ke section landing; halaman tanpa section dapat
-// mengirim array links kosong agar tidak menampilkan tautan yang tidak relevan.
+// `links`: tautan jangkar SEHALAMAN (mis. section di landing). Kosongkan di
+// halaman yang tidak punya section — menu otomatis disembunyikan agar tidak
+// ada dead link. `current`: halaman aktif, CTA-nya disembunyikan agar tidak
+// ada tautan ke diri sendiri.
 defineProps({
   links: {
     type: Array,
     default: () => [
       { label: 'Kenapa SIAP OSN', href: '/#kenapa' },
-      { label: 'Fitur', href: '/#fitur' },
       { label: 'Cara Kerja', href: '/#cara-kerja' },
+      { label: 'Fitur', href: '/#fitur' },
       { label: 'Tingkat Seleksi', href: '/#tingkat' },
       { label: 'Tim Kami', href: '/#tim' },
     ],
@@ -21,7 +24,7 @@ defineProps({
 </script>
 
 <template>
-  <header class="pubnav" :class="`pubnav--${theme}`">
+  <header v-if="route.name !== 'landing'" class="pubnav" :class="`pubnav--${theme}`">
     <div class="pubnav__inner">
       <RouterLink to="/" class="pubnav__brand" aria-label="SIAP OSN — ke beranda">
         <img class="pubnav__logo" src="/logo-siap-osn.png" alt="" aria-hidden="true" />
@@ -33,16 +36,8 @@ defineProps({
       </nav>
 
       <div class="pubnav__actions">
-        <RouterLink
-          v-if="current !== 'login'"
-          to="/login"
-          class="pubnav__btn pubnav__btn--outline"
-        >Masuk</RouterLink>
-        <RouterLink
-          v-if="current !== 'register'"
-          to="/register"
-          class="pubnav__btn pubnav__btn--primary"
-        >Daftar Gratis</RouterLink>
+        <RouterLink v-if="current !== 'login'" to="/login" class="pubnav__btn pubnav__btn--outline">Masuk</RouterLink>
+        <RouterLink v-if="current !== 'register'" to="/register" class="pubnav__btn pubnav__btn--primary">Daftar Gratis</RouterLink>
       </div>
     </div>
   </header>
@@ -67,6 +62,7 @@ defineProps({
   align-items: center;
   gap: 20px;
 }
+
 .pubnav__brand {
   display: inline-flex;
   align-items: center;
@@ -74,6 +70,7 @@ defineProps({
   gap: 10px;
   white-space: nowrap;
 }
+
 .pubnav__logo {
   width: 43px;
   height: 38px;
@@ -141,6 +138,8 @@ defineProps({
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Varian gelap: dipakai landing di atas hero navy (sesuai Figma) */
 .pubnav--dark {
   background: #1a2d4d;
   border-bottom-color: rgba(255, 255, 255, 0.06);
@@ -177,27 +176,13 @@ defineProps({
 .pubnav--dark .pubnav__btn:focus-visible {
   outline-color: #f5c96a;
 }
+
 @media (max-width: 900px) {
   .pubnav__links {
     display: none;
   }
   .pubnav__inner {
-    display: flex;
     justify-content: space-between;
-    gap: 12px;
-  }
-}
-@media (max-width: 420px) {
-  .pubnav__inner {
-    padding-inline: 14px;
-  }
-  .pubnav__logo {
-    width: 34px;
-    height: 32px;
-  }
-  .pubnav__btn {
-    padding: 8px 10px;
-    font-size: 12px;
   }
 }
 </style>

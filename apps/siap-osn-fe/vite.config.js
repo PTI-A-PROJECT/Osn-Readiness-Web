@@ -8,7 +8,13 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      // Hanya saat test: biarkan src="/gambar.png" apa adanya,
+      // tidak diubah menjadi import modul (menghindari error path di Windows)
+      template: process.env.VITEST
+        ? { transformAssetUrls: { includeAbsolute: false } }
+        : {},
+    }),
     vueDevTools(),
     tailwindcss(),
   ],
