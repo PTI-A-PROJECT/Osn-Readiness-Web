@@ -163,6 +163,8 @@ function mulaiPolling() {
   timerPolling = setInterval(async () => {
     const hasil = await latihan.cekHasil()
     if (!hasil) return
+    // Nilai sudah keluar: hentikan polling sebelum menyegarkan daftar materi.
+    stopPolling()
     await hasilMuncul()
   }, 5000)
 }
@@ -245,7 +247,7 @@ function formatNilai(nilai) {
 
     <!-- PENGERJAAN -->
     <PengerjaanSoal
-      v-else-if="bolehMengerjakan"
+      v-else-if="bolehMengerjakan || mengirim"
       :judul="latihan.materiJudul || 'Latihan'"
       :subjudul="subjudul"
       :soal="soal"
@@ -263,6 +265,7 @@ function formatNilai(nilai) {
       @toggle-ragu="toggleRagu"
       @pindah="pindah"
       @kumpulkan="kumpulkan"
+      @kumpulkan-kosong="kumpulkan({ paksa: true })"
     />
   </div>
 </template>

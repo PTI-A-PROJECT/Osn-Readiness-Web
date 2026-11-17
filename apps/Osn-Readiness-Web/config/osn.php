@@ -43,4 +43,32 @@ return [
 
     'konten_kabupaten_folder' => env('KONTEN_KABUPATEN_FOLDER', ''),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Durasi pre-test (menit)
+    |--------------------------------------------------------------------------
+    |
+    | Dipakai PretestService saat membuat pre-test: batas_pada = mulai_pada +
+    | durasi. Disimpan di server supaya sisa waktu tidak bisa direset dengan
+    | reload halaman. Harus sama dengan DURASI_PRETEST_MENIT di frontend
+    | (apps/siap-osn-fe/src/lib/pretest.js).
+    |
+    */
+
+    'pretest_durasi_menit' => (int) env('PRETEST_DURASI_MENIT', 60),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Prioritas soal yang paling jarang keluar
+    |--------------------------------------------------------------------------
+    |
+    | Saat aktif, pemilihan soal mengurutkan kandidat menurut kolom
+    | soal.jumlah_tampil menaik (acak hanya di antara nilai yang sama) supaya
+    | distribusi soal merata. Matikan untuk kembali ke acak murni tanpa
+    | rollback kode.
+    |
+    */
+
+    'prioritas_soal_jarang' => (bool) env('OSN_PRIORITAS_SOAL_JARANG', true),
+
 ];

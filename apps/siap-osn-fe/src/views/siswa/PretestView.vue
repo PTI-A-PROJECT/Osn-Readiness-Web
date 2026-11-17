@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useProgressStore } from '@/stores/progress.js'
-import { usePretestStore, STATUS } from '@/stores/pretest.js'
+import { usePretestStore, STATUS, WAKTU_HABIS } from '@/stores/pretest.js'
 import PengerjaanSoal from '@/components/soal/PengerjaanSoal.vue'
 import UserMenu from '@/components/UserMenu.vue'
 import { pesanError } from '@/lib/errors.js'
@@ -35,11 +35,6 @@ const petunjuk = {
       nama: 'Pilihan Ganda',
       kelas: 'tipe-green',
       desc: 'Pilih satu jawaban yang paling tepat dari beberapa opsi.',
-    },
-    {
-      nama: 'Pilihan Kompleks',
-      kelas: 'tipe-yellow',
-      desc: 'Pilih semua jawaban yang benar. Bisa lebih dari satu opsi.',
     },
     {
       nama: 'Uraian',
@@ -77,6 +72,10 @@ const tingkatDipilih = ref(null)
 const memuatAwal = ref(true)
 const galatAwal = ref('')
 const mengirim = ref(false)
+// Saat submit berjalan status store menjadi MENGUMPULKAN. Halaman tetap
+// menampilkan soal (dengan overlay dari PengerjaanSoal) supaya tidak
+// berkedip kosong atau kembali ke pemilih tingkat.
+const tampilKerja = computed(() => bolehMengerjakan.value || mengirim.value)
 
 /* ---------- State pengerjaan (UI lokal) ---------- */
 const aktif = ref(0)
@@ -210,11 +209,13 @@ async function kumpulkan({ paksa } = {}) {
 const timerSimpan = {}
 function jadwalSimpan(i) {
   clearTimeout(timerSimpan[i])
-  timerSimpan[i] = setTimeout(() => {
+  timerSimpan[i] = setTimeout(async () => {
     const target = soal.value[i]
     if (!target || pretest.status !== STATUS.MENGERJAKAN) return
     const nilai = jawaban[i]
-    pretest.simpanJawaban({ soalId: target.id, jawaban: nilai === '' ? null : (nilai ?? null) })
+    const kode = await pretest.simpanJawaban({ soalId: target.id, jawaban: nilai === '' ? null : (nilai ?? null) })
+    // Server menutup pre-test karena waktu habis: langsung kumpulkan.
+    if (kode === WAKTU_HABIS) kumpulkan({ paksa: true })
   }, 800)
 }
 function pilihGanda(kode) {
@@ -269,8 +270,16 @@ function perbaruiTimer() {
 function mulaiTimer() {
   if (!bolehMengerjakan.value || timer !== null) return
 
-  // Hitung batas waktu saat pre-test benar-benar dimulai.
-  batasWaktu = Date.now() + sisaDetik.value * 1000
+  // Batas waktu berasal dari server (batas_pada) supaya reload di tengah
+  // pengerjaan tidak mengembalikan timer ke awal. Pre-test lama yang belum
+  // punya batas_pada memakai hitungan lokal sebagai fallback.
+  if (batasWaktu === null) {
+    const dariServer = pretest.batasPada ? Date.parse(pretest.batasPada) : NaN
+
+    batasWaktu = Number.isFinite(dariServer)
+      ? dariServer
+      : Date.now() + DURASI_PRETEST_DETIK * 1000
+  }
 
   perbaruiTimer()
   timer = setInterval(perbaruiTimer, 250)
@@ -361,7 +370,7 @@ onBeforeUnmount(() => {
   <div class="page" :class="{ offline: offlineTampil }">
     <!-- Header state awal. Saat soal dikerjakan, headerProvided oleh
          PengerjaanSoal (v-else di bawah), jadi jangan render dua kali. -->
-    <header v-if="!bolehMengerjakan" class="header">
+    <header v-if="!tampilKerja" class="header">
       <div class="header-left">
         <h1>{{ judul }}</h1>
         <p>{{ subjudul }}</p>
@@ -382,7 +391,7 @@ onBeforeUnmount(() => {
 
     <!-- STATUS AWAL: PILIH TINGKAT / MEMUAT / GALAT -->
     <section
-      v-if="!bolehMengerjakan && pretest.status !== STATUS.MENILAI"
+      v-if="!tampilKerja && pretest.status !== STATUS.MENILAI"
       class="mulai-wrap"
     >
       <div class="card mulai">

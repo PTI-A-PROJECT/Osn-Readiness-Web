@@ -40,7 +40,6 @@ function mapOpsi(pilihan) {
     .map(([kode, teks]) => ({ kode: String(kode), teks: teks ?? '' }))
 }
 
-
 export function mapSoal(r) {
   const tipe = r.tipe_soal === 'isian' ? 'isian' : 'ganda'
 
@@ -71,7 +70,6 @@ export function mapSoal(r) {
     jawaban: r.jawaban_user ?? null,
   }
 }
-
 
 export function mapHasilPretest(r) {
   return {
@@ -104,6 +102,10 @@ export function paketPretest(r) {
       jenis: r.disubmit_pada ? 'menunggu' : 'pengerjaan',
       id: r.id,
       tingkatId: r.tingkat_id ?? null,
+      // Batas waktu milik server: frontend menghitung sisa waktu dari sini
+      // supaya reload tidak mengembalikan timer ke awal.
+      mulaiPada: r.mulai_pada ?? null,
+      batasPada: r.batas_pada ?? null,
       soal: [...r.soal].sort((a, b) => angka(a.urutan) - angka(b.urutan)).map(mapSoal),
     }
   }

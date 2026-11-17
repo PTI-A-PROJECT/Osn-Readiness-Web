@@ -41,6 +41,11 @@ class UpdateSoalRequest extends FormRequest
             'pilihan_jawaban' => ['nullable', 'array'],
             'pilihan_jawaban.*' => ['required', 'string'],
             'kunci_jawaban' => ['sometimes', 'required', 'string', 'max:255'],
+            // Boleh diperbaiki walau soal sudah dipakai pengerjaan; hanya
+            // kunci, level, peruntukan, dan materi yang terkunci (SoalGuard).
+            'pengantar' => ['sometimes', 'nullable', 'string'],
+            'kode' => ['sometimes', 'nullable', 'string'],
+            'bahasa' => ['sometimes', 'nullable', 'string', 'max:50'],
             'gambar' => ['nullable', 'image', 'max:2048'],
         ];
     }

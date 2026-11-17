@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Table('pretest')]
-#[Fillable(['user_id', 'tingkat_id', 'disubmit_pada', 'nilai', 'selesai_pada'])]
+#[Fillable(['user_id', 'tingkat_id', 'mulai_pada', 'batas_pada', 'disubmit_pada', 'nilai', 'selesai_pada'])]
 #[UseFactory(PretestFactory::class)]
 class Pretest extends Model
 {
@@ -25,6 +25,8 @@ class Pretest extends Model
     protected function casts(): array
     {
         return [
+            'mulai_pada' => 'datetime',
+            'batas_pada' => 'datetime',
             'disubmit_pada' => 'datetime',
             'selesai_pada' => 'datetime',
             'nilai' => 'decimal:2',

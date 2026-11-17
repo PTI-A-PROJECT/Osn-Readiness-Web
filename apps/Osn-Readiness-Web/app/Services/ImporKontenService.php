@@ -420,6 +420,13 @@ class ImporKontenService implements ImporKontenServiceInterface
             $bahasaProgram = trim((string) ($baris['bahasa'] ?? '')) ?: null;
         }
 
+        // Sumber konten kadang menaruh program yang sama di deskripsi_soal
+        // sekaligus di field kode. Tanpa pembersihan, siswa melihat program
+        // itu dua kali: di kartu pengantar dan di editor program.
+        if ($pengantar !== null) {
+            $pengantar = $this->tanpaKodeGanda($pengantar, $kodeProgram);
+        }
+
         // Untuk data yang belum mempunyai kode eksplisit,
         // pertahankan deskripsi sebagai konteks asli.
         $teksKonteks = $kodeProgram === null ? $deskripsi : '';
@@ -537,6 +544,41 @@ class ImporKontenService implements ImporKontenServiceInterface
         $teks = (string) preg_replace('/\s*\[cite:\s*\d+\]/', '', $teks);
 
         return trim($teks);
+    }
+
+    /**
+     * Buang blok berpagar yang isinya sama dengan program utama.
+     *
+     * Hanya blok yang isinya identik (spasi dan kapital diabaikan) yang
+     * dibuang; narasi di sekitarnya tetap utuh. Kalau hasilnya kosong,
+     * pengantar dikembalikan null supaya tidak ada kartu kosong di frontend.
+     */
+    private function tanpaKodeGanda(string $teks, ?string $kode): ?string
+    {
+        $program = trim((string) $kode);
+
+        if ($program === '') {
+            return $teks;
+        }
+
+        $hasil = preg_replace_callback(
+            '/```[\w+.#-]*[ \t]*\n([\s\S]*?)\n?```/',
+            function (array $cocok) use ($program): string {
+                return $this->ringkasTeks($cocok[1]) === $this->ringkasTeks($program)
+                    ? ''
+                    : $cocok[0];
+            },
+            $teks,
+        );
+
+        $teks = trim((string) preg_replace("/\n{3,}/", "\n\n", (string) $hasil));
+
+        return $teks === '' ? null : $teks;
+    }
+
+    private function ringkasTeks(string $teks): string
+    {
+        return mb_strtolower(trim((string) preg_replace('/\s+/u', ' ', $teks)));
     }
 
     /**

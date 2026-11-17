@@ -432,40 +432,46 @@ class SoalPickerServiceTest extends TestCase
     }
 
     #[Test]
-    public function soal_yang_belum_keluar_memiliki_peluang_lebih_besar_daripada_soal_yang_sering_keluar(): void
+    public function memilih_soal_dengan_jumlah_tampil_paling_kecil(): void
     {
         $this->siapkanMateri(1);
-        $this->siapkanBank(['mudah' => 10, 'sedang' => 0, 'sulit' => 0], Peruntukan::Latihan);
+        $this->siapkanBank(['mudah' => 3, 'sedang' => 0, 'sulit' => 0], Peruntukan::Latihan);
 
-        // Soal 1..5 sudah keluar 11 kali (tiket = 1), soal 6..10 belum pernah keluar (tiket = 12)
-        for ($id = 1; $id <= 5; $id++) {
-            $this->bank[$id]->setAttribute('jumlah_keluar', 11);
-        }
-        for ($id = 6; $id <= 10; $id++) {
-            $this->bank[$id]->setAttribute('jumlah_keluar', 0);
-        }
+        $this->bank[1]->jumlah_tampil = 5;
+        $this->bank[2]->jumlah_tampil = 0;
+        $this->bank[3]->jumlah_tampil = 1;
 
-        $munculSering = 0;
-        $munculBelum = 0;
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Latihan,
+            jumlahSoal: 1,
+            materiId: 1,
+        ));
 
-        for ($percobaan = 1; $percobaan <= 20; $percobaan++) {
-            $hasil = $this->picker(1000 + $percobaan)->pilih(new PermintaanSoal(
-                tingkatId: 1,
-                peruntukan: Peruntukan::Latihan,
-                jumlahSoal: 3,
-                materiId: 1,
-            ));
+        $this->assertSame([2], $hasil->soalIds());
+    }
 
-            foreach ($hasil->soalIds() as $id) {
-                if ($id <= 5) {
-                    $munculSering++;
-                } else {
-                    $munculBelum++;
-                }
-            }
-        }
+    #[Test]
+    public function jumlah_tampil_sama_diambil_semua_sebelum_yang_sering(): void
+    {
+        $this->siapkanMateri(1);
+        $this->siapkanBank(['mudah' => 3, 'sedang' => 0, 'sulit' => 0], Peruntukan::Latihan);
 
-        $this->assertGreaterThan($munculSering, $munculBelum);
+        $this->bank[1]->jumlah_tampil = 0;
+        $this->bank[2]->jumlah_tampil = 0;
+        $this->bank[3]->jumlah_tampil = 9;
+
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Latihan,
+            jumlahSoal: 2,
+            materiId: 1,
+        ));
+
+        $ids = $hasil->soalIds();
+        sort($ids);
+
+        $this->assertSame([1, 2], $ids);
     }
 
     private function permintaanPretest(int $tingkatId, int $minimal): PermintaanSoal

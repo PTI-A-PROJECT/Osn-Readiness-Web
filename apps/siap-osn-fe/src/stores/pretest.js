@@ -23,6 +23,10 @@ export const STATUS = {
   SELESAI: 'selesai',
 }
 
+// Kode balik simpanJawaban saat server sudah menutup pre-test karena waktu
+// habis; view langsung mengumpulkan.
+export const WAKTU_HABIS = 'waktu-habis'
+
 export const usePretestStore = defineStore('pretest', () => {
   const status = ref(STATUS.IDLE)
   const tingkatList = ref([])
@@ -30,6 +34,8 @@ export const usePretestStore = defineStore('pretest', () => {
   const pretestId = ref(null)
   const soal = ref([])
   const hasil = ref(null)
+  // Batas waktu dari server (null untuk pre-test lama sebelum migrasi).
+  const batasPada = ref(null)
   const loading = ref(false)
   const error = ref(false)
   const simpanError = ref(false)
@@ -42,7 +48,9 @@ export const usePretestStore = defineStore('pretest', () => {
   let controllerTingkat = null
 
   const jumlahTerjawab = computed(
-    () => soal.value.filter((s) => s.jawaban !== null && s.jawaban !== undefined && s.jawaban !== '').length,
+    () =>
+      soal.value.filter((s) => s.jawaban !== null && s.jawaban !== undefined && s.jawaban !== '')
+        .length,
   )
 
   function bacaSimpanan() {
@@ -61,6 +69,7 @@ export const usePretestStore = defineStore('pretest', () => {
   function terapkanPengerjaan(paket) {
     pretestId.value = paket.id
     tingkatId.value = paket.tingkatId
+    batasPada.value = paket.batasPada ?? null
     soal.value = paket.soal.map((s) => ({ ...s }))
     hasil.value = null
     status.value = STATUS.MENGERJAKAN
@@ -118,6 +127,7 @@ export const usePretestStore = defineStore('pretest', () => {
     if (paket.jenis === 'menunggu') {
       pretestId.value = paket.id
       tingkatId.value = paket.tingkatId
+      batasPada.value = paket.batasPada ?? null
       status.value = STATUS.MENILAI
       tulisSimpanan({ id: paket.id, tingkatId: paket.tingkatId })
       return
@@ -125,6 +135,7 @@ export const usePretestStore = defineStore('pretest', () => {
     hasil.value = paket.hasil
     pretestId.value = paket.hasil.id
     tingkatId.value = paket.hasil.tingkatId
+    batasPada.value = null
     status.value = STATUS.SELESAI
     tulisSimpanan(null)
   }
@@ -148,14 +159,18 @@ export const usePretestStore = defineStore('pretest', () => {
 
   // Autosave satu soal. Optimistis di lokal; kegagalan jaringan hanya
   // menandai simpanError agar view bisa memberi tahu user (tanpa toast tiap ketik).
+  // Mengembalikan WAKTU_HABIS bila server sudah menutup pre-test.
   async function simpanJawaban({ soalId, jawaban }) {
     const target = soal.value.find((s) => s.id === soalId)
     if (target) target.jawaban = jawaban ?? null
     try {
       await pretestService.simpanJawaban({ id: pretestId.value, soalId, jawaban })
       simpanError.value = false
-    } catch {
+      return null
+    } catch (err) {
+      if (kodeError(err) === 'WAKTU_HABIS') return WAKTU_HABIS
       simpanError.value = true
+      return null
     }
   }
 
@@ -211,6 +226,7 @@ export const usePretestStore = defineStore('pretest', () => {
     pretestId.value = null
     soal.value = []
     hasil.value = null
+    batasPada.value = null
     loading.value = false
     error.value = false
     simpanError.value = false
@@ -224,6 +240,7 @@ export const usePretestStore = defineStore('pretest', () => {
     pretestId,
     soal,
     hasil,
+    batasPada,
     loading,
     error,
     simpanError,

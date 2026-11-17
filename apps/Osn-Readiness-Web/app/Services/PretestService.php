@@ -13,6 +13,7 @@ use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\PretestServiceInterface;
+use App\Contracts\Services\PencatatSoalTampilServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
 use App\DTOs\HasilPretest;
@@ -25,6 +26,7 @@ use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Exceptions\PutaranMasihBerjalanException;
 use App\Exceptions\SudahLulusException;
 use App\Exceptions\TingkatTerkunciException;
+use App\Exceptions\WaktuHabisException;
 use App\Jobs\NilaiUlangJob;
 use App\Models\Pretest;
 use App\Models\PretestJawaban;
@@ -39,6 +41,13 @@ use Illuminate\Validation\ValidationException;
 
 class PretestService implements PretestServiceInterface
 {
+    /**
+     * Toleransi keterlambatan simpan jawaban (detik), sama dengan simulasi.
+     * Menutup selisih jam klien-server dan request yang sudah di jalan saat
+     * waktu habis.
+     */
+    private const TOLERANSI_DETIK = 30;
+
     public function __construct(
         private readonly PretestRepositoryInterface $pretestRepository,
         private readonly PretestJawabanRepositoryInterface $jawabanRepository,
@@ -52,6 +61,7 @@ class PretestService implements PretestServiceInterface
         private readonly AturanServiceInterface $aturanService,
         private readonly SoalPickerServiceInterface $soalPicker,
         private readonly PerhitunganClientInterface $perhitungan,
+        private readonly PencatatSoalTampilServiceInterface $pencatatTampil,
     ) {}
 
     public function mulai(User $user, int $tingkatId): PretestDimulai
@@ -97,13 +107,23 @@ class PretestService implements PretestServiceInterface
 
         try {
             $pretest = DB::transaction(function () use ($user, $tingkatId, $terpilih): Pretest {
+                $mulaiPada = now();
+
                 /** @var Pretest $pretest */
                 $pretest = $this->pretestRepository->create([
                     'user_id' => $user->id,
                     'tingkat_id' => $tingkatId,
+                    // Batas waktu milik server: reload halaman tidak
+                    // mengembalikan timer ke awal.
+                    'mulai_pada' => $mulaiPada,
+                    'batas_pada' => $mulaiPada->copy()->addMinutes(
+                        (int) config('osn.pretest_durasi_menit'),
+                    ),
                 ]);
 
                 $this->jawabanRepository->buatBanyak($pretest->id, $terpilih->butir);
+                // Catat kemunculan soal sekali per paket (dalam transaksi yang sama).
+                $this->pencatatTampil->catat($terpilih->soalIds());
 
                 $this->userRepository->update($user, ['tingkat_aktif_id' => $tingkatId]);
 
@@ -150,6 +170,18 @@ class PretestService implements PretestServiceInterface
     public function simpanJawaban(User $user, int $pretestId, int $soalId, ?string $jawaban): void
     {
         $pretest = $this->pretestMilik($user, $pretestId);
+
+        // Waktu server melewati batas ditambah toleransi. Pre-test lama tanpa
+        // batas_pada tetap bisa disimpan (NULL = tidak dibatasi).
+        if (
+            $pretest->batas_pada !== null
+            && now()->greaterThan($pretest->batas_pada->copy()->addSeconds(self::TOLERANSI_DETIK))
+        ) {
+            throw new WaktuHabisException(
+                'Waktu pengerjaan pre-test sudah habis.',
+                'Waktu pre-test sudah habis.',
+            );
+        }
 
         if ($pretest->disubmit_pada !== null) {
             throw new PengerjaanSudahDisubmitException('Jawaban sudah dikunci saat pre-test disubmit.');

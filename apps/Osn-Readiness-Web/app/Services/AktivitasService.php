@@ -212,9 +212,9 @@ class AktivitasService implements AktivitasServiceInterface
                 's.peruntukan',
             )
             ->selectRaw(
-                '((SELECT COUNT(*) FROM pretest_jawaban pj WHERE pj.soal_id = s.id) + '
+                'GREATEST(COALESCE(s.jumlah_tampil, 0), ((SELECT COUNT(*) FROM pretest_jawaban pj WHERE pj.soal_id = s.id) + '
                 .'(SELECT COUNT(*) FROM quiz_jawaban qj WHERE qj.soal_id = s.id) + '
-                .'(SELECT COUNT(*) FROM hasil_simulasi_jawaban hj WHERE hj.soal_id = s.id)) as jumlah_keluar'
+                .'(SELECT COUNT(*) FROM hasil_simulasi_jawaban hj WHERE hj.soal_id = s.id))) as jumlah_keluar'
             )
             ->orderBy('s.id')
             ->get();

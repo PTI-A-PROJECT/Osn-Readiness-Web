@@ -12,6 +12,7 @@ use App\Contracts\Repositories\SoalRepositoryInterface;
 use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\KelulusanServiceInterface;
+use App\Contracts\Services\PencatatSoalTampilServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SimulasiServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
@@ -62,6 +63,7 @@ class SimulasiService implements SimulasiServiceInterface
         private readonly TingkatSeleksiRepositoryInterface $tingkatRepository,
         private readonly PerhitunganClientInterface $perhitungan,
         private readonly KelulusanServiceInterface $kelulusanService,
+        private readonly PencatatSoalTampilServiceInterface $pencatatTampil,
     ) {}
 
     /**
@@ -200,6 +202,8 @@ class SimulasiService implements SimulasiServiceInterface
             ]);
 
             $this->jawabanRepository->buatBanyak($hasil->id, $terpilih->butir);
+            // Catat kemunculan soal sekali per paket (dalam transaksi yang sama).
+            $this->pencatatTampil->catat($terpilih->soalIds());
 
             return $this->balasan($hasil, baru: true);
         });

@@ -73,7 +73,7 @@ class SoalPickerService implements SoalPickerServiceInterface
      * materi. Struktur: [level][materi_id] => list butir, dan [level] => list butir.
      * Gabungan memuat semua level untuk mode bebas.
      *
-     * @return array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level}>}
+     * @return array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>}
      */
     private function kelompokkan(PermintaanSoal $permintaan): array
     {
@@ -95,7 +95,7 @@ class SoalPickerService implements SoalPickerServiceInterface
                 'id' => (int) $baris->id,
                 'materi_id' => $materiId,
                 'level' => $baris->level,
-                'jumlah_keluar' => max(0, (int) ($baris->jumlah_keluar ?? 0)),
+                'jumlah_tampil' => (int) $baris->jumlah_tampil,
             ];
 
             $perLevel[$level][$materiId][] = $butir;
@@ -140,9 +140,9 @@ class SoalPickerService implements SoalPickerServiceInterface
      * kuota tersisa paling banyak didahulukan; bila kandidat level itu habis
      * untuk materi ini, turun ke level berikutnya.
      *
-     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level}>}  $kandidat
+     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>}  $kandidat
      * @param  array<int, int>  $sisa
-     * @param  array<int, array{id: int, materi_id: int, level: Level}>  $terpilih
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>  $terpilih
      */
     private function ambilUntukMateri(
         int $materiId,
@@ -162,7 +162,7 @@ class SoalPickerService implements SoalPickerServiceInterface
             ));
 
             $sisaPool = $this->saringTerpilih($pool, $terpilih, $permintaan->soalDihindari);
-            $take = array_slice($this->acakBerbobotKemunculan($sisaPool), 0, min($target, $sisa[0] ?? 0));
+            $take = array_slice($this->prioritasJarang($sisaPool), 0, min($target, $sisa[0] ?? 0));
 
             foreach ($take as $butir) {
                 $terpilih[$butir['id']] = $butir;
@@ -198,7 +198,7 @@ class SoalPickerService implements SoalPickerServiceInterface
             }
 
             $take = array_slice(
-                $this->acakBerbobotKemunculan($pool),
+                $this->prioritasJarang($pool),
                 0,
                 min($target - $diambil, $sisa[$level]),
             );
@@ -214,12 +214,39 @@ class SoalPickerService implements SoalPickerServiceInterface
     }
 
     /**
+     * Acak kandidat, lalu dahulukan soal yang paling jarang keluar.
+     *
+     * Pengacakan dilakukan lebih dulu; PHP 8 memakai sort stabil sehingga
+     * soal dengan jumlah_tampil sama tetap berada dalam urutan acak. Kuota
+     * level dan batas materi tidak terpengaruh karena fungsi ini hanya
+     * mengubah urutan di dalam pool, bukan komposisinya.
+     *
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>  $pool
+     * @return array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>
+     */
+    private function prioritasJarang(array $pool): array
+    {
+        $acak = $this->randomizer->acak($pool);
+
+        if (! config('osn.prioritas_soal_jarang')) {
+            return $acak;
+        }
+
+        usort(
+            $acak,
+            fn (array $a, array $b): int => $a['jumlah_tampil'] <=> $b['jumlah_tampil'],
+        );
+
+        return $acak;
+    }
+
+    /**
      * Buang butir yang sudah terpakai atau ada di daftar dihindari.
      *
-     * @param  array<int, array{id: int, materi_id: int, level: Level}>  $pool
-     * @param  array<int, array{id: int, materi_id: int, level: Level}>  $terpilih
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>  $pool
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>  $terpilih
      * @param  array<int, int>  $dihindari
-     * @return array<int, array{id: int, materi_id: int, level: Level}>
+     * @return array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>
      */
     private function saringTerpilih(array $pool, array $terpilih, array $dihindari): array
     {
@@ -232,9 +259,9 @@ class SoalPickerService implements SoalPickerServiceInterface
     }
 
     /**
-     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level}>}  $kandidat
+     * @param  array{perLevel: array<int, array<int, array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>>>, semua: array<int, array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>>, gabungan: array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>}  $kandidat
      * @param  array<int, int>  $sisa
-     * @param  array<int, array{id: int, materi_id: int, level: Level}>  $terpilih
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>  $terpilih
      * @return array<int, int> sisa kuota per indeks level yang tidak terpenuhi
      */
     private function isiSisa(
@@ -255,7 +282,7 @@ class SoalPickerService implements SoalPickerServiceInterface
             // didahulukan; soal yang dihindari baru dipakai bila kandidat
             // lain habis.
             $diprioritas = $this->saringTerpilih($pool, $terpilih, $permintaan->soalDihindari);
-            $take = array_slice($this->acakBerbobotKemunculan($diprioritas), 0, $butuh);
+            $take = array_slice($this->prioritasJarang($diprioritas), 0, $butuh);
             $kurangLevelIni = $butuh - count($take);
 
             foreach ($take as $butir) {
@@ -266,7 +293,7 @@ class SoalPickerService implements SoalPickerServiceInterface
                 $penghindaran = $this->saringTerpilih($pool, $terpilih, []);
                 $take = array_merge(
                     $take,
-                    array_slice($this->acakBerbobotKemunculan($penghindaran), 0, $kurangLevelIni),
+                    array_slice($this->prioritasJarang($penghindaran), 0, $kurangLevelIni),
                 );
                 $kurangLevelIni = $butuh - count($take);
             }
@@ -282,59 +309,7 @@ class SoalPickerService implements SoalPickerServiceInterface
     }
 
     /**
-     * Acak kandidat dengan bobot berbanding terbalik terhadap jumlah kemunculan
-     * (W_i = 1 / (jumlah_keluar + 1)). Soal yang belum/jarang keluar mendapat
-     * peluang lebih besar daripada soal yang sudah sering keluar.
-     *
-     * Bila seluruh soal di pool memiliki jumlah_keluar yang sama (mis. 0),
-     * pengacakan langsung didelegasikan ke randomizer standar.
-     *
-     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_keluar?: int}>  $pool
-     * @return array<int, array{id: int, materi_id: int, level: Level, jumlah_keluar?: int}>
-     */
-    private function acakBerbobotKemunculan(array $pool): array
-    {
-        if (count($pool) <= 1) {
-            return $this->randomizer->acak($pool);
-        }
-
-        $frekuensi = array_map(
-            fn (array $butir): int => (int) ($butir['jumlah_keluar'] ?? 0),
-            $pool,
-        );
-
-        if (min($frekuensi) === max($frekuensi)) {
-            return $this->randomizer->acak($pool);
-        }
-
-        // Bobot peluang W_i = 1 / (f_i + 1) direpresentasikan sebagai tiket
-        // proporsional (skala 12: keluar 0x -> 12 tiket, 1x -> 6 tiket,
-        // 2x -> 4 tiket, 3x -> 3 tiket, dst.), lalu diacak dan diambil unik.
-        $tiket = [];
-
-        foreach ($pool as $butir) {
-            $keluar = max(0, (int) ($butir['jumlah_keluar'] ?? 0));
-            $jumlahTiket = max(1, (int) round(12 / ($keluar + 1)));
-
-            for ($i = 0; $i < $jumlahTiket; $i++) {
-                $tiket[] = $butir;
-            }
-        }
-
-        $tiketAcak = $this->randomizer->acak($tiket);
-        $unik = [];
-
-        foreach ($tiketAcak as $butir) {
-            if (! isset($unik[$butir['id']])) {
-                $unik[$butir['id']] = $butir;
-            }
-        }
-
-        return array_values($unik);
-    }
-
-    /**
-     * @param  array<int, array{id: int, materi_id: int, level: Level}>  $terpilih
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_tampil: int}>  $terpilih
      */
     private function rangkai(array $terpilih, int $tingkatId): SoalTerpilih
     {
