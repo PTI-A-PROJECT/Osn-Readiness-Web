@@ -13,6 +13,7 @@ use App\Contracts\Repositories\TingkatSeleksiRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\AturanServiceInterface;
 use App\Contracts\Services\PretestServiceInterface;
+use App\Contracts\Services\PencatatSoalTampilServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
 use App\DTOs\HasilPretest;
@@ -60,6 +61,7 @@ class PretestService implements PretestServiceInterface
         private readonly AturanServiceInterface $aturanService,
         private readonly SoalPickerServiceInterface $soalPicker,
         private readonly PerhitunganClientInterface $perhitungan,
+        private readonly PencatatSoalTampilServiceInterface $pencatatTampil,
     ) {}
 
     public function mulai(User $user, int $tingkatId): PretestDimulai
@@ -120,6 +122,8 @@ class PretestService implements PretestServiceInterface
                 ]);
 
                 $this->jawabanRepository->buatBanyak($pretest->id, $terpilih->butir);
+                // Catat kemunculan soal sekali per paket (dalam transaksi yang sama).
+                $this->pencatatTampil->catat($terpilih->soalIds());
 
                 $this->userRepository->update($user, ['tingkat_aktif_id' => $tingkatId]);
 

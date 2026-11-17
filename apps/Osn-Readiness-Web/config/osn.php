@@ -57,4 +57,18 @@ return [
 
     'pretest_durasi_menit' => (int) env('PRETEST_DURASI_MENIT', 60),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Prioritas soal yang paling jarang keluar
+    |--------------------------------------------------------------------------
+    |
+    | Saat aktif, pemilihan soal mengurutkan kandidat menurut kolom
+    | soal.jumlah_tampil menaik (acak hanya di antara nilai yang sama) supaya
+    | distribusi soal merata. Matikan untuk kembali ke acak murni tanpa
+    | rollback kode.
+    |
+    */
+
+    'prioritas_soal_jarang' => (bool) env('OSN_PRIORITAS_SOAL_JARANG', true),
+
 ];

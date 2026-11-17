@@ -169,6 +169,35 @@ class PretestApiTest extends TestCase
     }
 
     #[Test]
+    public function mulai_pretest_menaikkan_jumlah_tampil_soal_terpilih(): void
+    {
+        $user = $this->siswa();
+        $this->bank();
+
+        $soal = $this->mulai($user)->json('data.soal');
+        $ids = array_map('intval', array_column($soal, 'id'));
+
+        $this->assertCount(30, $ids);
+        $this->assertSame(30, Soal::whereIn('id', $ids)->where('jumlah_tampil', 1)->count());
+
+        // Soal di luar paket tidak ikut tersentuh.
+        $this->assertSame(0, Soal::whereNotIn('id', $ids)->where('jumlah_tampil', '>', 0)->count());
+    }
+
+    #[Test]
+    public function resume_pretest_tidak_menambah_jumlah_tampil(): void
+    {
+        $user = $this->siswa();
+        $this->bank();
+
+        $this->mulai($user)->assertCreated();
+        $this->mulai($user)->assertOk();
+
+        $this->assertSame(30, Soal::where('jumlah_tampil', 1)->count());
+        $this->assertSame(0, Soal::where('jumlah_tampil', '>', 1)->count());
+    }
+
+    #[Test]
     public function soal_berikutnya_mengikuti_kuota_level_dan_batas_materi(): void
     {
         $user = $this->siswa();

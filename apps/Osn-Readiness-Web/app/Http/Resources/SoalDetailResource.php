@@ -29,6 +29,8 @@ class SoalDetailResource extends JsonResource
             'level' => $soal->level->value,
             'peruntukan' => $soal->peruntukan->value,
             'tipe_soal' => $soal->tipe_soal->value,
+            // Berapa kali soal ini sudah dikirim ke siswa (global).
+            'jumlah_tampil' => (int) $soal->jumlah_tampil,
             'pertanyaan' => $soal->pertanyaan,
             'pilihan_jawaban' => $soal->pilihan_jawaban,
             'kunci_jawaban' => $soal->kunci_jawaban,

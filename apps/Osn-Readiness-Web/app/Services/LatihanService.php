@@ -6,6 +6,7 @@ use App\Contracts\Clients\PerhitunganClientInterface;
 use App\Contracts\Repositories\QuizJawabanRepositoryInterface;
 use App\Contracts\Repositories\QuizPengerjaanRepositoryInterface;
 use App\Contracts\Services\LatihanServiceInterface;
+use App\Contracts\Services\PencatatSoalTampilServiceInterface;
 use App\Contracts\Services\PutaranServiceInterface;
 use App\Contracts\Services\SoalPickerServiceInterface;
 use App\DTOs\LatihanDimulai;
@@ -36,6 +37,7 @@ class LatihanService implements LatihanServiceInterface
         private readonly SoalPickerServiceInterface $soalPicker,
         private readonly PutaranServiceInterface $putaranService,
         private readonly PerhitunganClientInterface $perhitungan,
+        private readonly PencatatSoalTampilServiceInterface $pencatatTampil,
     ) {}
 
     /**
@@ -80,6 +82,8 @@ class LatihanService implements LatihanServiceInterface
                 ]);
 
                 $this->jawabanRepository->buatBanyak($pengerjaan->id, $terpilih->butir);
+                // Catat kemunculan soal sekali per paket (dalam transaksi yang sama).
+                $this->pencatatTampil->catat($terpilih->soalIds());
 
                 return $pengerjaan;
             });

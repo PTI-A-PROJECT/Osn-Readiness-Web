@@ -431,6 +431,49 @@ class SoalPickerServiceTest extends TestCase
         $this->assertSame(['mudah' => 10], $hasil->jumlahPerLevel());
     }
 
+    #[Test]
+    public function memilih_soal_dengan_jumlah_tampil_paling_kecil(): void
+    {
+        $this->siapkanMateri(1);
+        $this->siapkanBank(['mudah' => 3, 'sedang' => 0, 'sulit' => 0], Peruntukan::Latihan);
+
+        $this->bank[1]->jumlah_tampil = 5;
+        $this->bank[2]->jumlah_tampil = 0;
+        $this->bank[3]->jumlah_tampil = 1;
+
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Latihan,
+            jumlahSoal: 1,
+            materiId: 1,
+        ));
+
+        $this->assertSame([2], $hasil->soalIds());
+    }
+
+    #[Test]
+    public function jumlah_tampil_sama_diambil_semua_sebelum_yang_sering(): void
+    {
+        $this->siapkanMateri(1);
+        $this->siapkanBank(['mudah' => 3, 'sedang' => 0, 'sulit' => 0], Peruntukan::Latihan);
+
+        $this->bank[1]->jumlah_tampil = 0;
+        $this->bank[2]->jumlah_tampil = 0;
+        $this->bank[3]->jumlah_tampil = 9;
+
+        $hasil = $this->picker()->pilih(new PermintaanSoal(
+            tingkatId: 1,
+            peruntukan: Peruntukan::Latihan,
+            jumlahSoal: 2,
+            materiId: 1,
+        ));
+
+        $ids = $hasil->soalIds();
+        sort($ids);
+
+        $this->assertSame([1, 2], $ids);
+    }
+
     private function permintaanPretest(int $tingkatId, int $minimal): PermintaanSoal
     {
         return new PermintaanSoal(
