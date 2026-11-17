@@ -99,6 +99,38 @@ class FakePerhitunganClient implements PerhitunganClientInterface
         ];
     }
 
+    public function hitungAnalisisKlasik(array $payload): array
+    {
+        $this->mungkinGagal();
+
+        return [
+            'reliabilitas' => [
+                'kr20' => 0.85,
+                'kategori' => 'Tinggi (Reliabel)',
+                'jumlah_sesi' => count($payload['sesi'] ?? []),
+                'jumlah_soal_teruji' => count($payload['bank_soal'] ?? []),
+                'jumlah_soal_valid' => count($payload['bank_soal'] ?? []),
+                'jumlah_soal_baik' => count($payload['bank_soal'] ?? []),
+                'rata_kesukaran' => 0.65,
+                'rata_daya_pembeda' => 0.45,
+                'rata_validitas' => 0.55,
+            ],
+            'butir_soal' => [],
+            'ringkasan_percobaan' => [
+                'total_kombinasi' => count($payload['pengerjaan'] ?? []),
+                'jumlah_coba_sekali' => 0,
+                'jumlah_coba_dua_kali' => 0,
+                'jumlah_coba_tiga_plus' => 0,
+                'rata_nilai_percobaan_1' => 70.0,
+                'rata_nilai_percobaan_2' => 85.0,
+                'rata_nilai_percobaan_3_plus' => 90.0,
+                'rata_peningkatan_1_ke_2' => 15.0,
+                'persen_siswa_meningkat' => 100.0,
+            ],
+            'rincian_percobaan' => [],
+        ];
+    }
+
     /**
      * @param  array<int, int>  $soalIds
      * @return list<array{soal_id: int, status_benar: bool}>
