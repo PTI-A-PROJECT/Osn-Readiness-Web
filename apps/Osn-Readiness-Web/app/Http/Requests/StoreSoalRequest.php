@@ -40,6 +40,11 @@ class StoreSoalRequest extends FormRequest
             'pilihan_jawaban' => ['nullable', 'array'],
             'pilihan_jawaban.*' => ['required', 'string'],
             'kunci_jawaban' => ['required', 'string', 'max:255'],
+            // Teks pendamping soal. Ikut divalidasi supaya admin bisa
+            // membersihkan salinan kode yang tertinggal di pengantar.
+            'pengantar' => ['nullable', 'string'],
+            'kode' => ['nullable', 'string'],
+            'bahasa' => ['nullable', 'string', 'max:50'],
             'gambar' => ['nullable', 'image', 'max:2048'],
         ];
     }

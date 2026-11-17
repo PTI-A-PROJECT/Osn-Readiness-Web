@@ -37,11 +37,6 @@ const petunjuk = {
       desc: 'Pilih satu jawaban yang paling tepat dari beberapa opsi.',
     },
     {
-      nama: 'Pilihan Kompleks',
-      kelas: 'tipe-yellow',
-      desc: 'Pilih semua jawaban yang benar. Bisa lebih dari satu opsi.',
-    },
-    {
       nama: 'Uraian',
       kelas: 'tipe-red',
       desc: 'Tulis jawabanmu dengan kalimat sendiri, jelaskan langkah dan alasannya.',
@@ -77,6 +72,10 @@ const tingkatDipilih = ref(null)
 const memuatAwal = ref(true)
 const galatAwal = ref('')
 const mengirim = ref(false)
+// Saat submit berjalan status store menjadi MENGUMPULKAN. Halaman tetap
+// menampilkan soal (dengan overlay dari PengerjaanSoal) supaya tidak
+// berkedip kosong atau kembali ke pemilih tingkat.
+const tampilKerja = computed(() => bolehMengerjakan.value || mengirim.value)
 
 /* ---------- State pengerjaan (UI lokal) ---------- */
 const aktif = ref(0)
@@ -371,7 +370,7 @@ onBeforeUnmount(() => {
   <div class="page" :class="{ offline: offlineTampil }">
     <!-- Header state awal. Saat soal dikerjakan, headerProvided oleh
          PengerjaanSoal (v-else di bawah), jadi jangan render dua kali. -->
-    <header v-if="!bolehMengerjakan" class="header">
+    <header v-if="!tampilKerja" class="header">
       <div class="header-left">
         <h1>{{ judul }}</h1>
         <p>{{ subjudul }}</p>
@@ -392,7 +391,7 @@ onBeforeUnmount(() => {
 
     <!-- STATUS AWAL: PILIH TINGKAT / MEMUAT / GALAT -->
     <section
-      v-if="!bolehMengerjakan && pretest.status !== STATUS.MENILAI"
+      v-if="!tampilKerja && pretest.status !== STATUS.MENILAI"
       class="mulai-wrap"
     >
       <div class="card mulai">

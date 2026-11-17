@@ -116,7 +116,17 @@ onMounted(async () => {
 
           <div v-if="s.konteks" class="mt-4 rounded-xl bg-[#f6f9ff] p-4 text-sm">
             <strong class="block">{{ s.konteks.judul }}</strong>
-            <p class="mt-1 text-[#374151]">{{ s.konteks.isi }}</p>
+            <div
+              v-if="s.konteks.isi"
+              class="konten-richtext mt-1 text-[#374151]"
+              v-html="soalHtml(s.konteks.isi, true)"
+            ></div>
+            <img
+              v-if="s.konteks.gambar"
+              :src="s.konteks.gambar"
+              alt="Gambar konteks soal"
+              class="mt-3 max-w-full rounded-lg"
+            />
           </div>
           <img
             v-if="s.gambar"
@@ -124,7 +134,31 @@ onMounted(async () => {
             alt="Gambar soal"
             class="mt-4 max-w-full rounded-xl"
           />
-          <h3 class="mt-4 text-[15px] font-semibold" v-html="soalHtml(s.pertanyaan)"></h3>
+          <div
+            v-if="s.pengantar"
+            class="konten-richtext mt-4 text-[14px] leading-relaxed text-[#334155]"
+            v-html="soalHtml(s.pengantar, true)"
+          ></div>
+          <!-- Program ikut ditampilkan: soal pemrograman tidak bisa dipahami
+               ulang tanpa potongan kodenya. -->
+          <div
+            v-if="s.kode"
+            class="mt-3 overflow-hidden rounded-xl border border-[#29364b] bg-[#111827]"
+          >
+            <div
+              class="flex items-center justify-between border-b border-[#29364b] px-4 py-2 text-[11px] font-semibold text-[#94a3b8]"
+            >
+              <span>Potongan program</span>
+              <span>{{ s.bahasa || 'Kode' }}</span>
+            </div>
+            <pre
+              class="overflow-x-auto px-4 py-3 text-[12.5px] leading-relaxed text-[#e5edf8]"
+            ><code>{{ s.kode }}</code></pre>
+          </div>
+          <div
+            class="konten-richtext mt-4 text-[15px] font-semibold text-[#0f172a]"
+            v-html="soalHtml(s.pertanyaan, true)"
+          ></div>
 
           <div v-if="s.tipe === 'ganda'" class="mt-3 flex flex-col gap-2">
             <div
