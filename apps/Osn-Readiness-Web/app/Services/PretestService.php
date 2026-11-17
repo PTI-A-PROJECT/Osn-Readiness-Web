@@ -25,6 +25,7 @@ use App\Exceptions\PerhitunganTidakTersediaException;
 use App\Exceptions\PutaranMasihBerjalanException;
 use App\Exceptions\SudahLulusException;
 use App\Exceptions\TingkatTerkunciException;
+use App\Exceptions\WaktuHabisException;
 use App\Jobs\NilaiUlangJob;
 use App\Models\Pretest;
 use App\Models\PretestJawaban;
@@ -39,6 +40,13 @@ use Illuminate\Validation\ValidationException;
 
 class PretestService implements PretestServiceInterface
 {
+    /**
+     * Toleransi keterlambatan simpan jawaban (detik), sama dengan simulasi.
+     * Menutup selisih jam klien-server dan request yang sudah di jalan saat
+     * waktu habis.
+     */
+    private const TOLERANSI_DETIK = 30;
+
     public function __construct(
         private readonly PretestRepositoryInterface $pretestRepository,
         private readonly PretestJawabanRepositoryInterface $jawabanRepository,
@@ -97,10 +105,18 @@ class PretestService implements PretestServiceInterface
 
         try {
             $pretest = DB::transaction(function () use ($user, $tingkatId, $terpilih): Pretest {
+                $mulaiPada = now();
+
                 /** @var Pretest $pretest */
                 $pretest = $this->pretestRepository->create([
                     'user_id' => $user->id,
                     'tingkat_id' => $tingkatId,
+                    // Batas waktu milik server: reload halaman tidak
+                    // mengembalikan timer ke awal.
+                    'mulai_pada' => $mulaiPada,
+                    'batas_pada' => $mulaiPada->copy()->addMinutes(
+                        (int) config('osn.pretest_durasi_menit'),
+                    ),
                 ]);
 
                 $this->jawabanRepository->buatBanyak($pretest->id, $terpilih->butir);
@@ -150,6 +166,18 @@ class PretestService implements PretestServiceInterface
     public function simpanJawaban(User $user, int $pretestId, int $soalId, ?string $jawaban): void
     {
         $pretest = $this->pretestMilik($user, $pretestId);
+
+        // Waktu server melewati batas ditambah toleransi. Pre-test lama tanpa
+        // batas_pada tetap bisa disimpan (NULL = tidak dibatasi).
+        if (
+            $pretest->batas_pada !== null
+            && now()->greaterThan($pretest->batas_pada->copy()->addSeconds(self::TOLERANSI_DETIK))
+        ) {
+            throw new WaktuHabisException(
+                'Waktu pengerjaan pre-test sudah habis.',
+                'Waktu pre-test sudah habis.',
+            );
+        }
 
         if ($pretest->disubmit_pada !== null) {
             throw new PengerjaanSudahDisubmitException('Jawaban sudah dikunci saat pre-test disubmit.');

@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useProgressStore } from '@/stores/progress.js'
-import { usePretestStore, STATUS } from '@/stores/pretest.js'
+import { usePretestStore, STATUS, WAKTU_HABIS } from '@/stores/pretest.js'
 import PengerjaanSoal from '@/components/soal/PengerjaanSoal.vue'
 import UserMenu from '@/components/UserMenu.vue'
 import { pesanError } from '@/lib/errors.js'
@@ -210,11 +210,13 @@ async function kumpulkan({ paksa } = {}) {
 const timerSimpan = {}
 function jadwalSimpan(i) {
   clearTimeout(timerSimpan[i])
-  timerSimpan[i] = setTimeout(() => {
+  timerSimpan[i] = setTimeout(async () => {
     const target = soal.value[i]
     if (!target || pretest.status !== STATUS.MENGERJAKAN) return
     const nilai = jawaban[i]
-    pretest.simpanJawaban({ soalId: target.id, jawaban: nilai === '' ? null : (nilai ?? null) })
+    const kode = await pretest.simpanJawaban({ soalId: target.id, jawaban: nilai === '' ? null : (nilai ?? null) })
+    // Server menutup pre-test karena waktu habis: langsung kumpulkan.
+    if (kode === WAKTU_HABIS) kumpulkan({ paksa: true })
   }, 800)
 }
 function pilihGanda(kode) {
@@ -269,8 +271,16 @@ function perbaruiTimer() {
 function mulaiTimer() {
   if (!bolehMengerjakan.value || timer !== null) return
 
-  // Hitung batas waktu saat pre-test benar-benar dimulai.
-  batasWaktu = Date.now() + sisaDetik.value * 1000
+  // Batas waktu berasal dari server (batas_pada) supaya reload di tengah
+  // pengerjaan tidak mengembalikan timer ke awal. Pre-test lama yang belum
+  // punya batas_pada memakai hitungan lokal sebagai fallback.
+  if (batasWaktu === null) {
+    const dariServer = pretest.batasPada ? Date.parse(pretest.batasPada) : NaN
+
+    batasWaktu = Number.isFinite(dariServer)
+      ? dariServer
+      : Date.now() + DURASI_PRETEST_DETIK * 1000
+  }
 
   perbaruiTimer()
   timer = setInterval(perbaruiTimer, 250)
