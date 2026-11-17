@@ -148,5 +148,6 @@ Route::middleware(['auth:sanctum', 'active', 'throttle:api'])->group(function ()
         // [B3-D] Log aktivitas user. Hanya Super Admin; siswa tidak punya akses.
         Route::get('aktivitas', [AktivitasController::class, 'index']);
         Route::get('aktivitas/detail', [AktivitasController::class, 'detail']);
+        Route::get('aktivitas/analisis', [AktivitasController::class, 'analisis']);
     });
 });

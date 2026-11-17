@@ -37,4 +37,13 @@ interface AktivitasServiceInterface
      * @return list<array<string, mixed>>
      */
     public function detail(?int $userId, string $aksi, string $tanggal): array;
+
+    /**
+     * Analisis psikometri 4 tes klasik (Reliabilitas KR-20, Validitas,
+     * Daya Pembeda, Tingkat Kesukaran), persentase kemunculan soal & bobot
+     * peluang keluar berikutnya, serta analisis percobaan (attempt 1 vs 2+).
+     *
+     * @return array<string, mixed>
+     */
+    public function analisis(?int $tingkatId = null, ?string $peruntukan = null, ?int $userId = null, ?int $materiId = null): array;
 }

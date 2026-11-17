@@ -95,6 +95,7 @@ class SoalPickerService implements SoalPickerServiceInterface
                 'id' => (int) $baris->id,
                 'materi_id' => $materiId,
                 'level' => $baris->level,
+                'jumlah_keluar' => max(0, (int) ($baris->jumlah_keluar ?? 0)),
             ];
 
             $perLevel[$level][$materiId][] = $butir;
@@ -161,7 +162,7 @@ class SoalPickerService implements SoalPickerServiceInterface
             ));
 
             $sisaPool = $this->saringTerpilih($pool, $terpilih, $permintaan->soalDihindari);
-            $take = array_slice($this->randomizer->acak($sisaPool), 0, min($target, $sisa[0] ?? 0));
+            $take = array_slice($this->acakBerbobotKemunculan($sisaPool), 0, min($target, $sisa[0] ?? 0));
 
             foreach ($take as $butir) {
                 $terpilih[$butir['id']] = $butir;
@@ -197,7 +198,7 @@ class SoalPickerService implements SoalPickerServiceInterface
             }
 
             $take = array_slice(
-                $this->randomizer->acak($pool),
+                $this->acakBerbobotKemunculan($pool),
                 0,
                 min($target - $diambil, $sisa[$level]),
             );
@@ -254,7 +255,7 @@ class SoalPickerService implements SoalPickerServiceInterface
             // didahulukan; soal yang dihindari baru dipakai bila kandidat
             // lain habis.
             $diprioritas = $this->saringTerpilih($pool, $terpilih, $permintaan->soalDihindari);
-            $take = array_slice($this->randomizer->acak($diprioritas), 0, $butuh);
+            $take = array_slice($this->acakBerbobotKemunculan($diprioritas), 0, $butuh);
             $kurangLevelIni = $butuh - count($take);
 
             foreach ($take as $butir) {
@@ -265,7 +266,7 @@ class SoalPickerService implements SoalPickerServiceInterface
                 $penghindaran = $this->saringTerpilih($pool, $terpilih, []);
                 $take = array_merge(
                     $take,
-                    array_slice($this->randomizer->acak($penghindaran), 0, $kurangLevelIni),
+                    array_slice($this->acakBerbobotKemunculan($penghindaran), 0, $kurangLevelIni),
                 );
                 $kurangLevelIni = $butuh - count($take);
             }
@@ -278,6 +279,58 @@ class SoalPickerService implements SoalPickerServiceInterface
         }
 
         return array_filter($kurang, fn (int $sisa): bool => $sisa > 0);
+    }
+
+    /**
+     * Acak kandidat dengan bobot berbanding terbalik terhadap jumlah kemunculan
+     * (W_i = 1 / (jumlah_keluar + 1)). Soal yang belum/jarang keluar mendapat
+     * peluang lebih besar daripada soal yang sudah sering keluar.
+     *
+     * Bila seluruh soal di pool memiliki jumlah_keluar yang sama (mis. 0),
+     * pengacakan langsung didelegasikan ke randomizer standar.
+     *
+     * @param  array<int, array{id: int, materi_id: int, level: Level, jumlah_keluar?: int}>  $pool
+     * @return array<int, array{id: int, materi_id: int, level: Level, jumlah_keluar?: int}>
+     */
+    private function acakBerbobotKemunculan(array $pool): array
+    {
+        if (count($pool) <= 1) {
+            return $this->randomizer->acak($pool);
+        }
+
+        $frekuensi = array_map(
+            fn (array $butir): int => (int) ($butir['jumlah_keluar'] ?? 0),
+            $pool,
+        );
+
+        if (min($frekuensi) === max($frekuensi)) {
+            return $this->randomizer->acak($pool);
+        }
+
+        // Bobot peluang W_i = 1 / (f_i + 1) direpresentasikan sebagai tiket
+        // proporsional (skala 12: keluar 0x -> 12 tiket, 1x -> 6 tiket,
+        // 2x -> 4 tiket, 3x -> 3 tiket, dst.), lalu diacak dan diambil unik.
+        $tiket = [];
+
+        foreach ($pool as $butir) {
+            $keluar = max(0, (int) ($butir['jumlah_keluar'] ?? 0));
+            $jumlahTiket = max(1, (int) round(12 / ($keluar + 1)));
+
+            for ($i = 0; $i < $jumlahTiket; $i++) {
+                $tiket[] = $butir;
+            }
+        }
+
+        $tiketAcak = $this->randomizer->acak($tiket);
+        $unik = [];
+
+        foreach ($tiketAcak as $butir) {
+            if (! isset($unik[$butir['id']])) {
+                $unik[$butir['id']] = $butir;
+            }
+        }
+
+        return array_values($unik);
     }
 
     /**

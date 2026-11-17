@@ -431,6 +431,43 @@ class SoalPickerServiceTest extends TestCase
         $this->assertSame(['mudah' => 10], $hasil->jumlahPerLevel());
     }
 
+    #[Test]
+    public function soal_yang_belum_keluar_memiliki_peluang_lebih_besar_daripada_soal_yang_sering_keluar(): void
+    {
+        $this->siapkanMateri(1);
+        $this->siapkanBank(['mudah' => 10, 'sedang' => 0, 'sulit' => 0], Peruntukan::Latihan);
+
+        // Soal 1..5 sudah keluar 11 kali (tiket = 1), soal 6..10 belum pernah keluar (tiket = 12)
+        for ($id = 1; $id <= 5; $id++) {
+            $this->bank[$id]->setAttribute('jumlah_keluar', 11);
+        }
+        for ($id = 6; $id <= 10; $id++) {
+            $this->bank[$id]->setAttribute('jumlah_keluar', 0);
+        }
+
+        $munculSering = 0;
+        $munculBelum = 0;
+
+        for ($percobaan = 1; $percobaan <= 20; $percobaan++) {
+            $hasil = $this->picker(1000 + $percobaan)->pilih(new PermintaanSoal(
+                tingkatId: 1,
+                peruntukan: Peruntukan::Latihan,
+                jumlahSoal: 3,
+                materiId: 1,
+            ));
+
+            foreach ($hasil->soalIds() as $id) {
+                if ($id <= 5) {
+                    $munculSering++;
+                } else {
+                    $munculBelum++;
+                }
+            }
+        }
+
+        $this->assertGreaterThan($munculSering, $munculBelum);
+    }
+
     private function permintaanPretest(int $tingkatId, int $minimal): PermintaanSoal
     {
         return new PermintaanSoal(

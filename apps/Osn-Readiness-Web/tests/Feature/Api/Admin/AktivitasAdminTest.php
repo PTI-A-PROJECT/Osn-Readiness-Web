@@ -127,4 +127,36 @@ class AktivitasAdminTest extends TestCase
 
         $this->assertDatabaseCount('log_aktivitas', 1);
     }
+
+    public function test_siswa_tidak_boleh_mengakses_analisis(): void
+    {
+        $siswa = $this->siswa();
+
+        $this->actingAs($siswa)
+            ->getJson('/api/admin/aktivitas/analisis')
+            ->assertForbidden();
+    }
+
+    public function test_admin_dapat_mengambil_analisis_evaluasi_soal(): void
+    {
+        $admin = $this->admin();
+        $this->app->instance(
+            \App\Contracts\Clients\PerhitunganClientInterface::class,
+            new \Tests\Fakes\FakePerhitunganClient
+        );
+
+        $response = $this->actingAs($admin)
+            ->getJson('/api/admin/aktivitas/analisis');
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'message',
+                'data' => [
+                    'reliabilitas',
+                    'butir_soal',
+                    'ringkasan_percobaan',
+                    'rincian_percobaan',
+                ],
+            ]);
+    }
 }
