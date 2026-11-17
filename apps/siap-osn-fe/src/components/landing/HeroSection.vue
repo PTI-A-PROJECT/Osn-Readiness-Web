@@ -14,6 +14,7 @@ const navItems = [
 const active = ref('beranda')
 let observer
 onMounted(() => {
+  if (typeof IntersectionObserver === 'undefined') return
   observer = new IntersectionObserver(
     (entries) => entries.forEach((e) => e.isIntersecting && (active.value = e.target.id)),
     { rootMargin: '-45% 0px -50% 0px' },

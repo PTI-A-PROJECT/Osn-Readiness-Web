@@ -3,18 +3,18 @@ import './shared.css'
 
 const cols = [
   { title: 'Produk', links: [['Fitur', '#fitur'], ['Cara Kerja', '#cara-kerja'], ['Tingkat Seleksi', '#tingkat']] },
-  { title: 'Tentang', links: [['Tim Kami', '#'], ['Kenapa SIAP OSN', '#kenapa']] },
+  { title: 'Tentang', links: [['Tim Kami', '#tim'], ['Kenapa SIAP OSN', '#kenapa']] },
   { title: 'Mulai', links: [['Daftar Gratis', '/register'], ['Masuk', '/login']] },
 ]
 </script>
 
 <template>
-  <footer class="font-body bg-white px-6 pb-[97px] pt-[91px] text-[#0b1f4b] lg:px-0">
+  <footer id="tim" class="font-body bg-white px-6 pb-[97px] pt-[91px] text-[#0b1f4b] lg:px-0">
     <div class="mx-auto max-w-[1245px]">
       <div class="grid gap-10 lg:grid-cols-[430px_298px_298px_1fr]">
         <div>
           <a href="#beranda" class="flex items-center gap-2">
-            <img src="/logo-siap-osn.png" alt="SIAP OSN" class="h-[27px] w-auto" />
+            <img src="/logo-siap-osn.png" alt="" aria-hidden="true" class="h-[27px] w-auto" />
             <span class="font-display text-[17px] font-bold leading-none">SIAP OSN</span>
           </a>
           <p class="mt-[11px] max-w-[340px] text-[14px] leading-[22px] text-[#5b6785]">
@@ -31,7 +31,7 @@ const cols = [
         </div>
       </div>
 
-      <div class="mt-[40px] flex justify-between border-t border-[#eaedf5] pt-[18px] text-[13px] text-[#5b6785]">
+      <div class="mt-[40px] flex flex-col justify-between gap-2 border-t border-[#eaedf5] pt-[18px] text-[13px] text-[#5b6785] sm:flex-row">
         <span>© 2026 SIAP OSN. Seluruh hak cipta dilindungi.</span>
         <span>Malang, Indonesia</span>
       </div>
