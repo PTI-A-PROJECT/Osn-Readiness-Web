@@ -101,7 +101,7 @@ onMounted(() => {
       class="sticky top-0 flex h-screen w-[182px] shrink-0 flex-col bg-[#0a1f3f] px-3 py-5 text-white"
     >
       <div class="mb-6 flex items-center gap-2.5 px-1.5">
-        <img src="/logo-icon.png" alt="Logo SIAP OSN" class="h-7 w-7 shrink-0 rounded-full object-contain" />
+        <img src="/logo-siap-osn.png" alt="Logo SIAP OSN" class="h-7 w-7 shrink-0 rounded-full object-contain" />
         <span class="text-[13px] font-bold tracking-tight text-white">SIAP OSN</span>
       </div>
       <nav class="flex flex-col gap-1" aria-label="Menu siswa">

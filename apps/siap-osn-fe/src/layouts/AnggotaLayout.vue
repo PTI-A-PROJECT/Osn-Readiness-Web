@@ -15,7 +15,7 @@ async function keluar() {
   <div class="anggota-shell flex min-h-screen bg-[#f5f8fc]">
     <aside class="anggota-sidebar sticky top-0 flex h-screen w-[200px] shrink-0 flex-col bg-[#0a1f3f] px-3 py-5 text-white">
       <div class="mb-6 flex items-center gap-2.5 px-1.5">
-        <img src="/logo-icon.png" alt="Logo SIAP OSN" class="h-7 w-7 shrink-0 rounded-full object-contain" />
+        <img src="/logo-siap-osn.png" alt="Logo SIAP OSN" class="h-7 w-7 shrink-0 rounded-full object-contain" />
         <span class="text-[13px] font-bold tracking-tight">SIAP OSN</span>
       </div>
       <nav aria-label="Menu anggota" class="anggota-nav flex flex-col gap-1">

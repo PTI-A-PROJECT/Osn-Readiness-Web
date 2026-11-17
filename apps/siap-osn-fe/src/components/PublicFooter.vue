@@ -13,8 +13,6 @@ const footerColumns = [
     links: [
       { label: 'Tim Kami', href: '#tim' },
       { label: 'Kenapa SIAP OSN', href: '#kenapa' },
-      { label: 'Kebijakan Privasi', href: '/kebijakan-privasi' },
-      { label: 'Ketentuan Layanan', href: '/ketentuan-layanan' },
     ],
   },
   {
@@ -28,15 +26,15 @@ const footerColumns = [
 </script>
 
 <template>
-<footer id="tim" class="footer">
+  <footer id="tim" class="footer">
       <div class="container footer__grid">
         <div class="footer__about">
-          <a href="/" class="brand" aria-label="SIAP OSN">
-            <img class="brand__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
+          <a href="#" class="brand" aria-label="SIAP OSN">
+            <img class="brand__logo" src="/logo-siap-osn.png" alt="" aria-hidden="true" />
             <span>SIAP OSN</span>
           </a>
           <p>
-            Sistem Interaktif Adaptif Persiapan OSN, membantu siswa mempersiapkan diri menghadapi
+            Sistem Interaktif Adaptif Persiapan OSN — membantu siswa mempersiapkan diri menghadapi
             seleksi OSN Bidang Informatika secara adaptif.
           </p>
         </div>
@@ -52,11 +50,9 @@ const footerColumns = [
     </footer>
 </template>
 
-<style scoped src="./landing/shared.css"></style>
-
 <style scoped>
 .footer {
-  background: var(--navy);
+  background: var(--navy, #1a2d4d);
   color: #c8d2ea;
   padding: 56px 0 28px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);

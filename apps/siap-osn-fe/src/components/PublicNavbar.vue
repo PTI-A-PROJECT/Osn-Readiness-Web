@@ -1,5 +1,6 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+const route = useRoute()
 
 // Satu-satunya navbar untuk halaman publik (landing, login, register).
 // `links`: tautan jangkar SEHALAMAN (mis. section di landing). Kosongkan di
@@ -23,10 +24,10 @@ defineProps({
 </script>
 
 <template>
-  <header class="pubnav" :class="`pubnav--${theme}`">
+  <header v-if="route.name !== 'landing'" class="pubnav" :class="`pubnav--${theme}`">
     <div class="pubnav__inner">
       <RouterLink to="/" class="pubnav__brand" aria-label="SIAP OSN — ke beranda">
-        <img class="pubnav__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
+        <img class="pubnav__logo" src="/logo-siap-osn.png" alt="" aria-hidden="true" />
         <span class="pubnav__name">SIAP OSN</span>
       </RouterLink>
 
@@ -35,7 +36,7 @@ defineProps({
       </nav>
 
       <div class="pubnav__actions">
-        <RouterLink v-if="current !== 'login'" to="/login" class="pubnav__btn pubnav__btn--primary">Masuk</RouterLink>
+        <RouterLink v-if="current !== 'login'" to="/login" class="pubnav__btn pubnav__btn--outline">Masuk</RouterLink>
         <RouterLink v-if="current !== 'register'" to="/register" class="pubnav__btn pubnav__btn--primary">Daftar Gratis</RouterLink>
       </div>
     </div>
