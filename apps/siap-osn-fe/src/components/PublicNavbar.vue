@@ -24,7 +24,7 @@ defineProps({
   <header class="pubnav" :class="`pubnav--${theme}`">
     <div class="pubnav__inner">
       <RouterLink to="/" class="pubnav__brand" aria-label="SIAP OSN — ke beranda">
-        <img class="pubnav__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
+        <img class="pubnav__logo" src="/logo-siap-osn.png" alt="" aria-hidden="true" />
         <span class="pubnav__name">SIAP OSN</span>
       </RouterLink>
 

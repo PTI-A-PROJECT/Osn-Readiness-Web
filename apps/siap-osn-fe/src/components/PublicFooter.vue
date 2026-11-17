@@ -32,7 +32,7 @@ const footerColumns = [
       <div class="container footer__grid">
         <div class="footer__about">
           <a href="/" class="brand" aria-label="SIAP OSN">
-            <img class="brand__logo" src="/logo-icon.png" alt="" aria-hidden="true" />
+            <img class="brand__logo" src="/logo-siap-osn.png" alt="" aria-hidden="true" />
             <span>SIAP OSN</span>
           </a>
           <p>
