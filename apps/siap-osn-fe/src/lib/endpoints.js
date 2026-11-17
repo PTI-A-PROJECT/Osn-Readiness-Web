@@ -17,6 +17,8 @@ export const ENDPOINTS = {
   },
   siswa: {
     dashboard: '/dashboard',
+    leaderboard: '/leaderboard',
+    leaderboardMe: '/leaderboard/me',
     tingkat: '/tingkat',
     pretestMulai: '/pretest',
     pretest: (id) => `/pretest/${id}`,
