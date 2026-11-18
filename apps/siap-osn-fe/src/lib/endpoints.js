@@ -12,9 +12,13 @@ export const ENDPOINTS = {
     me: '/auth/me',
     profile: '/auth/profile',
     password: '/auth/password',
+    forgotPassword: '/auth/forgot-password',
+    resetPassword: '/auth/reset-password',
   },
   siswa: {
     dashboard: '/dashboard',
+    leaderboard: '/leaderboard',
+    leaderboardMe: '/leaderboard/me',
     tingkat: '/tingkat',
     pretestMulai: '/pretest',
     pretest: (id) => `/pretest/${id}`,

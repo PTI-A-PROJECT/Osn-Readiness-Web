@@ -1,6 +1,6 @@
 # Environment bersama untuk semua container Laravel (backend + queue worker).
 x-backend-env: &backend-env
-  APP_NAME: Laravel
+  APP_NAME: "${APP_NAME:-SIAP OSN}"
   APP_ENV: local
   APP_DEBUG: "${APP_DEBUG:-false}"
   APP_URL: http://localhost:${BACKEND_PORT:-8000}

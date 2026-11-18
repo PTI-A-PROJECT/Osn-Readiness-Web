@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
+import { authService } from '@/services/auth.js'
 import { useToast } from 'primevue/usetoast'
 
-const router = useRouter()
 const toast = useToast()
 
 const email = ref('')
@@ -35,26 +35,22 @@ async function kirimTautan() {
   loading.value = true
 
   try {
-    // Sementara untuk slicing UI.
-    // Nanti diganti dengan auth.forgotPassword(...)
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
+    const hasil = await authService.forgotPassword(email.value)
     sudahDikirim.value = true
-
     toast.add({
       severity: 'success',
-      summary: 'Tautan berhasil dikirim',
-      detail: 'Tautan pengaturan ulang kata sandi telah dikirim ke email Anda.',
-      life: 4000,
+      summary: 'Permintaan diproses',
+      detail: hasil.message,
+      life: 5000,
     })
-
-    router.push({
-      name: 'reset-password',
-      query: {
-        email: email.value.trim(),
-        token: 'preview-token',
-      },
+  } catch (error) {
+    const pesan = error.response?.data?.errors?.email?.[0]
+    if (pesan) emailError.value = pesan
+    toast.add({
+      severity: 'error',
+      summary: 'Gagal memproses permintaan',
+      detail: error.response?.data?.message || 'Layanan sedang bermasalah. Coba lagi.',
+      life: 4000,
     })
   } finally {
     loading.value = false
