@@ -7,7 +7,7 @@ lihat [CI-CD-DEPLOY-VPS.md](CI-CD-DEPLOY-VPS.md).
 
 | | Produksi | Staging |
 | --- | --- | --- |
-| Branch | `monorepo` | `staging` |
+| Branch | `monorepo` | `monorepo-staging` |
 | Cara deploy | otomatis saat push ke `monorepo` | manual, lewat Run workflow |
 | Job deploy | `deploy` | `deploy-staging` |
 | File env | `.env.production` | `.env.staging` |
@@ -16,7 +16,7 @@ lihat [CI-CD-DEPLOY-VPS.md](CI-CD-DEPLOY-VPS.md).
 | Hostname | `mrcln0305.xyz`, `api.mrcln0305.xyz` | `stag.mrcln0305.xyz`, `stag-api.mrcln0305.xyz` |
 | Environment GitHub | `production` | `staging` |
 
-Push ke branch `staging` **tidak** menjalankan action. Deploy staging hanya jalan
+Push ke branch `monorepo-staging` **tidak** menjalankan action. Deploy staging hanya jalan
 saat dijalankan manual.
 
 ## 2. Persiapan (DevOps, sekali saja)
@@ -41,12 +41,12 @@ Hostname staging diatur di tiga tempat: DNS, reverse proxy di VPS, dan file
 1. Siapkan direktori checkout repo di VPS. Boleh sama dengan direktori produksi.
 2. Pastikan runner `self-hosted` bisa menjalankan `git fetch` ke repo, menulis di
    direktori itu, dan menjalankan `docker`. Biasanya user runner masuk grup `docker`.
-3. Pindah ke branch staging dan buat file env:
+3. Pindah ke branch `monorepo-staging` dan buat file env:
 
    ```bash
    cd <path checkout di VPS>
-   git fetch origin staging
-   git checkout staging
+   git fetch origin monorepo-staging
+   git checkout monorepo-staging
    cp .env.production.example .env.staging
    chmod 600 .env.staging
    ```
@@ -90,20 +90,20 @@ Hostname staging diatur di tiga tempat: DNS, reverse proxy di VPS, dan file
 
 ## 3. Deploy staging (setiap kali mau deploy)
 
-1. **Push** commit yang mau di-deploy ke branch `staging`. Ini tidak menjalankan apa pun.
+1. **Push** commit yang mau di-deploy ke branch `monorepo-staging`. Ini tidak menjalankan apa pun.
 2. **Jalankan workflow** dengan salah satu cara:
-   - Di GitHub: **Actions → CI/CD → Run workflow**, pilih branch `staging`, lalu klik
+   - Di GitHub: **Actions → CI/CD → Run workflow**, pilih branch `monorepo-staging`, lalu klik
      **Run workflow**.
-   - Dari terminal: `gh workflow run ci-cd.yml --ref staging`
+   - Dari terminal: `gh workflow run ci-cd.yml --ref monorepo-staging`
 3. Tunggu sampai job selesai. Urutannya:
    1. `frontend`, `laravel`, `analytics`: test
    2. `production-images`: build image
    3. `deploy-staging`: deploy ke server
 4. Job `deploy-staging` di server melakukan ini:
    1. Masuk ke `STAGING_DEPLOY_DIR`.
-   2. `git fetch origin staging`, lalu `git checkout -f -B staging origin/staging`.
+   2. `git fetch origin monorepo-staging`, lalu `git checkout -f -B monorepo-staging origin/monorepo-staging`.
    3. Menjalankan `scripts/deploy-vps.sh --skip-pull` dengan
-      `DEPLOY_BRANCH=staging`, `DEPLOY_ENV_FILE=.env.staging`, dan
+      `DEPLOY_BRANCH=monorepo-staging`, `DEPLOY_ENV_FILE=.env.staging`, dan
       `DEPLOY_PROJECT_NAME=osn-staging`.
 5. Setelah job hijau, lakukan verifikasi (bagian 4).
 
@@ -142,8 +142,8 @@ Semua perintah di atas harus berhasil. Setelah itu, cek dari luar:
 
 Push tidak men-deploy, jadi rollback dilakukan dalam tiga langkah:
 
-1. Di terminal: `git revert <sha>` di branch `staging`, lalu `git push origin staging`.
-2. Jalankan workflow manual dengan branch `staging` (bagian 3).
+1. Di terminal: `git revert <sha>` di branch `monorepo-staging`, lalu `git push origin monorepo-staging`.
+2. Jalankan workflow manual dengan branch `monorepo-staging` (bagian 3).
 3. Verifikasi (bagian 4).
 
 Migrasi tidak dibalik otomatis. Untuk mengosongkan total database staging, jalankan
@@ -160,7 +160,7 @@ Selalu pakai `-p osn-staging`. Tanpa flag itu, perintah bisa mengenai project pr
 
 ## 7. Sebelum deploy pertama
 
-Jalankan workflow manual sekali dengan branch `staging`, lalu pastikan:
+Jalankan workflow manual sekali dengan branch `monorepo-staging`, lalu pastikan:
 
 - Job `deploy-staging` **tidak** dilewati. Kalau dilewati, variable di bagian 2.3 belum
   terbaca.

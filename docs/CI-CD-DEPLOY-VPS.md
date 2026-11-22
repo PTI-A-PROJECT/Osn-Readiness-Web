@@ -136,5 +136,5 @@ migrasi yang mengubah atau menghapus data.
 ## Staging
 
 Staging dijelaskan di [PANDUAN-STAGING.md](PANDUAN-STAGING.md): setup, deploy manual,
-data, dan rollback. Di branch `staging`, push tidak memicu action. Deploy hanya lewat
-Run workflow dengan branch `staging`.
+data, dan rollback. Di branch `monorepo-staging`, push tidak memicu action. Deploy hanya lewat
+Run workflow dengan branch `monorepo-staging`.
