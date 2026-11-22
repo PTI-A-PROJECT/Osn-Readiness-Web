@@ -1,110 +1,136 @@
 # Panduan Staging SIAP OSN
 
-Panduan ini khusus untuk environment staging. Untuk produksi, lihat
-[CI-CD-DEPLOY-VPS.md](CI-CD-DEPLOY-VPS.md).
+Panduan ini untuk menyiapkan dan menjalankan environment staging. Untuk produksi,
+lihat [CI-CD-DEPLOY-VPS.md](CI-CD-DEPLOY-VPS.md).
 
-## Ringkasan
+## 1. Gambaran singkat
 
 | | Produksi | Staging |
 | --- | --- | --- |
 | Branch | `monorepo` | `staging` |
-| Cara deploy | otomatis saat push ke `monorepo` | manual: Run workflow dengan branch `staging` |
+| Cara deploy | otomatis saat push ke `monorepo` | manual, lewat Run workflow |
 | Job deploy | `deploy` | `deploy-staging` |
-| Env file | `.env.production` | `.env.staging` |
+| File env | `.env.production` | `.env.staging` |
 | Project Compose | default (nama direktori) | `osn-staging` |
 | Port host | 8081 (frontend), 8080 (backend) | 8091 (frontend), 8090 (backend) |
 | Environment GitHub | `production` | `staging` |
 
-Push ke branch `staging` tidak memicu action. Deploy staging hanya jalan lewat
-dispatch manual.
+Push ke branch `staging` **tidak** menjalankan action. Deploy staging hanya jalan
+saat dijalankan manual.
 
-## Prasyarat
+## 2. Persiapan (DevOps, sekali saja)
 
-- Runner `self-hosted` online dan bisa menulis di direktori checkout staging.
-- Environment GitHub `staging` dibuat, dengan variable:
-  - `DEPLOY_STAGING_ENABLED=true`
-  - `STAGING_DEPLOY_DIR=<path checkout di VPS>`
-- Reverse proxy, DNS, dan TLS untuk `staging.<domain>` dan `api-staging.<domain>`.
-- Redirect URI staging terdaftar di Google OAuth client.
+### 2.1 Di server
 
-## Setup sekali di server
+1. Siapkan direktori checkout repo di VPS. Boleh sama dengan direktori produksi.
+2. Pastikan runner `self-hosted` bisa menjalankan `git fetch` ke repo, menulis di
+   direktori itu, dan menjalankan `docker`. Biasanya user runner masuk grup `docker`.
+3. Pindah ke branch staging dan buat file env:
+
+   ```bash
+   cd <path checkout di VPS>
+   git fetch origin staging
+   git checkout staging
+   cp .env.production.example .env.staging
+   chmod 600 .env.staging
+   ```
+
+4. Isi `.env.staging`. Semua placeholder harus diganti:
+
+   | Variable | Isi |
+   | --- | --- |
+   | `APP_URL` | `https://api-staging.<domain>` |
+   | `FRONTEND_URL` | `https://staging.<domain>` |
+   | `VITE_API_BASE_URL` | `https://api-staging.<domain>/api` |
+   | `GOOGLE_REDIRECT_URI` | `https://api-staging.<domain>/auth/google/callback` |
+   | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | client Google OAuth milik staging |
+   | `APP_KEY` | `base64:` + hasil `openssl rand -base64 32` |
+   | `APP_DB_PASSWORD` | hasil `openssl rand -hex 32` |
+   | `INTERNAL_API_TOKEN` | hasil `openssl rand -hex 32`, **berbeda** dari `APP_DB_PASSWORD` |
+   | `APP_DB_DATABASE` | `osn_readiness_staging` |
+   | `APP_DB_USERNAME` | `osn_app` (atau sesuai produksi) |
+   | `FRONTEND_HOST_PORT` | `8091` |
+   | `BACKEND_HOST_PORT` | `8090` |
+
+   Jangan menyalin `APP_KEY`, password, atau token dari produksi.
+
+5. Atur reverse proxy dan TLS:
+   - `staging.<domain>` → `http://127.0.0.1:8091`
+   - `api-staging.<domain>` → `http://127.0.0.1:8090`, dengan header `Host`,
+     `X-Forwarded-Proto`, dan `X-Forwarded-For` diteruskan.
+6. Daftarkan `https://api-staging.<domain>/auth/google/callback` sebagai redirect URI
+   di Google OAuth client staging.
+
+### 2.2 Di GitHub
+
+1. Environment `staging` sudah ada. Tidak perlu dibuat ulang.
+2. Buka **Settings → Secrets and variables → Actions → Variables** (level repository),
+   lalu tambahkan:
+   - `DEPLOY_STAGING_ENABLED` = `true`
+   - `STAGING_DEPLOY_DIR` = path checkout di VPS, misalnya `/opt/osn-staging`
+
+   Pakai level repository. Gate di job `deploy-staging` dibaca sebelum environment
+   dipilih, jadi variable level environment belum tentu terbaca.
+3. Secret `VPS_*` tidak dipakai oleh workflow staging. Tidak perlu diisi.
+
+## 3. Deploy staging (setiap kali mau deploy)
+
+1. **Push** commit yang mau di-deploy ke branch `staging`. Ini tidak menjalankan apa pun.
+2. **Jalankan workflow** dengan salah satu cara:
+   - Di GitHub: **Actions → CI/CD → Run workflow**, pilih branch `staging`, lalu klik
+     **Run workflow**.
+   - Dari terminal: `gh workflow run ci-cd.yml --ref staging`
+3. Tunggu sampai job selesai. Urutannya:
+   1. `frontend`, `laravel`, `analytics`: test
+   2. `production-images`: build image
+   3. `deploy-staging`: deploy ke server
+4. Job `deploy-staging` di server melakukan ini:
+   1. Masuk ke `STAGING_DEPLOY_DIR`.
+   2. `git fetch origin staging`, lalu `git checkout -f -B staging origin/staging`.
+   3. Menjalankan `scripts/deploy-vps.sh --skip-pull` dengan
+      `DEPLOY_BRANCH=staging`, `DEPLOY_ENV_FILE=.env.staging`, dan
+      `DEPLOY_PROJECT_NAME=osn-staging`.
+5. Setelah job hijau, lakukan verifikasi (bagian 4).
+
+## 4. Verifikasi
+
+Di server, dari direktori checkout:
 
 ```bash
-cd <path checkout di VPS>
-git fetch origin staging
-git checkout staging
-cp .env.production.example .env.staging
-chmod 600 .env.staging
-```
-
-Isi `.env.staging`:
-
-- `APP_URL=https://api-staging.<domain>`, `FRONTEND_URL=https://staging.<domain>`,
-  `VITE_API_BASE_URL=https://api-staging.<domain>/api`.
-- `GOOGLE_REDIRECT_URI=https://api-staging.<domain>/auth/google/callback`, dengan
-  `GOOGLE_CLIENT_ID` dan `GOOGLE_CLIENT_SECRET` milik client staging.
-- `APP_KEY`: `base64:` diikuti hasil `openssl rand -base64 32`. Jangan salin dari produksi.
-- `APP_DB_PASSWORD` dan `INTERNAL_API_TOKEN`: hasil `openssl rand -hex 32`. Keduanya harus
-  berbeda satu sama lain dan berbeda dari produksi.
-- `APP_DB_DATABASE=osn_readiness_staging`.
-- `FRONTEND_HOST_PORT=8091` dan `BACKEND_HOST_PORT=8090`.
-
-Reverse proxy:
-
-- `staging.<domain>` diarahkan ke `127.0.0.1:8091`.
-- `api-staging.<domain>` diarahkan ke `127.0.0.1:8090`, dengan header `Host`,
-  `X-Forwarded-Proto`, dan `X-Forwarded-For` diteruskan.
-
-## Deploy
-
-1. Push commit ke branch `staging`. Tidak ada action yang berjalan.
-2. Jalankan workflow secara manual, dengan salah satu cara:
-   - GitHub: Actions → CI/CD → Run workflow → Branch: `staging`.
-   - CLI: `gh workflow run ci-cd.yml --ref staging`.
-3. Job berjalan berurutan: `frontend`, `laravel`, `analytics` (test), lalu
-   `production-images` (build), lalu `deploy-staging`.
-4. `deploy-staging` di server masuk ke `STAGING_DEPLOY_DIR`, lalu
-   `git checkout -f -B staging origin/staging`, dan menjalankan
-   `scripts/deploy-vps.sh` dengan `DEPLOY_BRANCH=staging`,
-   `DEPLOY_ENV_FILE=.env.staging`, dan `DEPLOY_PROJECT_NAME=osn-staging`.
-
-## Verifikasi setelah deploy
-
-Di server:
-
-```bash
-cd <path checkout di VPS>
 export APP_ENV_FILE=.env.staging
-docker compose -p osn-staging --env-file .env.staging -f docker-compose.prod.yml ps
+COMPOSE="docker compose -p osn-staging --env-file .env.staging -f docker-compose.prod.yml"
+
+$COMPOSE ps
 curl -fsS http://127.0.0.1:8091/healthz
 curl -fsS http://127.0.0.1:8090/up
-docker compose -p osn-staging --env-file .env.staging -f docker-compose.prod.yml \
-  exec -T analytics-api curl -fsS http://localhost:8000/health
-docker compose -p osn-staging --env-file .env.staging -f docker-compose.prod.yml \
-  logs --tail=100 backend
+$COMPOSE exec -T analytics-api curl -fsS http://localhost:8000/health
+$COMPOSE logs --tail=100 backend
 ```
 
-Lalu buka `https://staging.<domain>` dan cek login.
+Semua perintah di atas harus berhasil. Setelah itu, buka `https://staging.<domain>`
+dan coba login.
 
-## Data
+## 5. Data staging
 
-- Jangan menyalin volume `app_pgdata` atau dump produksi mentah. Tabel `users` berisi
-  email, nama, dan password hash. Tabel `personal_access_tokens` berisi token API.
+- **Jangan** menyalin volume `app_pgdata` atau dump produksi mentah ke staging. Tabel
+  `users` berisi email, nama, dan password hash. Tabel `personal_access_tokens` berisi
+  token API.
 - Isi database staging dengan seed, atau dengan dump yang sudah dianonimkan: email,
   nama, dan token diganti atau dikosongkan.
-- Jangan mengganti nama database produksi untuk dipakai sebagai staging. Database
-  staging dibuat baru: `osn_readiness_staging` di project `osn-staging`.
+- Database staging dibuat baru: `osn_readiness_staging` di project `osn-staging`.
+  Jangan mengganti nama database produksi untuk dipakai sebagai staging.
 
-## Rollback
+## 6. Rollback
 
-Push tidak men-deploy, jadi rollback dilakukan dalam dua langkah:
+Push tidak men-deploy, jadi rollback dilakukan dalam tiga langkah:
 
-1. `git revert <sha>` di branch `staging`, lalu push.
-2. Jalankan workflow secara manual dengan branch `staging`.
+1. Di terminal: `git revert <sha>` di branch `staging`, lalu `git push origin staging`.
+2. Jalankan workflow manual dengan branch `staging` (bagian 3).
+3. Verifikasi (bagian 4).
 
 Migrasi tidak dibalik otomatis. Untuk mengosongkan total database staging, jalankan
-perintah di bawah. Ini menghapus semua data di project `osn-staging`, termasuk
-volume `app_pgdata` dan `laravel_public`:
+perintah berikut. **Ini menghapus semua data di project `osn-staging`**, termasuk volume
+`app_pgdata` dan `laravel_public`:
 
 ```bash
 cd <path checkout di VPS>
@@ -112,23 +138,30 @@ export APP_ENV_FILE=.env.staging
 docker compose -p osn-staging --env-file .env.staging -f docker-compose.prod.yml down -v
 ```
 
-Jangan jalankan `down -v` tanpa `-p osn-staging`. Tanpa flag itu, perintah bisa
-mengenai project produksi.
+Selalu pakai `-p osn-staging`. Tanpa flag itu, perintah bisa mengenai project produksi.
 
-## Troubleshooting
+## 7. Sebelum deploy pertama
+
+Jalankan workflow manual sekali dengan branch `staging`, lalu pastikan:
+
+- Job `deploy-staging` **tidak** dilewati. Kalau dilewati, variable di bagian 2.2 belum
+  terbaca.
+- Verifikasi di bagian 4 lolos.
+
+## 8. Masalah umum
 
 | Gejala | Penyebab | Tindakan |
 | --- | --- | --- |
-| `Missing .env.staging` | File belum dibuat | Ikuti bagian setup |
-| `APP_KEY must be a generated base64-encoded 32-byte Laravel key.` | Format `APP_KEY` salah | Pakai `base64:` diikuti `openssl rand -base64 32` |
+| Job `deploy-staging` dilewati | Variable `DEPLOY_STAGING_ENABLED` atau `STAGING_DEPLOY_DIR` belum ada, atau tidak terbaca | Isi sebagai repository variable (bagian 2.2) |
+| `Missing .env.staging` | File env belum dibuat | Ikuti bagian 2.1 langkah 3–4 |
+| `APP_KEY must be a generated base64-encoded 32-byte Laravel key.` | Format `APP_KEY` salah | Pakai `base64:` + `openssl rand -base64 32` |
 | `... must be a 64-character hexadecimal secret.` | Format secret salah | Pakai `openssl rand -hex 32` |
-| `env file ... .env.production not found` saat menjalankan compose manual | `APP_ENV_FILE` belum di-export | `export APP_ENV_FILE=.env.staging` |
-| Job `deploy-staging` dilewati | Variable `DEPLOY_STAGING_ENABLED` atau `STAGING_DEPLOY_DIR` belum diisi, atau tidak terbaca | Isi sebagai repository variable; gate `if:` job tidak dijamin membaca variable level environment |
+| `env file ... .env.production not found` saat compose manual | `APP_ENV_FILE` belum di-export | `export APP_ENV_FILE=.env.staging` |
 
-## Catatan
+## 9. Catatan
 
-- Job staging dan produksi tidak saling mengunci. Jika `STAGING_DEPLOY_DIR` sama dengan
-  direktori produksi, jangan jalankan keduanya bersamaan. Pakai direktori terpisah, atau
-  tambahkan concurrency di file `monorepo` sebelum berbagi direktori.
-- Staging memakai `Dockerfile.production` yang sama dengan produksi. Bug yang muncul
-  di staging kemungkinan besar juga ada di produksi.
+- Job staging dan produksi **tidak** saling mengunci. Kalau `STAGING_DEPLOY_DIR` sama
+  dengan direktori produksi, jangan jalankan keduanya bersamaan. Lebih aman memakai
+  direktori terpisah.
+- Staging memakai `Dockerfile.production` yang sama dengan produksi. Bug yang muncul di
+  staging kemungkinan besar juga ada di produksi.
