@@ -194,7 +194,7 @@ jobs:
     needs:
       - production-images
     if: >-
-      github.ref == 'refs/heads/monorepo-staging' &&
+      github.ref == 'refs/heads/1-staging' &&
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
       vars.DEPLOY_STAGING_ENABLED == 'true' &&
       vars.STAGING_DEPLOY_DIR != ''
@@ -209,11 +209,11 @@ jobs:
       - name: Deploy latest staging commit
         env:
           STAGING_DEPLOY_DIR: ${{ vars.STAGING_DEPLOY_DIR }}
-          DEPLOY_BRANCH: monorepo-staging
+          DEPLOY_BRANCH: 1-staging
           DEPLOY_ENV_FILE: .env.staging
           DEPLOY_PROJECT_NAME: osn-staging
         run: |
           cd "$STAGING_DEPLOY_DIR"
-          git fetch origin monorepo-staging
-          git checkout -f -B monorepo-staging origin/monorepo-staging
+          git fetch origin 1-staging
+          git checkout -f -B 1-staging origin/1-staging
           bash scripts/deploy-vps.sh --skip-pull
