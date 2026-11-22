@@ -13,6 +13,7 @@ lihat [CI-CD-DEPLOY-VPS.md](CI-CD-DEPLOY-VPS.md).
 | File env | `.env.production` | `.env.staging` |
 | Project Compose | default (nama direktori) | `osn-staging` |
 | Port host | 8081 (frontend), 8080 (backend) | 8091 (frontend), 8090 (backend) |
+| Hostname | `mrcln0305.xyz`, `api.mrcln0305.xyz` | `stag.mrcln0305.xyz`, `stag-api.mrcln0305.xyz` |
 | Environment GitHub | `production` | `staging` |
 
 Push ke branch `staging` **tidak** menjalankan action. Deploy staging hanya jalan
@@ -20,7 +21,22 @@ saat dijalankan manual.
 
 ## 2. Persiapan (DevOps, sekali saja)
 
-### 2.1 Di server
+### 2.1 DNS dan reverse proxy
+
+Hostname staging diatur di tiga tempat: DNS, reverse proxy di VPS, dan file
+`.env.staging`. Langkah DNS dan reverse proxy:
+
+1. **DNS** (di tempat domain `mrcln0305.xyz` dikelola):
+   - Record `stag` → IP VPS (A record), atau CNAME ke host produksi.
+   - Record `stag-api` → IP VPS (A record), atau CNAME ke host produksi.
+   - Jika DNS memakai Cloudflare, sesuaikan status proxy dengan kebutuhan TLS.
+2. **Reverse proxy** di VPS (contoh nginx; sesuaikan dengan proxy yang dipakai):
+   - `stag.mrcln0305.xyz` → `http://127.0.0.1:8091`
+   - `stag-api.mrcln0305.xyz` → `http://127.0.0.1:8090`, dengan header `Host`,
+     `X-Forwarded-Proto`, dan `X-Forwarded-For` diteruskan.
+3. **TLS**: sertifikat untuk kedua hostname, misalnya dengan certbot.
+
+### 2.2 Di server: direktori dan file env
 
 1. Siapkan direktori checkout repo di VPS. Boleh sama dengan direktori produksi.
 2. Pastikan runner `self-hosted` bisa menjalankan `git fetch` ke repo, menulis di
@@ -39,10 +55,10 @@ saat dijalankan manual.
 
    | Variable | Isi |
    | --- | --- |
-   | `APP_URL` | `https://api-staging.<domain>` |
-   | `FRONTEND_URL` | `https://staging.<domain>` |
-   | `VITE_API_BASE_URL` | `https://api-staging.<domain>/api` |
-   | `GOOGLE_REDIRECT_URI` | `https://api-staging.<domain>/auth/google/callback` |
+   | `APP_URL` | `https://stag-api.mrcln0305.xyz` |
+   | `FRONTEND_URL` | `https://stag.mrcln0305.xyz` |
+   | `VITE_API_BASE_URL` | `https://stag-api.mrcln0305.xyz/api` |
+   | `GOOGLE_REDIRECT_URI` | `https://stag-api.mrcln0305.xyz/auth/google/callback` |
    | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | client Google OAuth milik staging |
    | `APP_KEY` | `base64:` + hasil `openssl rand -base64 32` |
    | `APP_DB_PASSWORD` | hasil `openssl rand -hex 32` |
@@ -54,14 +70,13 @@ saat dijalankan manual.
 
    Jangan menyalin `APP_KEY`, password, atau token dari produksi.
 
-5. Atur reverse proxy dan TLS:
-   - `staging.<domain>` → `http://127.0.0.1:8091`
-   - `api-staging.<domain>` → `http://127.0.0.1:8090`, dengan header `Host`,
-     `X-Forwarded-Proto`, dan `X-Forwarded-For` diteruskan.
-6. Daftarkan `https://api-staging.<domain>/auth/google/callback` sebagai redirect URI
+   `VITE_API_BASE_URL` di-build ke dalam frontend. Jika nilainya berubah, jalankan
+   deploy ulang agar frontend ikut ter-build.
+
+5. Daftarkan `https://stag-api.mrcln0305.xyz/auth/google/callback` sebagai redirect URI
    di Google OAuth client staging.
 
-### 2.2 Di GitHub
+### 2.3 Di GitHub
 
 1. Environment `staging` sudah ada. Tidak perlu dibuat ulang.
 2. Buka **Settings → Secrets and variables → Actions → Variables** (level repository),
@@ -107,8 +122,11 @@ $COMPOSE exec -T analytics-api curl -fsS http://localhost:8000/health
 $COMPOSE logs --tail=100 backend
 ```
 
-Semua perintah di atas harus berhasil. Setelah itu, buka `https://staging.<domain>`
-dan coba login.
+Semua perintah di atas harus berhasil. Setelah itu, cek dari luar:
+
+- `https://stag.mrcln0305.xyz` terbuka.
+- `https://stag-api.mrcln0305.xyz/up` mengembalikan respons sukses.
+- Login dengan akun staging berhasil.
 
 ## 5. Data staging
 
@@ -144,7 +162,7 @@ Selalu pakai `-p osn-staging`. Tanpa flag itu, perintah bisa mengenai project pr
 
 Jalankan workflow manual sekali dengan branch `staging`, lalu pastikan:
 
-- Job `deploy-staging` **tidak** dilewati. Kalau dilewati, variable di bagian 2.2 belum
+- Job `deploy-staging` **tidak** dilewati. Kalau dilewati, variable di bagian 2.3 belum
   terbaca.
 - Verifikasi di bagian 4 lolos.
 
@@ -152,11 +170,12 @@ Jalankan workflow manual sekali dengan branch `staging`, lalu pastikan:
 
 | Gejala | Penyebab | Tindakan |
 | --- | --- | --- |
-| Job `deploy-staging` dilewati | Variable `DEPLOY_STAGING_ENABLED` atau `STAGING_DEPLOY_DIR` belum ada, atau tidak terbaca | Isi sebagai repository variable (bagian 2.2) |
-| `Missing .env.staging` | File env belum dibuat | Ikuti bagian 2.1 langkah 3–4 |
+| Job `deploy-staging` dilewati | Variable `DEPLOY_STAGING_ENABLED` atau `STAGING_DEPLOY_DIR` belum ada, atau tidak terbaca | Isi sebagai repository variable (bagian 2.3) |
+| `Missing .env.staging` | File env belum dibuat | Ikuti bagian 2.2 langkah 3–4 |
 | `APP_KEY must be a generated base64-encoded 32-byte Laravel key.` | Format `APP_KEY` salah | Pakai `base64:` + `openssl rand -base64 32` |
 | `... must be a 64-character hexadecimal secret.` | Format secret salah | Pakai `openssl rand -hex 32` |
 | `env file ... .env.production not found` saat compose manual | `APP_ENV_FILE` belum di-export | `export APP_ENV_FILE=.env.staging` |
+| Frontend memanggil API produksi | `VITE_API_BASE_URL` salah saat build | Perbaiki `.env.staging`, lalu deploy ulang |
 
 ## 9. Catatan
 
