@@ -132,3 +132,38 @@ migrasi yang mengubah atau menghapus data.
 - `scripts/deploy-vps.sh`: skrip deploy yang dipanggil workflow di VPS.
 - `.env.example`: tetap untuk development lokal. Gunakan
   `.env.production.example` sebagai template environment production.
+
+## Staging
+
+Branch `staging` dideploy memakai `scripts/deploy-vps.sh` dengan project Compose
+`osn-staging`, sehingga container, network, dan volume database tidak bercampur
+dengan produksi. Env dibedakan lewat file: `.env.production` untuk produksi dan
+`.env.staging` untuk staging, keduanya di direktori checkout yang sama. Job
+`deploy-staging` berjalan hanya untuk push ke `staging` dan hanya jika variable
+`DEPLOY_STAGING_ENABLED=true`. Kedua job deploy berbagi concurrency group
+`vps-deploy` dan berpindah branch dengan `git checkout -f -B`.
+
+Setup sekali di server staging:
+
+```bash
+cd <path checkout di VPS>
+git checkout staging
+cp .env.production.example .env.staging
+chmod 600 .env.staging
+# isi .env.staging: domain staging, APP_KEY, APP_DB_*, INTERNAL_API_TOKEN, Google OAuth,
+# FRONTEND_HOST_PORT=8091, BACKEND_HOST_PORT=8090, APP_DB_DATABASE=osn_readiness_staging
+DEPLOY_BRANCH=staging DEPLOY_ENV_FILE=.env.staging DEPLOY_PROJECT_NAME=osn-staging bash scripts/deploy-vps.sh
+```
+
+`FRONTEND_HOST_PORT` dan `BACKEND_HOST_PORT` di `.env.staging` harus berbeda
+dari produksi (`8081`/`8080`) bila satu VPS. Reverse proxy mengarahkan
+`staging.<domain>` ke frontend dan `api-staging.<domain>` ke backend.
+
+Di GitHub, buat environment `staging` dan isi:
+
+- Variable `DEPLOY_STAGING_ENABLED=true`
+- Variable `STAGING_DEPLOY_DIR=<path checkout di VPS>` (boleh sama dengan produksi)
+
+Variabel `APP_ENV_FILE` diisi otomatis oleh `scripts/deploy-vps.sh` dari
+`DEPLOY_ENV_FILE`, sehingga service backend dan queue-worker membaca
+`.env.staging`, bukan `.env.production`.

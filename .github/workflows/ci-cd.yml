@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - monorepo
+      - staging
   push:
     branches:
       - monorepo
+      - staging
   workflow_dispatch:
 
 permissions:
@@ -179,6 +181,9 @@ jobs:
       vars.DEPLOY_VPS_ENABLED == 'true'
     environment:
       name: production
+    concurrency:
+      group: vps-deploy
+      cancel-in-progress: false
     defaults:
       run:
         working-directory: /home/guntur/osn/src
@@ -191,5 +196,33 @@ jobs:
       - name: Deploy latest monorepo commit
         run: |
           git fetch origin monorepo
-          git reset --hard origin/monorepo
+          git checkout -f -B monorepo origin/monorepo
+          bash scripts/deploy-vps.sh --skip-pull
+
+  deploy-staging:
+    name: Deploy staging to VPS
+    runs-on: self-hosted
+    needs:
+      - production-images
+    if: >-
+      github.ref == 'refs/heads/staging' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      vars.DEPLOY_STAGING_ENABLED == 'true' &&
+      vars.STAGING_DEPLOY_DIR != ''
+    environment:
+      name: staging
+    concurrency:
+      group: vps-deploy
+      cancel-in-progress: false
+    steps:
+      - name: Deploy latest staging commit
+        env:
+          STAGING_DEPLOY_DIR: ${{ vars.STAGING_DEPLOY_DIR }}
+          DEPLOY_BRANCH: staging
+          DEPLOY_ENV_FILE: .env.staging
+          DEPLOY_PROJECT_NAME: osn-staging
+        run: |
+          cd "$STAGING_DEPLOY_DIR"
+          git fetch origin staging
+          git checkout -f -B staging origin/staging
           bash scripts/deploy-vps.sh --skip-pull

@@ -15,7 +15,7 @@ services:
     mem_limit: 256m
     logging: *default-logging
     ports:
-      - "127.0.0.1:8081:80"
+      - "127.0.0.1:${FRONTEND_HOST_PORT:-8081}:80"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
       interval: 30s
@@ -36,7 +36,7 @@ services:
     cpus: 2
     logging: *default-logging
     env_file:
-      - .env.production
+      - ${APP_ENV_FILE:-.env.production}
     environment:
       APP_NAME: SIAP OSN
       APP_ENV: production
@@ -61,7 +61,7 @@ services:
       analytics-api:
         condition: service_healthy
     ports:
-      - "127.0.0.1:8080:80"
+      - "127.0.0.1:${BACKEND_HOST_PORT:-8080}:80"
     volumes:
       - laravel_public:/var/www/html/storage/app/public
     healthcheck:
@@ -81,7 +81,7 @@ services:
     mem_limit: 512m
     logging: *default-logging
     env_file:
-      - .env.production
+      - ${APP_ENV_FILE:-.env.production}
     environment:
       APP_NAME: SIAP OSN
       APP_ENV: production

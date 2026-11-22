@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-readonly branch="monorepo"
+readonly branch="${DEPLOY_BRANCH:-monorepo}"
 readonly compose_file="docker-compose.prod.yml"
-readonly env_file=".env.production"
+readonly env_file="${DEPLOY_ENV_FILE:-.env.production}"
+export APP_ENV_FILE="$env_file"
+
+# Default produksi tidak set project name: tetap ikut nama direktori agar volume tidak berubah.
+if [[ -n "${DEPLOY_PROJECT_NAME:-}" ]]; then
+    export COMPOSE_PROJECT_NAME="$DEPLOY_PROJECT_NAME"
+fi
 skip_pull=false
 
 if [[ "${1:-}" == "--skip-pull" ]]; then
