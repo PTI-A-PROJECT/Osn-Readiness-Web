@@ -123,11 +123,12 @@ mengenai project produksi.
 | `APP_KEY must be a generated base64-encoded 32-byte Laravel key.` | Format `APP_KEY` salah | Pakai `base64:` diikuti `openssl rand -base64 32` |
 | `... must be a 64-character hexadecimal secret.` | Format secret salah | Pakai `openssl rand -hex 32` |
 | `env file ... .env.production not found` saat menjalankan compose manual | `APP_ENV_FILE` belum di-export | `export APP_ENV_FILE=.env.staging` |
-| Job `deploy-staging` dilewati | Variable `DEPLOY_STAGING_ENABLED` atau `STAGING_DEPLOY_DIR` belum diisi | Isi variable di environment `staging` |
+| Job `deploy-staging` dilewati | Variable `DEPLOY_STAGING_ENABLED` atau `STAGING_DEPLOY_DIR` belum diisi, atau tidak terbaca | Isi sebagai repository variable; gate `if:` job tidak dijamin membaca variable level environment |
 
 ## Catatan
 
-- Job staging dan produksi berbagi concurrency group `vps-deploy`, jadi keduanya
-  tidak berjalan bersamaan.
+- Job staging dan produksi tidak saling mengunci. Jika `STAGING_DEPLOY_DIR` sama dengan
+  direktori produksi, jangan jalankan keduanya bersamaan. Pakai direktori terpisah, atau
+  tambahkan concurrency di file `monorepo` sebelum berbagi direktori.
 - Staging memakai `Dockerfile.production` yang sama dengan produksi. Bug yang muncul
   di staging kemungkinan besar juga ada di produksi.

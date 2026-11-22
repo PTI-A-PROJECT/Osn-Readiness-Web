@@ -173,9 +173,6 @@ jobs:
       vars.DEPLOY_VPS_ENABLED == 'true'
     environment:
       name: production
-    concurrency:
-      group: vps-deploy
-      cancel-in-progress: false
     defaults:
       run:
         working-directory: /home/guntur/osn/src
@@ -188,7 +185,7 @@ jobs:
       - name: Deploy latest monorepo commit
         run: |
           git fetch origin monorepo
-          git checkout -f -B monorepo origin/monorepo
+          git reset --hard origin/monorepo
           bash scripts/deploy-vps.sh --skip-pull
 
   deploy-staging:
@@ -203,10 +200,12 @@ jobs:
       vars.STAGING_DEPLOY_DIR != ''
     environment:
       name: staging
-    concurrency:
-      group: vps-deploy
-      cancel-in-progress: false
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Deploy latest staging commit
         env:
           STAGING_DEPLOY_DIR: ${{ vars.STAGING_DEPLOY_DIR }}
