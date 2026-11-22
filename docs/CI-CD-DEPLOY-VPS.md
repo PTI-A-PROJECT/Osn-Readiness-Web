@@ -135,52 +135,6 @@ migrasi yang mengubah atau menghapus data.
 
 ## Staging
 
-Branch `staging` dideploy memakai `scripts/deploy-vps.sh` dengan project Compose
-`osn-staging`, sehingga container, network, dan volume database tidak bercampur
-dengan produksi. Env dibedakan lewat file: `.env.production` untuk produksi dan
-`.env.staging` untuk staging, keduanya di direktori checkout yang sama. Job
-`deploy-staging` berjalan hanya untuk push ke `staging` dan hanya jika variable
-`DEPLOY_STAGING_ENABLED=true`. Kedua job deploy berbagi concurrency group
-`vps-deploy` dan berpindah branch dengan `git checkout -f -B`.
-
-Setup sekali di server staging:
-
-```bash
-cd <path checkout di VPS>
-git checkout staging
-cp .env.production.example .env.staging
-chmod 600 .env.staging
-# isi .env.staging: domain staging, APP_KEY, APP_DB_*, INTERNAL_API_TOKEN, Google OAuth,
-# FRONTEND_HOST_PORT=8091, BACKEND_HOST_PORT=8090, APP_DB_DATABASE=osn_readiness_staging
-DEPLOY_BRANCH=staging DEPLOY_ENV_FILE=.env.staging DEPLOY_PROJECT_NAME=osn-staging bash scripts/deploy-vps.sh
-```
-
-`FRONTEND_HOST_PORT` dan `BACKEND_HOST_PORT` di `.env.staging` harus berbeda
-dari produksi (`8081`/`8080`) bila satu VPS. Reverse proxy mengarahkan
-`staging.<domain>` ke frontend dan `api-staging.<domain>` ke backend.
-
-Di GitHub, buat environment `staging` dan isi:
-
-- Variable `DEPLOY_STAGING_ENABLED=true`
-- Variable `STAGING_DEPLOY_DIR=<path checkout di VPS>` (boleh sama dengan produksi)
-
-Variabel `APP_ENV_FILE` diisi otomatis oleh `scripts/deploy-vps.sh` dari
-`DEPLOY_ENV_FILE`, sehingga service backend dan queue-worker membaca
-`.env.staging`, bukan `.env.production`.
-
-### Checklist setup staging
-
-- [ ] Direktori checkout di VPS ada (boleh sama dengan produksi), dan `git checkout staging`.
-- [ ] `.env.staging` dibuat dari `.env.production.example`, `chmod 600`, dan semua placeholder diisi.
-- [ ] `APP_KEY`, `APP_DB_PASSWORD`, dan `INTERNAL_API_TOKEN` untuk staging dibuat baru, tidak sama dengan produksi.
-- [ ] `APP_DB_DATABASE=osn_readiness_staging`, `FRONTEND_HOST_PORT=8091`, `BACKEND_HOST_PORT=8090`.
-- [ ] Reverse proxy, DNS, dan TLS untuk `staging.<domain>` dan `api-staging.<domain>`.
-- [ ] Redirect URI staging terdaftar di Google OAuth client.
-- [ ] GitHub environment `staging` dibuat, dengan variable `DEPLOY_STAGING_ENABLED=true` dan `STAGING_DEPLOY_DIR`.
-- [ ] Runner `self-hosted` bisa `git fetch` ke repo dan menulis di direktori checkout.
-
-### Data staging
-
-- Jangan menyalin volume `app_pgdata` atau dump produksi mentah ke staging. Tabel `users` berisi email, nama, dan password hash, dan `personal_access_tokens` berisi token API. Semuanya data pribadi atau kredensial yang tidak boleh berada di environment staging.
-- Isi database staging dengan seed, atau dengan dump yang sudah dianonimkan: email, nama, dan tabel token diganti atau dikosongkan.
-- Database staging dibuat baru (`osn_readiness_staging` di project `osn-staging`). Jangan mengganti nama database produksi untuk dipakai sebagai staging.
+Staging dijelaskan di [PANDUAN-STAGING.md](PANDUAN-STAGING.md): setup, deploy manual,
+data, dan rollback. Di branch `staging`, push tidak memicu action. Deploy hanya lewat
+Run workflow dengan branch `staging`.
