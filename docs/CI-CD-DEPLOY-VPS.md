@@ -167,3 +167,20 @@ Di GitHub, buat environment `staging` dan isi:
 Variabel `APP_ENV_FILE` diisi otomatis oleh `scripts/deploy-vps.sh` dari
 `DEPLOY_ENV_FILE`, sehingga service backend dan queue-worker membaca
 `.env.staging`, bukan `.env.production`.
+
+### Checklist setup staging
+
+- [ ] Direktori checkout di VPS ada (boleh sama dengan produksi), dan `git checkout staging`.
+- [ ] `.env.staging` dibuat dari `.env.production.example`, `chmod 600`, dan semua placeholder diisi.
+- [ ] `APP_KEY`, `APP_DB_PASSWORD`, dan `INTERNAL_API_TOKEN` untuk staging dibuat baru, tidak sama dengan produksi.
+- [ ] `APP_DB_DATABASE=osn_readiness_staging`, `FRONTEND_HOST_PORT=8091`, `BACKEND_HOST_PORT=8090`.
+- [ ] Reverse proxy, DNS, dan TLS untuk `staging.<domain>` dan `api-staging.<domain>`.
+- [ ] Redirect URI staging terdaftar di Google OAuth client.
+- [ ] GitHub environment `staging` dibuat, dengan variable `DEPLOY_STAGING_ENABLED=true` dan `STAGING_DEPLOY_DIR`.
+- [ ] Runner `self-hosted` bisa `git fetch` ke repo dan menulis di direktori checkout.
+
+### Data staging
+
+- Jangan menyalin volume `app_pgdata` atau dump produksi mentah ke staging. Tabel `users` berisi email, nama, dan password hash, dan `personal_access_tokens` berisi token API. Semuanya data pribadi atau kredensial yang tidak boleh berada di environment staging.
+- Isi database staging dengan seed, atau dengan dump yang sudah dianonimkan: email, nama, dan tabel token diganti atau dikosongkan.
+- Database staging dibuat baru (`osn_readiness_staging` di project `osn-staging`). Jangan mengganti nama database produksi untuk dipakai sebagai staging.
