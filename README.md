@@ -78,25 +78,37 @@ penutup untuk file yang sebelumnya belum di-commit). Keduanya bisa dipakai berda
 
 ## Tim Kontributor
 
-Seluruh kontributor dari ketiga repositori proyek yang digabung ke dalam monorepo ini:
+Daftar kontributor per bagian. Satu orang bisa muncul di lebih dari satu bagian.
 
-| Bagian | Kontributor | GitHub / Email |
-|---|---|---|
-| **Backend** (`Osn-Readiness-Web`) | Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
-| | Sultonaru | `arifsetiawan.achmad2004@gmail.com` |
-| | Haman Haris | `hamanharis308@gmail.com` |
-| **Frontend** (`siap-osn-fe`) | Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
-| | Alvina | `amaliavina34@gmail.com` |
-| | Elvira | [@Elvira2334](https://github.com/Elvira2334) |
-| | Fajar Purba | [@Fajarpurba](https://github.com/Fajarpurba) |
-| | Nikola Okin | [@OKIN0902](https://github.com/OKIN0902) |
-| | Ibra Fahro (bjirkah) | `achmadibraalfahro@gmail.com` |
-| | Anisatul Qomariyah (nisajs) | `anisatulqomariyah95@gmail.com` |
-| | Bimo Taraqie | `bimotaraqie87@gmail.com` |
-| **Data Analytics** (`data-analytics`) | Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
-| | Muhammad Hanif Abdur Razaq | [@Razzoom23](https://github.com/Razzoom23) |
-| | Fakhri Ahmadi (Nexus) | `fakhriahmadi559@gmail.com` |
-| | Falih (PalihGit) | `falih.thefal@gmail.com` |
-| | Putra Lyan (PuLyan123) | `putralyan127@gmail.com` |
-| | Hilmi Zakin Putra | `hilmizakin12@gmail.com` |
-| | Dea Alensa | `dea.alensa11@gmail.com` |
+### Backend: `apps/Osn-Readiness-Web/`
+
+| Nama | Kontak |
+|---|---|
+| Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
+| Sultonaru | `arifsetiawan.achmad2004@gmail.com` |
+| Haman Haris | `hamanharis308@gmail.com` |
+
+### Frontend: `apps/siap-osn-fe/`
+
+| Nama | Kontak |
+|---|---|
+| Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
+| Alvina | `amaliavina34@gmail.com` |
+| Elvira | [@Elvira2334](https://github.com/Elvira2334) |
+| Fajar Purba | [@Fajarpurba](https://github.com/Fajarpurba) |
+| Nikola Okin | [@OKIN0902](https://github.com/OKIN0902) |
+| Ibra Fahro (bjirkah) | `achmadibraalfahro@gmail.com` |
+| Anisatul Qomariyah (nisajs) | `anisatulqomariyah95@gmail.com` |
+| Bimo Taraqie | `bimotaraqie87@gmail.com` |
+
+### Data Analytics: `apps/data-analytics/`
+
+| Nama | Kontak |
+|---|---|
+| Aditya Eka Rahmadani | [@Aditya27T](https://github.com/Aditya27T) |
+| Muhammad Hanif Abdur Razaq | [@Razzoom23](https://github.com/Razzoom23) |
+| Fakhri Ahmadi (Nexus) | `fakhriahmadi559@gmail.com` |
+| Falih (PalihGit) | `falih.thefal@gmail.com` |
+| Putra Lyan (PuLyan123) | `putralyan127@gmail.com` |
+| Hilmi Zakin Putra | `hilmizakin12@gmail.com` |
+| Dea Alensa | `dea.alensa11@gmail.com` |
