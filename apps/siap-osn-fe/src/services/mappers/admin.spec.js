@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   ATURAN_FIELDS,
+  kategoriAktivitas,
+  kategoriReferal,
   mapAdminDashboard,
   mapAnggota,
   mapAturanPemetaan,
@@ -36,6 +38,38 @@ describe('mapAdminDashboard', () => {
     // Diurutkan menurut urutan tingkat.
     expect(hasil.siswaPerTingkat.map((t) => t.nama)).toEqual(['Kabupaten/Kota', 'Provinsi'])
     expect(hasil.siswaPerTingkat[0]).toMatchObject({ tingkatId: 1, jumlahSiswa: 7 })
+  })
+
+  it('memetakan analitik pengguna; angka yang tidak dikirim menjadi null, bukan 0', () => {
+    const hasil = mapAdminDashboard({
+      analitik_pengguna: { siswa_terdaftar: 20, mulai_pretest: 12, mulai_latihan: null, mulai_simulasi: 3, terdaftar_dengan_referal: 5 },
+    })
+    expect(hasil.analitikPengguna).toEqual({
+      siswaTerdaftar: 20,
+      mulaiPretest: 12,
+      selesaiPretest: null,
+      mulaiLatihan: null,
+      selesaiLatihan: null,
+      mulaiSimulasi: 3,
+      selesaiSimulasi: null,
+      terdaftarDenganReferal: 5,
+    })
+    expect(mapAdminDashboard({}).analitikPengguna).toBeNull()
+  })
+
+  it('kategori aktivitas dan referal menjaga null dan memisahkan tanpa kode', () => {
+    const a = mapAdminDashboard({
+      analitik_pengguna: { siswa_terdaftar: 10, terdaftar_dengan_referal: 4, mulai_pretest: 7, selesai_pretest: null },
+    }).analitikPengguna
+    expect(kategoriAktivitas(a)).toHaveLength(6)
+    expect(kategoriAktivitas(a)[0]).toEqual({ label: 'Mulai pre-test', jumlah: 7 })
+    expect(kategoriAktivitas(a)[1].jumlah).toBeNull()
+    expect(kategoriReferal(a)).toEqual([
+      { label: 'Dengan kode referal', jumlah: 4 },
+      { label: 'Tanpa kode referal', jumlah: 6 },
+    ])
+    expect(kategoriReferal({ ...a, siswaTerdaftar: null })[1].jumlah).toBeNull()
+    expect(kategoriReferal(null)).toEqual([])
   })
 
   it('respons kosong tidak melempar', () => {
