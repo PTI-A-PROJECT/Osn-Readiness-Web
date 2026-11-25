@@ -1061,9 +1061,23 @@
                 "api",
                 "admin",
                 "dashboard"
+              ],
+              "query": [
+                {
+                  "key": "dari",
+                  "value": "2026-01-01",
+                  "description": "YYYY-MM-DD, opsional. Batas awal hari inklusif (UTC). Hanya memengaruhi analitik_pengguna.",
+                  "disabled": true
+                },
+                {
+                  "key": "sampai",
+                  "value": "2026-12-31",
+                  "description": "YYYY-MM-DD, opsional. Batas akhir hari inklusif (UTC). Tidak boleh sebelum dari.",
+                  "disabled": true
+                }
               ]
             },
-            "description": "Siswa aktif, pengerjaan per jenis, siswa per tingkat aktif, rata-rata nilai per jenis."
+            "description": "Siswa aktif, pengerjaan per jenis, siswa per tingkat aktif, dan rata-rata nilai per jenis selalu seluruh waktu. analitik_pengguna mengikuti filter dari dan sampai."
           }
         },
         {

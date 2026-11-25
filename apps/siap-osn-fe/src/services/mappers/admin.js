@@ -5,7 +5,11 @@
  *   pengerjaan_per_jenis: { pretest, latihan, simulasi },
  *   siswa_per_tingkat_aktif: [{ tingkat_id, nama_tingkat, urutan,
  *   jumlah_siswa }],
- *   rata_rata_nilai_per_jenis: { pretest, latihan, simulasi } } }
+ *   rata_rata_nilai_per_jenis: { pretest, latihan, simulasi },
+ *   analitik_pengguna: { siswa_terdaftar, mulai_{pretest,latihan,simulasi},
+ *   selesai_{pretest,latihan,simulasi}, terdaftar_dengan_referal } (siswa unik;
+ *   ?dari=&sampai= hanya memfilter bagian ini; belum tersedia -> null) } }
+ *   [Key analitik sudah dicocokkan dengan apps/Osn-Readiness-Web/docs/API-ENDPOINTS.md dan DashboardAdminService.php; key yang hilang dipetakan ke null.]
  * - GET /admin/bank-soal/kecukupan?tingkat_id= -> { message, data: {
  *   tingkat_id, pretest_per_level: [{ level, tersedia, kuota, kurang }],
  *   pretest_per_materi: [{ materi_id, judul, tersedia, minimal, kurang }],
@@ -51,6 +55,48 @@ const PERUNTUKAN_LABEL = { pretest: 'Pre-test', latihan: 'Latihan', simulasi: 'S
 export const labelLevel = (v) => LEVEL_LABEL[v] ?? v ?? '—'
 export const labelPeruntukan = (v) => PERUNTUKAN_LABEL[v] ?? v ?? '—'
 
+// Analitik pengguna dari backend. Null (bukan 0) bila belum dikirim, agar UI tidak menampilkan angka palsu.
+function mapAnalitikPengguna(r) {
+  if (r == null) return null
+  return {
+    siswaTerdaftar: nilaiAtauNull(r.siswa_terdaftar),
+    mulaiPretest: nilaiAtauNull(r.mulai_pretest),
+    selesaiPretest: nilaiAtauNull(r.selesai_pretest),
+    mulaiLatihan: nilaiAtauNull(r.mulai_latihan),
+    selesaiLatihan: nilaiAtauNull(r.selesai_latihan),
+    mulaiSimulasi: nilaiAtauNull(r.mulai_simulasi),
+    selesaiSimulasi: nilaiAtauNull(r.selesai_simulasi),
+    terdaftarDenganReferal: nilaiAtauNull(r.terdaftar_dengan_referal),
+  }
+}
+
+// Kelompok aktivitas: mulai dan selesai per jenis ujian, masing-masing periode
+// menurut tanggal kejadiannya. Tidak saling mengurangi dan tidak dipersentasekan
+// terhadap pendaftar, sehingga nilai null tetap null.
+export function kategoriAktivitas(a) {
+  if (!a) return []
+  return [
+    { label: 'Mulai pre-test', jumlah: a.mulaiPretest },
+    { label: 'Selesai pre-test', jumlah: a.selesaiPretest },
+    { label: 'Mulai latihan', jumlah: a.mulaiLatihan },
+    { label: 'Selesai latihan', jumlah: a.selesaiLatihan },
+    { label: 'Mulai simulasi', jumlah: a.mulaiSimulasi },
+    { label: 'Selesai simulasi', jumlah: a.selesaiSimulasi },
+  ]
+}
+
+// Kelompok referal saling lepas: berkode + tanpa kode = siswa terdaftar.
+// Tanpa kode null bila salah satu angka belum ada, agar tidak tampak sebagai nol.
+export function kategoriReferal(a) {
+  if (!a) return []
+  const berkode = a.terdaftarDenganReferal
+  const total = a.siswaTerdaftar
+  return [
+    { label: 'Dengan kode referal', jumlah: berkode },
+    { label: 'Tanpa kode referal', jumlah: berkode == null || total == null ? null : total - berkode },
+  ]
+}
+
 /* ---------- Dashboard ---------- */
 export function mapAdminDashboard(r) {
   const d = r ?? {}
@@ -64,6 +110,7 @@ export function mapAdminDashboard(r) {
     }))
   return {
     siswaAktif: angka(d.siswa_aktif),
+    analitikPengguna: mapAnalitikPengguna(d.analitik_pengguna),
     pengerjaanPerJenis: urut(perJenis),
     rataRataNilai: urut(rata).map((x) => ({ ...x, nilai: nilaiAtauNull(x.jumlah) })),
     siswaPerTingkat: daftar(d.siswa_per_tingkat_aktif)

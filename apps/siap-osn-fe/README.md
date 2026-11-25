@@ -6,7 +6,7 @@ Frontend Vue untuk SIAP OSN. Backend: `siap-osn-be`
 ## Stack
 
 Vue 3 + Vite (JavaScript, bukan TypeScript), Vue Router, Pinia,
-Axios, Tailwind CSS v4 + PrimeVue 4 (preset Aura).
+Axios, Tailwind CSS v4 + PrimeVue 4 (preset Aura), dan Chart.js untuk grafik dashboard admin.
 
 > **Kenapa PrimeVue 4 di-pin?** PrimeVue 5.x berlisensi komersial
 > (PrimeUI License — tidak cocok untuk universitas/instansi publik),

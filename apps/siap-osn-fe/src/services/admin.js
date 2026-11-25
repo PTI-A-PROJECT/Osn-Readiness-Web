@@ -38,9 +38,14 @@ function halamanPaginasi(res, perPage, halaman) {
 
 export const adminService = {
   /* ---------- A1 · Dashboard & bank soal ---------- */
-  // GET /admin/dashboard -> ringkasan siswa aktif, pengerjaan, rata-rata nilai.
-  async dashboard({ signal } = {}) {
-    return mapAdminDashboard(unwrap(await api.get(ENDPOINTS.admin.dashboard, { signal })))
+  // GET /admin/dashboard?dari=&sampai= -> ringkasan. Tanggal (YYYY-MM-DD, inklusif)
+  // hanya memfilter analitik_pengguna; bidang lain tetap seluruh waktu.
+  async dashboard({ dari, sampai, signal } = {}) {
+    if (dari && sampai && dari > sampai) throw new Error('Tanggal awal tidak boleh setelah tanggal akhir.')
+    const params = {}
+    if (dari) params.dari = dari
+    if (sampai) params.sampai = sampai
+    return mapAdminDashboard(unwrap(await api.get(ENDPOINTS.admin.dashboard, { params, signal })))
   },
 
   // GET /admin/bank-soal/kecukupan?tingkat_id= -> lima bagian laporan.

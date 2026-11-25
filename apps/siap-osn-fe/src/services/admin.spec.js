@@ -33,9 +33,17 @@ describe('adminService · A1 dashboard & bank soal', () => {
       },
     })
     const hasil = await adminService.dashboard({})
-    expect(api.get).toHaveBeenCalledWith('/admin/dashboard', { signal: undefined })
+    expect(api.get).toHaveBeenCalledWith('/admin/dashboard', { params: {}, signal: undefined })
     expect(hasil.siswaAktif).toBe(8)
     expect(hasil.pengerjaanPerJenis).toHaveLength(3)
+  })
+
+  it('dashboard hanya mengirim dari dan sampai yang diisi, dan menolak rentang terbalik', async () => {
+    api.get.mockResolvedValue({ data: { message: 'OK', data: {} } })
+    await adminService.dashboard({ dari: '2026-01-01' })
+    expect(api.get).toHaveBeenLastCalledWith('/admin/dashboard', { params: { dari: '2026-01-01' }, signal: undefined })
+    await expect(adminService.dashboard({ dari: '2026-02-01', sampai: '2026-01-01' })).rejects.toThrow('Tanggal awal')
+    expect(api.get).toHaveBeenCalledTimes(1)
   })
 
   it('kecukupanBankSoal mengirim tingkat_id', async () => {
