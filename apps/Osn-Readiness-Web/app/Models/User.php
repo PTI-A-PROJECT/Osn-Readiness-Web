@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordSiapOsn;
 use App\Support\KodeReferal;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -21,6 +22,11 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordSiapOsn($token));
+    }
 
     protected static function booted(): void
     {

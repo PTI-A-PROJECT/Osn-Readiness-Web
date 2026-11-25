@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
+import { authService } from '@/services/auth.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -14,11 +15,17 @@ const konfirmasiError = ref('')
 const loading = ref(false)
 const resetBerhasil = ref(false)
 
+const token = computed(() => typeof route.query.token === 'string' ? route.query.token : '')
+
 const email = computed(() => {
   return typeof route.query.email === 'string' ? route.query.email : ''
 })
 
 function validasi() {
+  if (!email.value || !token.value) {
+    toast.add({ severity: 'error', summary: 'Tautan tidak valid', detail: 'Minta tautan reset baru dari halaman Lupa Kata Sandi.', life: 5000 })
+    return false
+  }
   passwordError.value = ''
   konfirmasiError.value = ''
 
@@ -44,34 +51,31 @@ async function selesai() {
   resetBerhasil.value = false
 
   try {
-    /*
-     * Sementara untuk slicing UI.
-     * Nanti diganti dengan auth.resetPassword(...)
-     * setelah endpoint backend tersedia.
-     */
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
+    await authService.resetPassword({
+      email: email.value,
+      token: token.value,
+      password: password.value,
+      konfirmasi: konfirmasiPassword.value,
+    })
     resetBerhasil.value = true
-
     toast.add({
       severity: 'success',
       summary: 'Kata sandi berhasil diubah',
-      detail: 'Anda akan dialihkan ke halaman masuk.',
+      detail: 'Silakan masuk menggunakan kata sandi baru.',
       life: 4000,
     })
-
-    setTimeout(() => {
-      router.push('/login')
-    }, 1200)
-  } catch {
+    await router.replace('/login')
+  } catch (error) {
+    const errors = error.response?.data?.errors
+    passwordError.value = errors?.password?.[0] || ''
+    konfirmasiError.value = errors?.password_confirmation?.[0] || ''
     toast.add({
       severity: 'error',
       summary: 'Gagal mengubah kata sandi',
-      detail: 'Terjadi kesalahan. Silakan coba lagi.',
-      life: 4000,
+      detail: error.response?.data?.message || 'Tautan tidak valid atau kedaluwarsa. Minta tautan baru.',
+      life: 5000,
     })
-
+  } finally {
     loading.value = false
   }
 }
