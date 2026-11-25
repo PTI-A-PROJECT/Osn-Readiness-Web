@@ -299,7 +299,14 @@ Semua endpoint admin berada di bawah /api/admin/\* dengan CRUD standar; yang per
 
 BankSoalService memakai fungsi hitung kuota yang sama dengan SoalPickerService, supaya laporan admin dan perilaku nyata tidak pernah berbeda. "Tersedia" berarti stok bank (tingkat dan peruntukan yang sesuai, belum dihapus). Soal yang pernah dipakai siswa lain tetap dihitung, karena larangan mengulang soal pre-test berlaku per siswa.
 
-**Dashboard Super Admin** (GET /api/admin/dashboard): jumlah siswa aktif, jumlah pengerjaan per jenis, jumlah siswa per tingkat aktif, dan rata-rata nilai per jenis.
+**Dashboard Super Admin** (GET /api/admin/dashboard): jumlah siswa aktif, jumlah pengerjaan per jenis, jumlah siswa per tingkat aktif, dan rata-rata nilai per jenis selalu seluruh waktu. Query opsional `dari` dan `sampai` (YYYY-MM-DD, inklusif, `dari` tidak boleh setelah `sampai`) hanya memengaruhi `analitik_pengguna`. Batas hari memakai zona waktu aplikasi (UTC): `dari` mulai 00:00:00 dan `sampai` sampai 23:59:59. Kolom waktu per metrik:
+
+- `siswa_terdaftar` dan `terdaftar_dengan_referal`: `users.created_at`. Referal adalah status saat ini untuk akun yang terdaftar dalam periode, bukan tanggal kode diisi.
+- `mulai_pretest` dan `mulai_latihan`: `created_at` pada `pretest` dan `quiz_pengerjaan`.
+- `mulai_simulasi`: `hasil_simulasi.mulai_pada`.
+- `selesai_pretest`, `selesai_latihan`, `selesai_simulasi`: `disubmit_pada` masing-masing tabel.
+
+Semua hitungan adalah siswa unik (role siswa, belum di-soft-delete, termasuk nonaktif). Kategori boleh tumpang tindih.
 
 ## Klien Python dan job ulang (BE-11)
 

@@ -100,8 +100,16 @@ Akses: Token Super Admin.
 
 | Method | Endpoint | Query / body | Keterangan |
 | --- | --- | --- | --- |
-| GET | `/api/admin/dashboard` | — | Dashboard admin. Siswa aktif, pengerjaan per jenis, siswa per tingkat aktif, rata-rata nilai per jenis. |
+| GET | `/api/admin/dashboard` | Query opsional: `dari`, `sampai` (YYYY-MM-DD, inklusif, `dari` tidak boleh setelah `sampai`). | Dashboard admin. Siswa aktif, pengerjaan per jenis, siswa per tingkat aktif, dan rata-rata nilai per jenis selalu seluruh waktu. `analitik_pengguna` mengikuti filter. Format salah atau rentang terbalik 422 pada kolom terkait. |
 | GET | `/api/admin/bank-soal/kecukupan` | Query: `tingkat_id` (wajib) | Kecukupan bank soal. Lima bagian laporan kecukupan bank soal. |
+
+`analitik_pengguna`: tanpa `dari` dan `sampai` (atau kosong), semua angka menghitung seluruh waktu. Filter berlaku hanya ke blok ini, dan `dari` serta `sampai` boleh diisi salah satunya. Batas hari inklusif memakai zona waktu aplikasi (UTC): `dari` mulai 00:00:00, `sampai` sampai 23:59:59. Semua nilai integer adalah jumlah siswa unik: akun ber-role siswa yang belum dihapus (soft delete), termasuk yang nonaktif. Akun admin tidak dihitung. Kategori boleh tumpang tindih, jadi jumlahnya tidak perlu dijumlahkan.
+
+- `siswa_terdaftar`: siswa dengan `users.created_at` dalam periode.
+- `mulai_pretest`, `mulai_latihan`: siswa yang punya baris `pretest` atau `quiz_pengerjaan` dengan `created_at` dalam periode. Baris berjalan maupun selesai dihitung.
+- `mulai_simulasi`: siswa yang punya `hasil_simulasi` dengan `mulai_pada` dalam periode.
+- `selesai_pretest`, `selesai_latihan`, `selesai_simulasi`: siswa yang punya baris dengan `disubmit_pada` dalam periode. Percobaan yang belum disubmit tidak dihitung di sini.
+- `terdaftar_dengan_referal`: siswa dengan `users.created_at` dalam periode dan `direferensikan_oleh` terisi. Ini status saat ini, bukan tanggal kode diisi. Kode terisi saat daftar, atau sekali setelah login Google (`POST /api/auth/referal`). Pemberi yang di-soft-delete tetap dihitung; pemberi yang dihapus permanen membuat relasinya kosong. Akun yang terdaftar sebelum kolom referal ditambahkan (migrasi 26 Okt 2026) tidak punya relasi tercatat, sehingga dihitung tanpa referal. Angka ini tidak dipecah per pemberi.
 
 ## Admin · Tingkat & aturan pemetaan
 

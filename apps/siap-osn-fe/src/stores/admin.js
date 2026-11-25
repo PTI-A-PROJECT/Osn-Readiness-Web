@@ -36,6 +36,8 @@ const metaKosong = () => ({ halaman: 1, perHalaman: 15, halamanTerakhir: 1, tota
 export const useAdminStore = defineStore('admin', () => {
   /* ---------- Dashboard & bank soal ---------- */
   const ringkasan = ref(null)
+  const ringkasanPeriode = ref(null) // { dari, sampai } milik data ringkasan yang sedang tampil
+  const ringkasanMemuat = ref(false)
   const kecukupan = ref(null)
   const tingkatKecukupanId = ref(null)
 
@@ -79,16 +81,27 @@ export const useAdminStore = defineStore('admin', () => {
   const metaModul = (m) => meta.value[m] ?? metaKosong()
 
   /* ---------- Dashboard ---------- */
-  async function muatRingkasan() {
+  async function muatRingkasan({ dari, sampai } = {}) {
     const signal = sinyalBaru('dashboard')
     mulaiMuat()
+    ringkasanMemuat.value = true
     error.value = false
     try {
-      ringkasan.value = await adminService.dashboard({ signal })
+      const hasil = await adminService.dashboard({ dari, sampai, signal })
+      // Respons filter yang sudah digantikan permintaan lebih baru tidak boleh menimpa data.
+      if (signal.aborted) return
+      ringkasan.value = hasil
+      ringkasanPeriode.value = { dari: dari || null, sampai: sampai || null }
     } catch (err) {
-      if (!signal.aborted) error.value = true
+      if (signal.aborted) return
+      // Bidang seluruh waktu tidak bergantung pada filter, jadi tetap dipakai.
+      // Hanya analitik periode ini yang dibuang agar tidak tampak berhasil.
+      ringkasan.value = ringkasan.value ? { ...ringkasan.value, analitikPengguna: null } : null
+      ringkasanPeriode.value = null
+      error.value = true
       throw err
     } finally {
+      if (controllers.get('dashboard')?.signal === signal) ringkasanMemuat.value = false
       selesaiMuat()
     }
   }
@@ -305,6 +318,8 @@ export const useAdminStore = defineStore('admin', () => {
     controllers.clear()
     permintaanAktif = 0
     ringkasan.value = null
+    ringkasanPeriode.value = null
+    ringkasanMemuat.value = false
     kecukupan.value = null
     tingkatKecukupanId.value = null
     daftar.value = {}
@@ -319,6 +334,8 @@ export const useAdminStore = defineStore('admin', () => {
 
   return {
     ringkasan,
+    ringkasanPeriode,
+    ringkasanMemuat,
     kecukupan,
     tingkatKecukupanId,
     bankSoalRingkas,
